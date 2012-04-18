@@ -1,0 +1,144 @@
+Lastenheft
+==========
+
+Anmeldung
+=========
+* Sichere Anmeldung (https)
+* Usernamen und Rollen in Datenbank
+* Authentifizierung über AFS (wenn möglich)
+* Rollen: Besucher, Normaler Benutzer, Bibliothekar, Verwaltung,
+Administrator
+* Besucher kann: Nach Büchern suchen und sich diese anzeigen lassen
+* Normaler Nutzer kann: Bücher leihen, zurückgeben, an sich
+(und andere?) übertragen, Liste geliehener Bücher, Bibtex exportieren,
+etc.
+* Bibliothekar kann: Bücher importieren, ändern, als verloren
+markieren, etc
+* Verwaltung kann: Benutzer anlegen, 
+* Admin kann: Änderungen an (technischen) Systemeinstellungen
+vornehmen
+* (?) erweiterte Rollen nicht sofort aktivieren, sondern auf Anfrage
+* (?) Relation von Rollen zu erlaubten Aktionen in DB speichern
+* Speicherung von Email-Adressen
+
+Allgemeines
+===========
+
+Layout
+======
+* Angepasst an das neue Corporate Design der TU (aber nicht unbedingt
+genauso wie im CMS)
+* aufgeraeumtes Layout (sortiert)
+* klare Navigation und  Schaltflaechen
+* uebersichtlich Darstellung von Informationen, Tabellen
+* angepasste Fontgroessen
+
+
+Daten
+=====
+* Siehe auch: "Informationen in Büchern"
+* Übernahme erstmal aus bestehender Datenbank
+
+
+Textencoding
+============
+* Intern alle Zeichenketten als Unicode
+* Import von TeX muss möglich sein (in Grenzen)
+* Export nach BibTeX (auch in Grenzen)
+* Achtung: Unicode nach Tex-Escape-Konvertierung (optional für den Benutzer,checkbox)
+* Was mit nicht exportierbaren Zeichen passiert soll einstellbar sein
+
+Anbindung an die UB
+===================
+* Muss nur in eine Richtung funktionieren
+* Schreiben ins Allegro-Format für den Datenaustauch
+* Sollte vom Bibliothekar über einen Schalter angestossen werden
+
+Import von Büchern
+==================
+* Import und Validierung von Bibtex-formattierten Dateien (Pybibliographer oder selbst)
+* Konvertierung TeX->UTF8
+* Prüfung auf Unicode-Korrektheit
+* Upload dieser Dateien über Webschnittstelle
+* Warnung bei doppelt vorhandenen Büchern
+* Neueingabe von Büchern über Webschnittstelle
+* Anlegen von bestellten Büchern
+
+Löschen von Büchern
+===================
+* Bücher dürfen nicht gelöscht werden
+* (ausser sie sind gerade angelegt worden, und es noch nichts mit
+Ihnen geschehen)
+* Bücher, die verloren gegangen sind, können markiert werden
+
+
+Informationen in Büchern
+========================
+* Standardbibliographische Informationen (Autor, Titel, ...)
+* Dokumententypen: Buch, Dipl/Masterarbeit, Dissertation, Konferenzband
+* siehe auch die Informationen in der bestehenden
+Institutsbibliographie
+* Felder mehrfach möglich (z.B. Autor)
+* Kategorien (Buch, Diplomarbeit, Doktorarbeit ...)
+* Dynamische Feldinhalte: zusätzliche Felder können speziell für
+einzelne Bücher angelegt werden (Bibliothekar)
+* (?) Möglicherweise: alle Felder über Feldertabelle beschreiben
+
+
+Suche
+=====
+* Standardsuche ähnlich wie Google (soll vor allem funktionieren!)
+* Suche mit Und/Oder, Regex, Wildcards, Felder, numerisch
+* (?) Möglicherweise: Filter wie bei Thunderbird Message Filter
+* Suche sortieren nach: Autor, Titel, (vielleicht noch Jahr, Erwerb,
+...)
+* keine SQL-Injection
+* Bitte ein paar Such-Use-Cases überlegen und wie diese ausgeführt
+werden könnten
+
+Browsen
+=======
+* hierarchisch
+* Nach Dokumententyp
+* Nach Anfangsbuchstabe des Titels/(eines) Autors
+* 
+
+
+Anzeige
+=======
+* Buchinformationen (TODO)
+* Anzeige, ob ausgeliehen, und an wen
+* Wenn ausgeliehen: zurückgeben (Warnung, wenn nicht selbst geliehen),
+übertragen an sich selbst 
+Buchanzeige:
+* Daten ordentlich tabellarisch
+* Schalter zum Bibtex-Export
+
+
+Ausleihen
+=========
+* Ausleihen für externe Personen (keine Benutzer): 
+  + Eingabe von Name, Adresse, Email
+  + wichtig: Anzeige dieser Daten, wenn das geliehene Buch angezeigt
+  wird
+  + Eingabe einer Leihfrist (gibt's nicht für reguläre Benutzer)
+  + bestehende Externe können permanent angelegt werden
+  + Meldung wenn Leihfrist abgelaufen (evtl. bisher keine konkreten Leihfristen)
+  + (?) automatische Email
+* Ausleihen für normale Benutzer
+  + Historie speichern
+
+Entleihlisten
+=============
+* Enthält alle vom Benutzer geliehenen Bücher
+* Tabellenform (nur wichtige Infos: ID, Titel, Autor, wann geliehen)
+* sortierbar (nach Spaltenüberschriften)
+
+
+Sonstiges
+=========
+* beliebige zusätzliche Felder möglich
+* Bestelle Bücher eingeben, mit Bestellinformationen
+* Buchbild von und Link auf google.books oder wikipedia isbn locator
+* Lizenz: GPL
+* 
