@@ -1,10 +1,12 @@
 % Kapitel 4
 %-------------------------------------------------------------------------------
+%% TODO: Literatur durch Dokument ersetzen.
 
 \chapter{Produktfunktionen}
 
 \section{Allgemeine Funktionen}
 \subsection{F100 (Anmeldung)}
+\label{f100}
 \begin{description}
   \item[Geschäftsprozess]Anmeldung
     %% TODO: Meldet sich der Gastnutzer überhaupt an?
@@ -25,6 +27,7 @@
 \end{description}
 
 \subsection{\emph{optional:} F101 (Anmeldung über AFS)}
+\label{f101}
 \begin{description}
   \item[Geschäftsprozess]Login eines Mitgliedes der Universität.
     %% TODO: Meldet sich der Gastnutzer überhaupt an?
@@ -68,6 +71,7 @@
 
 
 
+\label{f102}
 \section{Literaturfunkionen}
 Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das System verwalteten Literatur. Darunter ist die \emph{Einpflege} (F201-F202), \emph{Suche} (F211-F219), \emph{Ausleihe} (F221-F229) und der \BibTeX -Export (F231-F239).
 \subsection{F201 (\BibTeX-Import)}
@@ -93,12 +97,12 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Das System macht die Daten verfügbar.
       \item Das System leitet den Benutzer zu einer Übersicht weiter.
     \end{enumerate}
-    %% TODO: Erweiterungen immer automatisch optional oder muss extra gekennzeichnet werden?
   \item[Erweiterung]Der Benutzer hat die Möglichkeit nicht vorher spezifizierte Felder in die \BibTeX -Datei einzutragen.
   \item[Alternativen]Der Benutzer registriert die Literatur über ein rein Webinterface.
 \end{description}
 
 \subsection{F202 (Webinterface-Import)}
+\label{f202}
 \begin{description}
   \item[Geschäftsprozess]Literatur hinzufügen über das Webinterface.
   \item[Ziel]Eine neu in die Bibliothek aufgenommene Literatur in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
@@ -121,6 +125,46 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
     %% TODO:
   \item[Erweiterung]Der Benutzer hat die Möglichkeit nicht vorher spezifizierte Felder selbst einzufügen.
   \item[Alternativen]Der Benutzer registriert die Literatur über den \BibTeX\ Import.
+\end{description}
+
+\subsection{F203 (Editieren von Dokumenten)}
+\begin{description}
+    %% TODO:
+  \item[Geschäftsprozess]Der Eintrag eines Dokumentes wird verändert.
+  \item[Ziel]siehe oben.
+  \item[Vorbedingung]Das Dokument exestiert im System.
+  \item[Nachbedingung Erfolg]Die Änderungen waren zulässig und werden in die Datenbank übernommen.
+  \item[Nachbedingung Fehlschlag]Die Änderungen waren nicht zulässig und der Benutzer wird auf den Eingabefehler aufmerksam gemacht.
+  \item[Akteure]Bibliothekar oder Administrator
+  \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer wählt die Option \emph{Dokument editieren}
+      \item Das System leitet den Benutzer an eine Seite ähnlich zu \nameref{f202}.
+      \item Der Benutzer führt seine Anpassungen durch und bestätigt.
+      \item Das System übernimmt die Anpassungen.
+    \end{enumerate}
+  \item[Erweiterung]
+  \item[Alternativen]
+\end{description}
+
+\subsection{F204 (Löschen von Dokumenten)}
+\begin{description}
+    %% TODO:
+  \item[Geschäftsprozess]Das Löschen eines Dokumentes aus dem System.
+  \item[Ziel]Das Dokument ist nicht mehr im System gespeichert wie auch alle weiteren Informationen zu dem Dokument.
+  \item[Vorbedingung]Das Dokument ist als \emph{vermisst} markiert.
+  \item[Nachbedingung Erfolg]Keine Information zu dem Dokument exestiert mehr im System.
+  \item[Nachbedingung Fehlschlag]Der Fehler wird abgefangen und die Datenbank wird nicht verändert.
+  \item[Akteure]Administrator
+  \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Administrator wählt auf der Dokumentenseite die Option \emph{Dokument löschen}.
+      \item Das System bittet den Administrator um Bestätigung.
+      \item Der Administrator bestätigt den Löschvorgang.
+      \item Das System entfernt alle Datenbankeinträge die zu dem Dokument gehören.
+    \end{enumerate}
+  \item[Erweiterung]
+  \item[Alternativen]
 \end{description}
 
 \subsection{F211 (Generelle Suche)}
@@ -222,23 +266,21 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F222 (Ausleihe externe)}
 \begin{description}
-    %%TODO: Ist auf alle Fälle fristgebunden.
-  \item[Geschäftsprozess]Ein Benutzer die nicht dem Institut angehört, leiht sich Literatur.
-  \item[Ziel]Der Benutzer kann sich die Literatur für die Dauer der Leihfrist mitnehmen.
-  \item[Vorbedingung]Der externe Aktor hat sich von einem \emph{Verwalter} einen Benutzer anlegen lassen.
-  \item[Nachbedingung Erfolg]Der Benutzer kann eine Literatur der Bibliothek entnehmen, da es im System registiert ist.
+  \item[Geschäftsprozess]Ein Benutzer die nicht dem Institut angehört, leiht sich ein Dokument.
+  \item[Ziel]Der Benutzer kann sich das Dokument für die Dauer der Leihfrist mitnehmen.
+  \item[Vorbedingung]Der Benutzer hat einen \emph{Verwalter} als Bürgen und das Dokument ist verfügbar.
+  \item[Nachbedingung Erfolg]Der Benutzer kann das Dokument der Bibliothek entnehmen und sowohl auf der Liste der geliehenen Dokumente des Bürgen wie auch auch auf der Seite des Dokumentes findet sich der Name Benutzers. Auf der Seite des Dokumentes ist weiter der Name des Bürgen zu entnehmen.
   \item[Nachbedingung Fehlschlag]Das Buch ist wahrscheinlich derzeit nicht verfügbar, der Benutzer muss es später nocheinmal versuchen.
-  \item[Akteure]Institutsfremder Benutzer.
+  \item[Akteure]Institutsfremder Benutzer.und ein Verwalter
   \item[Beschreibung]
     \begin{enumerate}
-      \item Der Benutzer sucht die gewünschte Literatur über die Systemsuche.
-      \item Der Benutzer befindet sich auf der Detail-Ansicht der Literatur.
-      \item Wenn die Literatur verfügbar ist wählt der Benutzer die Option \emph{ausleihen}.
-      \item Das System ändert den Status der Literatur auf \emph{verliehen} und registriert den Benutzer entsprechend.
-      \item Dem Benutzer wird das Ende seiner Leihfrist vom System gemeldet.
+      \item Der Benutzer bittet einen \emph{Verwalter} als Bürgen für ihn das Dokument zu entleihen.
+      \item Der Bürge wählt das Dokument aus und wählt dort die Option \emph{leihen für externe Person}.
+      \item Der Bürge trägt die Personalien (Name, E-Mail und Adresse) sowie die Dauer der Leihfrist ein.
+      \item Der Bürge bestätigt und das System trägt die Daten in die Datenbank ein.
     \end{enumerate}
   \item[Erweiterung]
-  \item[Alternativen]Nicht der Benutzer selbst sondern ein \emph{Verwalter} registriert den Benutzer als leihende Person.
+  \item[Alternativen]
 \end{description}
 
 \subsection{F223 (Ausleihe übertragen)}
@@ -263,7 +305,6 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F224 (Ausleihe zurückgeben)}
 \begin{description}
-    %% TODO:	-extrene über anmeldung oder über „verwalter“?
   \item[Geschäftsprozess]Der Benutzer bringt eine Literatur zurück in die Bibliothek.
   \item[Ziel]Die Literatur ist wieder \emph{verfügbar}.
   \item[Vorbedingung]Der Benutzer ist Leihender der Literatur.
@@ -276,34 +317,53 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Der Benutzer wählt auf der Literaturseite die Rückgabe aus.
       \item Das SysEintem ändert den Status der Literatur und verschiebt den Benutzer in die History der Leihenden.
     \end{enumerate}
-  \item[Erweiterung]
+  \item[Erweiterung]Externe Benutzer können ihr Buch an jede Person zurück geben und von denen Entsprechend als Zurückgegeben markieren lassen.
   \item[Alternativen]
 \end{description}
 
 \subsection{F225 (Ausleihe verlohren melden)}
 \begin{description}
-    %%TODO: -- email versenden?
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+    %%TODO: 	- email versenden?
+    %%		- Schwarzes Brett der Verlohrenen Dokumente?
+  \item[Geschäftsprozess]Ein Dokument das ausgeliehen wurde oder als Verfügbar gilt, wird als verlohren gemeldet.
+  \item[Ziel]Nicht mehr auffindbare Dokumente können allgemein als Vermisst gemeldet werden.
+  \item[Vorbedingung]Das Dokument ist bereits im System registiert.
+  \item[Nachbedingung Erfolg]Das Dokument gilt offiziell als Vermisst.
+  \item[Nachbedingung Fehlschlag]Der Fehler wird vom System an den Benutzer gemeldet.
+  \item[Akteure]Benutzer
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer befindet sich auf der Detailseite des Dokumentes
+      \item Der Benutzer wählt eine Option \emph{Vermisst melden}.
+      \item Das System registiert den Vorgang.
+    \end{enumerate}
   \item[Erweiterung]
+    \begin{itemize}
+      \item \emph{optional:} Ein allgemeines Blackboardsystem mit vermissten Dokumenten auf der Bibliotheksseite.
+      \item \emph{optional:} Das System versendet einen E-Mail an eine Mailingliste, dass das Buch als vermisst gemeldet wurde.
+    \end{itemize}
   \item[Alternativen]
 \end{description}
 
 \subsection{F226 (Ausleihfrist abgelaufen)}
 \begin{description}
-    %%TODO: - email an Benutzer und Verwalter?
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
+  \item[Geschäftsprozess]Die Leihfrist eines Dokumentes ist abgelaufen.
+  \item[Ziel]Sowohl der Bürge als auch die Person, die das Dokument geliehen hat, werden per E-Mail noch einmal erinnert.
+  \item[Vorbedingung]Die Person hat das Dokument geliehen und die Leihfrist ist abgelaufen.
+  \item[Nachbedingung Erfolg]Beide Parteien sind via E-Mail nocheinmal erinnert worden.
   \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+    \begin{itemize}
+      \item Die E-Mails konnten nicht verschickt werden, der Administrator wird benachrichtigt.
+      \item Die E-Mail an die Person, die das Dokument geliehen hat, ist nicht korrekt oder konnte nicht zugestellt werden. Damit wird der Bürge benachrichtigt.
+    \end{itemize}
+  \item[Akteure]Das System
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Das System prüft täglich ob eine Leihfrist abgelaufen ist.
+      \item Das System stellt fest, dass eine Leihfrist abgelaufen ist.
+      \item Das System sendet an beide Parteien eine E-Mail mit den Informationen auch zu dem Dokument selbst.
+    
+    \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
