@@ -3,16 +3,6 @@
 
 \chapter{Nichtfunktionale Anforderungen}
 
-In diesem Kapitel wird festgelegt, welche Qualitätsmerkmale das zu entwickelnde
-Produkt in welcher Qualitätsstufe besitzen soll. Anschließend werden die als am
-wichtigsten bezeichneten Qualitätsmerkmale operationalisiert, d.h. in konkrete
-Produktanforderungen detailliert, falls sie nicht als allgemeine Richtlinie (z.
-B. Standard, Norm) zur Verfügung gestellt werden können.
-
-Sofern projektspezifisch möglich, ist die Anordnung gemäß Beispiel zu nutzen.
-Ggf. können aber auch andere Qualitätsanforderungen gestellt oder nicht
-zutreffende weggelassen werden.\\
-Beispiel:\\
 
 %----Start der Tabelle------------------------------------------------------
 \begin{tabular}{|c|c|c|c|c|}
@@ -25,41 +15,41 @@ Beispiel:\\
 
   %----die nachfolgeden beiden Zeilen so oft wiederholen und die ... mit den
   %    entsprechenden Daten zu füllen wie erforderlich
-  \textbf{Funktionalität}  &&&&\\        % Eintrag in Zeile
+Funktionalität  &x&&&\\        % Eintrag in Zeile
   \hline
 Angemessenheit&&x&&\\
 \hline
-Richtigkeit&x&&&\\
+Richtigkeit&&x&&\\
 \hline
 Interoperabilität&&x&&\\
 \hline
-Ordnungsmäßgkeit&x&&&\\
+Ordnungsmäßgkeit&&x&&\\
 \hline
-\textbf{Sicherheit}&x&&&\\
+Sicherheit&&x&&\\
 \hline
-Zuverlässigkeit&&&&x\\
+Zuverlässigkeit&&x&&\\
 \hline
 Reife&x&&&\\
 \hline
 Fehlertoleranz&&&x&\\
 \hline
-Wiederherstellbarkeit&x&&&\\
+Wiederherstellbarkeit&&x&&\\
 \hline
-\textbf{Benutzbarkeit}&&&&\\
+Benutzbarkeit&x&&&\\
 \hline
-Verständlichkeit&&x&&\\
+Verständlichkeit&x&&&\\
 \hline
-Erlernbarkeit&&&x&\\
+Erlernbarkeit&x&&&\\
 \hline
-Bedienbarkeit&&x&&\\
+Bedienbarkeit&x&&&\\
 \hline
-Effizienz&&&&\\
+Effizienz&&&x&\\
 \hline
-Zeitverhalten&&x&&\\
+Zeitverhalten&&&x&\\
 \hline
 Verbrauchsverhalten&&x&&\\
 \hline
-\textbf{Änderbarkeit}&&&&\\
+Änderbarkeit&&x&&\\
 \hline
 Analysierbarkeit&&x&&\\
 \hline
@@ -69,13 +59,13 @@ Stabilität&x&&&\\
 \hline
 Prüfbarkeit&&x&&\\
 \hline
-Übertragbarkeit&&&&\\
+Übertragbarkeit&&&&x\\
 \hline
-Anpassbarkeit&&&&x\\
+Anpassbarkeit&&&x&\\
 \hline
-Installierbarkeit&&x&&\\
+Installierbarkeit&&&&x\\
 \hline
-Konformität&&x&&\\
+Konformität&&&&\\
 \hline
 Austauschbarkeit&&&x&\\
 \hline
@@ -83,31 +73,15 @@ Austauschbarkeit&&&x&\\
 \end{tabular}
 
 
-Die oben als am wichtigsten bezeichneten Qualitätsmerkmale werden im Folgenden
-operationalisiert, d.h. in konkrete Produktanforderungen detailliert oder es
-wird angegeben, welche Richtlinie (z. B. Standard, Norm) einzuhalten ist. Diese
-Qualitätsanforderungen werden mit /Qnn/ markiert. Zu prüfen ist, ob die
-gewünschte Qualität mit den in Produktdaten genannten Datenmengen erreicht
-werden kann.
-
-
-
-Beispiele:
-
 \begin{itemize}
 
-\item  /Q10/ Die Funktion /F60/ darf nicht länger als 5 Sekunden Antwortzeit
-benötigen.
-\item  /Q20/ Alle Reaktionszeiten auf Benutzeraktionen müssen unter 2 Sekunden
-liegen (außer Funktion /F60/).
-\item  /Q30/ Die im Rahmen der automatischen Einlagerung /F10/ notwendige
-Platzwahl für einen am Anmeldescanner gemeldeten Reifen darf aus Gründen der
-Kommunikation mit der SPS nicht länger als 3 Sekunden dauern, ansonsten kann
-die SPS die Lieferung des Reifens zum richtigen Modul nicht garantieren. //
-\item  /Q40/ Das Produkt soll plattformunabhängig sein
-\item  /Q50/ Das Produkt muss anwenderfreundlich sein (intuitive Bedienbarkeit
-für Benutzer ohne EDV-Vorkenntnisse, umfangreiche Hilfefunktion)
-\item  /Q60/ Die Produkt soll fehlertolerant bezüglich Bedien- und
-Eingabefehler sein
+\item  /Q10/ Der Login über die Funktionen /F101/ und /F102/ sowie Cookies sind verschlüsselt.
+\item  /Q11/ SQL-Injections sollen bei der Suche und anderen Eingaben nicht möglich sein.
+\item  /Q20/ Die Layoutstruktur und Fonts sind ähnlich denen des CMS der TU BRaunschweig.
+\item  /Q21/ Das Layout soll aufgeräumt sein mit klarer Navigation und Schaltflächen.
+\item  /Q22/ Informationen sollen übersichtlich dargestellt werden.
+\item  /Q23/ Die Funktionen /F211/ und /F212/ sollen intuitiv und einfach verständlich sein.
+\item  /Q30/ Intern sollen alle Zeichenketten als Unicode bearbeitet werden.
+\item  /Q31/ Nur bestellte Dokumente dürfen mit der Funktion /F/ gelöscht werden. Bereits vorhandene Dokumente dürfen nur als 'fehlend' markiert werden. Optional: Administratoren dürfen auch bereits vorhandene Dokumente löschen.
 
 \end{itemize}
