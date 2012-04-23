@@ -87,8 +87,8 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Der Benutzer wählt eine \BibTeX -Datei von seinem Rechner.
       \item Der Benutzer wählt den späteren Status der in der Datei enthaltenen Literatur.
       \item Der Benutzer startet einen Upload in das System.
-      \item Das System prüft die Datei auf Validität. Dabei ist vor allem zu beachten, dass Umlaute und Sonderzeichen in ein UTF-8 Format übersetzt werden und die Einträge valides UTF-8 sind.
-	(Validität schließt sowohl den \BibTeX -Umfang ein, wie auch die Felder: \emph{DateOfPurchase}, \emph{price}, \emph{InventarNo}, \emph{InformatikBibNo}, \emph{LibraryOfCongressNo}, \emph{CIPNo}, \emph{XtraNo}, \emph{keywords}.)
+      \item Das System prüft die Datei auf Validität. Dabei ist vor allem zu beachten, dass \TeX-Umlaute und -Sonderzeichen in ein UTF-8 Format übersetzt werden und die Einträge valides UTF-8 sind.
+	(Validität schließt sowohl den \BibTeX -Umfang ein, wie auch die Felder: \emph{DateOfPurchase}, \emph{price}, \emph{InventarNo}, \emph{InformatikBibNo}, \emph{LibraryOfCongressNo}, \emph{CIPNo}, \emph{XtraNo}, \emph{keywords}.) Umlaute und Sonderzeichen können auch direkt in UTF-8 angegeben werden.
 	Das System prüft ebenfalls, ob ein entsprechender Eintrag bereits vorhanden ist.
       \item Das System trägt die Literatureinträge in die Datenbank ein.
       \item Das System fügt den Literatureinträgen den vom Benutzer bestimmten Status hinzu.
@@ -184,7 +184,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
     \end{enumerate}
     %% TODO:
-    \item[Erweiterung]Erweiterungen der Suche sind F212 und F213
+    \item[Erweiterung]Erweiterungen der Suche sind \nameref{F:extSuche}, \nameref{F:n00bSuche} und \nameref{F:regexSuche}
 \end{description}
 
 
@@ -212,8 +212,28 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
     \end{enumerate}
 \end{description}
 
+\subsection{\emph{optional:} F213 (erweiterte Suche)}
+\label{F:n00bSuche}
+\begin{description}
+  \item[Geschäftsprozess]Der Benutzer sucht ein Dokument
+  \item[Ziel]Eine vereinfachte Suchmaske ermöglicht allen Benutzern die Nutzung von erweiterten Ausdrücken.
+  \item[Vorbedingung]Der Benutzer befindet sich auf der Seite mit der erweiterten Suchmaske.
+  \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
+  \item[Nachbedingung Fehlschlag]Es konnte keine Literatur der Suche entsprechend gefunden werden.
+  \item[Akteure]Benutzer
+  \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
+  \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer öffnet die Maske für die erweiterte Suche.
+      \item Das System stellt dem Benutzer exta Felder die ihm die Möglichkeiten von \nameref{F:extSuche} ermöglichen ohne die Kommandos zu kennen.
+      \item Der Benutzer bestätigt die eingetragenen Parameter.
+      \item Das System gibt dem Benutzer die Liste mit den Suchergebnissen zurück.
+    \end{enumerate}
+\end{description}
 
-\subsection{\emph{optional:} F213 (Suche mit regulären Ausdrücken)}
+
+\subsection{\emph{optional:} F214 (Suche mit regulären Ausdrücken)}
+\label{F:regexSuche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer kann bei der Suche reguläre Ausdrücke verwenden.
   \item[Ziel]Der Benutzer kann komplexe Mittel verwenden um nach möglichen Zeichenfolgend zu suchen.
@@ -231,7 +251,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
     \end{enumerate}
 \end{description}
 
-\subsection{F214 (Sortierung der Suche)}
+\subsection{F215 (Sortierung der Suche)}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer ordnet sein Suchergebnis nach gewünschter Spalte.
   \item[Ziel]Das System ordnet das Suchergebnis.
@@ -503,7 +523,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F211 (Rollengruppe Rechte zuwiesen)} 
+\subsection{F311 (Rollengruppe Rechte zuwiesen)} 
 \begin{description}
     %% TODO:
   \item[Geschäftsprozess]
@@ -517,7 +537,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F212 (Benutzer Rolle(n) zuweisen)}
+\subsection{F312 (Benutzer Rolle(n) zuweisen)}
 \begin{description}
     %% TODO:
   \item[Geschäftsprozess]
