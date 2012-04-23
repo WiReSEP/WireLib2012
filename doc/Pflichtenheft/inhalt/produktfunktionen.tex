@@ -25,13 +25,13 @@
     \end{enumerate}
 \end{description}
 
-\subsection{F101 (Anmeldung über AFS)}
+\subsection{\emph{optional:} F101 (Anmeldung über AFS)}
 \begin{description}
-  \item[Geschäftsprozess]Anmeldung
+  \item[Geschäftsprozess]Login eines Mitgliedes der Universität.
     %% TODO: Meldet sich der Gastnutzer überhaupt an?
   \item[Ziel]Ein Benutzer meldet sich erfolgreich am System an.
-  \item[Vorbedingung]Der Benutzer ist bereits auf dem System registriert und besitzt ein Passwort.
-  \item[Nachbedingung Erfolg]Der Benutzer findet sich auf seiner Benutzerseite wieder.
+  \item[Vorbedingung]Der Benutzer besitzt einen AFS-Account und besitzt sein Passwort.
+  \item[Nachbedingung Erfolg]Der Benutzer findet sich auf einer persönlichen Benutzerseite wieder.
   \item[Nachbedingung Fehlschlag]Der Benutzer bekommt eine Fehlermeldung.
   \item[Akteure]Gast/Benutzer
   \item[Auslösendes Ereignis]Der Benutzer erhält die Möglichkeiten sich Literatur zu entleihen oder den Status geliehener Literatur zu ändern.
@@ -40,22 +40,30 @@
       \item Der Benutzer wählt den Link „Login“ auf der Webseite aus.
       \item Der Benutzer gibt seinen Nutzernamen und sein Passwort ein.
       \item Der Benutzer bestätigt seine Eingaben.
-      \item Das System prüft die Korrektheit der Eingaben.
+      \item Das System prüft die Korrektheit der Eingaben indem sie über das AFS-System der TU validiert werden.
       \item Das System leitet den Benutzer entsprechend der Korrektheit seiner Daten weiter.
     \end{enumerate}
 \end{description}
 
 \subsection{F102 (Anbindung an die UB)}
 \begin{description}
-    %% TODO:
   \item[Geschäftsprozess]Übertragung der Institutsbibliothek an die Universitätsbibliothek.
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Ziel]Angleichung der im UB-Allegro verfügbaren Daten über die Institutsbibliothek.
+  \item[Vorbedingung]Keine.
+  \item[Nachbedingung Erfolg]Der Benutzer erhält eine Datei mit den Daten im Allegro-Format, die er an die UB per Mail verschicken kann.
+  \item[Nachbedingung Fehlschlag]Das System soll die Export-Funktion nur berechtigten Benutzern bieten, damit soll ein Fehlschlag in der Bedienung abgefangen werden. Sollte der Vorgang des Parsens einen Fehler erzeugen (z.\,B. durch eine gesperrte Datenbank), erhält der Benutzer die Bitte es später noch einmal zu versuchen.
+  \item[Akteure]Benutzer
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer fordert über das Webinterface die Allegro-Datei an.
+      \item Das System überträgt die Literatureinträge der Datenbank in das Allegro-Format.
+      \item Das System gibt dem Benutzer eine Datei zum Download, die der Benutzer manuell an die UB versenden kann.
+    \end{enumerate}
   \item[Erweiterung]
+    \begin{itemize}
+      \item \emph{optional} Das System übernimmt das versenden der E-Mail.
+      \item \emph{optional} Das System versendet die Datei automatisch nachdem ein Buch zum System hinzugefügt wurde.
+    \end{itemize}
   \item[Alternativen]
 \end{description}
 
@@ -63,7 +71,7 @@
 
 \section{Literaturfunkionen}
 Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das System verwalteten Literatur. Darunter ist die \emph{Einpflege} (F201-F202), \emph{Suche} (F211-F219), \emph{Ausleihe} (F221-F229) und der \BibTeX -Export (F231-F239).
-\subsection{F201}
+\subsection{F201 (\BibTeX-Import)}
 \begin{description}
   \item[Geschäftsprozess]Literatur hinzufügen mit \BibTeX.
   \item[Ziel]Eine neu in die Bibliothek aufgenommene Literatur in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
@@ -91,7 +99,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]Der Benutzer registriert die Literatur über ein rein Webinterface.
 \end{description}
 
-\subsection{F202}
+\subsection{F202 (Webinterface-Import)}
 \begin{description}
   \item[Geschäftsprozess]Literatur hinzufügen über das Webinterface.
   \item[Ziel]Eine neu in die Bibliothek aufgenommene Literatur in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
@@ -148,7 +156,12 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]
     \begin{enumerate}
-      \item Der Benuter gibt seine Ausdruck ein. Einzelne Ausdrücke werden durch ein Leerzeichen getrennt, um der Trennung zu entgehen müssen die Ausdrücke mit einfachen oder doppelten Hochkommata zu einem Ausdruck zusammen gefasst werden. Mehrere Ausdrücke können mit \emph{and} und \emph{or} oder mit \emph{und} und \emph{oder} verknüpft werden.
+      \item Der Benuter gibt seine Ausdruck ein. 
+	\begin{itemize}
+	  \item Einzelne Ausdrücke werden durch ein Leerzeichen getrennt, um der Trennung zu entgehen müssen die Ausdrücke mit einfachen oder doppelten Hochkommata zu einem Ausdruck zusammen gefasst werden. 
+	  \item Mehrere Ausdrücke können mit \emph{and} und \emph{or} oder mit \emph{und} und \emph{oder} verknüpft werden.
+	  \item Bestimmte Felder können direkt angesprochen werden, darunter Titel und Autor. Angesprochen werden die Felder mit z.\,B. „title:``Tim und Struppi''“.
+	\end{itemize}
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank um Literatureinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
@@ -201,49 +214,69 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Auslösendes Ereignis]Die Literatur ändert ihren Status von \emph{verfügbar} auf \emph{verliehen}. Der Benutzer sieht bei dieser Literatur einen Hinweis, dass er sie ausgeliehen hat, zusätzlich zu einer persönlichen Ausleihliste.
   \item[Beschreibung]
     \begin{enumerate}
-      \item %%TODO
+      \item Der Benutzer sucht die gewünschte Literatur über die Systemsuche.
+      \item Der Benutzer befindet sich auf der Detail-Ansicht der Literatur.
+      \item Wenn die Literatur verfügbar ist wählt der Benutzer die Option \emph{ausleihen}.
+      \item Das System ändert den Status der Literatur auf \emph{verliehen} und registriert den Benutzer entsprechend.
     \end{enumerate}
 \end{description}
 
 \subsection{F222 (Ausleihe externe)}
 \begin{description}
     %%TODO: Ist auf alle Fälle fristgebunden.
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Ein Benutzer die nicht dem Institut angehört, leiht sich Literatur.
+  \item[Ziel]Der Benutzer kann sich die Literatur für die Dauer der Leihfrist mitnehmen.
+  \item[Vorbedingung]Der externe Aktor hat sich von einem \emph{Verwalter} einen Benutzer anlegen lassen.
+  \item[Nachbedingung Erfolg]Der Benutzer kann eine Literatur der Bibliothek entnehmen, da es im System registiert ist.
+  \item[Nachbedingung Fehlschlag]Das Buch ist wahrscheinlich derzeit nicht verfügbar, der Benutzer muss es später nocheinmal versuchen.
+  \item[Akteure]Institutsfremder Benutzer.
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer sucht die gewünschte Literatur über die Systemsuche.
+      \item Der Benutzer befindet sich auf der Detail-Ansicht der Literatur.
+      \item Wenn die Literatur verfügbar ist wählt der Benutzer die Option \emph{ausleihen}.
+      \item Das System ändert den Status der Literatur auf \emph{verliehen} und registriert den Benutzer entsprechend.
+      \item Dem Benutzer wird das Ende seiner Leihfrist vom System gemeldet.
+    \end{enumerate}
   \item[Erweiterung]
-  \item[Alternativen]
+  \item[Alternativen]Nicht der Benutzer selbst sondern ein \emph{Verwalter} registriert den Benutzer als leihende Person.
 \end{description}
 
 \subsection{F223 (Ausleihe übertragen)}
 \begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Ein Benutzer $A$ gibt eine Literatur an eine an einen anderen Benutzer $B$ weiter.
+  \item[Ziel]Der Benutzer $A$ registiert einen anderen Benutzer $B$ als Leihender.
+  \item[Vorbedingung]Der Benutzer $A$ ist derzeit Leihender der Literatur.
+  \item[Nachbedingung Erfolg]Der Benutzer $B$ ist Leihender der Literatur.
+  \item[Nachbedingung Fehlschlag]Der Benutzer $A$ bleibt Leihender der Literatur, es wird nichts an der Datenbank geändert.
+  \item[Akteure]Leihender Benutzer und zukünftig leihender Benutzer.
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer $A$ wählt die Literatur aus.
+      \item Der Benutzer $A$ wählt die Option \emph{übertragen} aus.
+	%%TODO oder wählt ihn über ein Dropdown aus?
+      \item Der Benutzer $A$ gibt Benutzer $B$ ein.
+      \item Das System ändert die Ausleihe auf Benutzer $B$.
+    \end{enumerate}
   \item[Erweiterung]
-  \item[Alternativen]
+  \item[Alternativen]Der Benutzer $B$  überträgt die Literatur von Benutzer $A$ auf sich.
 \end{description}
 
 \subsection{F224 (Ausleihe zurückgeben)}
 \begin{description}
-    %% TODO: 	-ausschreiben.
-    %%		-extrene über anmeldung oder über „verwalter“?
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+    %% TODO:	-extrene über anmeldung oder über „verwalter“?
+  \item[Geschäftsprozess]Der Benutzer bringt eine Literatur zurück in die Bibliothek.
+  \item[Ziel]Die Literatur ist wieder \emph{verfügbar}.
+  \item[Vorbedingung]Der Benutzer ist Leihender der Literatur.
+  \item[Nachbedingung Erfolg]Der Benutzer ist nicht mehr Leihender der Literatur und die Literatur ist wieder \emph{verfügbar}
+  \item[Nachbedingung Fehlschlag]Der Benutzer wird über den Fehler informiert und wird gebeten, es später erneut zu versuchen.
+  \item[Akteure]Benutzer des Institutes.
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer wählt die Literatur aus.
+      \item Der Benutzer wählt auf der Literaturseite die Rückgabe aus.
+      \item Das SysEintem ändert den Status der Literatur und verschiebt den Benutzer in die History der Leihenden.
+    \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
