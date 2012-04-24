@@ -15,7 +15,7 @@
   \item[Nachbedingung Erfolg]Der Benutzer findet sich auf seiner Benutzerseite wieder.
   \item[Nachbedingung Fehlschlag]Der Benutzer bekommt eine Fehlermeldung.
   \item[Akteure]Gast/Benutzer
-  \item[Auslösendes Ereignis]Der Benutzer erhält die Möglichkeiten sich Literatur zu entleihen oder den Status geliehener Literatur zu ändern.
+  \item[Auslösendes Ereignis]Der Benutzer erhält die Möglichkeiten sich Dokumente zu leihen oder den Status geliehener Dokumente zu ändern.
   \item[Beschreibung]
     \begin{enumerate}
       \item Der Benutzer wählt den Link „Login“ auf der Webseite aus.
@@ -36,7 +36,7 @@
   \item[Nachbedingung Erfolg]Der Benutzer findet sich auf einer persönlichen Benutzerseite wieder.
   \item[Nachbedingung Fehlschlag]Der Benutzer bekommt eine Fehlermeldung.
   \item[Akteure]Gast/Benutzer
-  \item[Auslösendes Ereignis]Der Benutzer erhält die Möglichkeiten sich Literatur zu entleihen oder den Status geliehener Literatur zu ändern.
+  \item[Auslösendes Ereignis]Der Benutzer erhält die Möglichkeiten sich Dokumente zu leihen oder den Status geliehener Dokumente zu ändern.
   \item[Beschreibung]
     \begin{enumerate}
       \item Der Benutzer wählt den Link „Login“ auf der Webseite aus.
@@ -58,7 +58,7 @@
   \item[Beschreibung]
     \begin{enumerate}
       \item Der Benutzer fordert über das Webinterface die Allegro-Datei an.
-      \item Das System überträgt die Literatureinträge der Datenbank in das Allegro-Format.
+      \item Das System überträgt die Dokumente der Datenbank in das Allegro-Format.
       \item Das System gibt dem Benutzer eine Datei zum Download, die der Benutzer manuell an die UB versenden kann.
     \end{enumerate}
   \item[Erweiterung]
@@ -70,59 +70,59 @@
 \end{description}
 
 
-\section{Literaturfunkionen}
-Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das System verwalteten Literatur. Darunter ist die \emph{Einpflege} (F201-F202), \emph{Suche} (F211-F219), \emph{Ausleihe} (F221-F229) und der \BibTeX -Export (F231-F239).
+\section{Dokumentfunktionen}
+Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das System verwalteten Dokumente. Darunter ist die \emph{Einpflege} (F201-F202), \emph{Suche} (F211-F219), \emph{Ausleihe} (F221-F229) und der \BibTeX -Export (F231-F239).
 \subsection{F201 (\BibTeX-Import)}
 \begin{description}
-  \item[Geschäftsprozess]Literatur hinzufügen mit \BibTeX.
-  \item[Ziel]Eine neu in die Bibliothek aufgenommene Literatur in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
-  \item[Vorbedingung]Der Benutzer hat sich bereits erfolgreich Angemeldet und hat die Rolle \emph{Bibliothekar}. Der Benutzer ist im Besitz einer \BibTeX -Datei mit mindestens einer einzutragenen Literatur.
-  \item[Nachbedingung Erfolg]Die neue Literatur befindet sich im System (inkl. Eintrag in der Datenbank) und besitzt entweder den Status \emph{verfügbar} oder \emph{bestellt}
+  \item[Geschäftsprozess]Dokumente hinzufügen mit \BibTeX.
+  \item[Ziel]Eine neu in die Bibliothek aufgenommene Dokumente in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
+  \item[Vorbedingung]Der Benutzer hat sich bereits erfolgreich Angemeldet und hat die Rolle \emph{Bibliothekar}. Der Benutzer ist im Besitz einer \BibTeX -Datei mit mindestens einem eingetragenen Dokument.
+  \item[Nachbedingung Erfolg]Das neue Dokument befindet sich im System (inkl. Eintrag in der Datenbank) und besitzt entweder den Status \emph{verfügbar} oder \emph{bestellt}
   \item[Nachbedingung Fehlschlag]Der Benutzer erhält eine Meldung zum Fehlschlag und den Hinweis die \BibTeX -Datei zu überprüfen. Es findet kein Eintrag in die Datenbank statt.
   \item[Akteure]Benutzer/Bibliothekar
-  \item[Auslösendes Ereignis]Der Benutzer bekommt eine Übersicht zur neu eingetragenen Literatur.
+  \item[Auslösendes Ereignis]Der Benutzer bekommt eine Übersicht zu neu eingetragenen Dokumenten.
   \item[Beschreibung]
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Seite zur \BibTeX einpflege.
       \item Der Benutzer wählt eine \BibTeX -Datei von seinem Rechner.
-      \item Der Benutzer wählt den späteren Status der in der Datei enthaltenen Literatur.
+      \item Der Benutzer wählt den späteren Status der in den Dokumenten vermerkt sein soll.
       \item Der Benutzer startet einen Upload in das System.
       \item Das System prüft die Datei auf Validität. Dabei ist vor allem zu beachten, dass \TeX-Umlaute und -Sonderzeichen in ein UTF-8 Format übersetzt werden und die Einträge valides UTF-8 sind.
 	(Validität schließt sowohl den \BibTeX -Umfang ein, wie auch die Felder: \emph{DateOfPurchase}, \emph{price}, \emph{InventarNo}, \emph{InformatikBibNo}, \emph{LibraryOfCongressNo}, \emph{CIPNo}, \emph{XtraNo}, \emph{keywords}.) Umlaute und Sonderzeichen können auch direkt in UTF-8 angegeben werden.
 	Das System prüft ebenfalls, ob ein entsprechender Eintrag bereits vorhanden ist.
-      \item Das System trägt die Literatureinträge in die Datenbank ein.
-      \item Das System fügt den Literatureinträgen den vom Benutzer bestimmten Status hinzu.
+      \item Das System trägt die Dokumente in die Datenbank ein.
+      \item Das System fügt den Dokumenten den vom Benutzer bestimmten Status hinzu.
       \item Das System macht die Daten verfügbar.
       \item Das System leitet den Benutzer zu einer Übersicht weiter.
     \end{enumerate}
   \item[Erweiterung]Der Benutzer hat die Möglichkeit nicht vorher spezifizierte Felder in die \BibTeX -Datei einzutragen.
-  \item[Alternativen]Der Benutzer registriert die Literatur über ein rein Webinterface.
+  \item[Alternativen]Der Benutzer registriert das Dokument über ein rein Webinterface.
 \end{description}
 
 \subsection{F202 (Webinterface-Import)}
 \label{F:Web-Import}
 \begin{description}
-  \item[Geschäftsprozess]Literatur hinzufügen über das Webinterface.
-  \item[Ziel]Eine neu in die Bibliothek aufgenommene Literatur in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
-  \item[Vorbedingung]Der Benutzer hat sich bereits erfolgreich Angemeldet und dat die Rolle \emph{Bibliothekar}. Der Benutzer ist im Besitz aller Daten die zur Eintragung der Literatur erforderlich ist.
-  \item[Nachbedingung Erfolg]Die neue Literatur befindet sich im System (inkl. Eintrag in der Datenbank) und besitzt entweder den Status \emph{verfügbar} oder \emph{bestellt}.
+  \item[Geschäftsprozess]Dokument hinzufügen über das Webinterface.
+  \item[Ziel]Eine neu in die Bibliothek aufgenommenes Dokument in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
+  \item[Vorbedingung]Der Benutzer hat sich bereits erfolgreich Angemeldet und dat die Rolle \emph{Bibliothekar}. Der Benutzer ist im Besitz aller Daten die zur Eintragung des Dokumentes erforderlich ist.
+  \item[Nachbedingung Erfolg]Das neue Dokument befindet sich im System (inkl. Eintrag in der Datenbank) und besitzt entweder den Status \emph{verfügbar} oder \emph{bestellt}.
   \item[Nachbedingung Fehlschlag]Der Benutzer erhält eine Meldung zum Fehlschag und den Hinweis die eingegebenen Daten zu prüfen. Es findet kein Eintrag in die Datenbank statt.
   \item[Akteure]Benutzer/Bibliethekar
-  \item[Auslösendes Ereignis]Der Benutzer bekommt eine Übersicht zur neu eingetragenen Literatur.
+  \item[Auslösendes Ereignis]Der Benutzer bekommt eine Übersicht zum neu eingetragenen Dokument.
   \item[Beschreibung]
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Seite zur Einpflege über das Webinterface.
-      \item Der Benutzer wählt den Typ der Literatur und erhält alle Eingabefelder die für diese Literatur notwendig und optional sind. Das System stellt die Basisfelder, die in \BibTeX\ zur Verfügung stehen wie auch die Felder: \emph{DateOfPurchase}, \emph{price}, \emph{InventarNo}, \emph{InformatikBibNo}, \emph{LibraryOfCongressNo}, \emph{CIPNo}, \emph{XtraNo}, \emph{keywords}.
+      \item Der Benutzer wählt den Typ des Dokumentes und erhält alle Eingabefelder die für dieses Dokument notwendig und optional sind. Das System stellt die Basisfelder, die in \BibTeX\ zur Verfügung stehen wie auch die Felder: \emph{DateOfPurchase}, \emph{price}, \emph{InventarNo}, \emph{InformatikBibNo}, \emph{LibraryOfCongressNo}, \emph{CIPNo}, \emph{XtraNo}, \emph{keywords}.
       \item Der Benutzer bestätigt seine Eingaben.
       \item Das System prüft die Eingaben auf Validität und vorhandene Einträge.
-      \item Das System trägt die Literatureinträge in die Datenbank ein.
-      \item Das System fügt den Literatureinträgen den vom Benutzer bestimmten Status hinzu.
+      \item Das System trägt das Dokument in die Datenbank ein.
+      \item Das System fügt den Dokumenteneintrag den vom Benutzer bestimmten Status hinzu.
       \item Das System macht die Daten verfügbar.
       \item Das System leitet den Benutzer zu einer Übersicht weiter.
     \end{enumerate}
     %% TODO:
   \item[Erweiterung]Der Benutzer hat die Möglichkeit nicht vorher spezifizierte Felder selbst einzufügen.
-  \item[Alternativen]Der Benutzer registriert die Literatur über den \BibTeX\ Import.
+  \item[Alternativen]Der Benutzer registriert das Dokument über den \BibTeX\ Import.
 \end{description}
 
 \subsection{F203 (Editieren von Dokumenten)}
@@ -169,18 +169,18 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 \subsection{F211 (Generelle Suche)}
 \label{F:Suche}
 \begin{description}
-  \item[Geschäftsprozess]Der Benutzer sucht im System einen bestimmten Literatureintrag.
+  \item[Geschäftsprozess]Der Benutzer sucht im System einen bestimmten Dokumenteneintrag.
   \item[Ziel]Der Benuter bekommt alle seiner Suche entsprechenden Einträge.
   \item[Vorbedingung]Der Benutzer befindet sich auf der Seite mit der Suchmaske.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte keine Literatur der Suche entsprechend gefunden werden. Es wird ein Hinweis ausgegeben.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]
     \begin{enumerate}
-      \item Der Benuter gibt seine Suchwörter ein. Dabei kann der Benutzer mehrere Worte verwenden die entsprechned in den Literatureinträgen enthalten sind (Die Reihenfolge ist nicht relevant). Mehrere Wörter werden automatisch logisch mit \emph{und} verknüpft.
+      \item Der Benuter gibt seine Suchwörter ein. Dabei kann der Benutzer mehrere Worte verwenden die entsprechned in den Dokumenteneinträgen enthalten sind (Die Reihenfolge ist nicht relevant). Mehrere Wörter werden automatisch logisch mit \emph{und} verknüpft.
       \item Der Benutzer bestätigt seine Eingabe.
-      \item Das System durchsucht seine Datenbank um Literatureinträge mit den eingegebenen Teilworten zu finden.
+      \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
     \end{enumerate}
     %% TODO:
@@ -195,7 +195,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Ziel]Der Benutzer kann komplexe Mittel verwenden um nach möglichen Zeichenfolgend zu suchen.
   \item[Vorbedingung]Der Benutzer befindet sich auf der Seite mit der Suchmaske.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte keine Literatur der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]
@@ -207,7 +207,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 	  \item Bestimmte Felder können direkt angesprochen werden, darunter Titel und Autor. Angesprochen werden die Felder mit z.\,B. „title:``Tim und Struppi''“.
 	\end{itemize}
       \item Der Benutzer bestätigt seine Eingabe.
-      \item Das System durchsucht seine Datenbank um Literatureinträge mit den eingegebenen Teilworten zu finden.
+      \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
     \end{enumerate}
 \end{description}
@@ -219,7 +219,7 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Ziel]Eine vereinfachte Suchmaske ermöglicht allen Benutzern die Nutzung von erweiterten Ausdrücken.
   \item[Vorbedingung]Der Benutzer befindet sich auf der Seite mit der erweiterten Suchmaske.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte keine Literatur der Suche entsprechend gefunden werden.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]
@@ -239,14 +239,14 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Ziel]Der Benutzer kann komplexe Mittel verwenden um nach möglichen Zeichenfolgend zu suchen.
   \item[Vorbedingung]Der Benutzer befindet sich auf einer extra Seite für eine erweiterte Suche.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte keine Literatur der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]
     \begin{enumerate}
       \item Der Benuter gibt seine regulären Ausdrücke ein, die für die Suche verwendet werden sollen. Mehrere reguläre Ausdrücke müssen evtl. mit \emph{and} oder \emph{or} getrennt werden.
       \item Der Benutzer bestätigt seine Eingabe.
-      \item Das System durchsucht seine Datenbank um Literatureinträge mit den eingegebenen Teilworten zu finden.
+      \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
     \end{enumerate}
 \end{description}
@@ -269,19 +269,19 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F221 (Ausleihe)}
 \begin{description}
-  \item[Geschäftsprozess]Der Benutzer entnimmt Literatur der Bibliothek.
-  \item[Ziel]Es gibt eine Übersicht für andere Benutzer welche Bücher verfügbar sind. Es gibt auch eine Übersicht, welche Literatur der Benutzer selbst ausgeliehen hat.
+  \item[Geschäftsprozess]Der Benutzer entnimmt ein Dokument der Bibliothek.
+  \item[Ziel]Es gibt eine Übersicht für andere Benutzer welche Bücher verfügbar sind. Es gibt auch eine Übersicht, welches Dokument der Benutzer selbst ausgeliehen hat.
   \item[Vorbedingung]Der Benutzer ist im System registiert und angemeldet.
-  \item[Nachbedingung Erfolg]Der Benutzer kann eine Literatur der Bibliothek entnehmen, da es im System registiert ist.
+  \item[Nachbedingung Erfolg]Der Benutzer kann ein Dokument der Bibliothek entnehmen, da es im System registiert ist.
   \item[Nachbedingung Fehlschlag]Das Buch ist wahrscheinlich derzeit nicht verfügbar, der Benutzer muss es später nocheinmal versuchen.
   \item[Akteure]Benutzer
-  \item[Auslösendes Ereignis]Die Literatur ändert ihren Status von \emph{verfügbar} auf \emph{verliehen}. Der Benutzer sieht bei dieser Literatur einen Hinweis, dass er sie ausgeliehen hat, zusätzlich zu einer persönlichen Ausleihliste.
+  \item[Auslösendes Ereignis]Das Dokument ändert ihren Status von \emph{verfügbar} auf \emph{verliehen}. Der Benutzer sieht bei diesem Dokument einen Hinweis, dass er sie ausgeliehen hat, zusätzlich zu einer persönlichen Ausleihliste.
   \item[Beschreibung]
     \begin{enumerate}
-      \item Der Benutzer sucht die gewünschte Literatur über die Systemsuche.
-      \item Der Benutzer befindet sich auf der Detail-Ansicht der Literatur.
-      \item Wenn die Literatur verfügbar ist wählt der Benutzer die Option \emph{ausleihen}.
-      \item Das System ändert den Status der Literatur auf \emph{verliehen} und registriert den Benutzer entsprechend.
+      \item Der Benutzer sucht das gewünschte Dokument über die Systemsuche.
+      \item Der Benutzer befindet sich auf der Detail-Ansicht des Dokumentes.
+      \item Wenn das Dokument verfügbar ist wählt der Benutzer die Option \emph{ausleihen}.
+      \item Das System ändert den Status des Dokumentes auf \emph{verliehen} und registriert den Benutzer entsprechend.
     \end{enumerate}
 \end{description}
 
@@ -306,37 +306,37 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F223 (Ausleihe übertragen)}
 \begin{description}
-  \item[Geschäftsprozess]Ein Benutzer $A$ gibt eine Literatur an eine an einen anderen Benutzer $B$ weiter.
+  \item[Geschäftsprozess]Ein Benutzer $A$ gibt ein Dokument an eine an einen anderen Benutzer $B$ weiter.
   \item[Ziel]Der Benutzer $A$ registiert einen anderen Benutzer $B$ als Leihender.
-  \item[Vorbedingung]Der Benutzer $A$ ist derzeit Leihender der Literatur.
-  \item[Nachbedingung Erfolg]Der Benutzer $B$ ist Leihender der Literatur.
-  \item[Nachbedingung Fehlschlag]Der Benutzer $A$ bleibt Leihender der Literatur, es wird nichts an der Datenbank geändert.
+  \item[Vorbedingung]Der Benutzer $A$ ist derzeit Leihender des Dokumentes.
+  \item[Nachbedingung Erfolg]Der Benutzer $B$ ist Leihender des Dokumentes.
+  \item[Nachbedingung Fehlschlag]Der Benutzer $A$ bleibt Leihender des Dokumentes, es wird nichts an der Datenbank geändert.
   \item[Akteure]Leihender Benutzer und zukünftig leihender Benutzer.
   \item[Beschreibung]
     \begin{enumerate}
-      \item Der Benutzer $A$ wählt die Literatur aus.
+      \item Der Benutzer $A$ wählt das Dokument aus.
       \item Der Benutzer $A$ wählt die Option \emph{übertragen} aus.
 	%%TODO oder wählt ihn über ein Dropdown aus?
       \item Der Benutzer $A$ gibt Benutzer $B$ ein.
       \item Das System ändert die Ausleihe auf Benutzer $B$.
     \end{enumerate}
   \item[Erweiterung]
-  \item[Alternativen]Der Benutzer $B$  überträgt die Literatur von Benutzer $A$ auf sich.
+  \item[Alternativen]Der Benutzer $B$  überträgt das Dokument von Benutzer $A$ auf sich.
 \end{description}
 
 \subsection{F224 (Ausleihe zurückgeben)}
 \begin{description}
-  \item[Geschäftsprozess]Der Benutzer bringt eine Literatur zurück in die Bibliothek.
-  \item[Ziel]Die Literatur ist wieder \emph{verfügbar}.
-  \item[Vorbedingung]Der Benutzer ist Leihender der Literatur.
-  \item[Nachbedingung Erfolg]Der Benutzer ist nicht mehr Leihender der Literatur und die Literatur ist wieder \emph{verfügbar}
+  \item[Geschäftsprozess]Der Benutzer bringt ein Dokument zurück in die Bibliothek.
+  \item[Ziel]Das Dokument ist wieder \emph{verfügbar}.
+  \item[Vorbedingung]Der Benutzer ist Leihender des Dokumentes.
+  \item[Nachbedingung Erfolg]Der Benutzer ist nicht mehr Leihender des Dokumentes und die Literatur ist wieder \emph{verfügbar}.
   \item[Nachbedingung Fehlschlag]Der Benutzer wird über den Fehler informiert und wird gebeten, es später erneut zu versuchen.
   \item[Akteure]Benutzer des Institutes.
   \item[Beschreibung]
     \begin{enumerate}
-      \item Der Benutzer wählt die Literatur aus.
-      \item Der Benutzer wählt auf der Literaturseite die Rückgabe aus.
-      \item Das SysEintem ändert den Status der Literatur und verschiebt den Benutzer in die History der Leihenden.
+      \item Der Benutzer wählt das Dokument aus.
+      \item Der Benutzer wählt auf der Dokumentenseite die Rückgabe aus.
+      \item Das System ändert den Status des Dokumentes und verschiebt den Benutzer in die History der Leihenden.
     \end{enumerate}
   \item[Erweiterung]Externe Benutzer können ihr Buch an jede Person zurück geben und von denen Entsprechend als Zurückgegeben markieren lassen.
   \item[Alternativen]
@@ -392,27 +392,34 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 \subsection{F227 (Ausleihhistory)}
 \begin{description}
     %% TODO Sichtbarkeit optional?
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Prüfung wer das Dokument bereits ausgeliehen hat.
+  \item[Ziel]Die Benutzer bekommen Einsicht in die Liste der Personen die dieses Dokument bereits ausgeliehen haben.
+  \item[Vorbedingung]Das Dokument ist im System eingetragen und der Benutzer ist am System angemeldet.
+  \item[Nachbedingung Erfolg]Das Dokument wurde bereits ausgeliehen, daher bekommt der Benutzer die Liste.
+  \item[Nachbedingung Fehlschlag]Das Dokument wurde noch nicht ausgeliehen oder es gab einen anderen Fehler, in beiden Fällen wird das dem Benutzer gemeldet.
+  \item[Akteure]Benutzer
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer befindet sich auf der Dokumentenansicht.
+      \item Das System stellt dem Benutzer eine Liste mit der Ausleihhistory.
+    \end{enumerate}
   \item[Erweiterung]
-  \item[Alternativen]
+  \item[Alternativen]\emph{optional:} Die Ausleihhistory ist nur für Benutzer besonderer Gruppen zugänglich.
 \end{description}
 
 \subsection{F228 (Entleihliste)}
 \begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Vom Benutzer geliehene Dokumente.
+  \item[Ziel]Der Benutzer sieht die Dokumente die er selbst geliehen hat und für die er gebürgt hat ein.
+  \item[Vorbedingung]Der Benutzer ist im System angemeldet.
+  \item[Nachbedingung Erfolg]Der Benutzer erhält eine Liste über alle Dokumente die er geliehen hat und für die er gebürgt hat.
+  \item[Nachbedingung Fehlschlag]Der Benutzer wird über den enstandenen Fehler informiert.
+  \item[Akteure]Benutzer
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer wählt seine persönliche Seite über die Entleihe aus.
+      \item Das System gibt die beschriebene Seite dem Benutzer zurück.
+    \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
@@ -420,13 +427,18 @@ Die Literaturfunkionen beschreiben jeden direkten Umgang mit der durch das Syste
 \subsection{F231 (\BibTeX -Export)}
 \begin{description}
     %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Dokumentinformationen für \BibTeX-Einbindung herunterladen.
+  \item[Ziel]Der Benutzer erhält alle notwendigen Informationen zu einem Buch im \BibTeX-Format um diese z.\,B. in ein eigenes Dokument ein zu binden.
+  \item[Vorbedingung]Der Benutzer befindet sich auf der Detailsseite des Dokumentes.
+  \item[Nachbedingung Erfolg]Der Benutzer erhält den Code für \BibTeX .
+  \item[Nachbedingung Fehlschlag]Der Benutzer wird von dem System über den Fehler informiert.
+  \item[Akteure]Gast/Benutzer
   \item[Beschreibung]
+    \begin{enumerate}
+      \item Der Benutzer wählt die Detailseite des gewünschten Dokumentes aus.
+      \item Das System bietet dem Benutzer einen Link \emph{\BibTeX}, der vom Benutzer ausgewählt wird.
+      \item Das System gibt dem Benutzer die entsprechenden \BibTeX -Informationen zurück.
+    \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
