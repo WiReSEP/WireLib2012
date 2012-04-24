@@ -1,46 +1,75 @@
-% Kapitel 7
-%-------------------------------------------------------------------------------
-
-
 \chapter{Benutzeroberfläche}
-In diesem Kapitel werden grundlegende Anforderungen an die Benutzungsoberfläche
-festgelegt, z. B. Fensterlayout, Dialogstruktur und Mausbedienung. Die
-Festlegungen sollen sich auf die produktspezifischen Ausprägungen beschränken.
-Details werden durch Prototypen und Pilotsysteme spezifiziert (ggf. im Anhang
-des Pflichtenhefts).
 
-Gibt es verschiedene Rollen, die das Produkt benutzen (z. B. Sachbearbeiter,
-Administrator), dann sind für jede Rolle die Zugriffsrechte und die davon
-abhängigen sichtbaren Benutzeroberflächen (Menüs, Fenster, Benutzerdialoge,
-\ldots) aufzuführen.
+/B10/
 
-Die einzelnen Anforderungen werden analog wie die Funktionsanforderungen
-nummeriert, allerdings mit dem vorangesetzten Buchstaben B.
+\section{Seitenlayout}
 
-Bei Produkten, die keine Benutzeroberfläche haben, werden hier analog die
-Schnittstellenkonventionen beschreiben, die für das anwendende System wichtig
-sind.
+ \begin{itemize}
+   \item Bibliothek
+   \begin{itemize}
+    \item Suche
+      \begin{itemize}
+       \item Einfache Suche
+       \item Erweiterte Suche
+       \end{itemize}
+      \item Rückgabe
+      \item Einloggen
+    \end{itemize}
+    \item Literaturverzeichnis
+    \item Administration
+ \end{itemize}
 
-Beispiele:
 \begin{itemize}
-\item /B10/
-Standardmäßig sind das Windows-Gestaltungs-Regelwerk sowie die Norm ISO
-9241-10: 1996 (Ergonomische Anforderungen für Bürotätigkeiten mit
-Bildschirmgeräten, Teil 10: Grundsätze der Dialoggestaltung) in allen
-Benutzeroberflächen zu beachten.
-
-\item /B20/ Folgende Rollen sind zu unterscheiden: \\
-\begin{tabular}{|c|c|c|}
-  \hline
-  Rolle &  Rechte & Benutzeroberfläche\\
-  \hline
-  Instandhaltung &  /F30/, /F40/, /F50/  & Funktionsspezifische Eingabemasken,
-                                                                        \ldots\\
-  \hline
-  Werksleitung & /F60/, /F70/  & \ldots\\
-  \hline
-  ...&...&...\\
-  \hline
-  \end{tabular}
-
+\item Fenster mit der jeweiligen Suchausgabe 
+\item Anzeige, welcher Nutzer gerade aktiv ist	(falls eingeloggt)
 \end{itemize}
+  	 	
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{bilder/layout2.jpg}
+\caption[lol]{Beispiel für ein Seitenlayout}
+\end{figure}
+
+
+Das Beispiel (siehe Abbildung auf nächster Seite) zeigt nur den geplanten Seitenaufbau, sollte der Benutzer keinen
+Account besitzen, d.h er kann lediglich die Dokumente durchsuchen.
+
+/B20/
+
+Darüber hinaus sind mehrere Nutzergruppen geplant:
+
+\begin{enumerate}
+\item Besucher
+\item externer Benutzer
+\item Normaler Benutzer
+\item Bibliothekar
+\item Verwaltung
+\item Administrator
+\end{enumerate}
+
+Je nach Nutzergruppe verändert sich die Navigation. So erscheint bei einem Bibliothekar zusätzlich eine 
+Schaltfläche "Eintragen", mit der neu erworbene Dokumente in die Datenbank aufgenommen werden können.oder wir
+
+
+/B30/
+
+Bei einem Klick auf ein Dokument des Suchergebnisses erscheinen genauere Informationen über das Dokument (Titel,Autor,Jahr etc.), sowie
+sein Status (ausgeliehen, vorhanden, verloren).
+
+/B40/
+
+Weiterhin ist eine Account-Verwaltungsseite geplant.
+\newline
+\newline
+Hier kann der Nutzer, je nach Rechten:
+
+\begin{itemize}
+\item E-Mail Adresse ändern
+\item sich eine Liste aller ausgeliehenen Dokumente anzeigen lassen
+\item persönliche Daten ändern
+\end{itemize}
+
+
+
+
+
+ 
