@@ -6,40 +6,40 @@
 \chapter{Technische Produktumgebung}
 
 In diesem Kapitel wird die technische Umgebung des Produktes beschrieben. Bei
-Client / Server - Anwendungen ist die Umgebung jeweils für Client und Server
+Client / Server  Anwendungen ist die Umgebung jeweils für Client und Server
 getrennt anzugeben.
 
 \section{Software}
-Hier wird angegeben, welche Softwaresysteme (z. B. Betriebssystem, Datenbank,
-Fenstersystem, usw.) zur Verfügung stehen.\\
+\begin{itemize}
+\item Server-Betriebssystem:              Linux
+\item Client-Betriebssystem:                Browser
+\item Frameworkprogramm :                Django
+\item Programmiersprache:                  Python 2.6+
+\item Zur Erstellung der Datenbank:   SQLite
+\end{itemize}
 
-Beispiel:\\
-Server-Betriebssystem: Linux.\\
-Client-Betriebssystem: Windows XP oder Browser (für Fernwartung).\\
 
 
 \section{Hardware}
-Hier werden die Hardware Komponenten (z. B. CPU, Peripherie) in minimaler und
-maximaler Konfiguration aufgeführt, die für den Produkteinsatz vorgesehen
-sind.\\
-Beispiel:\\
-Server: PC\\
-Client: PC und browserfähiges Gerät mit Grafikbildschirm (für Fernwartung).
-
+\begin{itemize}
+\item Server: PC
+\item Client: Computer
+\end{itemize}
 
 \section{Orgware}
-Hier wird aufgeführt, unter welchen organisatorischen Randbedingungen bzw.
-Voraussetzungen das Produkt eingesetzt werden soll.
-Beispiel:\\
-Netzwerkverbindung des Servers zum Computersystem der Testmaschinen, von dem
-die Abmeldung der Reifen nach durchgeführtem Testlauf kommt.
+
+Durch Internetverbindung zum WebsServer soll man sich über die Dokumente in der Bibliothek informieren können, und 
+diese ausleihen oder je nach Rolle anderweitig Verwalten. Die Verbindung zum Webserver wird per https  gesichert. 
 
 
 
 \section{Produktschnittstellen}
-Wird das Produkt in eine bestehende oder geplante Produktfamilie eingeordnet,
-so werden hier die entsprechenden Schnittstellen definiert.
-Beispiel:\\
-Die Kommunikation mit der unterlagerten SPS erfolgt über getrennt definiertes
-(eigenes Pflichtenheft) TCP/IP - Protokoll. Analoges gilt für die Kommunikation
-mit dem Testmaschinen-Rechner.
+
+Es wird folgende Schnittstellen geben:
+\begin{itemize}
+\item Allegro - zum importieren der Daten aus der alten Datenbank, und der Möglichkeit der Uni-Bibliothek unsere Daten zu verwerten
+\item BibTex - zum importieren von BibTex Dateien
+\item GoogleBooks - um Links und Bilder importieren zu können
+\end{itemize}
+
+
