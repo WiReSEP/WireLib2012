@@ -2,35 +2,55 @@
 %------------------------------------------------------------------------------------------
 
 \chapter{Produktdaten}
-5  Produktdaten
-Die langfristig zu speichernden Daten sind aus Benutzersicht detaillierter zu
-beschreiben. Dabei bietet sich eine formale Beschreibung (z. B. in Form eines
-Data Dictionary) an, um eine größere Präzisierung zu erreichen.
+/D10/ Daten über einen Nutzer: 
+\begin{itemize}
+  \item Daten werden von der Verwaltung eingegeben.
+  \item Bestandteile: 
+  \begin{itemize}
+    \item[*] User: 
+    \begin{itemize}
+      \item[-] Username
+      \item[-] Vorname
+      \item[-] Nachname
+      \item[-] E-Mail
+      \item[-] Adresse
+      \item[-] Telefon
+      \item[-] den Posten in der Datenbank
+    \end{itemize}
+    \item[*] Externe: 
+    \begin{itemize}
+      \item[-] dasselbe wie beim User bis auf den Usernamen und den Posten
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
 
-Bitte die Darstellung gemäß Beispiel verwenden:\\
--  /D10/: fortlaufende Nummerierung der Daten\\
--  /LD10/: vordefinierte Daten aus dem Lastenheft (falls vorhanden).\\
+\newpage
 
-Beispiel: Lagerdaten\\
-/D10/ (/LD10/) Daten der Lagerplätze (max. 5.000):\\
--  Modulnummer,\\
--  Regalseite,\\
--  Regalspalte,\\
--  Regalzeile,\\
--  Fachhöhe,\\
--  Platzsperre (0 = nicht gesperrt, 1 = gesperrt für Einlagerung, 2 = gesperrt
-   für Auslagerung, 3 = gesperrt für alle Zugriffe),\\
--  Reifenstatus (0 = frei,1 = reserviert für Einlagerung, 2= belegt, 3 =
-   reserviert für Auslagerung),\\
--  Reifenseriennummer.\\
+/D20/ Daten über Dokumente: 
+\begin{itemize}
+  \item Dateneingabe erfolgt über den Bibliothekar.
+  \item Löschen eines Dokumentes aus der Datenbank ist allgemein nicht möglich.
+  \item Bestandteile: 
+  \begin{itemize}
+    \item[*] Titel
+    \item[*] Autoren
+    \item[*] ISBN
+    \item[*] Kategorie
+    \item[*] Status (0 = vorhanden, 1 = ausgeliehen, 2 = bestellt, 3 = verloren gegangen)
+    \item[*] weitere Eingaben möglich
+  \end{itemize}
+\end{itemize}
 
-/D40/ (/LD40/) Daten der Module (max. 20):\\
--  Modulnummer,\\
--  Sperrkennzeichen (0 = nicht gesperrt, 1 = gesperrt für Einlagerung, 2 =
-   gesperrt für Auslagerung, 3 = gesperrt für alle Zugriffe),\\
--  maximale Kapazität,\\
--  freie Kapazität,\\
--  belegte Plätze (ergibt sich aus Status und Zahl der zugeordneten
-   Lagerplätze, wird aus Geschwindigkeitsgründen allerdings redundant
-   mitgeführt).
-
+/D30/ Verleihdaten 
+\begin{itemize}
+  \item Zu jedem Dokument wird eine Verleihhistorie erstellt.
+  \item Die Daten können nicht gelöscht werden. Sie werden lediglich bei weiteren Verleihungen erweitert.
+  \item Bestandteile: 
+  \begin{itemize}
+    \item[*] Ausleihdatum
+    \item[*] Rückgabedatum
+    \item[*] Entleiher
+    \item[*] evtl. einen Bürgen
+    \item[*] das Dokument
+  \end{itemize}
+\end{itemize}
