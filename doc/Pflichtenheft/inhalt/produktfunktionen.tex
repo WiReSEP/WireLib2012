@@ -101,10 +101,10 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \begin{description}
   \item[Geschäftsprozess]Dokument hinzufügen über das Webinterface.
   \item[Ziel]Eine neu in die Bibliothek aufgenommenes Dokument in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
-  \item[Vorbedingung]Der Benutzer hat sich bereits erfolgreich Angemeldet und dat die Rolle \emph{Bibliothekar}. Der Benutzer ist im Besitz aller Daten die zur Eintragung des Dokumentes erforderlich ist.
+  \item[Vorbedingung]Der Benutzer hat sich bereits erfolgreich Angemeldet und hat die Rolle \emph{Bibliothekar}. Der Benutzer ist im Besitz aller Daten die zur Eintragung des Dokumentes erforderlich ist.
   \item[Nachbedingung Erfolg]Das neue Dokument befindet sich im System (inkl. Eintrag in der Datenbank) und besitzt entweder den Status \emph{verfügbar} oder \emph{bestellt}.
-  \item[Nachbedingung Fehlschlag]Der Benutzer erhält eine Meldung zum Fehlschag und den Hinweis die eingegebenen Daten zu prüfen. Es findet kein Eintrag in die Datenbank statt.
-  \item[Akteure]Benutzer/Bibliethekar
+  \item[Nachbedingung Fehlschlag]Der Benutzer erhält eine Meldung zum Fehlschlag und den Hinweis die eingegebenen Daten zu prüfen. Es findet kein Eintrag in die Datenbank statt.
+  \item[Akteure]Benutzer/Bibliothekar
   \item[Auslösendes Ereignis]Der Benutzer bekommt eine Übersicht zum neu eingetragenen Dokument.
   \item[Beschreibung]
     \begin{enumerate}
@@ -173,7 +173,11 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]\hfill
     \begin{enumerate}
+<<<<<<< HEAD
       \item Der Benutzer gibt seine Suchwörter ein. Dabei kann der Benutzer mehrere Worte verwenden die entsprechned in den Dokumenteneinträgen enthalten sind (Die Reihenfolge ist nicht relevant). Mehrere Wörter werden automatisch logisch mit \emph{und} verknüpft.
+=======
+      \item Der Benutzer gibt seine Suchwörter ein. Dabei kann der Benutzer mehrere Worte verwenden die entsprechend in den Dokumenteneinträgen enthalten sind (Die Reihenfolge ist nicht relevant). Mehrere Wörter werden automatisch logisch mit \emph{und} verknüpft.
+>>>>>>> 8773fa3f7a4458fed7aed46d6b0a30c6e96976e8
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
@@ -187,10 +191,10 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \label{F:extSuche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer kann bei der Suche Teilworte verwenden.
-  \item[Ziel]Der Benutzer kann komplexe Mittel verwenden um nach möglichen Zeichenfolgend zu suchen.
+  \item[Ziel]Der Benutzer kann komplexe Mittel verwenden um nach möglichen Zeichenfolgen zu suchen.
   \item[Vorbedingung]Der Benutzer befindet sich auf der Seite mit der Suchmaske.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdruck angegeben. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]\hfill
@@ -220,7 +224,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer öffnet die Maske für die erweiterte Suche.
-      \item Das System stellt dem Benutzer exta Felder die ihm die Möglichkeiten von \nameref{F:extSuche} ermöglichen ohne die Kommandos zu kennen.
+      \item Das System stellt dem Benutzer extra Felder die ihm die Möglichkeiten von \nameref{F:extSuche} ermöglichen ohne die Kommandos zu kennen.
       \item Der Benutzer bestätigt die eingetragenen Parameter.
       \item Das System gibt dem Benutzer die Liste mit den Suchergebnissen zurück.
     \end{enumerate}
@@ -231,15 +235,19 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \label{F:regexSuche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer kann bei der Suche reguläre Ausdrücke verwenden.
-  \item[Ziel]Der Benutzer kann komplexe Mittel verwenden um nach möglichen Zeichenfolgend zu suchen.
+  \item[Ziel]Der Benutzer kann komplexe Mittel verwenden um nach möglichen Zeichenfolgen zu suchen.
   \item[Vorbedingung]Der Benutzer befindet sich auf einer extra Seite für eine erweiterte Suche.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdruck angegeben. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]\hfill
     \begin{enumerate}
+<<<<<<< HEAD
       \item Der Benutzer gibt seine regulären Ausdrücke ein, die für die Suche verwendet werden sollen. Mehrere reguläre Ausdrücke müssen evtl. mit \emph{and} oder \emph{or} getrennt werden.
+=======
+      \item Der Benutzer gibt seine regulären Ausdrücke ein, die für die Suche verwendet werden sollen. Mehrere reguläre Ausdrücke müssen eventuell mit \emph{and} oder \emph{or} getrennt werden.
+>>>>>>> 8773fa3f7a4458fed7aed46d6b0a30c6e96976e8
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
@@ -253,7 +261,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Vorbedingung]Der Benutzer hat bereits seine Suchergebnisse.
   \item[Nachbedingung Erfolg]Das Ergebnis wird nach der vom Benutzer gewünschten Spalte sortiert.
   \item[Nachbedingung Fehlschlag]Dieser Fall sollte im System nicht möglich sein.
-  \item[Aktuere]Benutzer
+  \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Aktualisierung der Seite.
   \item[Beschreibung]\hfill
     \begin{enumerate}
@@ -337,13 +345,13 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F225 (Ausleihe verlohren melden)}
+\subsection{F225 (Ausleihe verloren melden)}
 \begin{description}
     %%TODO: 	- email versenden?
     %%		- Schwarzes Brett der Verlohrenen Dokumente?
-  \item[Geschäftsprozess]Ein Dokument das ausgeliehen wurde oder als Verfügbar gilt, wird als verlohren gemeldet.
+  \item[Geschäftsprozess]Ein Dokument das ausgeliehen wurde oder als Verfügbar gilt, wird als verloren gemeldet.
   \item[Ziel]Nicht mehr auffindbare Dokumente können allgemein als Vermisst gemeldet werden.
-  \item[Vorbedingung]Das Dokument ist bereits im System registiert.
+  \item[Vorbedingung]Das Dokument ist bereits im System registriert.
   \item[Nachbedingung Erfolg]Das Dokument gilt offiziell als Vermisst.
   \item[Nachbedingung Fehlschlag]Der Fehler wird vom System an den Benutzer gemeldet.
   \item[Akteure]Benutzer
@@ -351,7 +359,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Detailseite des Dokumentes
       \item Der Benutzer wählt eine Option \emph{Vermisst melden}.
-      \item Das System registiert den Vorgang.
+      \item Das System registriert den Vorgang.
     \end{enumerate}
   \item[Erweiterung]\hfill
     \begin{itemize}
@@ -441,119 +449,87 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \section{Rollen}
 \begin{description}
-  \item[F301-309]Rechte
-  \item[F311-319]Rollenadministration
-  \item[F321-329]Rollenzuweisungen
+  \item[F301-309]Rollen- und Benutzeradministration
 \end{description}
 
-\subsection{F301 (Literaturimport)}
+\subsection{F301 (Benutzerverwaltung)}
 \begin{description}
     %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
-  \item[Beschreibung]
+  \item[Geschäftsprozess]Benutzerverwaltung
+  \item[Ziel]Registrierungsanfragen werden beantwortet und vorhanden Benutzer bearbeitet
+  \item[Vorbedingung]Ausführender Benutzer hat ausreichend Rechte
+  \item[Nachbedingung Erfolg]Benutzer wurde erfolgreich bearbeitet
+  \item[Nachbedingung Fehlschlag]Änderungen wurden nicht übernommen
+  \item[Akteure]Administrator oder Benutzerverwalter
+  \item[Beschreibung]Registrierte Benutzer werden gelöscht und eingehende Registrierungsanfragen werden beantwortet
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
 
-\subsection{F302 (Literaturausleihe externer)}
+\subsection{F305 (UB-Export)}	%TODO
 \begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
-  \item[Beschreibung]
+    %% TODO: optional?
+  \item[Geschäftsprozess]Export zur Bibliothek der TU Braunschweig
+  \item[Ziel]Gewählte Bücher werden an die Uni-Bibliothek übermittelt
+  \item[Vorbedingung]Ausführender Benutzer hat genügend Rechte
+  \item[Nachbedingung Erfolg]Buch wurde erfolgreich an die Uni-Bibliothek übertragen
+  \item[Nachbedingung Fehlschlag]Buch wurde nicht an die Uni-Bibliothek übertragen
+  \item[Akteure]Benuzter mit ausreichend Rechten
+  \item[Beschreibung]Die gewählten Bücher werden in das Allegro-Format der Uni-Bibliothek konvertiert und übermittelt
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
 
-\subsection{F303 (Benutzerverwaltung)}
+\subsection{F306 (Derzeitiger Leihender)}    %TODO
 \begin{description}
     %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Leihenden abrufen
+  \item[Ziel]Ein Benutzer, der dieses Recht besitzt, kann bei verliehenen Büchern sehen, an wen das Buch verliehen ist.
+  \item[Vorbedingung]Das gewählte Buch ist verliehen und der Benutzer verfügt über ausreichend Rechte
+  \item[Nachbedingung Erfolg]Der Benutzer bekommt den derzeitig Ausleihenden angezeigt
+  \item[Nachbedingung Fehlschlag]Der Leihstatus konnte nicht abgerufen werden
+  \item[Akteure]Benutzer mit ausreichend Rechten
   \item[Beschreibung]
+  \begin{enumerate}
+  \item Benutzer wählt gewünschtes Buch aus
+  \item Bei ausreichenden Rechten wird der derzeitig ausleihende angezeigt
+  \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
 
-\subsection{F304 (Verleihstatus übertragen)}
+\subsection{F302 (Rechtezuweisung für Rollen)} 
 \begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Eine Benutzerrolle bekommt ein oder mehrere Rechte zugewiesen
+  \item[Ziel]Eine Benutzerrolle kann nachträglich im Umfang erweitert oder eingeschränkt werden
+  \item[Vorbedingung]Ändernder Nutzer hat ausreichende Rechte
+  \item[Nachbedingung Erfolg]Die Rolle hat neue Rechte bekommen und/oder alte Rechte verloren
+  \item[Nachbedingung Fehlschlag]Die Rechte wurden nicht übernommen
+  \item[Akteure]Administrator oder Benutzerverwalter
   \item[Beschreibung]
+  \begin{enumerate}
+  \item Administrator oder Benutzerverwalter wählt zu ändernde Rolle aus
+  \item Zugeteilte Rechte werden angepasst
+  \item (optional:) Nutzer mit der entsprechenden Rolle bekommen eine E-Mail zugeschickt mit dem Hinweis auf die Änderung
+  \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
 
-\subsection{F305 (UB-Export)}
+\subsection{F303 (Benutzer Rolle(n) zuweisen)}
 \begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
+  \item[Geschäftsprozess]Benutzer mit entsprechenden Rechten verteilen Rollen an andere Benutzer
+  \item[Ziel]Ein Benutzer bekommt eine Rolle zugeteilt von einem Administrator oder einem Benutzerverwalter
+  \item[Vorbedingung]Der ändernde Benutzer hat ausreichende Rechte
+  \item[Nachbedingung Erfolg]Der zu ändernde Benutzer hat eine neue Rolle zugewiesen bekommen
+  \item[Nachbedingung Fehlschlag]Der zu ändernde Benutzer hat die Rolle nicht gewechselt
+  \item[Akteure]Administrator oder Benutzerverwalter
   \item[Beschreibung]
-  \item[Erweiterung]
-  \item[Alternativen]
-\end{description}
-
-\subsection{F306 (Derzeitiger Leihender)}
-\begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]Ein Benutzer der dieses Recht besitzt kann bei verliehenen Büchern sehen, an wen das Buch verliehen ist.
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
-  \item[Beschreibung]
-  \item[Erweiterung]
-  \item[Alternativen]
-\end{description}
-
-\subsection{F311 (Rollengruppe Rechte zuwiesen)} 
-\begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
-  \item[Beschreibung]
-  \item[Erweiterung]
-  \item[Alternativen]
-\end{description}
-
-\subsection{F312 (Benutzer Rolle(n) zuweisen)}
-\begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]
-  \item[Ziel]
-  \item[Vorbedingung]
-  \item[Nachbedingung Erfolg]
-  \item[Nachbedingung Fehlschlag]
-  \item[Akteure]
-  \item[Beschreibung]
+  \begin{enumerate}
+  \item Administrator oder Benutzerverwalter wählt zu ändernden Benutzer aus
+  \item Eine neue Rolle wird eingetragen
+  \item (optional:) Der geänderte Nutzer bekommt eine E-Mail zugeschickt mit dem Hinweis auf die Änderung
+  \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
