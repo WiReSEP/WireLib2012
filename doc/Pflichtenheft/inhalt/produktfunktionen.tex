@@ -1,6 +1,5 @@
 % Kapitel 4
 %-------------------------------------------------------------------------------
-%% TODO: Literatur durch Dokument ersetzen.
 
 \chapter{Produktfunktionen}
 
@@ -9,16 +8,15 @@
 \label{F:Anmeldung}
 \begin{description}
   \item[Geschäftsprozess]Anmeldung
-    %% TODO: Meldet sich der Gastnutzer überhaupt an?
   \item[Ziel]Ein Benutzer meldet sich erfolgreich am System an.
   \item[Vorbedingung]Der Benutzer ist bereits auf dem System registriert und besitzt ein Passwort.
   \item[Nachbedingung Erfolg]Der Benutzer findet sich auf seiner Benutzerseite wieder.
-  \item[Nachbedingung Fehlschlag]Der Benutzer bekommt eine Fehlermeldung.
+  \item[Nachbedingung Fehlschlag]Das Passwort wurde falsch eingegeben. Der Benutzer erhält eine Meldung, dass der Benutzer oder das Password falsch eingegeben wurden.
   \item[Akteure]Gast/Benutzer
   \item[Auslösendes Ereignis]Der Benutzer erhält die Möglichkeiten sich Dokumente zu leihen oder den Status geliehener Dokumente zu ändern.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benutzer wählt den Link „Login“ auf der Webseite aus.
+      \item Der Benutzer wählt den Link \emph{Login} auf der Webseite aus.
       \item Der Benutzer gibt seinen Nutzernamen und sein Passwort ein.
       \item Der Benutzer bestätigt seine Eingaben.
       \item Das System prüft die Korrektheit der Eingaben.
@@ -26,42 +24,41 @@
     \end{enumerate}
 \end{description}
 
-\subsection{\emph{optional:} F101 (Anmeldung über AFS)}
+\subsection{\emph{optional:} F101 (Anmeldung über A\,F\,S)}
 \label{F:AnmeldungAFS}
 \begin{description}
-  \item[Geschäftsprozess]Login eines Mitgliedes der Universität.
-    %% TODO: Meldet sich der Gastnutzer überhaupt an?
-  \item[Ziel]Ein Benutzer meldet sich erfolgreich am System an.
-  \item[Vorbedingung]Der Benutzer besitzt einen AFS-Account und besitzt sein Passwort.
+  \item[Geschäftsprozess]Anmeldung eines Institusnutzers.
+  \item[Ziel]Ein Benutzer meldet sich über seinen G\,I\,T\,Z-Account am System an.
+  \item[Vorbedingung]Der Benutzer besitzt einen A\,F\,S-Account, ist auf dem System registiert und hat ein gültiges Passwort.
   \item[Nachbedingung Erfolg]Der Benutzer findet sich auf einer persönlichen Benutzerseite wieder.
   \item[Nachbedingung Fehlschlag]Der Benutzer bekommt eine Fehlermeldung.
   \item[Akteure]Gast/Benutzer
   \item[Auslösendes Ereignis]Der Benutzer erhält die Möglichkeiten sich Dokumente zu leihen oder den Status geliehener Dokumente zu ändern.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benutzer wählt den Link „Login“ auf der Webseite aus.
+      \item Der Benutzer wählt den Link \emph{Login} auf der Webseite aus.
       \item Der Benutzer gibt seinen Nutzernamen und sein Passwort ein.
       \item Der Benutzer bestätigt seine Eingaben.
-      \item Das System prüft die Korrektheit der Eingaben indem sie über das AFS-System der TU validiert werden.
+      \item Das System prüft die Korrektheit der Eingaben indem sie über das A\,F\,S-System der T\,U validiert werden.
       \item Das System leitet den Benutzer entsprechend der Korrektheit seiner Daten weiter.
     \end{enumerate}
 \end{description}
 
-\subsection{F102 (Anbindung an die UB)}
+\subsection{F102 (Anbindung an die U\,B)}
 \begin{description}
   \item[Geschäftsprozess]Übertragung der Institutsbibliothek an die Universitätsbibliothek.
-  \item[Ziel]Angleichung der im UB-Allegro verfügbaren Daten über die Institutsbibliothek.
+  \item[Ziel]Angleichung der im U\,B-Allegro verfügbaren Daten über die Institutsbibliothek.
   \item[Vorbedingung]Keine.
-  \item[Nachbedingung Erfolg]Der Benutzer erhält eine Datei mit den Daten im Allegro-Format, die er an die UB per Mail verschicken kann.
+  \item[Nachbedingung Erfolg]Der Benutzer erhält eine Datei mit den Daten im Allegro-Format, die er an die U\,B per Mail verschicken kann.
   \item[Nachbedingung Fehlschlag]Das System soll die Export-Funktion nur berechtigten Benutzern bieten, damit soll ein Fehlschlag in der Bedienung abgefangen werden. Sollte der Vorgang des Parsens einen Fehler erzeugen (z.\,B. durch eine gesperrte Datenbank), erhält der Benutzer die Bitte es später noch einmal zu versuchen.
   \item[Akteure]Benutzer
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer fordert über das Webinterface die Allegro-Datei an.
       \item Das System überträgt die Dokumente der Datenbank in das Allegro-Format.
-      \item Das System gibt dem Benutzer eine Datei zum Download, die der Benutzer manuell an die UB versenden kann.
+      \item Das System gibt dem Benutzer eine Datei zum Download, die der Benutzer manuell an die U\,B versenden kann.
     \end{enumerate}
-  \item[Erweiterung]
+  \item[Erweiterung]\hfill
     \begin{itemize}
       \item \emph{optional} Das System übernimmt das versenden der E-Mail.
       \item \emph{optional} Das System versendet die Datei automatisch nachdem ein Buch zum System hinzugefügt wurde.
@@ -75,13 +72,13 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \subsection{F201 (\BibTeX-Import)}
 \begin{description}
   \item[Geschäftsprozess]Dokumente hinzufügen mit \BibTeX.
-  \item[Ziel]Eine neu in die Bibliothek aufgenommene Dokumente in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
+  \item[Ziel]Neu in die Bibliothek aufgenommene Dokumente in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
   \item[Vorbedingung]Der Benutzer hat sich bereits erfolgreich Angemeldet und hat die Rolle \emph{Bibliothekar}. Der Benutzer ist im Besitz einer \BibTeX -Datei mit mindestens einem eingetragenen Dokument.
   \item[Nachbedingung Erfolg]Das neue Dokument befindet sich im System (inkl. Eintrag in der Datenbank) und besitzt entweder den Status \emph{verfügbar} oder \emph{bestellt}
   \item[Nachbedingung Fehlschlag]Der Benutzer erhält eine Meldung zum Fehlschlag und den Hinweis die \BibTeX -Datei zu überprüfen. Es findet kein Eintrag in die Datenbank statt.
   \item[Akteure]Benutzer/Bibliothekar
   \item[Auslösendes Ereignis]Der Benutzer bekommt eine Übersicht zu neu eingetragenen Dokumenten.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Seite zur \BibTeX einpflege.
       \item Der Benutzer wählt eine \BibTeX -Datei von seinem Rechner.
@@ -127,14 +124,13 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F203 (Editieren von Dokumenten)}
 \begin{description}
-    %% TODO:
   \item[Geschäftsprozess]Der Eintrag eines Dokumentes wird verändert.
   \item[Ziel]siehe oben.
-  \item[Vorbedingung]Das Dokument exestiert im System.
+  \item[Vorbedingung]Das Dokument existiert im System.
   \item[Nachbedingung Erfolg]Die Änderungen waren zulässig und werden in die Datenbank übernommen.
   \item[Nachbedingung Fehlschlag]Die Änderungen waren nicht zulässig und der Benutzer wird auf den Eingabefehler aufmerksam gemacht.
   \item[Akteure]Bibliothekar oder Administrator
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer wählt die Option \emph{Dokument editieren}
       \item Das System leitet den Benutzer an eine Seite ähnlich zu \nameref{F:Web-Import}.
@@ -145,17 +141,16 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F204 (Löschen von Dokumenten)}
+\subsection{\emph{optional:} F204 (Löschen von Dokumenten)}
 \label{F:Löschen}
 \begin{description}
-    %% TODO:
   \item[Geschäftsprozess]Das Löschen eines Dokumentes aus dem System.
-  \item[Ziel]Das Dokument ist nicht mehr im System gespeichert wie auch alle weiteren Informationen zu dem Dokument.
+  \item[Ziel]Das Dokument wird vollständig aus dem System entfernt wie auch alle im Bezug stehenden Daten.
   \item[Vorbedingung]Das Dokument ist als \emph{vermisst} markiert.
-  \item[Nachbedingung Erfolg]Keine Information zu dem Dokument exestiert mehr im System.
+  \item[Nachbedingung Erfolg]Keine Information zu dem Dokument existiert mehr im System.
   \item[Nachbedingung Fehlschlag]Der Fehler wird abgefangen und die Datenbank wird nicht verändert.
   \item[Akteure]Administrator
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Administrator wählt auf der Dokumentenseite die Option \emph{Dokument löschen}.
       \item Das System bittet den Administrator um Bestätigung.
@@ -170,15 +165,15 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \label{F:Suche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer sucht im System einen bestimmten Dokumenteneintrag.
-  \item[Ziel]Der Benuter bekommt alle seiner Suche entsprechenden Einträge.
+  \item[Ziel]Der Benutzer bekommt alle seiner Suche entsprechenden Einträge.
   \item[Vorbedingung]Der Benutzer befindet sich auf der Seite mit der Suchmaske.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
   \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benuter gibt seine Suchwörter ein. Dabei kann der Benutzer mehrere Worte verwenden die entsprechned in den Dokumenteneinträgen enthalten sind (Die Reihenfolge ist nicht relevant). Mehrere Wörter werden automatisch logisch mit \emph{und} verknüpft.
+      \item Der Benutzer gibt seine Suchwörter ein. Dabei kann der Benutzer mehrere Worte verwenden die entsprechned in den Dokumenteneinträgen enthalten sind (Die Reihenfolge ist nicht relevant). Mehrere Wörter werden automatisch logisch mit \emph{und} verknüpft.
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
@@ -198,9 +193,9 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benuter gibt seine Ausdruck ein. 
+      \item Der Benutzer gibt seine Ausdruck ein. 
 	\begin{itemize}
 	  \item Einzelne Ausdrücke werden durch ein Leerzeichen getrennt, um der Trennung zu entgehen müssen die Ausdrücke mit einfachen oder doppelten Hochkommata zu einem Ausdruck zusammen gefasst werden. 
 	  \item Mehrere Ausdrücke können mit \emph{and} und \emph{or} oder mit \emph{und} und \emph{oder} verknüpft werden.
@@ -222,7 +217,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer öffnet die Maske für die erweiterte Suche.
       \item Das System stellt dem Benutzer exta Felder die ihm die Möglichkeiten von \nameref{F:extSuche} ermöglichen ohne die Kommandos zu kennen.
@@ -242,9 +237,9 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder wurde kein valider regulärer Ausdrück angegeben. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert um später darauf wieder zurück greifen zu können.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benuter gibt seine regulären Ausdrücke ein, die für die Suche verwendet werden sollen. Mehrere reguläre Ausdrücke müssen evtl. mit \emph{and} oder \emph{or} getrennt werden.
+      \item Der Benutzer gibt seine regulären Ausdrücke ein, die für die Suche verwendet werden sollen. Mehrere reguläre Ausdrücke müssen evtl. mit \emph{and} oder \emph{or} getrennt werden.
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
@@ -260,7 +255,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Fehlschlag]Dieser Fall sollte im System nicht möglich sein.
   \item[Aktuere]Benutzer
   \item[Auslösendes Ereignis]Aktualisierung der Seite.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer klickt auf die gekennzeichnete Spaltenüberschrift.
       \item Lokal wird ihm die Suche aktualisiert.
@@ -276,7 +271,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Fehlschlag]Das Buch ist wahrscheinlich derzeit nicht verfügbar, der Benutzer muss es später nocheinmal versuchen.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Das Dokument ändert ihren Status von \emph{verfügbar} auf \emph{verliehen}. Der Benutzer sieht bei diesem Dokument einen Hinweis, dass er sie ausgeliehen hat, zusätzlich zu einer persönlichen Ausleihliste.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer sucht das gewünschte Dokument über die Systemsuche.
       \item Der Benutzer befindet sich auf der Detail-Ansicht des Dokumentes.
@@ -293,7 +288,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Der Benutzer kann das Dokument der Bibliothek entnehmen und sowohl auf der Liste der geliehenen Dokumente des Bürgen wie auch auch auf der Seite des Dokumentes findet sich der Name Benutzers. Auf der Seite des Dokumentes ist weiter der Name des Bürgen zu entnehmen.
   \item[Nachbedingung Fehlschlag]Das Buch ist wahrscheinlich derzeit nicht verfügbar, der Benutzer muss es später nocheinmal versuchen.
   \item[Akteure]Institutsfremder Benutzer.und ein Verwalter
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer bittet einen \emph{Verwalter} als Bürgen für ihn das Dokument zu entleihen.
       \item Der Bürge wählt das Dokument aus und wählt dort die Option \emph{leihen für externe Person}.
@@ -312,7 +307,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Der Benutzer $B$ ist Leihender des Dokumentes.
   \item[Nachbedingung Fehlschlag]Der Benutzer $A$ bleibt Leihender des Dokumentes, es wird nichts an der Datenbank geändert.
   \item[Akteure]Leihender Benutzer und zukünftig leihender Benutzer.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer $A$ wählt das Dokument aus.
       \item Der Benutzer $A$ wählt die Option \emph{übertragen} aus.
@@ -332,7 +327,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Der Benutzer ist nicht mehr Leihender des Dokumentes und die Literatur ist wieder \emph{verfügbar}.
   \item[Nachbedingung Fehlschlag]Der Benutzer wird über den Fehler informiert und wird gebeten, es später erneut zu versuchen.
   \item[Akteure]Benutzer des Institutes.
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer wählt das Dokument aus.
       \item Der Benutzer wählt auf der Dokumentenseite die Rückgabe aus.
@@ -352,13 +347,13 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Das Dokument gilt offiziell als Vermisst.
   \item[Nachbedingung Fehlschlag]Der Fehler wird vom System an den Benutzer gemeldet.
   \item[Akteure]Benutzer
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Detailseite des Dokumentes
       \item Der Benutzer wählt eine Option \emph{Vermisst melden}.
       \item Das System registiert den Vorgang.
     \end{enumerate}
-  \item[Erweiterung]
+  \item[Erweiterung]\hfill
     \begin{itemize}
       \item \emph{optional:} Ein allgemeines Blackboardsystem mit vermissten Dokumenten auf der Bibliotheksseite.
       \item \emph{optional:} Das System versendet einen E-Mail an eine Mailingliste, dass das Buch als vermisst gemeldet wurde.
@@ -378,7 +373,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Die E-Mail an die Person, die das Dokument geliehen hat, ist nicht korrekt oder konnte nicht zugestellt werden. Damit wird der Bürge benachrichtigt.
     \end{itemize}
   \item[Akteure]Das System
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Das System prüft täglich ob eine Leihfrist abgelaufen ist.
       \item Das System stellt fest, dass eine Leihfrist abgelaufen ist.
@@ -398,7 +393,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Das Dokument wurde bereits ausgeliehen, daher bekommt der Benutzer die Liste.
   \item[Nachbedingung Fehlschlag]Das Dokument wurde noch nicht ausgeliehen oder es gab einen anderen Fehler, in beiden Fällen wird das dem Benutzer gemeldet.
   \item[Akteure]Benutzer
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Dokumentenansicht.
       \item Das System stellt dem Benutzer eine Liste mit der Ausleihhistory.
@@ -415,7 +410,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Der Benutzer erhält eine Liste über alle Dokumente die er geliehen hat und für die er gebürgt hat.
   \item[Nachbedingung Fehlschlag]Der Benutzer wird über den enstandenen Fehler informiert.
   \item[Akteure]Benutzer
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer wählt seine persönliche Seite über die Entleihe aus.
       \item Das System gibt die beschriebene Seite dem Benutzer zurück.
@@ -433,7 +428,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Der Benutzer erhält den Code für \BibTeX .
   \item[Nachbedingung Fehlschlag]Der Benutzer wird von dem System über den Fehler informiert.
   \item[Akteure]Gast/Benutzer
-  \item[Beschreibung]
+  \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer wählt die Detailseite des gewünschten Dokumentes aus.
       \item Das System bietet dem Benutzer einen Link \emph{\BibTeX}, der vom Benutzer ausgewählt wird.
