@@ -1,8 +1,33 @@
 % Kapitel 3
 %-------------------------------------------------------------------------------
 \chapter{Produktübersicht}
-Dieser Abschnitt hat die Aufgabe, die Funktionalität des zu entwickelnden
-Systems  grafisch mit Hilfe von Use-Case-Diagrammen mit kurzer verbaler
-Beschreibung zu beschreiben. Es sind so viele Use-Case-Diagramme einzufügen,
-wie zur vollständigen und übersichtlichen Beschreibung der Systemfunktionalität
-notwendig sind.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{bilder/use-case.png}
+\caption[Use-Case-Diagramm]{Use-Case-Diagramm}
+\end{figure}
+
+
+Beschreibung:
+
+Benutzer die nicht angemeldet sind werden als Gäste geführt.\\
+Gäste können sich anmelden und sind dann Nutzer. \\
+Auch können Gäste Dokumente suchen und herausfinden ob sie vorhanden sind, oder ob sie bereits verliehen wurden.\\
+\\
+Ein Nutzer darf wie ein Gast nach Dokumenten suchen.\\
+Zusätzlich darf er Dokumente ausleihen und muss diese auch wieder zurückgeben.\\
+Wenn ihm ein Dokument verloren geht sollte er dies melden.\\
+Auch darf ein Nutzer ein ausgeliehenes Dokument weitergeben.\\
+Dabei wird der Verleihstatus auf die andere Person übertragen.\\
+Ist dies eine Auswärtige Person so müssen die Kontaktdaten hinterlegt werden.\\
+\\
+Der Bibliothekar kann den Bestand der Dokumente einsehen und ihn bearbeiten.\\
+Das heißt das er neue Dokumente eintragen kann, aus der Suchoption entfernen, oder ein\\
+Dokument als verloren markieren, sodass falls möglich, neu bestellt werden kann.\\
+Der Bibliothekar kann durch einen Button eine Datei exportieren welche für die UB lesbar ist.\\
+Somit kann auch von der UB aus ein gesuchtes Dokument gefunden werden.\\
+\\
+Die Verwaltung darf Nutzer erstellen, Nutzerrechte bearbeiten und gegebenenfalls Nutzer entfernen.\\
+\\
+Der Administrator hat vollen Zugriff auf das System und kann alle technische Spezifikationen vornehmen.\\
