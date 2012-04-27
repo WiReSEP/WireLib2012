@@ -2,55 +2,58 @@
 %------------------------------------------------------------------------------------------
 
 \chapter{Produktdaten}
-/D10/ Daten über einen Nutzer: 
+/D10/ Daten über einen Nutzer:
 \begin{itemize}
   \item Daten werden von der Verwaltung eingegeben.
-  \item Bestandteile: 
+  \item Bestandteile:
   \begin{itemize}
-    \item[*] User: 
+    \item[*] User:
     \begin{itemize}
       \item[-] Username
+      \item[-] Passwort, falls ohne AFS gearbeitet wird
       \item[-] Vorname
       \item[-] Nachname
       \item[-] E-Mail
       \item[-] Adresse
       \item[-] Telefon
-      \item[-] den Posten in der Datenbank
+      \item[-] Rolle
     \end{itemize}
-    \item[*] Externe: 
+    \item[*] Externe:
     \begin{itemize}
-      \item[-] dasselbe wie beim User bis auf den Usernamen und den Posten
+      \item[-] dasselbe wie beim User bis auf den Usernamen und die Rolle
     \end{itemize}
   \end{itemize}
 \end{itemize}
 
 \newpage
 
-/D20/ Daten über Dokumente: 
+/D20/ Daten über Dokumente:
 \begin{itemize}
   \item Dateneingabe erfolgt über den Bibliothekar.
   \item Löschen eines Dokumentes aus der Datenbank ist allgemein nicht möglich.
-  \item Bestandteile: 
+  \item Bestandteile:
   \begin{itemize}
+    \item[*] ID
     \item[*] Titel
     \item[*] Autoren
     \item[*] ISBN
     \item[*] Kategorie
-    \item[*] Status (0 = vorhanden, 1 = ausgeliehen, 2 = bestellt, 3 = verloren gegangen)
+    \item[*] Status (0 = vorhanden, 1 = ausgeliehen, 2 = bestellt, 3 = vermisst, 4 = verloren gegangen)
     \item[*] weitere Eingaben möglich
   \end{itemize}
 \end{itemize}
 
-/D30/ Verleihdaten 
+/D30/ Verleihdaten
 \begin{itemize}
   \item Zu jedem Dokument wird eine Verleihhistorie erstellt.
   \item Die Daten können nicht gelöscht werden. Sie werden lediglich bei weiteren Verleihungen erweitert.
-  \item Bestandteile: 
+  \item Bestandteile:
   \begin{itemize}
     \item[*] Ausleihdatum
     \item[*] Rückgabedatum
+    \item[*] Entleihfrist
     \item[*] Entleiher
-    \item[*] evtl. einen Bürgen
+    \item[*] evtl. einen Externen
     \item[*] das Dokument
   \end{itemize}
 \end{itemize}
