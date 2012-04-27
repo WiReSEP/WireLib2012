@@ -61,15 +61,32 @@
   \item[Erweiterung]\hfill
     \begin{itemize}
       \item \emph{optional} Das System übernimmt das versenden der E-Mail.
-      \item \emph{optional} Das System versendet die Datei automatisch nachdem ein Buch zum System hinzugefügt wurde.
     \end{itemize}
+  \item[Alternativen]
+\end{description}
+
+\subsection{F103 (Mailtexte ändern)}
+\begin{description}
+  \item[Geschäftsprozess]Der Administrator passt den Text für generierte E-Mails an.
+  \item[Ziel]Vom System generierte E-Mails sind leicht anpassbar.
+  \item[Vorbedingung]Keine.
+  \item[Nachbedingung Erfolg]E-Mails der geänderten Klasse werden mit dem neuen Text verschickt.
+  \item[Nachbedingung Fehlschlag]Der Administrator bekommt eine Meldung vom System zum Fehler.
+  \item[Akteure]Administrator
+  \item[Beschreibung]\hfill
+    \begin{enumerate}
+      \item Der Administrator geht auf eine Seite des Systems die ihm allgemeine Einstellungen ermöglicht.
+      \item Der Administrator ändert den Text der gewünschten E-Mail.
+      \item Der Administrator bestätigt seine Änderung.
+    \end{enumerate}
+  \item[Erweiterungen]
   \item[Alternativen]
 \end{description}
 
 
 \section{Dokumentfunktionen}
-Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das System verwalteten Dokumente. Darunter ist die \emph{Einpflege} (F201-F202), \emph{Suche} (F211-F219), \emph{Ausleihe} (F221-F229) und der \BibTeX -Export (F231-F239).
-\subsection{F201 (\BibTeX-Import)}
+Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das System verwalteten Dokumente. Darunter ist die \emph{Einpflege} (F200-F202), \emph{Suche} (F210-F219), \emph{Ausleihe} (F220-F229) und der Export (F230-F239).
+\subsection{F200 (\BibTeX-Import)}
 \begin{description}
   \item[Geschäftsprozess]Dokumente hinzufügen mit \BibTeX.
   \item[Ziel]Neu in die Bibliothek aufgenommene Dokumente in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
@@ -96,7 +113,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]Der Benutzer registriert das Dokument über ein rein Webinterface.
 \end{description}
 
-\subsection{F202 (Webinterface-Import)}
+\subsection{F201 (Webinterface-Import)}
 \label{F:Web-Import}
 \begin{description}
   \item[Geschäftsprozess]Dokument hinzufügen über das Webinterface.
@@ -122,7 +139,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]Der Benutzer registriert das Dokument über den \BibTeX\ Import.
 \end{description}
 
-\subsection{F203 (Editieren von Dokumenten)}
+\subsection{F202 (Editieren von Dokumenten)}
 \begin{description}
   \item[Geschäftsprozess]Der Eintrag eines Dokumentes wird verändert.
   \item[Ziel]siehe oben.
@@ -141,7 +158,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{\emph{optional:} F204 (Löschen von Dokumenten)}
+\subsection{\emph{optional:} F203 (Löschen von Dokumenten)}
 \label{F:Löschen}
 \begin{description}
   \item[Geschäftsprozess]Das Löschen eines Dokumentes aus dem System.
@@ -161,7 +178,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F211 (Generelle Suche)}
+\subsection{F210 (Generelle Suche)}
 \label{F:Suche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer sucht im System einen bestimmten Dokumenteneintrag.
@@ -183,7 +200,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \end{description}
 
 
-\subsection{F212 (Suche mit erweiterten Ausdrücken)}
+\subsection{F211 (Suche mit erweiterten Ausdrücken)}
 \label{F:extSuche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer kann bei der Suche Teilworte verwenden.
@@ -198,16 +215,16 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Der Benutzer gibt seine Ausdruck ein. 
 	\begin{itemize}
 	  \item Einzelne Ausdrücke werden durch ein Leerzeichen getrennt, um der Trennung zu entgehen müssen die Ausdrücke mit einfachen oder doppelten Hochkommata zu einem Ausdruck zusammen gefasst werden. 
-	  \item Mehrere Ausdrücke können mit \emph{and} und \emph{or} oder mit \emph{und} und \emph{oder} verknüpft werden.
+	  \item Mehrere Ausdrücke können mit \emph{AND} und \emph{OR} oder mit \emph{UND} und \emph{ODER} verknüpft werden.
 	  \item Bestimmte Felder können direkt angesprochen werden, darunter Titel und Autor. Angesprochen werden die Felder mit z.\,B. „title:``Tim und Struppi''“.
 	\end{itemize}
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
-      \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
+      \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt wie auch den Suchterm des Benutzers.
     \end{enumerate}
 \end{description}
 
-\subsection{\emph{optional:} F213 (erweiterte Suche)}
+\subsection{\emph{optional:} F212 (erweiterte Suche)}
 \label{F:n00bSuche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer sucht ein Dokument
@@ -222,12 +239,12 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Der Benutzer öffnet die Maske für die erweiterte Suche.
       \item Das System stellt dem Benutzer extra Felder die ihm die Möglichkeiten von \nameref{F:extSuche} ermöglichen ohne die Kommandos zu kennen.
       \item Der Benutzer bestätigt die eingetragenen Parameter.
-      \item Das System gibt dem Benutzer die Liste mit den Suchergebnissen zurück.
+      \item Das System gibt dem Benutzer die Liste mit den Suchergebnissen zurück wie auch den Suchterm des Benutzers.
     \end{enumerate}
 \end{description}
 
 
-\subsection{\emph{optional:} F214 (Suche mit regulären Ausdrücken)}
+\subsection{\emph{optional:} F213 (Suche mit regulären Ausdrücken)}
 \label{F:regexSuche}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer kann bei der Suche reguläre Ausdrücke verwenden.
@@ -242,11 +259,11 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Der Benutzer gibt seine regulären Ausdrücke ein, die für die Suche verwendet werden sollen. Mehrere reguläre Ausdrücke müssen eventuell mit \emph{and} oder \emph{or} getrennt werden.
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
-      \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt.
+      \item Das System gibt eine Seite zurück die alle passenden Einträge anzeigt wie auch den Suchterm des Benutzers.
     \end{enumerate}
 \end{description}
 
-\subsection{F215 (Sortierung der Suche)}
+\subsection{F214 (Sortierung der Suche)}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer ordnet sein Suchergebnis nach gewünschter Spalte.
   \item[Ziel]Das System ordnet das Suchergebnis.
@@ -262,7 +279,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
     \end{enumerate}
 \end{description}
 
-\subsection{F221 (Ausleihe)}
+\subsection{F220 (Ausleihe)}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer entnimmt ein Dokument der Bibliothek.
   \item[Ziel]Es gibt eine Übersicht für andere Benutzer welche Bücher verfügbar sind. Es gibt auch eine Übersicht, welches Dokument der Benutzer selbst ausgeliehen hat.
@@ -280,17 +297,17 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
     \end{enumerate}
 \end{description}
 
-\subsection{F222 (Ausleihe externe)}
+\subsection{F221 (Ausleihe externe)}
 \begin{description}
-  \item[Geschäftsprozess]Ein Benutzer die nicht dem Institut angehört, leiht sich ein Dokument.
+  \item[Geschäftsprozess]Ein Externer leiht sich ein Dokument.
   \item[Ziel]Der Benutzer kann sich das Dokument für die Dauer der Leihfrist mitnehmen.
-  \item[Vorbedingung]Der Benutzer hat einen \emph{Verwalter} als Bürgen und das Dokument ist verfügbar.
+  \item[Vorbedingung]Der Benutzer hat einen \emph{Benutzer} als Bürgen und das Dokument ist verfügbar.
   \item[Nachbedingung Erfolg]Der Benutzer kann das Dokument der Bibliothek entnehmen und sowohl auf der Liste der geliehenen Dokumente des Bürgen wie auch auch auf der Seite des Dokumentes findet sich der Name Benutzers. Auf der Seite des Dokumentes ist weiter der Name des Bürgen zu entnehmen.
   \item[Nachbedingung Fehlschlag]Das Buch ist wahrscheinlich derzeit nicht verfügbar, der Benutzer muss es später nocheinmal versuchen.
-  \item[Akteure]Institutsfremder Benutzer.und ein Verwalter
+  \item[Akteure]Externer und ein Benutzer 
   \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benutzer bittet einen \emph{Verwalter} als Bürgen für ihn das Dokument zu entleihen.
+      \item Der Benutzer bittet einen \emph{Benutzer} als Bürgen für ihn das Dokument zu entleihen.
       \item Der Bürge wählt das Dokument aus und wählt dort die Option \emph{leihen für externe Person}.
       \item Der Bürge trägt die Personalien (Name, E-Mail und Adresse) sowie die Dauer der Leihfrist ein.
       \item Der Bürge bestätigt und das System trägt die Daten in die Datenbank ein.
@@ -299,7 +316,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F223 (Ausleihe übertragen)}
+\subsection{F222 (Ausleihe übertragen)}
 \begin{description}
   \item[Geschäftsprozess]Ein Benutzer $A$ gibt ein Dokument an eine an einen anderen Benutzer $B$ weiter.
   \item[Ziel]Der Benutzer $A$ registiert einen anderen Benutzer $B$ als Leihender.
@@ -319,7 +336,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]Der Benutzer $B$  überträgt das Dokument von Benutzer $A$ auf sich.
 \end{description}
 
-\subsection{F224 (Ausleihe zurückgeben)}
+\subsection{F223 (Ausleihe zurückgeben)}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer bringt ein Dokument zurück in die Bibliothek.
   \item[Ziel]Das Dokument ist wieder \emph{verfügbar}.
@@ -337,7 +354,27 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
+\subsection{\emph{optional:} F224 (Ausleihe vermisst melden)}
+\begin{description}
+  \item[Geschäftsprozess]Ein Dokument, dass nicht mehr auffindbar ist wird als \emph{vermisst} gemeldet.
+  \item[Ziel]Alle Personen die zum wieder auffinden des Dokumentes beitragen könnten werden Informiert.
+  \item[Vorbedingung]Der Benuzter hat geprüft ob das Dokument sich an dem Ort befindet, bei dem es auffindbar sein soll.
+  \item[Nachbedingung Erfolg]Ein Benutzer, der das Dokument gesichtet hat meldet sich per E-Mail.
+  \item[Nachbedingung Fehlschlag]Der Bibliothekar bestellt das Buch nach und/oder meldet es als \emph{verlohren} (Siehe \nameref{F:AusleiheVerlohren}).
+  \item[Akteure]zwei Benutzer und ein Bibliothekar.
+  \item[Beschreibung]\hfill
+    \begin{enumerate}
+      \item Der Benutzer stellt fest, dass das Dokument nicht wie im System beschrieben auffindbar ist.
+      \item Der Benutzer wählt die Detailseite des Dokumentes aus.
+      \item Der Benutzer wählt die Option \emph{vermisst melden}.
+      \item Das System verschickt eine E-Mail mit den Entsprechenden Informationen an eine Mailingliste für alle Benutzer.
+    \end{enumerate}
+  \item[Erweiterung]
+  \item[Alternativen]Das System verschickt keine E-Mail sondern meldet den Verlust über eine entsprechende Stelle auf dem System.
+\end{description}
+
 \subsection{F225 (Ausleihe verloren melden)}
+\label{F:AusleiheVerlohren}
 \begin{description}
     %%TODO: 	- email versenden?
     %%		- Schwarzes Brett der Verlohrenen Dokumente?
@@ -346,20 +383,18 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Vorbedingung]Das Dokument ist bereits im System registriert.
   \item[Nachbedingung Erfolg]Das Dokument gilt offiziell als Vermisst.
   \item[Nachbedingung Fehlschlag]Der Fehler wird vom System an den Benutzer gemeldet.
-  \item[Akteure]Benutzer
+  \item[Akteure]Bibliothekar
   \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Detailseite des Dokumentes
       \item Der Benutzer wählt eine Option \emph{Vermisst melden}.
       \item Das System registriert den Vorgang.
+      \item Das System schließt das Dokument in Zukunft bei normalen Suchen aus.
     \end{enumerate}
   \item[Erweiterung]\hfill
-    \begin{itemize}
-      \item \emph{optional:} Ein allgemeines Blackboardsystem mit vermissten Dokumenten auf der Bibliotheksseite.
-      \item \emph{optional:} Das System versendet einen E-Mail an eine Mailingliste, dass das Buch als vermisst gemeldet wurde.
-    \end{itemize}
   \item[Alternativen]
 \end{description}
+
 
 \subsection{F226 (Ausleihfrist abgelaufen)}
 \begin{description}
@@ -392,7 +427,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Vorbedingung]Das Dokument ist im System eingetragen und der Benutzer ist am System angemeldet.
   \item[Nachbedingung Erfolg]Das Dokument wurde bereits ausgeliehen, daher bekommt der Benutzer die Liste.
   \item[Nachbedingung Fehlschlag]Das Dokument wurde noch nicht ausgeliehen oder es gab einen anderen Fehler, in beiden Fällen wird das dem Benutzer gemeldet.
-  \item[Akteure]Benutzer
+  \item[Akteure]Bibliothekar
   \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Dokumentenansicht.
@@ -402,7 +437,24 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]\emph{optional:} Die Ausleihhistory ist nur für Benutzer besonderer Gruppen zugänglich.
 \end{description}
 
-\subsection{F228 (Entleihliste)}
+\subsection{F228 (Derzeitiger Leihender)}    %TODO
+\begin{description}
+  \item[Geschäftsprozess]Leihenden abrufen.
+  \item[Ziel]Ein Benutzer, der dieses Recht besitzt, kann bei verliehenen Büchern sehen, an wen das Buch verliehen ist.
+  \item[Vorbedingung]Das gewählte Dokument ist verliehen und der Benutzer verfügt über ausreichend Rechte.
+  \item[Nachbedingung Erfolg]Der Benutzer bekommt den derzeitig Ausleihenden angezeigt.
+  \item[Nachbedingung Fehlschlag]Der Leihstatus konnte nicht abgerufen werden.
+  \item[Akteure]Der Benutzer mit ausreichend Rechten.
+  \item[Beschreibung]\hfill
+  \begin{enumerate}
+  \item Benutzer wählt gewünschtes Dokument aus.
+  \item Bei ausreichenden Rechten wird der derzeitig ausleihende angezeigt.
+  \end{enumerate}
+  \item[Erweiterung]
+  \item[Alternativen]
+\end{description}
+
+\subsection{F229 (Entleihliste)}
 \begin{description}
   \item[Geschäftsprozess]Vom Benutzer geliehene Dokumente.
   \item[Ziel]Der Benutzer sieht die Dokumente die er selbst geliehen hat und für die er gebürgt hat ein.
@@ -419,7 +471,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F231 (\BibTeX -Export)}
+\subsection{F230 (\BibTeX -Export)}
 \begin{description}
     %% TODO:
   \item[Geschäftsprozess]Dokumentinformationen für \BibTeX-Einbindung herunterladen.
@@ -438,6 +490,19 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
+\subsection{F231 (U\,B-Export)}
+\begin{description}
+  \item[Geschäftsprozess]Export zur Bibliothek der TU Braunschweig.
+  \item[Ziel]Die gewählten Dokumente werden an die Uni-Bibliothek übermittelt.
+  \item[Vorbedingung]Der Ausführender Benutzer hat genügend Rechte.
+  \item[Nachbedingung Erfolg]Das Dokument wurde erfolgreich an die Uni-Bibliothek übertragen.
+  \item[Nachbedingung Fehlschlag]Das Dokument wurde nicht an die Uni-Bibliothek übertragen.
+  \item[Akteure]Der Benuzter mit ausreichend Rechten.
+  \item[Beschreibung]Die gewählten Dokumente werden in das Allegro-Format der U\,B konvertiert und übermittelt.
+  \item[Erweiterung]
+  \item[Alternativen]
+\end{description}
+
 
 \section{Rollen}
 \begin{description}
@@ -446,7 +511,6 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F301 (Benutzerverwaltung)}
 \begin{description}
-    %% TODO:
   \item[Geschäftsprozess]Benutzerverwaltung
   \item[Ziel]Registrierungsanfragen werden beantwortet und vorhanden Benutzer bearbeitet
   \item[Vorbedingung]Ausführender Benutzer hat ausreichend Rechte
@@ -458,51 +522,19 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F305 (U\,B-Export)}	%TODO
-\begin{description}
-    %% TODO: optional?
-  \item[Geschäftsprozess]Export zur Bibliothek der TU Braunschweig
-  \item[Ziel]Gewählte Bücher werden an die Uni-Bibliothek übermittelt
-  \item[Vorbedingung]Ausführender Benutzer hat genügend Rechte
-  \item[Nachbedingung Erfolg]Buch wurde erfolgreich an die Uni-Bibliothek übertragen
-  \item[Nachbedingung Fehlschlag]Buch wurde nicht an die Uni-Bibliothek übertragen
-  \item[Akteure]Benuzter mit ausreichend Rechten
-  \item[Beschreibung]Die gewählten Bücher werden in das Allegro-Format der Uni-Bibliothek konvertiert und übermittelt
-  \item[Erweiterung]
-  \item[Alternativen]
-\end{description}
-
-\subsection{F306 (Derzeitiger Leihender)}    %TODO
-\begin{description}
-    %% TODO:
-  \item[Geschäftsprozess]Leihenden abrufen
-  \item[Ziel]Ein Benutzer, der dieses Recht besitzt, kann bei verliehenen Büchern sehen, an wen das Buch verliehen ist.
-  \item[Vorbedingung]Das gewählte Buch ist verliehen und der Benutzer verfügt über ausreichend Rechte
-  \item[Nachbedingung Erfolg]Der Benutzer bekommt den derzeitig Ausleihenden angezeigt
-  \item[Nachbedingung Fehlschlag]Der Leihstatus konnte nicht abgerufen werden
-  \item[Akteure]Benutzer mit ausreichend Rechten
-  \item[Beschreibung]\hfill
-  \begin{enumerate}
-  \item Benutzer wählt gewünschtes Buch aus
-  \item Bei ausreichenden Rechten wird der derzeitig ausleihende angezeigt
-  \end{enumerate}
-  \item[Erweiterung]
-  \item[Alternativen]
-\end{description}
-
 \subsection{F302 (Rechtezuweisung für Rollen)} 
 \begin{description}
-  \item[Geschäftsprozess]Eine Benutzerrolle bekommt ein oder mehrere Rechte zugewiesen
-  \item[Ziel]Eine Benutzerrolle kann nachträglich im Umfang erweitert oder eingeschränkt werden
-  \item[Vorbedingung]Ändernder Nutzer hat ausreichende Rechte
-  \item[Nachbedingung Erfolg]Die Rolle hat neue Rechte bekommen und/oder alte Rechte verloren
-  \item[Nachbedingung Fehlschlag]Die Rechte wurden nicht übernommen
-  \item[Akteure]Administrator oder Benutzerverwalter
+  \item[Geschäftsprozess]Eine Benutzerrolle bekommt ein oder mehrere Rechte zugewiesen.
+  \item[Ziel]Eine Benutzerrolle kann nachträglich im Umfang erweitert oder eingeschränkt werden.
+  \item[Vorbedingung]Ändernder Nutzer hat ausreichende Rechte.
+  \item[Nachbedingung Erfolg]Die Rolle hat neue Rechte bekommen und/oder alte Rechte verloren.
+  \item[Nachbedingung Fehlschlag]Die Rechte wurden nicht übernommen.
+  \item[Akteure]Administrator oder Benutzerverwalter.
   \item[Beschreibung]\hfill
   \begin{enumerate}
-  \item Administrator oder Benutzerverwalter wählt zu ändernde Rolle aus
-  \item Zugeteilte Rechte werden angepasst
-  \item (optional:) Nutzer mit der entsprechenden Rolle bekommen eine E-Mail zugeschickt mit dem Hinweis auf die Änderung
+  \item Administrator oder Benutzerverwalter wählt zu ändernde Rolle aus.
+  \item Zugeteilte Rechte werden angepasst.
+  \item \emph{optional:} Nutzer mit der entsprechenden Rolle bekommen eine E-Mail zugeschickt mit dem Hinweis auf die Änderung.
   \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
@@ -510,17 +542,17 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F303 (Benutzer Rolle(n) zuweisen)}
 \begin{description}
-  \item[Geschäftsprozess]Benutzer mit entsprechenden Rechten verteilen Rollen an andere Benutzer
-  \item[Ziel]Ein Benutzer bekommt eine Rolle zugeteilt von einem Administrator oder einem Benutzerverwalter
-  \item[Vorbedingung]Der ändernde Benutzer hat ausreichende Rechte
-  \item[Nachbedingung Erfolg]Der zu ändernde Benutzer hat eine neue Rolle zugewiesen bekommen
-  \item[Nachbedingung Fehlschlag]Der zu ändernde Benutzer hat die Rolle nicht gewechselt
-  \item[Akteure]Administrator oder Benutzerverwalter
+  \item[Geschäftsprozess]Der Benutzer mit entsprechenden Rechten verteilen Rollen an andere Benutzer.
+  \item[Ziel]Ein Benutzer bekommt eine Rolle zugeteilt von einem Administrator oder einem Benutzerverwalter.
+  \item[Vorbedingung]Der ändernde Benutzer hat ausreichende Rechte.
+  \item[Nachbedingung Erfolg]Der zu ändernde Benutzer hat eine neue Rolle zugewiesen bekommen.
+  \item[Nachbedingung Fehlschlag]Der zu ändernde Benutzer hat die Rolle nicht gewechselt.
+  \item[Akteure]Administrator oder Benutzerverwalter.
   \item[Beschreibung]\hfill
   \begin{enumerate}
-  \item Administrator oder Benutzerverwalter wählt zu ändernden Benutzer aus
-  \item Eine neue Rolle wird eingetragen
-  \item (optional:) Der geänderte Nutzer bekommt eine E-Mail zugeschickt mit dem Hinweis auf die Änderung
+  \item Administrator oder Benutzerverwalter wählt zu ändernden Benutzer aus.
+  \item Eine neue Rolle wird eingetragen.
+  \item \emph{optional:} Der geänderte Nutzer bekommt eine E-Mail zugeschickt mit dem Hinweis auf die Änderung.
   \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
