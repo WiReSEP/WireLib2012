@@ -11,7 +11,15 @@
 \input{einstellungen/newComments.tex}
 \input{einstellungen/layout.tex}           % Diese Datei enthält alle
                                            % Layouteinstellungen
-\newcommand{\BibTeX}{Bib\TeX}
+
+% Dieses Befehle sortieren die Einträge in den einzelnen Listen:
+%makeindex -s datei.ist -t datei.alg -o datei.acr datei.acn
+%makeindex -s datei.ist -t datei.glg -o datei.gls datei.glo
+%makeindex -s datei.ist -t datei.slg -o datei.syi datei.syg
+
+\input{inhalt/glossar.tex}
+
+\newcommand{\BibTeX}{\gls{glos:BibTeX}}
 
 %------Beginn des Gesamtdokumentes----------------------------------------------
 \begin{document}
@@ -33,7 +41,14 @@
 \include{inhalt/nichtfunktionaleanforderungen}        % Kapitel 4
 \include{inhalt/benutzeroberflaeche}       % Kapitel 4
 \include{inhalt/produktumgebung}           % Kapitel 4
-\include{inhalt/glossar}
+
+%---Hier werden das Glossar und das Abkürzungsverzeichnis gedruckt--------------
+\providetranslation{Glossary}{Glossar}
+\printglossary[style=altlist,title=Glossar]
+
+\providetranslation{Acronyms}{Akronyme}
+\printglossary[type=\acronymtype,style=long]
+
 %------Ende des Dokumentes------------------------------------------------------
 \end{document}
 

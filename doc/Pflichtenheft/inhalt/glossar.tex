@@ -1,18 +1,38 @@
 % Kapitel 9
 %-------------------------------------------------------------------------------
+%Hier werden Fachbegriffe und Abkürzungen erklährt.
+% Verwendet werden diese Begriffe mit \gls{name} oder \Gls{name} wenn der Anfang
+% groß geschrieben sein muss.
+%
+%%	Beispiel unter: http://ewus.de/tipp-1029.html
+%%	und natürlich Erkärung mit dem Befehl
+%texdoc glossaries
 
-\chapter{Glossar}
-Hier werden Fachbegriffe erklärt.
-%% TODO: 	glossaries einpflegen.
-%%		Erklährung unter: http://ewus.de/tipp-1029.html
-\begin{itemize}
-  \item https
-  \item AFS
-  \item GITZ
-  \item UB
-  \item sqlite
-  \item \BibTeX
-  \item Allegro
-  \item reguläre Ausdrücke
-  \item externer
-\end{itemize}
+\newacronym{UB}{UB}{Universitätsbibliothek}
+\newacronym{GITZ}{GITZ}{Gauß-IT-Zentrum}
+\newacronym{LDAP}{LDAP}{Lightweight Directory Access Protocol\protect\glsadd{glos:LDAP}}
+
+\newglossaryentry{glos:LDAP}{name=Lightweight Directory Access Protocol,
+description={}
+}
+\newglossaryentry{glos:https}{name=Hypertext Transfer Protocol Secure,
+description={Hypertext Transfer Protocol Secure ist die verschlüsselte Variante
+vom Hypertext Transfer Protocol und ist eine zertifiktasbasierende sichere
+Übertragungstechnik}
+}
+\newglossaryentry{glos:sqlite}{name=sqlite,
+description={}
+}
+\newglossaryentry{glos:BibTeX}{name=Bib\TeX,
+description={}
+}
+\newglossaryentry{glos:Allegro}{name=Allegro,
+description={}
+}
+\newglossaryentry{glos:regex}{name=Reguläre Ausdrücke,
+description={}
+}
+\newglossaryentry{glos:ext}{name=Externer,
+description={}
+}
+

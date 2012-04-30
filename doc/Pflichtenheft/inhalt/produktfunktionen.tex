@@ -24,12 +24,12 @@
     \end{enumerate}
 \end{description}
 
-\subsection{\emph{optional:} F101 (Anmeldung über A\,F\,S)}
+\subsection{\emph{optional:} F101 (Anmeldung über LDAP)}
 \label{F:AnmeldungAFS}
 \begin{description}
   \item[Geschäftsprozess]Anmeldung eines Institusnutzers.
-  \item[Ziel]Ein Benutzer meldet sich über seinen G\,I\,T\,Z-Account am System an.
-  \item[Vorbedingung]Der Benutzer besitzt einen A\,F\,S-Account, ist auf dem System registiert und hat ein gültiges Passwort.
+  \item[Ziel]Ein Benutzer meldet sich über seinen \gls{GITZ}-Account am System an.
+  \item[Vorbedingung]Der Benutzer besitzt einen \gls{LDAP}-Account, ist auf dem System registiert und hat ein gültiges Passwort.
   \item[Nachbedingung Erfolg]Der Benutzer findet sich auf einer persönlichen Benutzerseite wieder.
   \item[Nachbedingung Fehlschlag]Der Benutzer bekommt eine Fehlermeldung.
   \item[Akteure]Gast/Benutzer
@@ -39,24 +39,24 @@
       \item Der Benutzer wählt den Link \emph{Login} auf der Webseite aus.
       \item Der Benutzer gibt seinen Nutzernamen und sein Passwort ein.
       \item Der Benutzer bestätigt seine Eingaben.
-      \item Das System prüft die Korrektheit der Eingaben indem sie über das A\,F\,S-System der T\,U validiert werden.
+      \item Das System prüft die Korrektheit der Eingaben indem sie über das \gls{LDAP}-System der TU validiert werden.
       \item Das System leitet den Benutzer entsprechend der Korrektheit seiner Daten weiter.
     \end{enumerate}
 \end{description}
 
-\subsection{F102 (Anbindung an die U\,B)}
+\subsection{F102 (Anbindung an die Universitätsbibliothek)}
 \begin{description}
-  \item[Geschäftsprozess]Übertragung der Institutsbibliothek an die Universitätsbibliothek.
-  \item[Ziel]Angleichung der im U\,B-Allegro verfügbaren Daten über die Institutsbibliothek.
+  \item[Geschäftsprozess]Übertragung der Institutsbibliothek an die \gls{UB}.
+  \item[Ziel]Angleichung der im \gls{UB}-\gls{glos:Allegro} verfügbaren Daten über die Institutsbibliothek.
   \item[Vorbedingung]Keine.
-  \item[Nachbedingung Erfolg]Der Benutzer erhält eine Datei mit den Daten im Allegro-Format, die er an die U\,B per Mail verschicken kann.
+  \item[Nachbedingung Erfolg]Der Benutzer erhält eine Datei mit den Daten im \gls{glos:Allegro}-Format, die er an die \gls{UB} per Mail verschicken kann.
   \item[Nachbedingung Fehlschlag]Das System soll die Export-Funktion nur berechtigten Benutzern bieten, damit soll ein Fehlschlag in der Bedienung abgefangen werden. Sollte der Vorgang des Parsens einen Fehler erzeugen (z.\,B. durch eine gesperrte Datenbank), erhält der Benutzer die Bitte es später noch einmal zu versuchen.
   \item[Akteure]Benutzer
   \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benutzer fordert über das Webinterface die Allegro-Datei an.
-      \item Das System überträgt die Dokumente der Datenbank in das Allegro-Format.
-      \item Das System gibt dem Benutzer eine Datei zum Download, die der Benutzer manuell an die U\,B versenden kann.
+      \item Der Benutzer fordert über das Webinterface die \gls{glos:Allegro}-Datei an.
+      \item Das System überträgt die Dokumente der Datenbank in das \gls{glos:Allegro}-Format.
+      \item Das System gibt dem Benutzer eine Datei zum Download, die der Benutzer manuell an die \gls{UB} versenden kann.
     \end{enumerate}
   \item[Erweiterung]\hfill
     \begin{itemize}
@@ -86,7 +86,7 @@
 
 \section{Dokumentfunktionen}
 Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das System verwalteten Dokumente. Darunter ist die \emph{Einpflege} (F200-F202), \emph{Suche} (F210-F219), \emph{Ausleihe} (F220-F229) und der Export (F230-F239).
-\subsection{F200 (\BibTeX-Import)}
+\subsection{F200 (Bib\TeX-Import)}
 \begin{description}
   \item[Geschäftsprozess]Dokumente hinzufügen mit \BibTeX.
   \item[Ziel]Neu in die Bibliothek aufgenommene Dokumente in die Verwaltung aufnehmen und zur Ausleihe verfügbar machen.
@@ -471,7 +471,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F230 (\BibTeX -Export)}
+\subsection{F230 (Bib\TeX -Export)}
 \begin{description}
     %% TODO:
   \item[Geschäftsprozess]Dokumentinformationen für \BibTeX-Einbindung herunterladen.
@@ -490,7 +490,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Alternativen]
 \end{description}
 
-\subsection{F231 (U\,B-Export)}
+\subsection{F231 (Universitätsbibliothek-Export)}
 \begin{description}
   \item[Geschäftsprozess]Export zur Bibliothek der TU Braunschweig.
   \item[Ziel]Die gewählten Dokumente werden an die Uni-Bibliothek übermittelt.
@@ -498,7 +498,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Nachbedingung Erfolg]Das Dokument wurde erfolgreich an die Uni-Bibliothek übertragen.
   \item[Nachbedingung Fehlschlag]Das Dokument wurde nicht an die Uni-Bibliothek übertragen.
   \item[Akteure]Der Benuzter mit ausreichend Rechten.
-  \item[Beschreibung]Die gewählten Dokumente werden in das Allegro-Format der U\,B konvertiert und übermittelt.
+  \item[Beschreibung]Die gewählten Dokumente werden in das Allegro-Format der \gls{UB} konvertiert und übermittelt.
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
