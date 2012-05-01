@@ -101,8 +101,8 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Der Benutzer wählt eine \BibTeX -Datei von seinem Rechner.
       \item Der Benutzer wählt den späteren Status, der in den Dokumenten vermerkt sein soll.
       \item Der Benutzer startet einen Upload in das System.
-      \item Das System prüft die Datei auf Validität. Dabei ist vor allem zu beachten, dass \TeX-Umlaute und -Sonderzeichen in ein UTF-8 Format übersetzt werden und die Einträge valides UTF-8 sind.
-	(Validität schließt sowohl den \BibTeX -Umfang ein, wie auch die Felder: \emph{DateOfPurchase}, \emph{price}, \emph{InventarNo}, \emph{InformatikBibNo}, \emph{LibraryOfCongressNo}, \emph{CIPNo}, \emph{XtraNo}, \emph{keywords}.) Umlaute und Sonderzeichen können auch direkt in UTF-8 angegeben werden.
+      \item Das System prüft die Datei auf Validität. Dabei ist vor allem zu beachten, dass \TeX-Umlaute und -Sonderzeichen in ein \gls{glos:unicode} Format übersetzt werden und die Einträge valides \gls{glos:unicode} sind.
+	(Validität schließt sowohl den \BibTeX -Umfang ein, wie auch die Felder: \emph{DateOfPurchase}, \emph{price}, \emph{InventarNo}, \emph{InformatikBibNo}, \emph{LibraryOfCongressNo}, \emph{CIPNo}, \emph{XtraNo}, \emph{keywords}.) Umlaute und Sonderzeichen können auch direkt in \gls{glos:unicode} angegeben werden.
 	Das System prüft ebenfalls, ob ein entsprechender Eintrag bereits vorhanden ist.
       \item Das System trägt die Dokumente in die Datenbank ein.
       \item Das System fügt den Dokumenten den vom Benutzer bestimmten Status hinzu.
@@ -136,7 +136,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
     \end{enumerate}
     %% TODO:
   \item[Erweiterung]Der Benutzer hat die Möglichkeit, nicht vorher spezifizierte Felder selbst einzufügen.
-  \item[Alternativen]Der Benutzer registriert das Dokument über den \BibTeX\ Import.
+  \item[Alternativen]Der Benutzer registriert das Dokument über den \BibTeX Import.
 \end{description}
 
 \subsection{F202 (Editieren von Dokumenten)}
@@ -195,7 +195,6 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Das System durchsucht seine Datenbank, um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück, die alle passenden Einträge anzeigt.
     \end{enumerate}
-    %% TODO:
     \item[Erweiterung]Erweiterungen der Suche sind \nameref{F:extSuche}, \nameref{F:n00bSuche} und \nameref{F:regexSuche}
 \end{description}
 
@@ -207,7 +206,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Ziel]Der Benutzer kann komplexe Mittel verwenden, um nach möglichen Zeichenfolgen zu suchen.
   \item[Vorbedingung]Der Benutzer befindet sich auf der Seite mit der Suchmaske.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder es wurde kein valider regulärer Ausdruck angegeben. Es wird ein Hinweis ausgegeben.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden. Dem Benutzer wird ein Hinweis zurück gegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert, um später darauf wieder zurück greifen zu können.
   \item[Beschreibung]\hfill
@@ -247,16 +246,16 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \subsection{\emph{optional:} F213 (Suche mit regulären Ausdrücken)}
 \label{F:regexSuche}
 \begin{description}
-  \item[Geschäftsprozess]Der Benutzer kann bei der Suche reguläre Ausdrücke verwenden.
+  \item[Geschäftsprozess]Der Benutzer kann bei der Suche \gls{glos:regex}  verwenden.
   \item[Ziel]Der Benutzer kann komplexe Mittel verwenden, um nach möglichen Zeichenfolgen zu suchen.
   \item[Vorbedingung]Der Benutzer befindet sich auf einer extra Seite für eine erweiterte Suche.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt eine Liste aller Suchergebnisse.
-  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder es wurde kein valider regulärer Ausdruck angegeben. Es wird ein Hinweis ausgegeben.
+  \item[Nachbedingung Fehlschlag]Es konnte kein Dokument der Suche entsprechend gefunden werden oder es wurde keine validen \gls{glos:regex} angegeben. Es wird ein Hinweis ausgegeben.
   \item[Akteure]Benutzer
   \item[Auslösendes Ereignis]Die Suche wird gespeichert, um später darauf wieder zurückgreifen zu können.
   \item[Beschreibung]\hfill
     \begin{enumerate}
-      \item Der Benutzer gibt seine regulären Ausdrücke ein, die für die Suche verwendet werden sollen. Mehrere reguläre Ausdrücke müssen eventuell mit \emph{and} oder \emph{or} getrennt werden.
+      \item Der Benutzer gibt seine \gls{glos:regex} ein, die für die Suche verwendet werden sollen. Mehrere \gls{glos:regex} müssen eventuell mit \emph{and} oder \emph{or} getrennt werden.
       \item Der Benutzer bestätigt seine Eingabe.
       \item Das System durchsucht seine Datenbank, um Dokumenteneinträge mit den eingegebenen Teilworten zu finden.
       \item Das System gibt eine Seite zurück, die alle passenden Einträge anzeigt, wie auch den Suchterm des Benutzers.
@@ -299,12 +298,12 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F221 (Ausleihe externe)}
 \begin{description}
-  \item[Geschäftsprozess]Ein Externer leiht sich ein Dokument.
+  \item[Geschäftsprozess]Der \gls{glos:ext} leiht sich ein Dokument.
   \item[Ziel]Der Benutzer kann sich das Dokument für die Dauer der Leihfrist mitnehmen.
   \item[Vorbedingung]Der Benutzer hat einen \emph{Benutzer} als Bürgen und das Dokument ist verfügbar.
   \item[Nachbedingung Erfolg]Der Benutzer kann das Dokument der Bibliothek entnehmen und sowohl auf der Liste der geliehenen Dokumente des Bürgen, wie auch auch auf der Seite des Dokumentes findet sich der Name des  Benutzers. Auf der Seite des Dokumentes ist weiter der Name des Bürgen zu entnehmen.
   \item[Nachbedingung Fehlschlag]Das Buch ist wahrscheinlich derzeit nicht verfügbar, der Benutzer muss es später nocheinmal versuchen.
-  \item[Akteure]Externer und ein Benutzer 
+  \item[Akteure]Der \gls{glos:ext} und ein Benutzer 
   \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer bittet einen \emph{Benutzer} als Bürgen, für ihn das Dokument zu entleihen.
@@ -328,7 +327,6 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
     \begin{enumerate}
       \item Der Benutzer $A$ wählt das Dokument aus.
       \item Der Benutzer $A$ wählt die Option \emph{übertragen} aus.
-	%%TODO oder wählt ihn über ein Dropdown aus?
       \item Der Benutzer $A$ gibt Benutzer $B$ ein.
       \item Das System ändert die Ausleihe auf Benutzer $B$.
     \end{enumerate}
@@ -376,8 +374,6 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \subsection{F225 (Ausleihe verloren melden)}
 \label{F:AusleiheVerlohren}
 \begin{description}
-    %%TODO: 	- email versenden?
-    %%		- Schwarzes Brett der Verlorenen Dokumente?
   \item[Geschäftsprozess]Ein Dokument, das ausgeliehen wurde oder als verfügbar gilt, wird als verloren gemeldet.
   \item[Ziel]Nicht mehr auffindbare Dokumente können allgemein als vermisst gemeldet werden.
   \item[Vorbedingung]Das Dokument ist bereits im System registriert.
@@ -421,7 +417,6 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F227 (Ausleihhistory)}
 \begin{description}
-    %% TODO Sichtbarkeit optional?
   \item[Geschäftsprozess]Prüfung, wer das Dokument bereits ausgeliehen hat.
   \item[Ziel]Die Benutzer bekommen Einsicht in die Liste der Personen die dieses Dokument bereits ausgeliehen haben.
   \item[Vorbedingung]Das Dokument ist im System eingetragen und der Benutzer ist am System angemeldet.
@@ -473,7 +468,6 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F230 (Bib\TeX -Export)}
 \begin{description}
-    %% TODO:
   \item[Geschäftsprozess]Dokumentinformationen für \BibTeX-Einbindung herunterladen.
   \item[Ziel]Der Benutzer erhält alle notwendigen Informationen zu einem Buch im \BibTeX-Format, um diese z.\,B. in ein eigenes Dokument ein zu binden.
   \item[Vorbedingung]Der Benutzer befindet sich auf der Detailsseite des Dokumentes.
@@ -492,13 +486,13 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 
 \subsection{F231 (Universitätsbibliothek-Export)}
 \begin{description}
-  \item[Geschäftsprozess]Export zur Bibliothek der TU Braunschweig.
-  \item[Ziel]Die gewählten Dokumente werden an die Uni-Bibliothek übermittelt.
+  \item[Geschäftsprozess]Export zur \gls{UB}.
+  \item[Ziel]Die gewählten Dokumente werden an die \gls{UB} übermittelt.
   \item[Vorbedingung]Der Ausführender Benutzer hat genügend Rechte.
-  \item[Nachbedingung Erfolg]Das Dokument wurde erfolgreich an die Uni-Bibliothek übertragen.
-  \item[Nachbedingung Fehlschlag]Das Dokument wurde nicht an die Uni-Bibliothek übertragen.
+  \item[Nachbedingung Erfolg]Das Dokument wurde erfolgreich an die \gls{UB} übertragen.
+  \item[Nachbedingung Fehlschlag]Das Dokument wurde nicht an die \gls{UB} übertragen.
   \item[Akteure]Der Benuzter mit ausreichend Rechten.
-  \item[Beschreibung]Die gewählten Dokumente werden in das Allegro-Format der \gls{UB} konvertiert und übermittelt.
+  \item[Beschreibung]Die gewählten Dokumente werden in das \gls{glos:Allegro}-Format der \gls{UB} konvertiert und übermittelt.
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
