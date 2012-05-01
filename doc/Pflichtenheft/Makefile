@@ -1,12 +1,12 @@
 FILE=TemplatePflichtenheft
 
 default:
-	pdflatex  ${FILE}
+	pdflatex  -interaction=nonstopmode ${FILE}
 	makeindex -s ${FILE}.ist -t ${FILE}.alg -o ${FILE}.acr ${FILE}.acn
 	makeindex -s ${FILE}.ist -t ${FILE}.glg -o ${FILE}.gls ${FILE}.glo
-	pdflatex ${FILE}
-	pdflatex ${FILE}
-	pdflatex ${FILE}
+	pdflatex -interaction=nonstopmode ${FILE}
+	pdflatex -interaction=nonstopmode ${FILE}
+	pdflatex -interaction=nonstopmode ${FILE}
 
 clean:
 	find . -name '*.aux' -delete
