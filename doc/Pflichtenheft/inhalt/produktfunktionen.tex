@@ -341,14 +341,14 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Vorbedingung]Der Benutzer ist Leihender des Dokumentes.
   \item[Nachbedingung Erfolg]Der Benutzer ist nicht mehr Leihender des Dokumentes und die Literatur ist wieder \emph{verfügbar}.
   \item[Nachbedingung Fehlschlag]Der Benutzer wird über den Fehler informiert und wird gebeten, es später erneut zu versuchen.
-  \item[Akteure]Benutzer des Institutes.
+  \item[Akteure]Benutzer
   \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer wählt das Dokument aus.
       \item Der Benutzer wählt auf der Dokumentenseite die Rückgabe aus.
       \item Das System ändert den Status des Dokumentes und verschiebt den Benutzer in die History der Leihenden.
     \end{enumerate}
-  \item[Erweiterung]Externe Benutzer können ihr Buch an jede Person zurück geben und von denen entsprechend als Zurückgegeben markieren lassen.
+  \item[Erweiterung]\gls{glos:ext} können ihr Buch an jede Person zurück geben und von denen entsprechend als Zurückgegeben markieren lassen.
   \item[Alternativen]
 \end{description}
 
@@ -358,7 +358,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Ziel]Alle Personen, die zum wieder Auffinden des Dokumentes beitragen könnten, werden Informiert.
   \item[Vorbedingung]Der Benuzter hat geprüft, ob das Dokument sich an dem Ort befindet, bei dem es auffindbar sein soll.
   \item[Nachbedingung Erfolg]Ein Benutzer, der das Dokument gesichtet hat, meldet sich per E-Mail.
-  \item[Nachbedingung Fehlschlag]Der Bibliothekar bestellt das Buch nach und/oder meldet es als \emph{verloren} (Siehe \nameref{F:AusleiheVerloren}).
+  \item[Nachbedingung Fehlschlag]Der Bibliothekar bestellt das Buch nach und/oder meldet es als \emph{verloren} (Siehe \nameref{F:AusleiheVerlohren}).
   \item[Akteure]zwei Benutzer und ein Bibliothekar.
   \item[Beschreibung]\hfill
     \begin{enumerate}
@@ -383,7 +383,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer befindet sich auf der Detailseite des Dokumentes
-      \item Der Benutzer wählt eine Option \emph{Vermisst melden}.
+      \item Der Benutzer wählt eine Option \emph{verlohren melden}.
       \item Das System registriert den Vorgang.
       \item Das System schließt das Dokument in Zukunft bei normalen Suchen aus.
     \end{enumerate}
@@ -398,7 +398,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Ziel]Sowohl der Bürge als auch die Person, die das Dokument geliehen hat, werden per E-Mail noch einmal erinnert.
   \item[Vorbedingung]Die Person hat das Dokument geliehen und die Leihfrist ist abgelaufen.
   \item[Nachbedingung Erfolg]Beide Parteien sind via E-Mail nocheinmal erinnert worden.
-  \item[Nachbedingung Fehlschlag]
+  \item[Nachbedingung Fehlschlag]\hfill
     \begin{itemize}
       \item Die E-Mails konnten nicht verschickt werden, der Administrator wird benachrichtigt.
       \item Die E-Mail an die Person, die das Dokument geliehen hat, ist nicht korrekt oder konnte nicht zugestellt werden. Damit wird der Bürge benachrichtigt.
@@ -429,7 +429,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
       \item Das System stellt dem Benutzer eine Liste mit der Ausleihhistory.
     \end{enumerate}
   \item[Erweiterung]
-  \item[Alternativen]\emph{optional:} Die Ausleihhistory ist nur für Benutzer besonderer Gruppen zugänglich.
+  \item[Alternativen]
 \end{description}
 
 \subsection{F228 (Derzeitiger Leihender)}    %TODO
@@ -439,11 +439,11 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Vorbedingung]Das gewählte Dokument ist verliehen und der Benutzer verfügt über ausreichend Rechte.
   \item[Nachbedingung Erfolg]Der Benutzer bekommt den derzeitig Ausleihenden angezeigt.
   \item[Nachbedingung Fehlschlag]Der Leihstatus konnte nicht abgerufen werden.
-  \item[Akteure]Der Benutzer mit ausreichend Rechten.
+  \item[Akteure]Benutzer 
   \item[Beschreibung]\hfill
   \begin{enumerate}
   \item Benutzer wählt gewünschtes Dokument aus.
-  \item Bei ausreichenden Rechten wird der derzeitig Ausleihende angezeigt.
+  \item Der derzeitig Ausleihende angezeigt.
   \end{enumerate}
   \item[Erweiterung]
   \item[Alternativen]
@@ -473,7 +473,7 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Vorbedingung]Der Benutzer befindet sich auf der Detailsseite des Dokumentes.
   \item[Nachbedingung Erfolg]Der Benutzer erhält den Code für \BibTeX .
   \item[Nachbedingung Fehlschlag]Der Benutzer wird von dem System über den Fehler informiert.
-  \item[Akteure]Gast/Benutzer
+  \item[Akteure]Gast oder Benutzer
   \item[Beschreibung]\hfill
     \begin{enumerate}
       \item Der Benutzer wählt die Detailseite des gewünschten Dokumentes aus.
@@ -489,29 +489,27 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Geschäftsprozess]Export zur \gls{UB}.
   \item[Ziel]Die gewählten Dokumente werden an die \gls{UB} übermittelt.
   \item[Vorbedingung]Der Ausführender Benutzer hat genügend Rechte.
-  \item[Nachbedingung Erfolg]Das Dokument wurde erfolgreich an die \gls{UB} übertragen.
-  \item[Nachbedingung Fehlschlag]Das Dokument wurde nicht an die \gls{UB} übertragen.
-  \item[Akteure]Der Benuzter mit ausreichend Rechten.
+  \item[Nachbedingung Erfolg]Der Benutzer hat eine Datei für den Versand an die \gls{UB}.
+  \item[Nachbedingung Fehlschlag]Die Datei konnte nicht erzeugt werden, der Benutzer erhält vom System eine Fehlermeldung.
+  \item[Akteure]Bibliothekar
   \item[Beschreibung]Die gewählten Dokumente werden in das \gls{glos:Allegro}-Format der \gls{UB} konvertiert und übermittelt.
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
 
 
-\section{Rollen}
-\begin{description}
-  \item[F301-309]Rollen- und Benutzeradministration
-\end{description}
+\section{Benutzer und System}
+Im Folgenden werden die Funktionalitäten zu den Benutzerrollen, Benutzern und der Administration beschrieben.
 
 \subsection{F301 (Benutzerverwaltung)}
 \begin{description}
-  \item[Geschäftsprozess]Benutzerverwaltung
-  \item[Ziel]Registrierungsanfragen werden beantwortet und vorhanden Benutzer bearbeitet
-  \item[Vorbedingung]Ausführender Benutzer hat ausreichend Rechte
-  \item[Nachbedingung Erfolg]Benutzer wurde erfolgreich bearbeitet
-  \item[Nachbedingung Fehlschlag]Änderungen wurden nicht übernommen
-  \item[Akteure]Administrator oder Benutzerverwalter
-  \item[Beschreibung]Registrierte Benutzer werden gelöscht und eingehende Registrierungsanfragen werden beantwortet
+  \item[Geschäftsprozess]Benutzerverwaltung und -Erzeugung.
+  \item[Ziel]Benutzer werden angelegt und verwaltet.
+  \item[Vorbedingung]Ausführender Benutzer hat ausreichend Rechte.
+  \item[Nachbedingung Erfolg]Benutzer wurde erfolgreich bearbeitet.
+  \item[Nachbedingung Fehlschlag]Änderungen wurden nicht übernommen, das System informiert über den aufgetretenen Fehler.
+  \item[Akteure]Verwalter oder Administrator.
+  \item[Beschreibung]Registrierte Benutzer werden über eine Weboberfläche erstellt, Rollen zugewiesen (siehe \nameref{F:rollen}) und gelöscht.
   \item[Erweiterung]
   \item[Alternativen]
 \end{description}
@@ -523,10 +521,10 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
   \item[Vorbedingung]Ändernder Nutzer hat ausreichende Rechte.
   \item[Nachbedingung Erfolg]Die Rolle hat neue Rechte bekommen und/oder alte Rechte verloren.
   \item[Nachbedingung Fehlschlag]Die Rechte wurden nicht übernommen.
-  \item[Akteure]Administrator oder Benutzerverwalter.
+  \item[Akteure]Verwalter oder Administrator.
   \item[Beschreibung]\hfill
   \begin{enumerate}
-  \item Administrator oder Benutzerverwalter wählt zu ändernde Rolle aus.
+  \item Administrator oder Verwalter wählt zu ändernde Rolle aus.
   \item Zugeteilte Rechte werden angepasst.
   \item \emph{optional:} Nutzer mit der entsprechenden Rolle bekommen eine E-Mail zugeschickt mit dem Hinweis auf die Änderung.
   \end{enumerate}
@@ -535,13 +533,14 @@ Die Dokumentfunktionen beschreiben jeden direkten Umgang mit der durch das Syste
 \end{description}
 
 \subsection{F303 (Benutzer Rolle(n) zuweisen)}
+\label{F:rollen}
 \begin{description}
   \item[Geschäftsprozess]Der Benutzer mit entsprechenden Rechten verteilen Rollen an andere Benutzer.
   \item[Ziel]Ein Benutzer bekommt eine Rolle zugeteilt von einem Administrator oder einem Benutzerverwalter.
   \item[Vorbedingung]Der ändernde Benutzer hat ausreichende Rechte.
   \item[Nachbedingung Erfolg]Der zu ändernde Benutzer hat eine neue Rolle zugewiesen bekommen.
   \item[Nachbedingung Fehlschlag]Der zu ändernde Benutzer hat die Rolle nicht gewechselt.
-  \item[Akteure]Administrator oder Benutzerverwalter.
+  \item[Akteure]Verwalter oder Administrator.
   \item[Beschreibung]\hfill
   \begin{enumerate}
   \item Administrator oder Benutzerverwalter wählt zu ändernden Benutzer aus.
