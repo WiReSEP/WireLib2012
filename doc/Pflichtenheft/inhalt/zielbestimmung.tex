@@ -12,7 +12,7 @@ Die primäre Funktion ist die Darstellung und Verwaltung von Buchinformationen (
 Es muss verschiedene Rollen geben:
 \begin{itemize}
   \item Den Gast, der Bücher suchen und sich Informationen über sie anzeigen lassen kann.
-  \item Den normalen Nutzer, der alle Funktionen, die zum allgemeinen Gebrauch nötig sind, nutzen kann, wie z.B. ein Buch ausleihen, zurückgeben, an andere übertragen, Bib\TeX Export von Buchinformationen erhalten, eine Liste aller momentan entliehenen Bücher anzeigen lassen etc.
+  \item Den normalen Nutzer, der alle Funktionen, die zum allgemeinen Gebrauch nötig sind, nutzen kann, wie z.B. ein Buch ausleihen, zurückgeben, an andere übertragen, \gls{glos:BibTex} Export von Buchinformationen erhalten, eine Liste aller momentan entliehenen Bücher anzeigen lassen etc.
   \item Die Verwaltung, die neue Benutzer anlegen kann.
   \item Den Bibliothekar, der erweiterte Editierrechte für Bücher erhält, wie Bücher importieren, als verloren markieren, anlegen von bestellten Büchern etc.
 \item Den Administrator, der (technische) Systemeinstellungen ändern kann.
@@ -22,20 +22,20 @@ Das Entleihen eines Buches durch Gäste muss über einen normalen Benutzer mögl
 
 Es sind die standardbibliographischen Informationen wie Titel, Autor etc., sowie die Kategorie eines Dokumentes, also ob es ein Buch, eine Diplom-/Masterarbeit, eine Dissertation oder ein Konferenzband ist, sowie mehrere dynamische Inhalte zu speichern. Außerdem ist für jedes Buch eine Historie anzulegen. 
 
-Das Layout muss an das Corporate Design der Technischen Universität Braunschweig angepasst sein, sowie eine klare und übersichtliche Struktur haben. 
+Das Layout muss an das \gls{glos:copdes} der Technischen Universität Braunschweig angepasst sein, sowie eine klare und übersichtliche Struktur haben. 
 
-Es muss intern der Unicode zur Codierung von Zeichen benutzt werden. Außerdem ist der Import von \TeX sowie ein Export zu Bib\TeX und der Uni-Bibliothek, welche das Allegroformat benutzt, einzubauen. 
+Es muss intern der U\gls{glos:unicode} zur Codierung von Zeichen benutzt werden. Außerdem ist der Import von \gls{glos:BibTex} sowie ein Export zu \gls{glos:BibTex} und der Uni-Bibliothek, welche das Format \gls{glos:Allegro} benutzt, einzubauen. 
 
 Die Anmeldung muss über ein sicheres Protokoll erfolgen.
 
 \section{Wunschkriterien}
 Zur Verbesserung der Funktion der Rollen kann eingebaut werden, dass Rollen erst auf Anfrage aktiviert werden und die Rechte von Rollen flexibel eingestellt werden können. 
 
-In der Buchsuche wäre ein Filter nach dem Vorbild des Thunderbird Message Filter wünschenswert. 
+In der Buchsuche wäre ein Filter nach dem Vorbild des \gls{glos:thmefi} wünschenswert. 
 
 Es kann eine Funktion erstellt werden, die ab einer bestimmten Ausleihdauer automatische Erinnerungsmails verschickt. Im Falle einer Entleihung durch Gäste wird diese Nachricht sowohl an den Gast als auch den normalen Benutzer, der den Entleihvorgang vorgenommen hat, versendet. 
 
-Eine Authentifizierung über AFS wäre denkbar.
+Eine Authentifizierung über \gls{glos:LDAP} wäre denkbar.
 
 \section{Abgrenzungskriterien}
 Es wird kein automatischer Datenaustausch mit der Uni-Bibliothek eingerichtet. Daten für die Bibliothek werden lediglich in einer Datei gespeichert, die der Bibliothek auf normalen Datentransferwegen wie E-Mail übermittelt werden kann. 
