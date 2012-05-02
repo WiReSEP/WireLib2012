@@ -10,6 +10,8 @@ Client / Server  Anwendungen ist die Umgebung jeweils für Client und Server
 getrennt anzugeben.
 
 \section{Software}
+Als Server-Betriebssystem werden wir Linux verwenden. Für das Clientbetriebssystem, ist allerdings ist jedes Browserfähiges Gerät vorgesehen.Wie gefordert  werden wir für die Framesworks wir Django benutzen und als Programmiersprache Python 2.6+. Unsere Datenbank wird mit SQLite entworfen.
+
 \begin{itemize}
 \item Server-Betriebssystem:              Linux
 \item Client-Betriebssystem:                Browser
@@ -21,6 +23,9 @@ getrennt anzugeben.
 
 
 \section{Hardware}
+Als Server ist ein PC gedacht, da die Datenbank nicht übermäßig groß ausfallen wird zum anderen kann die Website von jedem browserfähigem Gerät aus genutzt werden.
+
+
 \begin{itemize}
 \item Server: PC
 \item Client: Computer
@@ -29,17 +34,19 @@ getrennt anzugeben.
 \section{Orgware}
 
 Durch Internetverbindung zum WebsServer soll man sich über die Dokumente in der Bibliothek informieren können, und 
-diese ausleihen oder je nach Rolle anderweitig verwalten. Die Verbindung zum Webserver wird per https  gesichert. 
+diese ausleihen oder je nach Rolle anderweitig Verwalten. Die Verbindung zum Webserver wird per https  gesichert. 
 
 
 
 \section{Produktschnittstellen}
 
-Es wird folgende Schnittstellen geben:
+Es wird drei verschiedene Schnittstellen geben, wie zum einen für Allegro um der Uni-Bibliothek zu ermöglichen unsere Daten zu verwerten.
+Eine weitere zum importieren von BibTeX-Dateien und eine letzte für den WikipediaBookLocator und Links und Bilder von Bücher zu importieren.
+
 \begin{itemize}
-\item Allegro - zum Importieren der Daten aus der alten Datenbank, und der Möglichkeit der Uni-Bibliothek,  unsere Daten zu verwerten
-\item BibTex - zum Importieren von BibTex Dateien
-\item GoogleBooks - um Links und Bilder importieren zu können
+\item Allegro - zum importieren der Daten aus der alten Datenbank, und der Möglichkeit der Uni-Bibliothek unsere Daten zu verwerten
+\item BibTex - zum importieren von BibTex Dateien
+\item WikipediaBookLocator - um Links und Bilder importieren zu können
 \end{itemize}
 
 
