@@ -1,7 +1,7 @@
 FILE=TemplatePflichtenheft
 
 default:
-	pdflatex  -interaction=nonstopmode ${FILE}
+	pdflatex ${FILE}
 	makeindex -s ${FILE}.ist -t ${FILE}.alg -o ${FILE}.acr ${FILE}.acn
 	makeindex -s ${FILE}.ist -t ${FILE}.glg -o ${FILE}.gls ${FILE}.glo
 	pdflatex -interaction=nonstopmode ${FILE}
