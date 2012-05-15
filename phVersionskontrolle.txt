@@ -1,3 +1,0 @@
-Versionskontrolle:
-
-0.1 Erste Version der Zielbestimmung als .doc
