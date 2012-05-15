@@ -22,13 +22,32 @@
 %Realisierung der Funktion als Interaktion von Komponenten des zu entwickelnden
 %Systems in einem Sequenzdiagramm. Das Diagramm bitte ebenfalls kurz
 %beschreiben.
+Im folgenden werden die Funktionen und Qualitätsmerkmale des System auf ihre
+Modulzugehörigkeit hin geprüft und eingeordnet. Dabei wird auf das
+Basis-Konstrukt von Django aufgebaut und die Funktionen bzw. Qualitätsmerkmale
+werden in unterschiedliche Kategorien eingeteil.
+
+Hier zuerst die Kategorienen in die, Die einzelnen Funktionen und
+Qualitätsmerkmale eingeordnet werden.
+\begin{itemize}
+	\item Build in Django
+	\item Model einer Django-App
+	\item Klassen bzw. Objectmethode
+	\item Template
+	\item View im Backend
+	\item View im Frontend
+\end{itemize}
 
 %% Aufgaben: 
 % Kapitel 1 bearbeiten
-\include{F100-F200} % Q10 zusätzlich!
-\include{F201-F210}
-\include{F210-F214}
-\include{F220-F225}
-\include{F226-F229}
-\include{F230-F302}
-\include{Q11-Q31}
+\input{inhalt/F100-F200} % Q10 zusätzlich!
+\input{inhalt/F201-F210}
+\input{inhalt/F210-F214}
+\input{inhalt/F220-F225}
+\input{inhalt/F226-F229}
+\input{inhalt/F230-F302}
+
+\section{Analyse von Qualitätsmerkmal /Q10/ (Sicherheit der Anmeldung)}
+Die Verschlüsselung der Anmeldung wird von Django bereit gestellt und ist daher
+bereits eine Build-In-Funktion. 
+\input{inhalt/Q11-Q31}

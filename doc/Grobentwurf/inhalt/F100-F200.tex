@@ -1,9 +1,21 @@
 \section{Analyse von Funktion F100 (Anmeldung)}
-Diese Funktion wird von Django abgebildet und bereit gestellt. Es muss daher
-lediglich ein entsprechendes Template im Frontend jeder dargestellten Seite
-erreichbar sein. Dieses Template muss entweder nur in Form einer Template-Datei
-für \emph{django.contrib.auth} hinterlegt werden oder in einer allgemeinen App
-untergebracht werden.
+Diese Funktion ist eine Build-In-Funktion von Django. Innerhalb von Django
+werden die Benutzer durch eine eigenständige Klasse dargestellt. Diese Klasse
+muss erweitert werden um die zusätzlichen Daten der Benutzer zu speichern. Da
+Django eine Datenkbank zugrunde liegt müssen diese weiteren Daten in einer Extra
+Klasse mit Referenz auf die Benutzer gesetzt werden.
 
 \section{Analyse von Funktion F101 (Anmeldung über LDAP)}
-Diese Funktion muss in einer extra App dargestellt werden.
+Diese Funktion muss in einer extra App dargestellt werden. Die LDAP-Anmeldung
+muss dabei die normale Anmeldung erweitern und im View evtl. durch eine Checkbox
+zur Verfügung gestellt werden.
+
+\section{Analyse von Funktion F102 (Anbindung an die Universitätsbibliothek)}
+% TODO: Diese Analyse muss von jmd. geschrieben werden der sich mir der UB
+% auseinander gesetzt hat.
+
+\section{Analyse von Funktion F103 (Mailtexte ändern)}
+Die Mailtexte sind Bestandteil einer veränderbaren aber nicht großen Tabelle an
+Basisinformationen wie auch andere Einstellungen für die Software. Um die
+Informationen bereit zu stellen muss eine neue Klasse erzeugt werden, das alle
+Informationen für die App bereit stellt.
