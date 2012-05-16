@@ -19,3 +19,14 @@ Die Mailtexte sind Bestandteil einer veränderbaren aber nicht großen Tabelle a
 Basisinformationen wie auch andere Einstellungen für die Software. Um die
 Informationen bereit zu stellen muss eine neue Klasse erzeugt werden, das alle
 Informationen für die App bereit stellt.
+
+\section{Analyse von Funktion F201 (Bib\TeX\ import)}
+Ein oder mehrere Dokumente werden zum System hinzugefügt. Dafür wählt der
+Benutzer den entsprechenden View aus und läd über einen Upload-Dialog eine
+Bib\TeX -Datei hoch. Das System analysiert die Datei auf Validität, erzeugt
+Objekte aus den Daten die in eine Datenbank gespeichert werden.
+
+Für die Funktion wird also ein View benötigt, der den Upload bereit stellt.
+Desweiteren werden die Dokument-Objekte benötigt, die auch von vielen weiteren
+Funktionen verwendet werden und die auch über Django die Datenbankeinträge
+verwalten.
