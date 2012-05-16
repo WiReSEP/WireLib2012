@@ -1,0 +1,15 @@
+<html>
+<head>
+</head>
+<body>
+<h1>Dokumente des Authors {{author.name|escape}} {{author.surname|escape}}<h1>
+<hr>
+{% for document in author_query.objects.all() %}
+<div align=center>{{document.title|escape}}</div>
+<b>Kategorie:</b> {{document.category|escape}}
+<b>ISBN:</b> {{document.isbn|escape}}
+<b>Status:</b> {{document.status|escape}}
+<hr>
+{% endfor %}
+</body>
+</html>
