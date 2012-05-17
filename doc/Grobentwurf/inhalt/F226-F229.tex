@@ -1,0 +1,13 @@
+\section{Analyse von Funktion F226 (Ausleihfrist abgelaufen)}
+Die Mailtexte 
+
+\section{Analyse von Funktion F227 (Ausleihhistory)}
+Diese Funktion ist eine Built-In-Funktion von Django.
+Es wird ein Filter über die Dokument-Objekte gelegt, damit nur bestimmte bzw. die gewünschten Dokumente und deren bisherige Ausleiher ausgegeben werden. Diese so erhaltenen Daten müssen nun noch durch ein Frontend-View an geigneter Stelle der Web-Seite angezeigt werden.
+
+\section{Analyse von Funktion F228 (Derzeitiger Leihender)}
+Da in Django die User durch eine eigene Klasse dargestellt werden, muss diese Klasse auf die Rechte des momentan angemeldeten Benutzers überprüft werden. Falls diese Rechte ausreichend sind, wird wiederum durch ein Queryset+Filter die jeweilige Literatur und der dazugehörige Leihende durch einen View ausgegeben.
+Damit ist auch diese Funktion Built-In-Django.
+
+\section{Analyse von Funktion F229 (Entleihliste)}
+
