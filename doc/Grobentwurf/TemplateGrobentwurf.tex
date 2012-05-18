@@ -12,6 +12,14 @@
 \input{einstellungen/layout.tex}          % Diese Datei enthält alle
                                           % Layouteinstellungen
 
+% Dieses Befehle sortieren die Einträge in den einzelnen Listen:
+%makeindex -s datei.ist -t datei.alg -o datei.acr datei.acn
+%makeindex -s datei.ist -t datei.glg -o datei.gls datei.glo
+%makeindex -s datei.ist -t datei.slg -o datei.syi datei.syg
+
+\input{inhalt/glossar.tex}
+
+\newcommand{\BibTeX}{\gls{glos:BibTeX}\xspace}
 %------Beginn des Gesamtdokumentes----------------------------------------------
 \begin{document}
 
