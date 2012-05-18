@@ -4,9 +4,21 @@
 %-------------------------------------------------------------------------------
 
 \chapter{Einleitung}
-%Hier Einleitungstext einfügen, dabei die Formatierungen selber erstellen
-Hier ist die Arbeitsweise des Systems anhand von Aktivitätsdiagrammen darzustellen und
-kurz zu erläutern.
+Die Datenbank WiReLib repräsentiert die den Bestand der Bibliothek für das Institut für Wissenschaftliches Rechnen.
+Auf diese Datenbank können Nutzer über ein Web-Interface zugreifen um Dokumente zu suchen und sich nach der Anmeldung Dokumente auszuleihen.
+
 \section{Projektdetails}
-Die Details der Aufgabenstellung bitte anhand von Aktivitätsdiagramme darstellen und
-kurz verbal beschreiben.
+Die Funktionalitäten gliedern sich in drei Teilbereiche.
+Diese Bereiche bündeln die Anforderungen, die im Pflichtenheft spezialisiert
+worden sind.
+
+\subsection{Client}
+Über das Web-Interface erhält der als Client fungierende Browser Zugriff auf die Datenbank.
+
+\subsection{Server}
+Auf dem Server läuft die Anwendung, welche verschiedene Funktionen zum Auslesen und Verwalten der Datenbank bereitstellt. 
+Auch stellt der Server die Datenbank bereit und baut eine sichere Verbindung zum Client auf.
+
+\subsection{Datenbank}
+In der Datenbank werden die Dokumenente sowie die Nutzerrechte verwaltet.
+Auch werden Daten zu den einzelnen Nutzern gespeichert.
