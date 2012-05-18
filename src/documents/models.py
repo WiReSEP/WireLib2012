@@ -8,9 +8,10 @@ class category(models.Model):
 class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     title = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=17)
+    isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
     status = models.IntegerField()
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=True);
 
 class doc_extra(models.Model):
     """

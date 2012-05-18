@@ -1,5 +1,7 @@
 \section{Analyse von Funktion F226 (Ausleihfrist abgelaufen)}
-Die Mailtexte 
+Falls die Leihdauer eines Dokumentes abgelaufen ist, wird der Mailtext aus der 
+Datenbank abgerufen und an die E-Mail Adressen der beiden Entleiher(Bürge/Entleiher)
+gesendet. Hierfür muss eine neue App erstellt werden, welche alle benötigten Informationen enthält bzw. sich holt, um diese Funktion zu bewerkstelligen.
 
 \section{Analyse von Funktion F227 (Ausleihhistory)}
 Diese Funktion ist eine Built-In-Funktion von Django.
@@ -7,7 +9,10 @@ Es wird ein Filter über die Dokument-Objekte gelegt, damit nur bestimmte bzw. d
 
 \section{Analyse von Funktion F228 (Derzeitiger Leihender)}
 Da in Django die User durch eine eigene Klasse dargestellt werden, muss diese Klasse auf die Rechte des momentan angemeldeten Benutzers überprüft werden. Falls diese Rechte ausreichend sind, wird wiederum durch ein Queryset+Filter die jeweilige Literatur und der dazugehörige Leihende durch einen View ausgegeben.
-Damit ist auch diese Funktion Built-In-Django.
+
 
 \section{Analyse von Funktion F229 (Entleihliste)}
+Wenn der Benutzer angemeldet ist und seine Entleihliste einsehen möchte, wird 
+durch einen View, welcher seine Informationen durch einen Anfrage an die Datenbank 
+erhält, diese ausgegeben.
 
