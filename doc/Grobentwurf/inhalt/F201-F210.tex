@@ -1,9 +1,45 @@
 \section{Analyse von Funktion F201 (Webinterface-Import)}
-Der Benutzer wählt einen View der ein Interface bietet um die Daten für einzelne
-Dokumente 
+\label{f:201}
+Der Benutzer, der entsprechende Rechte hat, wählt einen View, der ein Interface
+bietet um die Daten für einzelne Dokumente in das System ein zu pflegen. Dafür
+wird ihm vom System eine Eingabemaske auf dem View geboten.
+
+Diese Funktion stellt für den Benutzer eine weitere Schnittstelle zur internen
+\BibTeX -Verwaltung. Es handelt sich also nur um einen weiteren View zu einer
+bestehenden Funktion, weswegen auf eine Grafik verzichtet wird
+
 
 \section{Analyse von Funktion F202 (Editieren von Dokumenten)}
+% Grafik?
+Der Benutzer, der entsprechnde Rechte hat, nimmt auf der Detailansicht eines
+Dokumentes die Möglichkeit wahr, die Daten Dieses nachträglich zu ändern. Dafür
+wählt der die entsprechnde Option und wird vom System auf eine Seite ähnlich der
+aus \ref{f:201}\nameref{f:201} mit einer ausgefüllten Maske.
+
+Diese Funktion muss zurest das Dokument auslesen um den View zu erzeugen und
+dann die Einträge des Dokumentes entsprechend ändern. Eine solche Veränderung
+von den Objekten benötigt lediglich entsprechnende set- und get-Methoden für die
+Dokumente und einen entsprechenden View für Django.
 
 \section{Analyse von Funktion F203 (Löschen von Dokumenten)}
+Der Administrator, als einziger Benutzer mit den entsprechenden Privilegien,
+löscht ein Dokument vollständig aus der Datenbank inkl. der Ausleihhistory.
+Diese Aktion wird über einen View im Backend erledigt, der dort bereit steht.
+
+Benötigt wird für Django ein entsprechender View im Backend, der die Möglichkeit
+bietet die eingetragenen Dokumente im Backend ein zu sehen. Weiter wird die
+zugrundeliegende Funktion der Löschung von Objekten aus der Datenbank benötigt,
+die in Django bereits build-in ist. Aufgrund des nicht sehr komplexen
+Funktionsaufbaus wurde auf eine Funktion verzichtet.
 
 \section{Analyse von Funktion F210 (Generelle Suche)}
+Der Benutzer gibt in eine Suchmaske einen oder mehrere Begriffe ein, um seine
+Suche zu spezifizieren. Nach der Bestätigung der Eingabe gibt das System
+entsprechende Treffer dem Benutzer in einer Liste zurück.
+
+Die zugrundeliegenden Funktionen der Objekt-Suche nach bestimmten Parametern
+wird bereits durch Django bereit gestellt. Der Such-View arbeitet auf dabei auf
+einer Funktion die für die Dokumentfunktionen arbeitet.
+
+Da diese Suche mit der weitläufig bekannten Google-Suche vergleichbar ist wird
+auf eine Grafik verzichtet.
