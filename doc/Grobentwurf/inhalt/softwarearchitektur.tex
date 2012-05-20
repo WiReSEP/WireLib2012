@@ -23,16 +23,30 @@ innen liegenden Aufteilung ist für jede Operation einer Schnittstelle eine
 Zeile einzufügen.  Reine Set- und Get-Aufrufe brauchen nicht aufgeführt zu
 werden (sollten auch möglichst nicht komponentenübergreifend auftauchen).
 
-\begin{tabular}[ht]{|l|c|}
- \hline
- Schnittstelle & Aufgabenbeschreibung\\
- \hline\hline
-    <Schnittstellen – ID>: & Operation      |     Beschreibung\\
- \hline\hline\hline
-    <Bezeichnung>  & <Signatur der Operation>|<Aufgabenbeschreibung der
-                                                                    Operation>\\
-    \hline
-  \end{tabular}
+\begin{tabular}[ht]{|l|p{0.35\linewidth}|p{0.35\linewidth}|}
+\hline
+Schnittstelle & \multicolumn{2}{|c|}{Aufgabenbeschreibung}\\
+\hline
+\hline
+/S10/ Wähle View & \multicolumn{2}{|c|}{}\\
+\hline
+& search(String) : List & Die Suche liefert eine Liste mit den Ergebnissen\\
+& changeLendState(String) : void & Ändert den Ausleihstatus des Dokuments\\
+& signIn() : void & Anmelden des Benutzers\\
+& import(data) : void & Import \\
+& getRole(String) : String & liefert die aktuelle Rolle des Nutzers\\
+& getHistory(String) : List & liefert eine Liste der Ausgeliehen Dokumente\\
+& createDoc(...) : void & erstellt ein neues Dokument\\
+& editDoc(String, ...) : void & Ändert das Dokument \\
+& getDoc(String) : List & liefert die Dokumentinformationen in einer Liste\\
+& getLend(String) : String & liefert den Nutzernamen der das Dokument ausgeliehen hat\\
+\hline
+/S20/Export & \multicolumn{2}{|c|}{Exportieren von Informationen}\\
+\hline
+& exportBibTeX() : String & Liefert einen String welcher die Dokumentinformationen im BibTeX-Format enthält\\
+& exportAllegro() : & Liefert eine Datei für die UB\\
+\hline
+\end{tabular}
 
 
 
