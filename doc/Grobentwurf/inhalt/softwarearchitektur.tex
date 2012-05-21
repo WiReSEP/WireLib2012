@@ -13,15 +13,13 @@ resultierende Komponentenstruktur zunächst überblickartig durch ein
 Komponentendiagramm beschrieben. Die Bezeichnungen und Anzahl der Komponenten
 muss natürlich konsistent sein mit der in Kapitel 2!
 
-\section{Schnittstellenspezifikation}
+\begin{figure}[h]
+\includegraphics[width=0.8\linewidth]{bilder/komponentendiagramm_client_server.jpg}
+\caption[Komponentendiagramm]{Komponentendiagramm}
+\label{Komponentendiagramm}
+\end{figure}
 
-Im Folgenden werden die einzelnen Schnittstellen der Komponenten aus der
-Komponentenspezifikation näher erläutert, d.h. die von Ihnen zur Verfügung
-gestellten Operationen werden dokumentiert. Die Tabelle ist dabei um so viele
-Zeilen zu erweitern, wie es Schnittstellen im Komponentendiagramm gibt. In der
-innen liegenden Aufteilung ist für jede Operation einer Schnittstelle eine
-Zeile einzufügen.  Reine Set- und Get-Aufrufe brauchen nicht aufgeführt zu
-werden (sollten auch möglichst nicht komponentenübergreifend auftauchen).
+\section{Schnittstellenspezifikation}
 
 \begin{tabular}[ht]{|l|p{0.35\linewidth}|p{0.35\linewidth}|}
 \hline
@@ -31,13 +29,11 @@ Schnittstelle & \multicolumn{2}{|c|}{Aufgabenbeschreibung}\\
 /S10/ Wähle View & \multicolumn{2}{|c|}{}\\
 \hline
 & search(String) : List & Die Suche liefert eine Liste mit den Ergebnissen\\
-& changeLendState(String) : void & Ändert den Ausleihstatus des Dokuments\\
-& signIn() : void & Anmelden des Benutzers\\
-& import(data) : void & Import \\
+& signIn(String) : boolean & Anmelden des Benutzers\\
+& signOut() : boolean & Abmelden des Benutzers\\
+& import(data) : boolean & Import \\
 & getRole(String) : String & liefert die aktuelle Rolle des Nutzers\\
 & getHistory(String) : List & liefert eine Liste der Ausgeliehen Dokumente\\
-& createDoc(...) : void & erstellt ein neues Dokument\\
-& editDoc(String, ...) : void & Ändert das Dokument \\
 & getDoc(String) : List & liefert die Dokumentinformationen in einer Liste\\
 & getLend(String) : String & liefert den Nutzernamen der das Dokument ausgeliehen hat\\
 \hline
@@ -46,6 +42,11 @@ Schnittstelle & \multicolumn{2}{|c|}{Aufgabenbeschreibung}\\
 & exportBibTeX() : String & Liefert einen String welcher die Dokumentinformationen im BibTeX-Format enthält\\
 & exportAllegro() : & Liefert eine Datei für die UB\\
 \hline
+/S30/Django & \multicolumn{2}{|c|}{Verbindung mit Datenbank}\\
+\hline
+& connect(String) : boolean & Verbindung zur Datenbank\\
+& disconnect() : boolean & Verbindung wird beendet\\
+& sendQuery(String) : List & liefert eine Liste des Ergebnisses\\
 \end{tabular}
 
 
