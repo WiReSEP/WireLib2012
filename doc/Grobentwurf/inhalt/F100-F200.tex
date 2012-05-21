@@ -1,4 +1,6 @@
 \section{Analyse von Funktion F100 (Anmeldung)}
+Der Benutzer meldet sich auf dem System unter seinem Benutzernamen an.
+
 Diese Funktion ist eine Build-In-Funktion von Django. Innerhalb von Django
 werden die Benutzer durch eine eigenständige Klasse dargestellt. Diese Klasse
 muss erweitert werden um die zusätzlichen Daten der Benutzer zu speichern. Da
@@ -6,15 +8,25 @@ Django eine Datenkbank zugrunde liegt müssen diese weiteren Daten in einer Extr
 Klasse mit Referenz auf die Benutzer gesetzt werden.
 
 \section{Analyse von Funktion F101 (Anmeldung über LDAP)}
+%% TODO
+%%  Glossar eintrag hinzufügen
+Der Benutzer meldet sich auf dem System über einen GITZ-Benutzer an.
+
 Diese Funktion muss in einer extra App dargestellt werden. Die LDAP-Anmeldung
 muss dabei die normale Anmeldung erweitern und im View evtl. durch eine Checkbox
 zur Verfügung gestellt werden.
 
 \section{Analyse von Funktion F102 (Anbindung an die Universitätsbibliothek)}
+%% TODO Abkürzung hinzufügen
+Ein Benutzer mit hinreichtenden Rechten verschickt an die Universitätsbibliothek
+den Stand der aktuellen Datensätze.
 % TODO: Diese Analyse muss von jmd. geschrieben werden der sich mir der UB
 % auseinander gesetzt hat.
 
 \section{Analyse von Funktion F103 (Mailtexte ändern)}
+Die Standard-Mails die vom System an Benutzer verschickt werden, sollen geändert
+werden.
+
 Die Mailtexte sind Bestandteil einer veränderbaren aber nicht großen Tabelle an
 Basisinformationen wie auch andere Einstellungen für die Software. Um die
 Informationen bereit zu stellen muss eine neue Klasse erzeugt werden, das alle
