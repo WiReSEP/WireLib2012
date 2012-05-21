@@ -1,10 +1,11 @@
 \section{Analyse von Qualitätsmerkmal /Q11/ (SQL-Injections vermeiden)}
 
 %% TODO
-% Sollte vlt. extra geprüft werden. Was macht es sicher?
-SQL-Statements werden ausschließlich durch Übergabe von Parametern an Funktionen
-von Django ausgeführt. SQL-Injections sind in Django nicht möglich.
-
+SQL-Statements werden ausschließlich durch Übergabe von Parametern an 
+Funktionen von Django ausgeführt. SQL-Injections sind in Django durch 
+integriertes Escaping von SQL-Syntax nicht möglich. Nur wenn RAW-SQL 
+ausgeführt werden soll, oder aber an die Funktion .extra von Django 
+übergeben werden soll, ist eigenes Escaping notwendig.
 
 \section{Analyse von Qualitätsmerkmal /Q20/ (Layoutstruktur)}
 
@@ -12,15 +13,16 @@ von Django ausgeführt. SQL-Injections sind in Django nicht möglich.
 % Glossareintrag hinzufügen.
 Die Templates für Django müssen so angepasst werden, dass sie dem Corporate
 Design der TU Braunschweig entsprechen. Dies wird durch Verwendung ensprechender
-Grafiken, Cascading-Stylesheets, Webseitenstruktur und weiterem Mitteln erreicht.
+Grafiken, Cascading-Stylesheets, Webseitenstruktur und weiteren Mitteln erreicht.
 
 
 \section{Analyse von Qualitätsmerkmal /Q21/ (Klare Struktur)}
 
 %% TODO
-% sind keine Stylesheets, und wie stellt es die klare Struktur sicher?
-Die Stylesheets für die Templates von Django müssen auf Übersichtlichkeit
-ausgelegt werden. Ein entsprechendes Design muss vorher entworfen werden.
+Die Stylesheets für die Templates von Django sowie die Templates selber
+müssen so konstruiert werden, dass der auf der Webseite dargestellte 
+Inhalt übersichtlich ist. Menüführung soll ebenfalls ohne Verschachtelung
+möglich sein. Ein entsprechendes Design muss vorher entworfen werden.
 
 
 \section{Analyse von Qualitätsmerkmal /Q22/ (Suche)}
@@ -35,7 +37,6 @@ große Anpassungen bereits intuitiv und einfach nutzbar.
 \section{Analyse von Qualitätsmerkmal /Q30/ (Zeichenketten)} 
 
 %% TODO
-% Sicher oder Vermutung?
 Die Bearbeitung von Zeichenketten als Unicode wird bereits von der benutzten
 Datenbank SQLite erfordert, welche nur Unicode-codierte Zeichenketten benutzt.
 
