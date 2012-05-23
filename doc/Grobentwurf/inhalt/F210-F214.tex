@@ -1,17 +1,24 @@
-\section{Analyse von Funktion F210 (Generelle Suche)}
-Diese Funktion ist eine Build-In Funktion von Django. Das gesuchte Wort wird einfach mithilfe einer Search-Query innerhalb der Datenbank gesucht und ausgegeben. 
-
 \section{Analyse von Funktion F211 (Suche mit erweiterten Ausdrücken)}
-Auch diese Suche wird von Django mithilfe von mehreren Querysets bereitgestellt und ist daher bereits eine Built-In Funktion.
+Auch hier gibt der Benutzer einen oder mehrere Begriffe in die Suchmaske ein, kann aber nun zusätzlich bestimmte Teilworte (and, or etc.) in das Suchfeld eingeben, um seine Suche zu präzisieren.  
+
+Auch diese Suche wird von Django mithilfe von mehreren Querysets bereitgestellt und ist daher bereits eine Built-In Funktion. Diese Funktion gehört zur Komponente \textbf{Model:Suche}. 
+Die Ergebnisse werden durch einen View ausgegeben. 
 
 \section{Analyse von Funktion 212 (erweiterte Suche)}
-Im FrontEnd werden die bestätigten Parameter (aus der Maske für die erweiterte Suche) den dazu passenden Built-In Querysets im System übergeben. 
+Durch diese Funktion ist der Benutzer in der Lage, mithilfe einer erweiterten Suchmaske bestimmte Felder bzw. Checkbox zu bestätigen, die seine Suche spezifizieren sollen.
+    
+Diese Funktion liest zuerst die im FrontEnd bestätigten Parameter (aus der Maske für die erweiterte Suche) aus und übergibt sie der Objekt-Suche, deren benötigte Funktionen bereits von Django zur Verfügung gestellt wird. Somit gehört auch sie zur Komponente \textbf{Model:Suche}. Durch einen View werden die Ergebnisse ausgegeben.  
 
 \section{Analyse von Funktion 213 (Suche mit regulären Ausdrücken)}
-Diese Funktion muss in einer extra App dargestellt werden, wo genau bestimmt wird, welche aus der FrontEnd ermittelten Zeichenfolgen in der Suchanfrage bestimmte Querysets auslösen.
+In der erweiteren Suchmaske ist der Benutzer zusätzlich in der Lage, reguläre Ausdrücke in das Suchfeld einzugeben, um seine Suche zu vereinfachen. 
 
+Die aus dem FrontEnd ausgelesenen regulären Ausdrücke werden in der Objekt-Suche berücksichtigt, die Ergebnisse durch einen View dargestellt. 
+ 
 \section{Analyse von Funktion 214 (Sortierung der Suche)}
-Auch diese Funktion muss in einer extra App dargestellt werden. Das vorläufige Ergebnis aus einer Suchanfrage wird tabellarisch angezeigt, dessen Spalten aber interaktiv sind: Die Spaltennamen lösen system-intern Funktionen aus, die aus Build-In Querysets bestehen, die genau bestimmen, wie die Ergebnisse dargestellt werden sollen (in diesem Fall alphabetisch aufwärts/abwärts). 
+Nach einer Suchanfrage werden die Ergebnisse tabellarisch aufgelistet. Der Benutzer ist nun in der Lage durch Interaktion mit gewünschten Spaltennamen, diese Ergebnisse alphabetisch aufwärts/abwärts zu sortieren. 
+
+Die Funktion startet in Abhängigkeit von dem bestätigten Spaltenparameter eine Sortierung des aktuellen Views mithilfe von in Django enthaltenen Querysets und passende Filter. Die Funktion ist Teil der Komponente \textbf{Model}. 
+
 
 
 
