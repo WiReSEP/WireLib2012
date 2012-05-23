@@ -14,7 +14,7 @@ Komponenten und Subsysteme zu liefern.
 %muss natürlich konsistent sein mit der in Kapitel 2!
 Bei der Analyse der notwendigen Komponenten fallen drei Komponentenbereiche auf.
 Zum einen muss der Client beachtet werden, zum anderen gibt es den Server. Der
-Server besteht aus der Django-App, den Templates und der Datenbank. Die App
+Server besteht aus der \gls{glos:django}-App, den Templates und der Datenbank. Die App
 benötigt noch die Views und den Adminbereich zur Kommunikation mit dem Client
 und die Models für den Zugriff auf die Datenbank.
 
@@ -50,7 +50,7 @@ Dokumentinformationen im \BibTeX -Format enthält\\
 & exportAllegro() : \Gls{glos:Allegro} -kompatible Datei & Liefert eine Datei für die
 \Gls{UB}\\
 \hline
-/S30/Django & \multicolumn{2}{|c|}{Verbindung mit Datenbank}\\
+/S30/\gls{glos:django} & \multicolumn{2}{|c|}{Verbindung mit Datenbank}\\
 \hline
 & connect(String) : boolean & Verbindung zur Datenbank\\
 & disconnect() : boolean & Verbindung wird beendet\\
@@ -94,7 +94,7 @@ Komponenten sehr projektspezifisch gehalten werden müssen. Sie können unter Um
 \label{StAdmin}
 \end{figure}
 
-Die Komponente \textbf{DB} wird hier nicht modelliert, da diese zunächst trivial ist(Anfrage an DB -> DB liefert Ergebnis) und die \textbf{DB} vollkommen durch Django auf die Komponente \textbf{Models} gemappt wird.
+Die Komponente \textbf{DB} wird hier nicht modelliert, da diese zunächst trivial ist(Anfrage an DB -> DB liefert Ergebnis) und die \textbf{DB} vollkommen durch \gls{glos:django} auf die Komponente \textbf{Models} gemappt wird.
 
 Auch auf eine Darstellung der Komponente \textbf{Template} wird verzichtet, da ein Template nur einen wirklichen Zustand hat, und dies ist der des Existierens. 
 

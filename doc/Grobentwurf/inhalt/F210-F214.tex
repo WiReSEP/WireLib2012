@@ -1,13 +1,13 @@
 \section{Analyse von Funktion F211: Suche mit erweiterten Ausdrücken}
 Auch hier gibt der Benutzer einen oder mehrere Begriffe in die Suchmaske ein, kann aber nun zusätzlich bestimmte Teilworte (and, or etc.) in das Suchfeld eingeben, um seine Suche zu präzisieren.  
 
-Auch diese Suche wird von Django mithilfe von mehreren Querysets bereitgestellt und ist daher bereits eine Built-In Funktion. Diese Funktion gehört zur Komponente \textbf{Model}. Die Ergebnisse werden durch einen View ausgegeben. 
+Auch diese Suche wird von \gls{glos:django} mithilfe von mehreren Querysets bereitgestellt und ist daher bereits eine Built-In Funktion. Diese Funktion gehört zur Komponente \textbf{Model}. Die Ergebnisse werden durch einen View ausgegeben. 
 Da der Funktionsaufbau von Suchanfragen trivial ist (Anfrage an den Server/Datenbank, Response zurück), wird auf die Grafiken zu F211-F214 verzichtet.   
 
 \section{Analyse von Funktion F212: erweiterte Suche}
 Durch diese Funktion ist der Benutzer in der Lage, mithilfe einer erweiterten Suchmaske, bestimmte Felder bzw. Checkboxen zu betätigen, die seine Suche spezifizieren sollen.
     
-Diese Funktion liest zuerst die im FrontEnd bestätigten Parameter (aus der Maske für die erweiterte Suche) aus und übergibt sie der Objekt-Suche, deren benötigte Funktionen bereits von Django zur Verfügung gestellt wird. Somit gehört auch sie zur Komponente \textbf{Model}. Durch einen View werden die Ergebnisse ausgegeben. 
+Diese Funktion liest zuerst die im FrontEnd bestätigten Parameter (aus der Maske für die erweiterte Suche) aus und übergibt sie der Objekt-Suche, deren benötigte Funktionen bereits von \gls{glos:django} zur Verfügung gestellt wird. Somit gehört auch sie zur Komponente \textbf{Model}. Durch einen View werden die Ergebnisse ausgegeben. 
 
 \section{Analyse von Funktion F213: Suche mit regulären Ausdrücken}
 In der erweiterten Suchmaske ist der Benutzer zusätzlich in der Lage, \gls{glos:regex} in das Suchfeld einzugeben, um seine Suche zu vereinfachen. 
@@ -17,7 +17,7 @@ Als Teil der Komponente \textbf{Model} benutzt die Funktion die \gls{glos:regex}
 \section{Analyse von Funktion F214: Sortierung der Suche}
 Nach einer Suchanfrage werden die Ergebnisse tabellarisch aufgelistet. Der Benutzer ist nun in der Lage durch Interaktion mit gewünschten Spaltennamen, diese Ergebnisse alphabetisch aufwärts/abwärts zu sortieren. 
 
-Die Funktion startet in Abhängigkeit von dem bestätigten Spaltenparameter eine Sortierung des aktuellen Views mithilfe von (in Django enthalten) Querysets und passenden Filtern. Die neue Ergebnisauflistung wird durch einen neuen View dargestellt. Die Funktion ist Teil der Komponente \textbf{Model}. 
+Die Funktion startet in Abhängigkeit von dem bestätigten Spaltenparameter eine Sortierung des aktuellen Views mithilfe von (in \gls{glos:django} enthalten) Querysets und passenden Filtern. Die neue Ergebnisauflistung wird durch einen neuen View dargestellt. Die Funktion ist Teil der Komponente \textbf{Model}. 
 
 
 

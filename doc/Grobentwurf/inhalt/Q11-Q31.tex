@@ -1,14 +1,14 @@
 \section{Analyse von Qualitätsmerkmal Q11: SQL-Injections vermeiden}
 
 SQL-Statements werden ausschließlich durch Übergabe von Parametern an 
-Funktionen von Django ausgeführt. SQL-Injections sind in Django durch 
+Funktionen von \gls{glos:django} ausgeführt. SQL-Injections sind in Django durch 
 integriertes Escaping von SQL-Syntax nicht möglich. Nur wenn RAW-SQL 
-ausgeführt werden soll, oder aber an die Funktion .extra von Django 
+ausgeführt werden soll, oder aber an die Funktion .extra von \gls{glos:django} 
 übergeben werden soll, ist eigenes Escaping notwendig.
 
 \section{Analyse von Qualitätsmerkmal Q20: Layoutstruktur}
 
-Die Templates für Django müssen so angepasst werden, dass sie dem
+Die Templates für \gls{glos:django} müssen so angepasst werden, dass sie dem
 \Gls{glos:copdes}  der TU Braunschweig entsprechen. Dies wird durch Verwendung
 ensprechender Grafiken, Cascading-Stylesheets, Webseitenstruktur und weiteren
 Mitteln erreicht.
@@ -16,7 +16,7 @@ Mitteln erreicht.
 
 \section{Analyse von Qualitätsmerkmal Q21: Klare Struktur}
 
-Die Stylesheets für die Templates von Django sowie die Templates selber
+Die Stylesheets für die Templates von \gls{glos:django} sowie die Templates selber
 müssen so konstruiert werden, dass der auf der Webseite dargestellte 
 Inhalt übersichtlich ist. Menüführung soll ebenfalls ohne Verschachtelung
 möglich sein. Ein entsprechendes Design muss vorher entworfen werden.
@@ -24,7 +24,7 @@ möglich sein. Ein entsprechendes Design muss vorher entworfen werden.
 
 \section{Analyse von Qualitätsmerkmal Q22: Suche}
 
-Verwendet wird die in Django bereits implementierte Suche. Diese Suche ist ohne
+Verwendet wird die in \gls{glos:django} bereits implementierte Suche. Diese Suche ist ohne
 große Anpassungen bereits intuitiv und einfach nutzbar.
 
 
@@ -36,5 +36,5 @@ Datenbank \Gls{glos:sqlite} erfordert, welche nur \Gls{glos:unicode}-codierte Ze
 
 \section{Analyse von Qualitätsmerkmal Q31: Löschen von Dokumenten} 
 
-Löschen von Dokumenten ist mit Django möglich. Intern muss verhindert werden,
+Löschen von Dokumenten ist mit \gls{glos:django} möglich. Intern muss verhindert werden,
 dass andere Nutzer als Administratoren löschen dürfen.
