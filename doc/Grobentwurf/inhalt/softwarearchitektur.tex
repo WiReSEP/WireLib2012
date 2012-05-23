@@ -45,8 +45,10 @@ Schnittstelle & \multicolumn{2}{|c|}{Aufgabenbeschreibung}\\
 \hline
 /S20/Export & \multicolumn{2}{|c|}{Exportieren von Informationen}\\
 \hline
-& exportBibTeX() : String & Liefert einen String welcher die Dokumentinformationen im BibTeX-Format enthält\\
-& exportAllegro() : Allgerokompatible Datei & Liefert eine Datei für die UB\\
+& exportBibTeX() : String & Liefert einen String welcher die
+Dokumentinformationen im \BibTeX -Format enthält\\
+& exportAllegro() : \Gls{glos:Allegro} -kompatible Datei & Liefert eine Datei für die
+\Gls{UB}\\
 \hline
 /S30/Django & \multicolumn{2}{|c|}{Verbindung mit Datenbank}\\
 \hline
@@ -62,12 +64,42 @@ Schnittstelle & \multicolumn{2}{|c|}{Aufgabenbeschreibung}\\
 
 \section{Protokolle für die Benutzung der Komponenten}
 
-In diesem Abschnitt wird mit Hilfe von Protokoll-Statecharts die korrekte
-Verwendung der zu entwickelnden Komponenten dokumentiert. Dies ist insbesondere
-für diejenigen Komponenten notwendig, für die eine Wiederverwendung möglich
-erscheint oder sogar bereits geplant ist.
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{bilder/KompClient.pdf}
+\caption{Statechart für die Komponente Client}
+\label{StClient}
+\end{figure}
 
-Begründen Sie für welche Komponenten eine Wiederverwendung sinnvoll erscheint
-und für welche nicht!
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{bilder/KompView.pdf}
+\caption{Statechart für die Komponente View}
+\label{StView}
+\end{figure}
 
-Fügen Sie so viele Statechartdiagramme ein, wie sie Komponenten gefunden haben.
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{bilder/KompModel.pdf}
+\caption{Statechart für die Komponente Model}
+\label{StModel}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{bilder/KompAdmin.pdf}
+\caption{Statechart für die Komponente Admin}
+\label{StAdmin}
+\end{figure}
+
+
+
+
+
+
+
+%In diesem Abschnitt wird mit Hilfe von Protokoll-Statecharts die korrekte
+%Verwendung der zu entwickelnden Komponenten dokumentiert. Dies ist insbesondere
+%für diejenigen Komponenten notwendig, für die eine Wiederverwendung möglich
+%erscheint oder sogar bereits geplant ist.
+
+%Begründen Sie für welche Komponenten eine Wiederverwendung sinnvoll erscheint
+%und für welche nicht!
+
+%Fügen Sie so viele Statechartdiagramme ein, wie sie Komponenten gefunden haben.
