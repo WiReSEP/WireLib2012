@@ -64,6 +64,12 @@ Dokumentinformationen im \BibTeX -Format enthält\\
 
 \section{Protokolle für die Benutzung der Komponenten}
 
+In diesem Unterkapitel werden nun die Protokoll-Statecharts für alle Komponenten,
+welche in dem Komponentendiagramm \ref{Komponentendiagramm} vorhanden sind, dargestellt.
+
+Für jede dieser Komponenten ist eine Wiederverwendung begrenzt sinnvoll, da alle diese 
+Komponenten sehr projektspezifisch gehalten werden müssen. Sie können unter Umständen in anderen Projekten eingesetzt werden, aber dann nur unter größten Anpassungsbedarf.
+
 \begin{figure}
 \includegraphics[width=0.8\linewidth]{bilder/KompClient.pdf}
 \caption{Statechart für die Komponente Client}
@@ -88,8 +94,9 @@ Dokumentinformationen im \BibTeX -Format enthält\\
 \label{StAdmin}
 \end{figure}
 
+Die Komponente \textbf{DB} wird hier nicht modelliert, da diese zunächst trivial ist(Anfrage an DB -> DB liefert Ergebnis) und die \textbf{DB} vollkommen durch Django auf die Komponente \textbf{Models} gemappt wird.
 
-
+Auch auf eine Darstellung der Komponente \textbf{Template} wird verzichtet, da ein Template nur einen wirklichen Zustand hat, und dies ist der des Existierens. 
 
 
 
