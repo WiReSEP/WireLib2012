@@ -1,10 +1,11 @@
 \section{Analyse von Funktion F230(Bib\TeX -Export)}
 Die für diesen Export nötigen Informationen sind vollständig in der Datenbank enthalten und müssen mit Django ermittelt werden. Die so erhaltenen Daten werden dem Benutzer in einer View im \BibTeX -Format zum Kopieren angezeigt. Diese Funktion gehört zur Komponente \textbf{View:Export}.
 
-%\begin{figure}[h]
-%\includegraphics[width=0.8\linewidth]{bilder/Seq-BibTex.svg}
-%\label{BibTeX-Export}
-%\end{figure}
+\begin{figure}[h]
+\includegraphics[width=0.8\linewidth]{bilder/Seq-BibTex.pdf}
+\caption[BibTeX-Export]{BibTeX-Export}
+\label{BibTeX-Export}
+\end{figure}
 
 \section{Analyse von Funktion F231(Universitätsbibliothek-Export)}
 Diese Funktion muss in einer extra Klasse dargestellt werden. Die für diesen Export nötigen Informationen sind vollständig in der Datenbanken enthalten und müssen mittels einer direkten Datenbankabfrage ermittelt werden. Diese Daten werden durch eine Funktion in das richtige Format gebracht und in einem vom Benutzer vorher gewählten Dateipfad in einem Allegro kompatiblen Format gespeichert. Dieses Sequenzdiagramm ist strukturell genauso wie das für den BibTex-Export, nur das auf eine andere Weise ausgegeben wird. Deswegen wird dies hier weggelassen. Diese Komponente gehört zur \textbf{View:Export}.
