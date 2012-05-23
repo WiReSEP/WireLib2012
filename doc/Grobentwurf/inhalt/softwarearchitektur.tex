@@ -8,10 +8,15 @@ Dieser Abschnitt hat die Aufgabe, einen Überblick über die zu entwickelnden
 Komponenten und Subsysteme zu liefern.
 \section{Komponentenspezifikation}
 
-In diesem Abschnitt wird die aus der Analyse der Produktfunktionen (Kapitel 2)
-resultierende Komponentenstruktur zunächst überblickartig durch ein
-Komponentendiagramm beschrieben. Die Bezeichnungen und Anzahl der Komponenten
-muss natürlich konsistent sein mit der in Kapitel 2!
+%In diesem Abschnitt wird die aus der Analyse der Produktfunktionen (Kapitel 2)
+%resultierende Komponentenstruktur zunächst überblickartig durch ein
+%Komponentendiagramm beschrieben. Die Bezeichnungen und Anzahl der Komponenten
+%muss natürlich konsistent sein mit der in Kapitel 2!
+Bei der Analyse der notwendigen Komponenten fallen drei Komponentenbereiche auf.
+Zum einen muss der Client beachtet werden, zum anderen gibt es den Server. Der
+Server besteht aus der Django-App, den Templates und der Datenbank. Die App
+benötigt noch die Views und den Adminbereich zur Kommunikation mit dem Client
+und die Models für den Zugriff auf die Datenbank.
 
 \begin{figure}[h]
     \begin{center}
