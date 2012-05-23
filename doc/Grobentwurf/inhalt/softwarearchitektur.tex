@@ -33,16 +33,15 @@ und die Models für den Zugriff auf die Datenbank.
 Schnittstelle & \multicolumn{2}{|c|}{Aufgabenbeschreibung}\\
 \hline
 \hline
-/S10/ Wähle View & \multicolumn{2}{|c|}{}\\
+/S10/ HTTP Request & \multicolumn{2}{|c|}{}\\
 \hline
 & search(String) : List & Die Suche liefert eine Liste mit den Ergebnissen\\
 & signIn(String) : boolean & Anmelden des Benutzers\\
 & signOut() : boolean & Abmelden des Benutzers\\
 & import(data) : boolean & Import \\
-& getRole(String) : String & liefert die aktuelle Rolle des Nutzers\\
 & getHistory(String) : List & liefert eine Liste der Ausgeliehen Dokumente\\
 & getDoc(String) : List & liefert die Dokumentinformationen in einer Liste\\
-& getLend(String) : String & liefert den Nutzernamen der das Dokument ausgeliehen hat\\
+& getView(String) : View & liefert die View, die die Aufgabenstellung erfüllt\\
 \hline
 /S20/Export & \multicolumn{2}{|c|}{Exportieren von Informationen}\\
 \hline
