@@ -7,12 +7,14 @@ Diese Funktion gehört zur Komponente \textbf{Models}, natürlich in Interaktion
 
 
 \section{Analyse von Funktion F227: Ausleihhistory}
+\label{f:227}
 Die Ausleihhistory ist eine Liste von Personen, welche bereits ein bestimmes Buch ausgeliehen hatten bzw. immer noch haben.
 Es wird ein Filter über die Dokument-Objekte gelegt, damit nur bestimmte bzw. die gewünschten Dokumente und deren bisherige Ausleiher ausgegeben werden. Diese so erhaltenen Daten müssen nun noch durch ein Frontend-View an geigneter Stelle der Web-Seite angezeigt werden.
 Diese Funktion ist eine Built-In-Funktion von Django und wird über \textbf{View} benutzt. Da die Informationen wiederrum nur in der Datenbank liegen, muss diese Komponente bei jeder Anfrage auf \textbf{DB} zugreifen.
 Das Sequenz-Diagramm wird hier nicht dargestellt, da es eine einfache Suchanfrage an die DB mit anschließendem, gefilterten Ergebnis ist, siehe auch 
 
 \section{Analyse von Funktion F228: Derzeitiger Leihender}
+\label{f:228}
 Die Funktion Derzeitiger Leihender gibt die Person aus, welche grad ein bestimmes Buch ausgeliehen hat.
 Da in Django die User durch eine eigene Klasse dargestellt werden, muss diese Klasse auf die Rechte des momentan angemeldeten Benutzers überprüft werden. Falls diese Rechte ausreichend sind, wird wiederum durch ein Queryset+Filter die jeweiligen Dokumente und der dazugehörige Leihende durch einen View ausgegeben.
 Auch diese Funktion benutzt die Komponente \textbf{View} in Zusammenhang mit \textbf{DB} (siehe auch \ref{f:227} \nameref{f:227}).
