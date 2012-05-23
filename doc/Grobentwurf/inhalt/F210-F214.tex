@@ -10,9 +10,9 @@ Durch diese Funktion ist der Benutzer in der Lage, mithilfe einer erweiterten Su
 Diese Funktion liest zuerst die im FrontEnd bestätigten Parameter (aus der Maske für die erweiterte Suche) aus und übergibt sie der Objekt-Suche, deren benötigte Funktionen bereits von Django zur Verfügung gestellt wird. Somit gehört auch sie zur Komponente \textbf{Model:Suche}. Durch einen View werden die Ergebnisse ausgegeben. 
 
 \section{Analyse von Funktion 213 (Suche mit regulären Ausdrücken)}
-In der erweiteren Suchmaske ist der Benutzer zusätzlich in der Lage, reguläre Ausdrücke in das Suchfeld einzugeben, um seine Suche zu vereinfachen. 
+In der erweiteren Suchmaske ist der Benutzer zusätzlich in der Lage, \gls{glos:regex} in das Suchfeld einzugeben, um seine Suche zu vereinfachen. 
 
-Als Teil der Komponente \textbf{Model:Suche} benutzt die Funktion die regulären Ausdrücke (aus dem FrontEnd View ausgelesen) für die Dokumenten-Suche, die Ergebnisse werden dann durch einen View dargestellt.
+Als Teil der Komponente \textbf{Model:Suche} benutzt die Funktion die \gls{glos:regex} (aus dem FrontEnd View ausgelesen) für die Dokumenten-Suche, die Ergebnisse werden dann durch einen View dargestellt.
  
 \section{Analyse von Funktion 214 (Sortierung der Suche)}
 Nach einer Suchanfrage werden die Ergebnisse tabellarisch aufgelistet. Der Benutzer ist nun in der Lage durch Interaktion mit gewünschten Spaltennamen, diese Ergebnisse alphabetisch aufwärts/abwärts zu sortieren. 
