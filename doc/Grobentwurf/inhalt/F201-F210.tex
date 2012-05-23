@@ -4,9 +4,9 @@ Der Benutzer, der entsprechende Rechte hat, wählt einen View, der ein Interface
 bietet um die Daten für einzelne Dokumente in das System ein zu pflegen. Dafür
 wird ihm vom System eine Eingabemaske auf dem View geboten.
 
-Als Teil der Komponente \textbf{View: Anmeldung} stellt diese Funktion für den
+Als Teil der Komponente \textbf{View} stellt diese Funktion für den
 Benutzer eine weitere Schnittstelle zur internen \BibTeX -Verwaltung, es wird
-daher ein Zugriff auf die Komponente \textbf{}.%%TODO in WORK
+daher ein Zugriff auf die Komponente der \textbf{Models} benötigt.
 
 \section{Analyse von Funktion F202 (Editieren von Dokumenten)}
 % Grafik?
@@ -18,17 +18,22 @@ aus \ref{f:201}\nameref{f:201} mit einer ausgefüllten Maske.
 Diese Funktion muss zurest das Dokument auslesen um den View zu erzeugen und
 dann die Einträge des Dokumentes entsprechend ändern. Eine solche Veränderung
 von den Objekten benötigt lediglich entsprechnende set- und get-Methoden für die
-Dokumente und einen entsprechenden View für Django.
+Dokumente und einen entsprechenden View für Django. Der in der
+\textbf{Datenbank} zugrundeliegende Datensatz wird also über \textbf{View} mit
+den \textbf{Models} manipuliert. Da diese Funktion nur in einem View
+repräsentiert wird und eine einfache Eingabe-Ausgabe ist, wird auf eine
+beschreibende Grafik verzichtet.
 
 \section{Analyse von Funktion F203 (Löschen von Dokumenten)}
 Der Administrator, als einziger Benutzer mit den entsprechenden Privilegien,
 löscht ein Dokument vollständig aus der Datenbank inkl. der Ausleihhistory.
 Diese Aktion wird über einen View im Backend erledigt, der dort bereit steht.
 
-Benötigt wird für Django ein entsprechender View im Backend, der die Möglichkeit
-bietet die eingetragenen Dokumente im Backend ein zu sehen. Weiter wird die
-zugrundeliegende Funktion der Löschung von Objekten aus der Datenbank benötigt,
-die in Django bereits build-in ist. Aufgrund des nicht sehr komplexen
+Benötigt wird für Django ein entsprechender \textbf{View} im Backend, der die
+Möglichkeit bietet die eingetragenen Dokumente im Backend ein zu sehen. Weiter
+wird die zugrundeliegende Funktion der Löschung von Objekten aus der Datenbank
+in den \textbf{Models} benötigt, die zur Basis in Django bereits built-in ist,
+jedoch evtl. erweitert werden muss. Aufgrund des nicht sehr komplexen
 Funktionsaufbaus wurde auf eine Grafik verzichtet.
 
 \section{Analyse von Funktion F210 (Generelle Suche)}
