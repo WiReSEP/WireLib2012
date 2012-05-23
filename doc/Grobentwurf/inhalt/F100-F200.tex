@@ -1,11 +1,11 @@
 \section{Analyse von Funktion F100 (Anmeldung)}
 Der Benutzer meldet sich auf dem System unter seinem Benutzernamen an.
 
-Diese Funktion, die lediglich in der Komponente \textbf{View} bekommt, ist
+Diese Funktion, die lediglich in der Komponente \textbf{View} vorkommt, ist
 eine Built-in-Funktion von Django. Innerhalb von Django werden die Benutzer
-in einer eigenen Datenstruktur  dargestellt. Diese Klasse muss erweitert werden
-um die zusätzlichen Daten der Benutzer zu speichern. Da Django eine Datenkbank
-zugrunde liegt müssen diese weiteren Daten in einer Extra Klasse mit Referenz
+in einer eigenen Datenstruktur  dargestellt. Diese Klasse muss erweitert werden,
+um die zusätzlichen Daten der Benutzer zu speichern. Da Django eine Datenbank
+zugrunde liegt, müssen diese weiteren Daten in einer extra Klasse mit Referenz
 auf die Benutzer gesetzt werden.
 
 \section{Analyse von Funktion F101 (Anmeldung über LDAP)}
@@ -17,27 +17,27 @@ Verfügung gestellt werden. Die zugrundeliegende Datenstruktur wird von \gls{LDA
 bereit gestellt.
 
 \section{Analyse von Funktion F102 (Anbindung an die Universitätsbibliothek)}
-Ein Benutzer mit hinreichtenden Rechten verschickt an die Universitätsbibliothek
+Ein Benutzer mit hinreichenden Rechten verschickt an die Universitätsbibliothek
 den Stand der aktuellen Datensätze.
 
 Der zugrunde liegende Datensatz der Dokumente wird von einem, in den
-\textbf{Models} gelegenen, Befehlssatz in ein Datenformat übersetzt, welches von
+\textbf{Models} gelegenen Befehlssatz in ein Datenformat übersetzt, welches von
 der TU Braunschweig Universitätsbibliothek gelesen werden kann. 
 
 \section{Analyse von Funktion F103 (Mailtexte ändern)}
-Die Standard-Mails die vom System an Benutzer verschickt werden, sollen geändert
+Die Standard-Mails, die vom System an Benutzer verschickt werden, sollen geändert
 werden.
 
-Die Mailtexte sind Bestandteil einer veränderbaren aber nicht großen Tabelle an
-Basisinformationen wie auch andere Einstellungen für die Software. Um die
-Informationen bereit zu stellen muss eine neue Klasse in den \textbf{Models}
-erzeugt werden, das alle Informationen für die App bereit stellt.
+Die Mailtexte sind Bestandteil einer veränderbaren, aber nicht großen Tabelle an
+Basisinformationen, wie auch andere Einstellungen für die Software. Um die
+Informationen bereit zu stellen, muss eine neue Klasse in den \textbf{Models}
+erzeugt werden, die alle Informationen für die App bereit stellt.
 
 \section{Analyse von Funktion F201 (Bib\TeX\ import)}
 Ein oder mehrere Dokumente werden zum System hinzugefügt. Dafür wählt der
-Benutzer den entsprechenden View aus und läd über einen Upload-Dialog eine
+Benutzer den entsprechenden View aus und lädt über einen Upload-Dialog eine
 \BibTeX -Datei hoch. Das System analysiert die Datei auf Validität, erzeugt
-Objekte aus den Daten die in eine Datenbank gespeichert werden.
+Objekte aus den Daten, die in eine Datenbank gespeichert werden.
 
 Für die Funktion wird also ein \textbf{View} benötigt, der den Upload bereit
 stellt.  Als Basis werden die Dokument-Objekte aus den \textbf{Models} benötigt,
