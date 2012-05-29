@@ -81,3 +81,13 @@ doc/TemplatePflichtenheftLatex/Latex/inhalt/produktuebersicht.aux
 doc/TemplatePflichtenheftLatex/Latex/inhalt/produktumgebung.aux
 doc/TemplatePflichtenheftLatex/Latex/inhalt/versionsuebersicht.aux
 doc/TemplatePflichtenheftLatex/Latex/inhalt/zielbestimmung.aux
+src/wirelib.db
+src/wirelib/__init__.py
+src/wirelib/__init__.pyc
+src/wirelib/documents/__init__.pyc
+src/wirelib/documents/models.pyc
+src/wirelib/manage.py
+src/wirelib/settings.py
+src/wirelib/settings.pyc
+src/wirelib/urls.py
+src/wirelib/urls.pyc
