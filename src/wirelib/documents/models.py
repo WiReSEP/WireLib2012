@@ -6,6 +6,10 @@ class category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
 
 class document(models.Model):
+    """
+    Representiert den Standard der BibTeX-Felder, die für die Bibliothek verwendet
+    werden.
+    """
     bib_no = models.CharField(max_length=15, primary_key=True)
     title = models.CharField(max_length=100)
     isbn = models.CharField(max_length=17, null=True)
