@@ -72,21 +72,37 @@ class doc_extra(models.Model):
         unique_together = ('doc_id', 'bib_field', 'content')
     #primary_key(docId, bibField, content)
 
+class user_profile(models.Model):
+    user = models.OneToOneField(User)
+    street = models.CharField(max_length=30)
+    number = models.CharField(max_length=5)
+    zipcode = models.CharField(max_length=5)
+    city = models.CharField(max_length=58)
+    
+class tel_user(models.Model):
+    user = models.ForeignKey(User)
+    tel_nr = models.CharField(max_length=20)
+    #todo
+    class Meta:
+        unique_together = ('user', 'tel_nr')
+
 class non_user(models.Model):
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=40)
+    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30)
     email = models.EmailField(unique=True)
     street = models.CharField(max_length=30)
     number = models.CharField(max_length=5)
     zipcode = models.CharField(max_length=5)
     city = models.CharField(max_length=58)
     class Meta:
-        unique_together = ('name', 'surname')
+        unique_together = ('last_name', 'first_name')
 
 class tel_non_user(models.Model):
     non_user = models.ForeignKey(non_user)
     tel_nr = models.CharField(max_length=20)
         #todo
+    class Meta:
+        unique_together = ('non_user', 'tel_nr')
 
 class lending(models.Model):
     doc_id = models.ForeignKey(document)
