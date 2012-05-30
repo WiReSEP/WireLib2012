@@ -1,0 +1,38 @@
+<html>
+<head></head>
+<body>
+  <h1 align=center>Editiere {{Benutzername}}</h1>
+  <br><br>
+  <table>
+	<tr>
+	  <td>Benutzername:</td>
+	  <td><input type=text size=15 name=b_name 
+		value={{benutzername}}><br></td>
+	</tr>
+	<tr>
+	  <td>E-Mail Adresse:</td> 
+	  <td><input type=text size=15 name=email
+		value={{email}}><br></td>
+	</tr>
+	<tr>
+	  <td>Vornamen:</td>
+	  <td><input type=text size=15 name=v_name
+		value={{vorname}}><br></td>
+	</tr>
+	<tr>
+	  <td>Nachname:</td>
+	  <td><input type=text size=15 name=b_name
+		value={{nachname}}><br></td>
+	</tr>
+	<tr>
+	  <td>Rolle:</td> 
+	  <td><select size=3 name=rolle value={{rolle}}>
+	      <option>Benutzer</option>
+	      <option>Bibliothekar</option>
+	      <option>Admin</option>
+	      <option>Weiterer Eintrag fuer jede Rolle</option>
+        </select></td>
+    </tr>
+  </table>  
+</body>
+</html>
