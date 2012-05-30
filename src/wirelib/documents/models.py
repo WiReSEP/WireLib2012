@@ -46,7 +46,7 @@ class doc_extra(models.Model):
     bib_field = models.CharField(max_length=40)
     content = models.CharField(max_length=200)
     class Meta:
-        unique_together = ('document', 'keyword')
+        unique_together = ('doc_id', 'bib_field', 'content')
     #primary_key(docId, bibField, content)
 
 class non_user(models.Model):
