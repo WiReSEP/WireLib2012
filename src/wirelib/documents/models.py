@@ -4,20 +4,20 @@ from django.contrib.auth.models import User
 
 class category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
-    #article
-    #book
-    #booklet
-    #conference
-    #''inbook (Teilstück von book)
-    #''incollection (Teilstück von book)
-    #''inproceedings (Teilstück von proceedings)
-    #manual
-    #mastersthesis
-    #''misc ("beliebiger Eintrag": also wohl nicht in der DB)
-    #phdthesis
-    #proceedings
-    #techreport
-    #unpublished
+        #article
+        #book
+        #booklet
+        #conference
+        #''inbook (Teilstück von book)
+        #''incollection (Teilstück von book)
+        #''inproceedings (Teilstück von proceedings)
+        #manual
+        #mastersthesis
+        #''misc ("beliebiger Eintrag": also wohl nicht in der DB)
+        #phdthesis
+        #proceedings
+        #techreport
+        #unpublished
     
 class publisher(models.Model):
     name = models.CharField(max_length=35, primary_key=True)
@@ -25,6 +25,8 @@ class publisher(models.Model):
 class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15)
+    bibtex_id = models.CharField(max_length=120)
+    lib_of_con_nr = models.CharField(max_length=20)
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
@@ -42,6 +44,7 @@ class document(models.Model):
     currency = models.CharField(max_length=3)
     date_of_purchase = models.DateField(auto_now_add=True)
     ub_date = models.DateField(null=True)
+
     
 class author(models.Model):
     documents = models.ManyToManyField(document)
@@ -77,6 +80,13 @@ class non_user(models.Model):
     number = models.CharField(max_length=5)
     zipcode = models.CharField(max_length=5)
     city = models.CharField(max_length=58)
+    class Meta:
+        unique_together = ('name', 'surname')
+
+class tel_non_user(models.Model):
+    non_user = models.ForeignKey(non_user)
+    tel_nr = models.CharField(max_length=20)
+        #todo
 
 class lending(models.Model):
     doc_id = models.ForeignKey(document)
