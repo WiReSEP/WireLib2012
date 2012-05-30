@@ -30,7 +30,7 @@ class document(models.Model):
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
-    status = models.IntegerField()
+    status = models.IntegerField(min_value=0, max_value=4)
         #(0) vorhanden
         #(1) ausgeliehen
         #(2) bestellt
@@ -44,6 +44,7 @@ class document(models.Model):
     currency = models.CharField(max_length=3)
     date_of_purchase = models.DateField(auto_now_add=True)
     ub_date = models.DateField(null=True)
+    comment = models.TextField(null=True)
 
     
 class author(models.Model):
@@ -69,8 +70,8 @@ class doc_extra(models.Model):
     bib_field = models.CharField(max_length=40)
     content = models.CharField(max_length=200)
     class Meta:
-        unique_together = ('doc_id', 'bib_field', 'content')
-    #primary_key(docId, bibField, content)
+        unique_together = ('doc_id', 'bib_field')
+    #primary_key(docId, bibField)
 
 class user_profile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
