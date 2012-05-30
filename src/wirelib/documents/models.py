@@ -73,7 +73,7 @@ class doc_extra(models.Model):
     #primary_key(docId, bibField, content)
 
 class user_profile(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, primary_key=True)
     street = models.CharField(max_length=30)
     number = models.CharField(max_length=5)
     zipcode = models.CharField(max_length=5)
