@@ -8,18 +8,9 @@ class publisher(models.Model):
     name = models.CharField(max_length=35, primary_key=True)
         
 class document(models.Model):
-<<<<<<< HEAD
     bibNo = models.CharField(max_length=15, primary_key=True)
     invNo = models.CharField(max_length=15)
     title = models.CharField(max_length=200)
-=======
-    """
-    Representiert den Standard der BibTeX-Felder, die für die Bibliothek verwendet
-    werden.
-    """
-    bib_no = models.CharField(max_length=15, primary_key=True)
-    title = models.CharField(max_length=100)
->>>>>>> 6a362ecc0030c7b4f774e82916a39e289b193335
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
     status = models.IntegerField()
