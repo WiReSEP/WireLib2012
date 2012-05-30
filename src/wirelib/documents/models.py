@@ -4,6 +4,20 @@ from django.contrib.auth.models import User
 
 class category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
+    #article
+    #book
+    #booklet
+    #conference
+    #''inbook (Teilstück von book)
+    #''incollection (Teilstück von book)
+    #''inproceedings (Teilstück von proceedings)
+    #manual
+    #mastersthesis
+    #''misc ("beliebiger Eintrag": also wohl nicht in der DB)
+    #phdthesis
+    #proceedings
+    #techreport
+    #unpublished
     
 class publisher(models.Model):
     name = models.CharField(max_length=35, primary_key=True)
@@ -15,9 +29,15 @@ class document(models.Model):
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
     status = models.IntegerField()
+        #(0) vorhanden
+        #(1) ausgeliehen
+        #(2) bestellt
+        #(3) vermisst
+        #(4) verloren
+    last_updated = models.DateField(auto_now=True) 
     publisher = models.ForeignKey(publisher)
     pub_date = models.DateField()
-    address = models.CharField(max_length=100)
+    address = models.CharField(max_length=100) #auch "school"
     price = models.DecimalField(max_digits=6, decimal_places=2);
     currency = models.CharField(max_length=3)
     date_of_purchase = models.DateField(auto_now_add=True)
