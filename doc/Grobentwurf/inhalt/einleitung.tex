@@ -6,6 +6,12 @@
 \chapter{Einleitung}
 Die Datenbank WiReLib repräsentiert den Bestand der Bibliothek für das Institut für Wissenschaftliches Rechnen.
 Auf diese Datenbank können Nutzer über ein Web-Interface zugreifen, um Dokumente zu suchen und sich nach der Anmeldung Dokumente auszuleihen.
+Es gibt verschiedene Rollen, welche den Nutzern zugewiesen werden.
+Die Verwaltung der Dokumente obliegt der Rolle des Bibliothekars.
+Die Verwaltung der Benutzer obliegt der Rolle des Administrators.
+Alle anderen Nutzer haben nur einfache Leserechte.
+Die Anwendung wird nur im kleinem Rahmen eingesetzt und fungiert am Ende auf
+Vertrauensbasis.
 
 \section{Projektdetails}
 Die Funktionalitäten gliedern sich in drei Teilbereiche.
@@ -16,9 +22,14 @@ worden sind.
 \begin{center}
 \includegraphics[width=0.8\linewidth]{bilder/Seq-Uebersicht.pdf}
 \caption[Übersichtssequenzdiagramm]{Übersichtssequenzdiagramm}
-\label{fig:Seqü}
+\label{Seq-Übersicht}
 \end{center}
 \end{figure}
+
+Im \ref{Seq-Übersicht} \nameref{Seq-Übersicht} werden grobe Abläufe im System veraunschaulicht um eine
+Übersicht über die Anwendung zu bekommen.
+Da die Anmeldung zeitlich nicht festsetzbar ist, ist sie nicht in diesem
+Diagramm vorhanden.
 
 \subsection{Client}
 Über das Web-Interface erhält der als Client fungierende Browser Zugriff auf die Datenbank und kann verschiedene Funktionen nutzen.
