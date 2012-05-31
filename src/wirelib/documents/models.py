@@ -51,12 +51,15 @@ class document(models.Model):
     date_of_purchase = models.DateField(auto_now_add=True)
     ub_date = models.DateField(null=True)
     comment = models.TextField(null=True)
+    authors = models.ManyToManyField('author', related_name='authors',
+                                     db_table=u'doc_to_auth')
 
     def __unicode__(self):
         return self.title
 
 class author(models.Model):
-    documents = models.ManyToManyField(document)
+    documents = models.ManyToManyField(document, related_name='documents',
+                                                db_table=u'doc_to_auth')
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     class Meta:
@@ -95,7 +98,7 @@ class user_profile(models.Model):
     city = models.CharField(max_length=58)
 
     def __unicode__(self):
-        return self.street
+        return self.city
 
 class tel_user(models.Model):
     user = models.ForeignKey(user_profile)
