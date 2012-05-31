@@ -11,7 +11,7 @@ def insert_doc(dict_insert):
     bib_no_f = dict_insert[u"bib_no"]
     inv_no_f = dict_insert[u"inv_no"]
     bibtex_id_f = dict_insert[u"bibtex_id"]
-    lib_of_con_nr_f = dict_insert[u"lib_of_con_nr"]
+    lib_of_con_nr_f = dict_insert.get(u"lib_of_con_nr",None)
     title_f = dict_insert[u"title"]
     isbn_f = dict_insert.get(u"isbn", None)
     category_f = dict_insert[u"category"]
@@ -39,12 +39,12 @@ def insert_doc(dict_insert):
             comment=comment_f)
     authors_db = []
     for auth in author_f:
-        au = auth.split(u", ", maxsplit=2)
+        au = auth.split(", ", 2)
         if len(au) > 1:
             last_name_f = au[0]
             first_name_f = au[1]
         else:
-            name_f = au[0].split(u" ")
+            name_f = au[0].split(" ")
             last_name_f = name_f[-1]
             first_name_f = u" ".join(name_f[:-2])
         try:
@@ -69,3 +69,4 @@ def insert_doc(dict_insert):
         extra_db, dummy = doc_extra.objects.get_or_create(
                 doc_id=document_db, bib_field=extra, content=value)
         extras_db.append(extra_db)
+    document_db.save()

@@ -39,7 +39,7 @@ class bibtex(object):
         self.bib_file = open(self.file,'r')
         for line in self.bib_file:
             if re.match(r'\s*@',line):
-                print "entering entry"
+#                print "entering entry"
                 self.__get_entry(line)
         self.bib_file.close()
 
@@ -72,6 +72,8 @@ class bibtex(object):
                 print "Entry: "
                 for i in self.entry:
                     print i," = ", self.entry[i]
+                extras_doc_funcs.insert_doc(self.entry)
+                self.entry = {}
                 break
 
             key_val = re.split(bibtex.BIBTEX_SPLIT, line)
@@ -86,7 +88,7 @@ class bibtex(object):
                 print "hier ist ein Fehler!",line
             elif key_val[0] == 'author' or key_val[0] == 'keywords':
                 """ Multi-Value Fields """
-                bib_field = key_val[0]
+                bib_field = bibtex.BIB_FIELDS[key_val[0]]
                 key_val.remove(key_val[0])
                 self.entry[bib_field] = key_val
             elif key_val[0]  == 'price':
@@ -98,7 +100,7 @@ class bibtex(object):
 #               TODO: Sofort auf Date arbeiten statt auf Datetime
                 mydatetime = datetime.strptime(
                         key_val[1],'%d.%m.%Y')
-                self.entry[key_val[0]] = mydatetime.date()
+                self.entry[bibtex.BIB_FIELDS[key_val[0]]] = mydatetime.date()
             elif key_val[0] in bibtex.BIB_FIELDS:
                 """ Default Fields """
                 if len(key_val) > 2:
@@ -109,7 +111,7 @@ class bibtex(object):
                             maxsplit=2))[1]
                 else:
                     bib_value = key_val[1]
-                self.entry[key_val[0]] = bib_value
+                self.entry[bibtex.BIB_FIELDS[key_val[0]]] = bib_value
             else:
                 """ Extra Field """
                 if len(key_val) > 2:
@@ -120,8 +122,6 @@ class bibtex(object):
                         maxsplit=2
                         ))
                 bib_extra[key_val[0]] = key_val[1]
-        extras_doc_funcs.insert_doc(self.entry)
-        self.entry = {}
 
     def __clean_list(self, dirty_list):
         """ Entfernt die leeren Elemente aus einer Liste.
