@@ -1,0 +1,15 @@
+key allegro_equivalent
+bib_no #080
+inv_no #910
+isbn #08i
+publisher #360
+volume #001
+series #400
+author #21e
+LibraryOfCongressNo #08l
+bookid #090
+bibfile #800 //unused
+title #100
+address #552
+keywords #500
+year #040
