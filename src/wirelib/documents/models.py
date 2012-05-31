@@ -52,7 +52,7 @@ class author(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     class Meta:
-        unique_together = ('name', 'surname')
+        unique_together = ('first_name', 'last_name')
     #primary ('name', 'surname')
     
 class keywords(models.Model):
