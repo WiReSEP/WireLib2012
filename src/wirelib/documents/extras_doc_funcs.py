@@ -30,7 +30,7 @@ def insert_doc(dict_insert):
     extra_fields_f = dict_insert.get(u"extras", {})
     publisher_db, dummy = publisher.objects.get_or_create(name=publisher_f)
     category_db = category.objects.get(name=category_f)
-    document_db = document.objects.create(bib_no=bib_no_f, inv_no=inv_no_f,
+    document_db = document(bib_no=bib_no_f, inv_no=inv_no_f,
             bibtex_id=bibtex_id_f, lib_of_con_nr=lib_of_con_nr_f,
             title=title_f, isbn=isbn_f, category=category_db, status=status_f,
             publisher=publisher_db, year=year_f, address=address_f,
@@ -50,13 +50,14 @@ def insert_doc(dict_insert):
         try:
             auth_db = author.objects.get(last_name=last_name_f, 
                     first_name=first_name_f)
-            auth_db.documents.add(document_db)
+            # auth_db.documents.add(document_db)
         except author.DoesNotExist:
             auth_db = author(last_name=last_name_f,
                     first_name=first_name_f)
-            auth_db.documents.add(document_db)
+            # auth_db.documents.add(document_db)
         auth_db.save()
         authors_db.append(auth_db)
+        document_db.authors.add(auth_db)
     keywords_db = []
     for key in keywords_f:
         key_db, dummy = keywords.objects.get_or_create(document=document_db,

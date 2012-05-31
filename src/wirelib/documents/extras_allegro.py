@@ -30,7 +30,7 @@ def __doc_to_string(document):
     """
     extra_fields = document.doc_extra_set.all()
     keywords_db = document.keywords_set.all()
-    authors = list(document.author_set.all())
+    authors = list(document.authors.all())
     file_allegro_dict = open(u"dict_Allegro.txt", "r")
     allegro_dict = {}
     for line in file_allegro_dict:
