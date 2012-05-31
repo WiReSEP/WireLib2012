@@ -23,7 +23,7 @@ class author_admin(admin.ModelAdmin):
 class document_admin(admin.ModelAdmin):
     fields = ['bib_no', 'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',
               'isbn', 'category', 'status', 'publisher',
-              'address','year', 'price', 'currency', 'comment']
+              'address','year', 'price', 'currency', 'authors', 'comment']
 
 class user_profile_admin(admin.ModelAdmin):
     fields = ['user', 'street', 'number', 'zipcode', 'city']
