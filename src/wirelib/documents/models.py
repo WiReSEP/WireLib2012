@@ -24,8 +24,8 @@ class publisher(models.Model):
         
 class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
-    inv_no = models.CharField(max_length=15)
-    bibtex_id = models.CharField(max_length=120)
+    inv_no = models.CharField(max_length=15, unique=True)
+    bibtex_id = models.CharField(max_length=120, unique=True)
     lib_of_con_nr = models.CharField(max_length=20)
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
@@ -39,7 +39,7 @@ class document(models.Model):
     last_updated = models.DateField(auto_now=True) 
     publisher = models.ForeignKey(publisher)
     pub_date = models.DateField()
-    address = models.CharField(max_length=100) #auch "school"
+    address = models.CharField(max_length=100, null=True) #auch "school"
     price = models.DecimalField(max_digits=6, decimal_places=2);
     currency = models.CharField(max_length=3)
     date_of_purchase = models.DateField(auto_now_add=True)
