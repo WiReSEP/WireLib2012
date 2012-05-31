@@ -18,10 +18,16 @@ class category(models.Model):
         #proceedings
         #techreport
         #unpublished
+
+    def __unicode__(self):
+        return self.name
     
 class publisher(models.Model):
     name = models.CharField(max_length=35, primary_key=True)
-        
+    
+    def __unicode__(self):
+        return self.name
+
 class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
@@ -46,7 +52,9 @@ class document(models.Model):
     ub_date = models.DateField(null=True)
     comment = models.TextField(null=True)
 
-    
+    def __unicode__(self):
+        return self.title
+
 class author(models.Model):
     documents = models.ManyToManyField(document)
     first_name = models.CharField(max_length=30)
@@ -55,6 +63,9 @@ class author(models.Model):
         unique_together = ('first_name', 'last_name')
     #primary ('name', 'surname')
     
+    def __unicode__(self):
+        return self.last_name
+
 class keywords(models.Model):
     document = models.ForeignKey(document)
     keyword = models.CharField(max_length=50)
@@ -62,6 +73,9 @@ class keywords(models.Model):
         unique_together = ('document', 'keyword')
     #primary_key(document, keyword)
     
+    def __unicode__(self):
+        return self.keyword
+
 class doc_extra(models.Model):
     """
     Bietet die Möglichkeit für mehrere extra Felder für ein Dokument
@@ -79,7 +93,10 @@ class user_profile(models.Model):
     number = models.CharField(max_length=5)
     zipcode = models.CharField(max_length=5)
     city = models.CharField(max_length=58)
-    
+
+    def __unicode__(self):
+        return self.street
+
 class tel_user(models.Model):
     user = models.ForeignKey(user_profile)
     tel_nr = models.CharField(max_length=20)
@@ -97,6 +114,9 @@ class non_user(models.Model):
     city = models.CharField(max_length=58)
     class Meta:
         unique_together = ('last_name', 'first_name')
+
+    def __unicode__(self):
+        return self.last_name, self.first_name
 
 class tel_non_user(models.Model):
     non_user = models.ForeignKey(non_user)
