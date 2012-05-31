@@ -72,7 +72,10 @@ class bibtex(object):
                 print "Entry: "
                 for i in self.entry:
                     print i," = ", self.entry[i]
-                extras_doc_funcs.insert_doc(self.entry)
+                try:
+                    extras_doc_funcs.insert_doc(self.entry)
+                except KeyError:
+                    pass
                 self.entry = {}
                 break
 
