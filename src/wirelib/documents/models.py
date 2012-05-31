@@ -44,7 +44,7 @@ class author(models.Model):
     #primary ('name', 'surname')
     
     def __unicode__(self):
-        return self.last_name
+        return (self.last_name + ', ' + self.first_name)
 
 class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
@@ -103,7 +103,7 @@ class user_profile(models.Model):
     city = models.CharField(max_length=58)
 
     def __unicode__(self):
-        return self.city
+        return unicode(self.user)
 
 class tel_user(models.Model):
     user = models.ForeignKey(user_profile)
@@ -124,7 +124,7 @@ class non_user(models.Model):
         unique_together = ('last_name', 'first_name')
 
     def __unicode__(self):
-        return self.last_name, self.first_name
+        return (self.last_name + ', ' + self.first_name)
 
 class tel_non_user(models.Model):
     non_user = models.ForeignKey(non_user)
