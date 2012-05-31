@@ -10,7 +10,7 @@ from django.contrib import admin
 class document_admin(admin.ModelAdmin):
     fields = ['bib_no', 'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',
               'isbn', 'category', 'status', 'publisher',
-              'pub_date', 'address', 'price', 'currency','ub_date', 'comment']
+              'address', 'price', 'currency','ub_date', 'comment']
 
 class user_profile_admin(admin.ModelAdmin):
     fields = ['user', 'street', 'number', 'zipcode', 'city']
