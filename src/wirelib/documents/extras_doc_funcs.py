@@ -1,11 +1,11 @@
 from decimal import Decimal
 import datetime
-from documents.models import publisher
-from documents.models import category
-from documents.models import document
-from documents.models import author
-from documents.models import keywords
-from documents.models import doc_extra
+from models import publisher
+from models import category
+from models import document
+from models import author
+from models import keywords
+from models import doc_extra
 
 def insert_doc(dict_insert):
     bib_no_f = dict_insert[u"bib_no"]
