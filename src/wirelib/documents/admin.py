@@ -18,7 +18,7 @@ class publisher_admin(admin.ModelAdmin):
     fields = ['name']
 
 class author_admin(admin.ModelAdmin):
-    fields = ['documents', 'first_name', 'last_name']
+    fields = ['first_name', 'last_name']
 
 class document_admin(admin.ModelAdmin):
     fields = ['bib_no', 'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',

@@ -2,6 +2,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+"""
+class ManyToManyField_NoSyncdb(models.ManyToManyField):
+    def __init__(self, *args, **kwargs):
+        super(ManyToManyField_NoSyncdb,self).__init__(*args, **kwargs)
+        self.creates_table = False
+"""
+
 class category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
         #article
@@ -28,6 +35,17 @@ class publisher(models.Model):
     def __unicode__(self):
         return self.name
 
+
+class author(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    class Meta:
+        unique_together = ('first_name', 'last_name')
+    #primary ('name', 'surname')
+    
+    def __unicode__(self):
+        return self.last_name
+
 class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
@@ -51,23 +69,10 @@ class document(models.Model):
     date_of_purchase = models.DateField(auto_now_add=True)
     ub_date = models.DateField(null=True)
     comment = models.TextField(null=True)
-    authors = models.ManyToManyField('author', related_name='authors',
-                                     db_table=u'doc_to_auth')
+    authors = models.ManyToManyField(author)
 
     def __unicode__(self):
         return self.title
-
-class author(models.Model):
-    documents = models.ManyToManyField(document, related_name='documents',
-                                                db_table=u'doc_to_auth')
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    class Meta:
-        unique_together = ('first_name', 'last_name')
-    #primary ('name', 'surname')
-    
-    def __unicode__(self):
-        return self.last_name
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
