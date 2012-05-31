@@ -30,7 +30,7 @@ class document(models.Model):
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
-    status = models.IntegerField(min_value=0, max_value=4)
+    status = models.IntegerField()
         #(0) vorhanden
         #(1) ausgeliehen
         #(2) bestellt
