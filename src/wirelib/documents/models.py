@@ -81,7 +81,7 @@ class user_profile(models.Model):
     city = models.CharField(max_length=58)
     
 class tel_user(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(user_profile)
     tel_nr = models.CharField(max_length=20)
     #todo
     class Meta:
