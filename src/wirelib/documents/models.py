@@ -26,7 +26,7 @@ class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
     bibtex_id = models.CharField(max_length=120, unique=True)
-    lib_of_con_nr = models.CharField(max_length=20)
+    lib_of_con_nr = models.CharField(max_length=20) #LibraryOfCongressN
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
@@ -38,9 +38,9 @@ class document(models.Model):
         #(4) verloren
     last_updated = models.DateField(auto_now=True) 
     publisher = models.ForeignKey(publisher)
-    pub_date = models.DateField()
-    address = models.CharField(max_length=100, null=True) #auch "school"
-    price = models.DecimalField(max_digits=6, decimal_places=2);
+    year = models.IntegerField()
+    address = models.CharField(max_length=100, null=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.CharField(max_length=3)
     date_of_purchase = models.DateField(auto_now_add=True)
     ub_date = models.DateField(null=True)
@@ -49,8 +49,8 @@ class document(models.Model):
     
 class author(models.Model):
     documents = models.ManyToManyField(document)
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=40)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
     class Meta:
         unique_together = ('name', 'surname')
     #primary ('name', 'surname')
