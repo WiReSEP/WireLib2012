@@ -42,6 +42,21 @@ sich weiter in den folgenden Gruppen beschreiben:
 	  repräsentiert.
 \end{description}
 
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{bilder/frage_antwort.pdf}
+        \caption{Sequenzdiagramm für allgemeine (An-)Frage-Anwort-Anweisungen}
+        \label{fig:F-A}
+    \end{center}
+\end{figure}
+Es sei des Weiteren angemerkt, dass bei vielen Funktionen das Sequenzdiagramm 
+weggelassen wird. Sie sind alle strukturgleich mit Abb.\ \ref{fig:F-A} und damit
+trivial. Dabei gibt das Web-Interface Daten an den Server und dieser verarbeitet 
+diese in ein für die Datenbank verständlichen Befehl (Suche, Löschen, 
+Bearbeiten) und gibt diesen weiter. Daraufhin gibt die Datenbank das Ergebnis 
+des Befehles zurück an den Server. Dieser wandelt dieses für den Web-Server und 
+das Verständnis des Nutzers um und sendet es an den Web-Server.
+
 %% Aufgaben: 
 % Kapitel 1 bearbeiten   %% Marco
 \input{inhalt/F100-F200} % Q10 zusätzlich! %% Theo
