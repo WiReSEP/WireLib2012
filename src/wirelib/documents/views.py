@@ -35,3 +35,8 @@ def templatebeispiel (request, s_author):
     template = loader.get_template("Beispielbuchausgabe.html")
     context = Context({"authoren" : author_query.objects.all()})
     return HttpResponse(template.render(context))
+    
+def unsere_suche (self):
+    template = loader.get_template("unsere_suche.html")
+    context = Context()
+    return HttpResponse(template.render(context))
