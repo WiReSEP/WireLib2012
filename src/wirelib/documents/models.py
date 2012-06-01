@@ -62,11 +62,11 @@ class document(models.Model):
         #(3) vermisst
         #(4) verloren
     last_updated = models.DateField(auto_now=True) 
-    publisher = models.ForeignKey(publisher)
-    year = models.IntegerField()
+    publisher = models.ForeignKey(publisher, null=True)
+    year = models.IntegerField(null=True)
     address = models.CharField(max_length=100, null=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    currency = models.CharField(max_length=3)
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    currency = models.CharField(max_length=3, null=True)
     date_of_purchase = models.DateField(auto_now_add=True)
     ub_date = models.DateField(null=True)
     comment = models.TextField(null=True)
