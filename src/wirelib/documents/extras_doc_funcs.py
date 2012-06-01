@@ -23,11 +23,11 @@ def insert_doc(dict_insert):
         isbn_f = dict_insert.get(u"isbn", None)
         category_f = dict_insert[u"category"]
         status_f = dict_insert.get(u"status", 0)
-        publisher_f = dict_insert[u"publisher"]
-        year_f = dict_insert[u"year"]
+        publisher_f = dict_insert.get(u"publisher", None)
+        year_f = dict_insert.get(u"year", None)
         address_f = dict_insert.get(u"address", None)
-        price_f = dict_insert.get(u"price", Decimal("0.00"))
-        currency_f = dict_insert.get(u"currency", u"Eur")
+        price_f = dict_insert.get(u"price", None)
+        currency_f = dict_insert.get(u"currency", None)
         date_of_purchase_f = dict_insert.get(u"date_of_purchase",
                 datetime.date.today())
         ub_date_f = None
