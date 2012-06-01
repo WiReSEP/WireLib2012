@@ -36,7 +36,14 @@ def templatebeispiel (request, s_author):
     context = Context({"authoren" : author_query.objects.all()})
     return HttpResponse(template.render(context))
     
-def unsere_suche (self):
-    template = loader.get_template("unsere_suche.html")
+def unsere_suche (request):
     context = Context()
-    return HttpResponse(template.render(context))
+    if "suchanfrage_starten" in request.GET:
+        suchtext = request.POST.get('suche','')
+        response = HttpResponse(suchtext)
+        response["ContentType"] = "text/plain"
+        return response
+    else:
+        context = Context()
+        template = loader.get_template("unsere_suche.html")
+        return HttpResponse(template.render(context))
