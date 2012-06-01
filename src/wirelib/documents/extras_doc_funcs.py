@@ -87,7 +87,8 @@ def is_valid(dict_data): #TODO
     """Diese Methode überprüft, ob es sich bei dem übergebenen dict um ein 
     BibteX-kompatibles Format handelt"""
     try:
-        if not dict_data["bib_no"].startswith("K"):
+		bib_no_r = r"[PKDRM]\d+"
+        if not re.match(bib_no_r, dict_data["bib_no"]):
             return False
         inv_no_r = r"\d{4}/\d{3}"
         if not re.match(inv_no_r, dict_data[u"inv_no"]):
