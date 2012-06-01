@@ -1,5 +1,6 @@
 from decimal import Decimal
 import datetime
+import re
 from models import publisher
 from models import category
 from models import document
@@ -8,6 +9,9 @@ from models import keywords
 from models import doc_extra
 
 def insert_doc(dict_insert):
+    """Fügt ein Dokument aus einem dict in die Datenbank ein, nachdem es auf
+    Validität überprüft wurde.
+    """
     try:
         bib_no_f = dict_insert[u"bib_no"]
         inv_no_f = dict_insert[u"inv_no"]
@@ -31,6 +35,8 @@ def insert_doc(dict_insert):
         extra_fields_f = dict_insert.get(u"extras", {})
     except KeyError:
         raise
+    if not is_valid(dict_insert):
+        raise ValueError(u"Data is not valid")
     publisher_db, dummy = publisher.objects.get_or_create(name=publisher_f)
     category_db = category.objects.get(name=category_f)
     document_db = document(bib_no=bib_no_f, inv_no=inv_no_f,
@@ -74,3 +80,74 @@ def insert_doc(dict_insert):
                 doc_id=document_db, bib_field=extra, content=value)
         extras_db.append(extra_db)
     document_db.save()
+
+def is_valid(dict_data): #TODO
+    try:
+        if not dict_data["bib_no"].startswith("K"):
+            return False
+        inv_no_r = r"\d{4}/\d{3}"
+        if not re.match(inv_no_r, dict_data[u"inv_no"]):
+            return False
+        if dict_data[u"category"] == u"book":
+            auths = dict_data.get(u"author", [])
+            extras = dict_data.get(u"extras", {})
+            editors = extras.get(u"editor", [])
+            if __lst_is_empty(auths.extend(editors)):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"publisher"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"artictle":
+            if __lst_is_empty(dict_data[u"author"]):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"journal"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"booklet":
+            if dict_data[u"title"] == u"":
+                return False
+        elif dict_data[u"category"] == u"conference":
+            if __lst_is_empty(dict_data[u"author"]):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"booktitle"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"inbook":
+            auths = dict_data.get(u"author", [])
+            extras = dict_data.get(u"extras", {})
+            editors = extras.get(u"editor", [])
+            if __lst_is_empty(auths.extend(editors)):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"booktitle"] == u"":
+                return False
+            chapter = dict_data.get(u"chapter", u"")
+            pages = dict_data.get(u"pages", u"")
+            if (chapter + pages) == u"":
+                return False
+            if dict_data[u"publisher"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+# TODO incollection
+    except KeyError:
+        return False
+    return True
+
+def __lst_is_empty(list_data):
+    if len(list_data) == 0:
+        return True
+    for i in list_data:
+        if i == "":
+            return True
+    return False

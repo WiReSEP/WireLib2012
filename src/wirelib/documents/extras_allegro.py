@@ -2,6 +2,7 @@
 from documents.models import document
 from documents.models import doc_extra
 from datetime import datetime
+from django.conf import settings
 def export_allegro():
     """
     Diese Methode gibt eine Datei mit den aktuell zu exportierenden Büchern im
@@ -13,16 +14,17 @@ def export_allegro():
             status__lte=1)
     date = datetime.today()
     date = date.date()
+    filepath = getattr(settings, 'EXPORT_PATH', "documents/exports/")
     filename = u"WiReLib_" + date.strftime("%d-%m-%Y") + u".ADT"
-    tmp_file = open(filename, "w")
-    # allegro_query.update(ub_date=date)
+    tmp_file = open(filepath + filename, "w")
     print len(list(allegro_query))
     for doc in list(allegro_query):
         print >> tmp_file, u"#00"
         print >> tmp_file, __doc_to_string(doc).encode("iso-8859-1", "strict")
-        print >> tmp_file, u""
-        doc.save()
     tmp_file.close()
+    allegro_query.update(ub_date=date)
+    for doc in allegro_query:
+        doc.save()
     return tmp_file
 
 def __doc_to_string(document):
@@ -42,7 +44,8 @@ def __doc_to_string(document):
     file_allegro_dict.close()
     line_end = u"\n"
     doc_str = u"" + allegro_dict[u"isbn"] + u" " + document.isbn + line_end
-    doc_str += allegro_dict[u"publisher"] + u" " + document.publisher.name + line_end
+    doc_str += allegro_dict[u"publisher"] + u" "
+    doc_str += document.publisher.name + line_end
     try:
         vol = extra_fields.get(bib_field__iexact="volume")
         vol = vol.content
