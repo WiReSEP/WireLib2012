@@ -17,6 +17,61 @@ def functions_test(self):
     response["ContentType"] = "text/plain"
     return response
 
+def index(request): 	
+    """ Index der App.
+    Bietet dem Benutzer nur eine Übersicht.
+    TODO: Was sollte er auf dieser Seite noch sehen?
+    """
+    documents = document.objects.all().order_by("-title")
+    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
+
+def search(request):
+    """ Suche nach Dokumenten.
+    Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
+    finden.
+    """
+    return render_to_response("search.html")
+
+def search_pro(request):
+    """ Erweiterte Suche nach Dokumeten.
+    Hier kann der Benutzer mit einer übersichtlichen Form nach Dokumenten
+    suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
+    kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
+    """
+    return render_to_response("search_pro.html")
+
+def doc_list(request):
+    """ Übersicht über alle enthaltenen Dokumente
+    Dem Benutzer wird ein reichhaltiges Angebot an Dokumenten angeboten und
+    übersichtlich präsentiert. Er kann nach belieben zwischen Dokumenten die
+    'A' beginnend oder Autoren mit 'Z' beginnend wählen.
+    Jedes Dokument muss selbständig abgeholt werden, wir haften nicht für den
+    Reiseweg!
+    """
+    return render_to_response("doc_list.html")
+
+def doc_detail(request):
+    """ Detailansicht zum Dokument
+
+    """
+    return render_to_response("doc_detail.html")
+
+def doc_add(request):
+    """ Ein Dokument hinzufügen
+    Hier kann der Benutzer mit den entsprechenden Rechten ein Dokument der
+    Datenbank hinzufügen. Dies kann auf folgende Arten geschehen:
+        * Import durch Formeingabe
+        * Import durch Upload einer BibTeX-Datei
+    """
+    return render_to_response("doc_add.html")
+
+def doc_rent(request):
+    """ Des Benutzers Ausleihliste
+    Alle Dokumente die der Benutzer ausgeliehen hat und die Dokumente für die
+    der Benutzer für andere Bürgt.
+    """
+    return render_to_response("doc_rent.html")
+
 def authorbooks (request, s_author):
     author_query = author.objects.filter(surname__icontains=s_author)
     book_titles=[]
@@ -26,10 +81,6 @@ def authorbooks (request, s_author):
     response["Content-Type"] = "text/plain"
     return response
     
-def main(request): 	
-    documents = document.objects.all().order_by("-title")
-    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
-
 def templatebeispiel (request, s_author):
     author_query = author.objects.filter(surname__icontains=s_author)
     template = loader.get_template("Beispielbuchausgabe.html")

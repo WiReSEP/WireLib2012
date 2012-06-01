@@ -91,3 +91,11 @@ src/wirelib/settings.py
 src/wirelib/settings.pyc
 src/wirelib/urls.py
 src/wirelib/urls.pyc
+src/bib2000.bib
+src/wirelib/bibtex/
+src/wirelib/documents/admin.pyc
+src/wirelib/documents/bibtex.pyc
+src/wirelib/documents/extras_allegro.pyc
+src/wirelib/documents/extras_doc_funcs.pyc
+src/wirelib/documents/urls.pyc
+src/wirelib/documents/views.pyc
