@@ -50,7 +50,7 @@ class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
     bibtex_id = models.CharField(max_length=120, unique=True)
-    lib_of_con_nr = models.CharField(max_length=20) #LibraryOfCongressN
+    lib_of_con_nr = models.CharField(max_length=20, null=True) #LibraryOfCongressN
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
