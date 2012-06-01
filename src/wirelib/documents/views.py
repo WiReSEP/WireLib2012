@@ -2,6 +2,11 @@
 from models import author
 from django.http import HttpResponse
 from django.template import Context, loader
+from django.shortcuts import render_to_response
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse
+from documents.models import document
+import settings
 
 def functions_test(self):
     """
@@ -20,6 +25,10 @@ def authorbooks (request, s_author):
     response = HttpResponse("/n".join(book_titles))
     response["Content-Type"] = "text/plain"
     return response
+    
+def main(request): 	
+    documents = document.objects.all().order_by("-title")
+    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
 
 def templatebeispiel (request, s_author):
     author_query = author.objects.filter(surname__icontains=s_author)

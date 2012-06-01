@@ -281,7 +281,7 @@ li#tu_suchfeld input.tu_suchbegriff {
 	margin: 0px;
 	border: solid 1px #999;
 	background-color: #fff;
-	background: url('icons/tubsdesign/bg_such.gif');
+	background: url('../../icons/tubsdesign/bg_such.gif');
         left:780px;       
 /* margin-left:10px;*/
 	/*width: 20px;
