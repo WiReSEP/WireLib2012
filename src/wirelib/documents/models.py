@@ -1,6 +1,7 @@
 # vim: set fileencoding=utf-8
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
@@ -104,6 +105,15 @@ class user_profile(models.Model):
 
     def __unicode__(self):
         return unicode(self.user)
+
+    """
+    Zugriff auf unsere Daten auch von außerhalb durch get_profile() möglich
+    """
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        user_profile.objects.get_or_create(user=instance)
+ 
+post_save.connect(create_user_profile, sender=User)
 
 class tel_user(models.Model):
     user = models.ForeignKey(user_profile)
