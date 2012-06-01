@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# vim set fileencoding=utf-8
 from decimal import Decimal
 import datetime
 import re
@@ -34,7 +36,7 @@ def insert_doc(dict_insert):
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
     except KeyError:
-        raise
+        raise ValueError(u"Data is not valid")
     if not is_valid(dict_insert):
         raise ValueError(u"Data is not valid")
     publisher_db, dummy = publisher.objects.get_or_create(name=publisher_f)
@@ -82,17 +84,20 @@ def insert_doc(dict_insert):
     document_db.save()
 
 def is_valid(dict_data): #TODO
+    """Diese Methode überprüft, ob es sich bei dem übergebenen dict um ein 
+    BibteX-kompatibles Format handelt"""
     try:
         if not dict_data["bib_no"].startswith("K"):
             return False
         inv_no_r = r"\d{4}/\d{3}"
         if not re.match(inv_no_r, dict_data[u"inv_no"]):
             return False
-        if dict_data[u"category"] == u"book":
+        if dict_data[u"category"] == u"book": #checking book
             auths = dict_data.get(u"author", [])
             extras = dict_data.get(u"extras", {})
             editors = extras.get(u"editor", [])
-            if __lst_is_empty(auths.extend(editors)):
+            print auths, editors, (auths + editors)
+            if __lst_is_empty(auths + editors):
                 return False
             if dict_data[u"title"] == u"":
                 return False
@@ -100,7 +105,7 @@ def is_valid(dict_data): #TODO
                 return False
             if dict_data[u"year"] == u"":
                 return False
-        elif dict_data[u"category"] == u"artictle":
+        elif dict_data[u"category"] == u"artictle": #checking article
             if __lst_is_empty(dict_data[u"author"]):
                 return False
             if dict_data[u"title"] == u"":
@@ -109,10 +114,10 @@ def is_valid(dict_data): #TODO
                 return False
             if dict_data[u"year"] == u"":
                 return False
-        elif dict_data[u"category"] == u"booklet":
+        elif dict_data[u"category"] == u"booklet": #checking booklet
             if dict_data[u"title"] == u"":
                 return False
-        elif dict_data[u"category"] == u"conference":
+        elif dict_data[u"category"] == u"conference": #checking conference
             if __lst_is_empty(dict_data[u"author"]):
                 return False
             if dict_data[u"title"] == u"":
@@ -121,7 +126,7 @@ def is_valid(dict_data): #TODO
                 return False
             if dict_data[u"year"] == u"":
                 return False
-        elif dict_data[u"category"] == u"inbook":
+        elif dict_data[u"category"] == u"inbook": #checking inbook
             auths = dict_data.get(u"author", [])
             extras = dict_data.get(u"extras", {})
             editors = extras.get(u"editor", [])
@@ -139,7 +144,72 @@ def is_valid(dict_data): #TODO
                 return False
             if dict_data[u"year"] == u"":
                 return False
-# TODO incollection
+        elif dict_data[u"category"] == u"incollection": #checking incollection
+            if __lst_is_empty(dict_data.get(u"author", [])):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"booktitle"] == u"":
+                return False
+            if dict_data[u"publisher"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"inproceedings": #checking inproceedings
+            if __lst_is_empty(dict_data.get(u"author", [])):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"booktitle"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"manual": #checking manual
+            if dict_data[u"address"] == u"":
+                return False
+            if dict_data["title"] == u"":
+                return False
+        elif dict_data[u"category"] == u"masterthesis": #checking masterthesis
+            if __lst_is_empty(dict_data.get(u"author", [])):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"school"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"misc": #checking misc
+            return True
+        elif dict_data[u"category"] == u"phdthesis": #checking phdthesis
+            if __lst_is_empty(dict_data.get(u"author", [])):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"school"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"proceedings": #checking proceedings
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"techreport": #checking techreport
+            if __lst_is_empty(dict_data.get(u"author", [])):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"institution"] == u"":
+                return False
+            if dict_data[u"year"] == u"":
+                return False
+        elif dict_data[u"category"] == u"unpublished": #checking unpublished
+            if __lst_is_empty(dict_data.get(u"author", [])):
+                return False
+            if dict_data[u"title"] == u"":
+                return False
+            if dict_data[u"note"] == u"":
+                return False
     except KeyError:
         return False
     return True

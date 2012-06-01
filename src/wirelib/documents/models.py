@@ -116,7 +116,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 post_save.connect(create_user_profile, sender=User)
 
 class tel_user(models.Model):
-    user = models.ForeignKey(user_profile)
+    user = models.ForeignKey(User)
     tel_nr = models.CharField(max_length=20)
     #todo
     class Meta:
