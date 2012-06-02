@@ -4,7 +4,7 @@ from datetime import datetime
 import extras_doc_funcs
 import re
 
-class bibtex(object):
+class UglyBibtex(object):
     """ BibTeX-Parser zur Befüllung des Prototypen.
     Dieser BibTeX-Parser ist in der aktuellen Entwicklung nur zur Unterstützung
     der Prototyp-Entwicklung gedacht und sollte weiter nicht verwendet werden.
@@ -27,115 +27,76 @@ class bibtex(object):
             }
     BIBTEX_SPLIT= r'[{}@,="\n]'
 
-    def __init__(self, file):
-        self.file = file
-        self.bib_file = None
+    def __init__(self, bibtex_file):
+        self.bibtex_file = bibtex_file
+        self.errout_file = bibtex_file+'.err'
+        self.line = None
+        self.line_no = 0
+        self.worker = None                      # Aktuelle Arbeitsfunktion
+        self.first_call = False
+        self.stack = 0
+        self.quotation_mark_stack = 0
+        self.bracket_stack = 0
         self.entry = {}
+        self.entrys = []
 
     def do_import(self):
-        """ Diese Methode geht von einem sehr unflexiblen Format für
-        BibTeX-Dateien aus. Sie ist also nicht robust!
-        """
-        self.bib_file = open(self.file,'r')
-        for line in self.bib_file:
-            if re.match(r'\s*@',line):
-#                print "entering entry"
-                self.__get_entry(line)
-        self.bib_file.close()
+        self.worker = self.do_import
+        with open(self.bibtex_file,'r') as bib, open(self.errout_file) as errout:
+            for self.line in bib:
+                self.line_no += 1
+                if re.match(r'^\s*@',self.line):
+                    self.worker = self.__get_entry
+                    self.first_call = True
+                if self.worker != self.do_import:
+                    try:
+                        self.worker()
+                    except ValueError:
+                        print "Fehler im Datensatz!"
+                        errout.write(self.line_no+" ")
+                        errout.write("Fehler bei: "+self.line+'\n') # loglvl 1
+                        errout.write("Bisher gelesen: "+self.entry+'\n') #lvl 2
+                        errout.write('\n')
+#                        Hier fehlt es noch, dass nach einem Erfolgreichen
+#                        Abschluss die Daten in die DB eingetragen werden,
+#                        exceptions abgefangen werden und die nötigen Variablen
+#                        zurück gesetzt werden.
 
-    def __get_entry(self,line):
-        """ Ist u.a. für die Mangelnde Robustheit der do_import()
-        verantwortlich.
-        """
-        key_val = re.split(bibtex.BIBTEX_SPLIT, line)
-        key_val = self.__clean_list(key_val)
-        if len(key_val) != 2:
-            raise  ValueError()
-        self.entry[u'category'] = key_val[0].lower()
-        self.entry[u'bibtex_id'] = key_val[1]
+    def __get_entry(self):
+        key_val = re.split(r'{', self.line)
+        self.stack = 1
+        self.stack -= self.line.count(r'}')
+        if self.stack != 1:
+            raise ValueError()
+        self.entry_line = False
+        if key_val != 2:
+            raise ValueError()
 
-        bib_extra = {}
-        parse_stack = ['{']
+        # Clean key_vals
+        key_val[0] = re.sub(r'(^\s*@\s*)|(\s*$)','',key_val[0]).lower()
+        key_val[1] = re.sub(r'(^\s*)|(\s*,\s*$)','',key_val[1])
 
-        for line in self.bib_file:
-            if re.match(r'.*}',line):
-                parse_stack.pop()
-            if re.match(r'.*{',line):
-                parse_stack.append('{')
-            if len(parse_stack) == 0:
-                """ Entry exit """
-                if len(bib_extra) > 0:
-                    self.entry[u'extras'] = bib_extra
-                    bib_extra = []
-                key_val = []
-                print
-                print "Entry: "
-                for i in self.entry:
-                    print i," = ", self.entry[i]
-                try:
-                    extras_doc_funcs.insert_doc(self.entry)
-                except KeyError:
-                    pass
-                self.entry = {}
-                break
+        self.entry[UglyBibtex.BIB_FIELDS[key_val[0]]] = key_val[1]
+        if self.line.count(',') == 1:
+            self.worker = self.__get_field
 
-            key_val = re.split(bibtex.BIBTEX_SPLIT, line)
-            key_val = self.__clean_list(key_val)
-
-            if len(key_val) < 2:
-                continue
-
-            bib_value = ''
-            key_val[0] = key_val[0].lower()
-            if key_val[0] == 'book':
-                print "hier ist ein Fehler!",line
-            elif key_val[0] == 'author' or key_val[0] == 'keywords':
-                """ Multi-Value Fields """
-                bib_field = bibtex.BIB_FIELDS[key_val[0]]
-                key_val.remove(key_val[0])
-                self.entry[bib_field] = key_val
-            elif key_val[0]  == 'price':
-                """ TODO: split in currency & price"""
-                pass
-            elif key_val[0] == u'dateofpurchase':
-                if len(key_val) > 2:
-                    raise ValueError()
-#               TODO: Sofort auf Date arbeiten statt auf Datetime
-                mydatetime = datetime.strptime(
-                        key_val[1],'%d.%m.%Y')
-                self.entry[bibtex.BIB_FIELDS[key_val[0]]] = mydatetime.date()
-            elif key_val[0] in bibtex.BIB_FIELDS:
-                """ Default Fields """
-                if len(key_val) > 2:
-                    """ value wurde zu weit zerlegt """
-                    bib_value = self.__clean_list(
-                            re.split(r"=", 
-                            line,
-                            maxsplit=2))[1]
-                else:
-                    bib_value = key_val[1]
-                self.entry[bibtex.BIB_FIELDS[key_val[0]]] = bib_value
-            else:
-                """ Extra Field """
-                if len(key_val) > 2:
-                    """ value wurde zu weit zerlegt """
-                    key_val = self.__clean_list(re.split(
-                        r'=',
-                        line,
-                        maxsplit=2
-                        ))
-                bib_extra[key_val[0]] = key_val[1]
-
-    def __clean_list(self, dirty_list):
-        """ Entfernt die leeren Elemente aus einer Liste.
-
-        """
-        for i in range(len(dirty_list)):
-            """ Bäääh, aber die Wahrscheinlichkeit wurde als gering eingestuft,
-            dieser Schritt öfter widerholt werden muss - INTEL """
-            dirty_list[i] = dirty_list[i].strip()
-            dirty_list[i] = dirty_list[i].strip('"{},')
-            dirty_list[i] = dirty_list[i].strip()
-        while '' in dirty_list:
-            dirty_list.remove('')
-        return dirty_list
+    def __get_field(self):
+        if self.line.count("=") > 1:
+            raise ValueError()
+        self.stack += self.line.count('{')
+        self.stack -= self.line.count('}')
+        self.quotation_mark_stack = self.line.count('"')
+        self.bracket_stack += self.line.count("{")
+        self.bracket_stack -= self.line.count("}")
+        if self.stack == 0:
+            self.worker = self.do_import
+        if self.stack < 0:
+            raise ValueError()
+        key_val = self.line.split('=')
+        if len(key_val) == 2:
+            key_val[0].strip()
+            re.sub(r'(^[\s"{]*)|(["}\s]*,\s*$)','',key_val[1])
+## TODO: Wenn die stacks ok sagen, darf geschrieben werden und der
+#            quotation_mark_stack wird zurückgesetzt. Wenn nicht, wird das
+#            Bisherige gesichert und hoffentlich beim nächsten Durchlauf
+#            mitgenommen... oder bei dem danach.
