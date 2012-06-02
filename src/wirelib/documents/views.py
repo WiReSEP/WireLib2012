@@ -30,7 +30,19 @@ def search(request):
     Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
     finden.
     """
-    return render_to_response("search.html")
+    context = Context()
+    if "suchanfrage_starten" in request.GET:
+        suchtext = request.POST.get('suche','')
+        document_query = document.objects.filter(title__icontains=suchtext)
+        template = loader.get_template("suchergebnis.html")
+        context = Context({"documents" : document_query})
+        response = HttpResponse(template.render(context))
+        #response["ContentType"] = "text/plain"
+        return response
+    else:
+        context = Context()
+        template = loader.get_template("unsere_suche.html")
+        return HttpResponse(template.render(context))
 
 def search_pro(request):
     """ Erweiterte Suche nach Dokumeten.
