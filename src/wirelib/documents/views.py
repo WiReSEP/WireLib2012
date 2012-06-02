@@ -1,11 +1,11 @@
 # vim: set fileencoding=utf-8
 from models import author
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
-from documents.models import document
+from documents.models import document, keywords
 import settings
 
 def functions_test(self):
@@ -62,11 +62,23 @@ def doc_list(request):
     """
     return render_to_response("doc_list.html")
 
-def doc_detail(request):
+def doc_detail(request, id):
     """ Detailansicht zum Dokument
-
     """
-    return render_to_response("doc_detail.html")
+    try: 
+        d = document.objects.get(bib_no=id)
+    except document.DoesNotExist:
+        raise Http404
+        
+    document_query = document.objects.filter(bib_no__icontains=id)
+    keyword_query = keywords.objects.filter(document__icontains=id)
+    doc_extra_query = doc_extra.objects.filter(doc_id__icontains=id)
+    template = loader.get_template("doc_detail.html")
+    context = Context({"documents" : document_query}),
+                      {"keywords" : keyword_query},
+                      {"doc_extra" : doc_extra_query})
+    response = HttpResponse(template.render(context))
+    return response
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
