@@ -91,8 +91,11 @@ def unsere_suche (request):
     context = Context()
     if "suchanfrage_starten" in request.GET:
         suchtext = request.POST.get('suche','')
-        response = HttpResponse(suchtext)
-        response["ContentType"] = "text/plain"
+        document_query = document.objects.filter(title__icontains=suchtext)
+        template = loader.get_template("suchergebnis.html")
+        context = Context({"documents" : document_query})
+        response = HttpResponse(template.render(context))
+        #response["ContentType"] = "text/plain"
         return response
     else:
         context = Context()
