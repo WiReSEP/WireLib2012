@@ -1,4 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-	<h1>{{ document }}</h1>
+    {for d in documents}
+	<h1>d.title</h1>
+	
 {% endblock %}
