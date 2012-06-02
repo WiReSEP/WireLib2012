@@ -2,7 +2,7 @@
 {% block content %}
     <h1> Suchergebnis </h1>
 	{% for d in documents %}		
-	{{d}} 
+	<a href="../doc/{{d.bib_no}}">{{d}}</a> 
 	<h1>{{d.year}}</h1>
 	{% endfor %}
 {% endblock %}
