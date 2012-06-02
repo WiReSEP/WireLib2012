@@ -50,7 +50,20 @@ def search_pro(request):
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
     """
-    return render_to_response("search_pro.html")
+    if "pro_search_result" in request.GET:
+        s_author = request.POST.get('author','')
+        s_title = request.POST.get('title','')
+        s_year = request.POST.get('year','')
+        s_documents = document.objects.filter(title__icontains = s_title)
+        s_documents = s_documents.filter(authors__last_name__icontains =
+                                         s_author)
+        s_documents = s_documents.filter(year__icontains = s_year)
+        template = loader.get_template("suchergebnis.html")
+        context = Context({"documents" : s_documents})
+        response = HttpResponse(template.render(context))
+        return response
+    else:
+        return render_to_response("search_pro.html")
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
