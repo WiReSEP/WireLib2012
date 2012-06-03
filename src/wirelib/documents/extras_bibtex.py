@@ -33,70 +33,175 @@ class UglyBibtex(object):
         self.line = None
         self.line_no = 0
         self.worker = None                      # Aktuelle Arbeitsfunktion
-        self.first_call = False
+        self.go_further = False
         self.stack = 0
+
         self.quotation_mark_stack = 0
         self.bracket_stack = 0
+        self.current_keyval = [] 
+
         self.entry = {}
-        self.entrys = []
+        self.extra_entry = {}
 
     def do_import(self):
+        """ Importiert eine BibTeX-Datei in die Datenbank.
+        Wichtig ist, dass die BibTeX-Datei dem WiRe-TU-BS-Format entspricht, da
+        von dieser Funktion einige BibTeX-Fehler ignoriert werden und einige
+        nicht valide Formate dennoch geparsed werden.
+
+        Ein fehlerhafter Datensatz wird in eine extra-Datei gespeichert, direkt
+        neben der Ursprungsdatei.
+        """
         self.worker = self.do_import
-        with open(self.bibtex_file,'r') as bib, open(self.errout_file) as errout:
-            for self.line in bib:
-                self.line_no += 1
-                if re.match(r'^\s*@',self.line):
-                    self.worker = self.__get_entry
-                    self.first_call = True
-                if self.worker != self.do_import:
-                    try:
-                        self.worker()
-                    except ValueError:
-                        print "Fehler im Datensatz!"
-                        errout.write(self.line_no+" ")
-                        errout.write("Fehler bei: "+self.line+'\n') # loglvl 1
-                        errout.write("Bisher gelesen: "+self.entry+'\n') #lvl 2
-                        errout.write('\n')
-#                        Hier fehlt es noch, dass nach einem Erfolgreichen
-#                        Abschluss die Daten in die DB eingetragen werden,
-#                        exceptions abgefangen werden und die nötigen Variablen
-#                        zurück gesetzt werden.
+        with open(self.bibtex_file,'r') as bib:
+            with open(self.errout_file,'w') as self.errout:
+                for self.line in bib:
+                    self.line_no += 1
+                    if re.match(r'^\s*@',self.line):
+                        self.worker = self.__get_entry
+
+                    if self.worker != self.do_import:
+                        try:
+                            self.worker()
+                        except ValueError:
+                            self.__log_error()
+                            self.worker = self.do_import
+                    else:
+                        self.go_further = False
+                        self.stack = 0
+                
+                        self.quotation_mark_stack = 0
+                        self.bracket_stack = 0
+                        self.current_keyval = [] 
+                
+                        self.entry = {}
+                        self.extra_entry = {}
 
     def __get_entry(self):
+        """ Nimmt einen Eintrag auf.
+        Es wird direkt der Kopf eines Eintrages gespeichert und das Sammeln der
+        einzelnen Einträge angestoßen.
+        """
         key_val = re.split(r'{', self.line)
         self.stack = 1
         self.stack -= self.line.count(r'}')
         if self.stack != 1:
             raise ValueError()
         self.entry_line = False
-        if key_val != 2:
+        if len(key_val) != 2:
             raise ValueError()
 
         # Clean key_vals
         key_val[0] = re.sub(r'(^\s*@\s*)|(\s*$)','',key_val[0]).lower()
         key_val[1] = re.sub(r'(^\s*)|(\s*,\s*$)','',key_val[1])
 
-        self.entry[UglyBibtex.BIB_FIELDS[key_val[0]]] = key_val[1]
-        if self.line.count(',') == 1:
+        self.entry[u'category'] = key_val[0]
+        self.entry[u'bibtex_id'] = key_val[1]
+        head_end = re.match(r'.*,$',self.line.strip())
+        if head_end:
             self.worker = self.__get_field
+        else:
+            raise ValueError()
 
     def __get_field(self):
+        """ Nimmt das Feld eines Eintrages auf.
+        Diese Methode übernimmt nur einen Eintrag eines Feldes und erkennt
+        unstimmigkeiten sowohl in Feld als auch in Einträgen
+        """
         if self.line.count("=") > 1:
             raise ValueError()
+
         self.stack += self.line.count('{')
         self.stack -= self.line.count('}')
+        if self.stack < 0:
+            raise ValueError()
+        elif self.stack == 0:   # Nach aktueller Zeile neuen Eintrag suchen
+            self.worker = self.do_import
+
         self.quotation_mark_stack = self.line.count('"')
         self.bracket_stack += self.line.count("{")
         self.bracket_stack -= self.line.count("}")
-        if self.stack == 0:
-            self.worker = self.do_import
-        if self.stack < 0:
-            raise ValueError()
+
+        if self.bracket_stack > 0 or self.quotation_mark_stack % 2 == 1:
+            self.go_further = True
+        else:
+            self.go_further = False
+            self.bracket_stack = 0
+            self.quotation_mark_stack = 0
+        if self.worker == self.do_import and self.go_further == True:
+            raise ValueError()  # Syntaxfehler
+
         key_val = self.line.split('=')
-        if len(key_val) == 2:
-            key_val[0].strip()
-            re.sub(r'(^[\s"{]*)|(["}\s]*,\s*$)','',key_val[1])
-## TODO: Wenn die stacks ok sagen, darf geschrieben werden und der
-#            quotation_mark_stack wird zurückgesetzt. Wenn nicht, wird das
-#            Bisherige gesichert und hoffentlich beim nächsten Durchlauf
-#            mitgenommen... oder bei dem danach.
+        if len(key_val) == 2:   # Einfacher Key = Value
+            key_val[0] = key_val[0].lower().strip()
+            key_val[1] = re.sub(r'(^[\s"{]*)|(["}\s]*,\s*\n)','',key_val[1])
+            field_end = re.match('.*,$',self.line.strip())
+            if field_end and not self.go_further: 
+                try:
+                    self.__insert_field(key_val)
+                except ValueError:
+                    raise
+            elif field_end and self.go_further:
+                raise ValueError()
+            else:
+                self.current_keyval = key_val
+        elif len(key_val) == 1: # Nur noch Value Ergänzung
+            key_val[0] =re.sub(r'(^\s*)|(["}\s]*,\s*$)','',key_val[0])
+            key_val.insert(0,self.current_keyval[0])
+            key_val[1] += " "+self.current_keyval[1]
+            field_end = re.match('.*,$',self.line.strip())
+            if field_end and not self.go_further:
+                try:
+                    self.__insert_field(key_val)
+                except ValueError:
+                    raise
+                self.current_keyval = []
+            if not field_end and not self.go_further:
+                raise ValueError()
+            else:
+                self.current_keyval = key_val
+
+        if self.worker == self.do_import:   # Eintrag in DB schreiben
+            self.entry[u'extras'] = self.extra_entry
+            try:
+                extras_doc_funcs.insert_doc(self.entry)
+            except ValueError:
+                self.errout.write("Eintrag von DB nicht akzeptiert\n")
+                self.__log_error()
+            except DoesNotExist:    # TODO: korrekte Exception eintragen.
+                self.errout.write("Kategorie des Eintrages nicht bekannt\n")
+                self.__log.error()
+    
+
+    def __insert_field(self, key_val):
+        if key_val[0] == u'author' or key_val[0] == u'keywords':
+            key_val[1] = key_val[1].split(',')
+            key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
+            self.entry[key_val[0]] = key_val[1]
+
+        elif key_val[0] == u'price':
+            pass
+
+        elif key_val[0] == u'dateofpurchase':
+            if len(key_val) > 2:
+                raise ValueError()
+            try:
+                mydatetime = datetime.strptime(
+                        key_val[1],'%d.%m.%Y')
+            except ValueError:
+                return           # Mal wieder das falsche Format
+            key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
+            self.entry[key_val[0]] = mydatetime.date()
+
+        elif key_val[0] in UglyBibtex.BIB_FIELDS:
+            key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
+            self.entry[key_val[0]] = key_val[1]
+        else:       # Extra Field
+            self.extra_entry[key_val[0]] = key_val[1]
+
+    def __log_error(self):
+        print "Fehler im Datensatz!"
+        self.errout.write("Zeile %d: " % self.line_no)
+        self.errout.write("Fehler bei: %s" % self.line) # loglvl 1
+        self.errout.write("Bisher gelesen: %r\n" % self.entry) #lvl 2
+        self.errout.write('\n')

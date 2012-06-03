@@ -58,7 +58,7 @@ def insert_doc(dict_insert):
             name_f = au[0].split(" ")
             last_name_f = name_f[-1]
             first_name_f = " ".join(name_f[:-1])
-        print last_name_f, first_name_f
+#        print last_name_f, first_name_f
         try:
             auth_db = author.objects.get(last_name=last_name_f, 
                     first_name=first_name_f)
@@ -87,7 +87,7 @@ def is_valid(dict_data): #TODO
     """Diese Methode überprüft, ob es sich bei dem übergebenen dict um ein 
     BibteX-kompatibles Format handelt"""
     try:
-		bib_no_r = r"[PKDRM]\d+"
+        bib_no_r = r"[PKDRM]\d+"
         if not re.match(bib_no_r, dict_data["bib_no"]):
             return False
         inv_no_r = r"\d{4}/\d{3}"
@@ -97,7 +97,7 @@ def is_valid(dict_data): #TODO
             auths = dict_data.get(u"author", [])
             extras = dict_data.get(u"extras", {})
             editors = extras.get(u"editor", [])
-            print auths, editors, (auths + editors)
+#            print auths, editors, (auths + editors)
             if __lst_is_empty(auths + editors):
                 return False
             if dict_data[u"title"] == u"":
