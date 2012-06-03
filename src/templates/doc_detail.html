@@ -1,6 +1,119 @@
 {% extends "index.html" %}
 {% block content %}
-    {for d in documents}
-	<h1>d.title</h1>
+    {% for d in documents %}
+	<h1>{{ d.title}} </h1>
+	<table>
+	    <tr>
+	        <td><b><u>ID in der Bibliothek:</u></b></td>
+	        <td>{{ d.bib_no }}</td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Inventarnummer:</u></b></td>
+	        <td>{{ d.inv_no }}</td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Kategorie:</u></b></td>
+	        <td>{{ d.category }}</td>
+	    </tr>
+	    <tr>
+	        <td><b><u>ISBN:</u></b></td>
+	        <td>
+	            {% if d.isbn %}
+	                {{ d.isbn }}
+	            {% else %}
+	                -
+	            {% endif %}
+	        </td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Autor:</u></b></td>
+	        <td>
+	            {% for a in d.authors.all %}
+	                    {{ a.first_name }} {{ a.last_name }},
+	            {% endfor %}
+	        </td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Publisher:</u></b></td>
+	        <td>
+	            {% if d.publisher %}
+	                {{ d.publisher }}
+	            {% else %}
+	                -
+	            {% endif %}
+	        </td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Erscheinungsjahr:</u></b></td>
+	        <td>{{ d.year }}</td>
+	    </tr>
+	    <tr>
+	        <td><b><u>BibTeX-ID:</u></b></td>
+	        <td>{{ d.bibtex_id }}</td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Keywords:</u></b></td>
+	        <td>
+	            {% if d.keywords.all %}
+	                {% for k in d.keywords.all %}
+	                    {{ k.keyword }},
+	                {% endfor %}
+	            {% else %}
+	                -
+	            {% endif %}
+	        </td>
+	    </tr>	    
+	    <tr>
+	        <td><b><u>LibraryOfCongressN:</u></b></td>
+	        <td>
+	            {% if d.lib_of_con_nr %}
+	                {{ d.lib_of_con_nr }}
+	            {% else %}
+	                -
+	            {% endif %}
+	        </td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Preis:</u></b></td>
+	        <td>
+	            {% if d.price and d.currency %}
+	                {{ d.price }}{{ d.currency }}
+	            {% else %}
+	                -
+	            {% endif %}
+	        </td>
+	    </tr>
+	    	    <tr>
+	        <td><b><u>In der Bibliothek seit:</u></b></td>
+	        <td>{{ d.date_of_purchase }}</td>
+	    </tr>
+	    <tr>
+	        <td><b><u>Notizen:</u></b></td>
+	        <td>
+	            {% if d.comment %}
+	                {{ d.comment }}
+	            {% else %}
+	                -
+	            {% endif %}
+	        </td>
+	    </tr>
+	    {% for de in d.doc_extra %}    
+	        <tr>
+	            <td><b><u>{{ de.bib_field }}</u></b></td>
+	            <td>{{ de.content }}</td>
+	        </tr>
+	    {% endfor %}
+	</table>
 	
+	<script language="JavaScript" type="text/JavaScript">
+<!--
+function show(id) {
+  document.getElementById(id).style.display='inline';
+}
+//-->
+</script>
+<input type="button" name="button" value="BibTeX" onclick="javascript: show('spoiler');"> <br>
+<div id="spoiler" name="spoiler" style="display: none;"><textarea readonly=true>TODO BibTeX generieren</textarea></div>
+
+	{% endfor %}
 {% endblock %}
