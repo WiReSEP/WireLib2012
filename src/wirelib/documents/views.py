@@ -57,13 +57,21 @@ def search_pro(request):
         s_publisher = request.POST.get('publisher','')
         s_bib_no = request.POST.get('bib_no','Test')
         s_isbn = request.POST.get('isbn','')
+        s_keywords = request.POST.get('keywords','')
         s_documents = document.objects.filter(title__icontains = s_title)
-        s_documents = s_documents.filter(authors__last_name__icontains =
-                                         s_author)
-        s_documents = s_documents.filter(year__icontains = s_year)
-        s_documents = s_documents.filter(publisher__name__icontains = s_publisher)
-        s_documents = s_documents.filter(bib_no__icontains = s_bib_no)
-        s_documents = s_documents.filter(isbn__icontains = s_isbn)
+        if s_author != "":
+            s_documents = s_documents.filter(authors__last_name__icontains =
+                                             s_author)
+        if s_year != "":
+            s_documents = s_documents.filter(year__icontains = s_year)
+        if s_publisher != "":
+            s_documents = s_documents.filter(publisher__name__icontains = s_publisher)
+        if s_bib_no != "":
+            s_documents = s_documents.filter(bib_no__icontains = s_bib_no)
+        if s_isbn != "":
+            s_documents = s_documents.filter(isbn__icontains = s_isbn)
+        if s_keywords != "":
+            s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
         template = loader.get_template("suchergebnis.html")
         context = Context({"documents" : s_documents})
         response = HttpResponse(template.render(context))
