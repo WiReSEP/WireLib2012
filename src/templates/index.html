@@ -23,9 +23,10 @@
 	<link rel="help" href="/presse/web" title="Hilfekontext" />
 
     <!-- Die Stylesheets die für alle Seiten gelten -->
-
-    <link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}tubs.css" media="all" title="Layout für alle Seiten" />
-    <link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}tubs_print.css" media="print" title="Layout für alle Seiten" />
+    {% load static %}
+    {% get_static_prefix as STATIC_PREFIX %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}tubs.css" media="all" title="Layout für alle Seiten" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}tubs_print.css" media="print" title="Layout für alle Seiten" />
       
 </head>
 
@@ -129,7 +130,7 @@
 		<div class="mittlere_spalte">
     
 		<div class = "inhalt">
-		 {% block content %} {% endblock %}
+		 {% block content %} {% endblock content %}
 		</div>	
 		
 		<span style="visibility:collapse;">

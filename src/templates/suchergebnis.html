@@ -1,8 +1,8 @@
 {% extends "index.html" %}
 {% block content %}
-    <h1> Literaturverzeichnis </h1>
+    <h1> Suchergebnis </h1>
 	{% for d in documents %}		
 	<a href="../doc/{{d.bib_no}}">{{d}}</a> 
 	<h1>{{d.year}}</h1>
 	{% endfor %}
-{% endblock content %}
+{% endblock %}

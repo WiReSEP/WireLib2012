@@ -1,19 +1,27 @@
 # vim: set fileencoding=utf-8
 from models import author
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
-from documents.models import document
+from documents.models import document, keywords
 import settings
+
+from extras_bibtex import UglyBibtex
+import os
 
 def functions_test(self):
     """
     Um eine Funktion zu testen, die nur einen einfachen Text zurückgibt, 
     einfach die Funktion statt dem String einfüge und die Seite ~/funktionstest aufrufen.
     """
-    response = HttpResponse("testfunktion hier einfügen")
+    for file in os.listdir('olddb'):
+        try:
+            UglyBibtex('olddb/'+file).do_import()
+        except:
+            pass
+    response = HttpResponse("Datenbankimport abgeschlossen")
     response["ContentType"] = "text/plain"
     return response
 
@@ -30,7 +38,19 @@ def search(request):
     Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
     finden.
     """
-    return render_to_response("search.html")
+    context = Context()
+    if "suchanfrage_starten" in request.GET:
+        suchtext = request.POST.get('suche','')
+        document_query = document.objects.filter(title__icontains=suchtext)
+        template = loader.get_template("suchergebnis.html")
+        context = Context({"documents" : document_query})
+        response = HttpResponse(template.render(context))
+        #response["ContentType"] = "text/plain"
+        return response
+    else:
+        context = Context()
+        template = loader.get_template("unsere_suche.html")
+        return HttpResponse(template.render(context))
 
 def search_pro(request):
     """ Erweiterte Suche nach Dokumeten.
@@ -38,7 +58,20 @@ def search_pro(request):
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
     """
-    return render_to_response("search_pro.html")
+    if "pro_search_result" in request.GET:
+        s_author = request.POST.get('author','')
+        s_title = request.POST.get('title','')
+        s_year = request.POST.get('year','')
+        s_documents = document.objects.filter(title__icontains = s_title)
+        s_documents = s_documents.filter(authors__last_name__icontains =
+                                         s_author)
+        s_documents = s_documents.filter(year__icontains = s_year)
+        template = loader.get_template("suchergebnis.html")
+        context = Context({"documents" : s_documents})
+        response = HttpResponse(template.render(context))
+        return response
+    else:
+        return render_to_response("search_pro.html")
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -51,10 +84,37 @@ def doc_list(request):
     return render_to_response("doc_list.html")
 
 def doc_detail(request):
-    """ Detailansicht zum Dokument
+    bib_id = "K006011"
+    document_query = document.objects.filter(bib_no__icontains=bib_id)
+    keyword_query = keywords.objects.filter(document__bib_no__icontains=bib_id)
+    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_id)
+#    lend_query = lending.objects.filter(doc_id__bib_no__icontains=bib_id).order_by('-date_lend')
+#    user_query = User.objects.filter(id__doc_id__bib_no__icontains=bib_id)
+    template = loader.get_template("doc_detail.html")
+    context = Context({"documents" : document_query},
+                      {"keywords" : keyword_query},
+                      {"doc_extra" : doc_extra_query})
+    response = HttpResponse(template.render(context))
+    return response
 
-    """
-    return render_to_response("doc_detail.html")
+
+"""def doc_detail(request, bib_no_id):
+    "" Detailansicht zum Dokument
+    ""
+    try: 
+        d = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
+
+    document_query = document.objects.filter(bib_no__icontains=bib_no_id)
+    keyword_query = keywords.objects.filter(document__icontains=bib_no_id)
+    doc_extra_query = doc_extra.objects.filter(doc_id__icontains=bib_no_id)
+    template = loader.get_template("doc_detail.html")
+    context = Context({"documents" : document_query},
+                      {"keywords" : keyword_query},
+                      {"doc_extra" : doc_extra_query})
+    response = HttpResponse(template.render(d))
+    return response"""
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
@@ -91,8 +151,11 @@ def unsere_suche (request):
     context = Context()
     if "suchanfrage_starten" in request.GET:
         suchtext = request.POST.get('suche','')
-        response = HttpResponse(suchtext)
-        response["ContentType"] = "text/plain"
+        document_query = document.objects.filter(title__icontains=suchtext)
+        template = loader.get_template("suchergebnis.html")
+        context = Context({"documents" : document_query})
+        response = HttpResponse(template.render(context))
+        #response["ContentType"] = "text/plain"
         return response
     else:
         context = Context()

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # vim set fileencoding=utf-8
 from datetime import datetime
+from exceptions import UnknownCategoryError
 import extras_doc_funcs
 import re
+import codecs
 
 class UglyBibtex(object):
     """ BibTeX-Parser zur Befüllung des Prototypen.
@@ -53,8 +55,8 @@ class UglyBibtex(object):
         neben der Ursprungsdatei.
         """
         self.worker = self.do_import
-        with open(self.bibtex_file,'r') as bib:
-            with open(self.errout_file,'w') as self.errout:
+        with codecs.open(self.bibtex_file,mode='r',encoding='utf-8') as bib:
+            with codecs.open(self.errout_file,mode='w', encoding='utf-8') as self.errout:
                 for self.line in bib:
                     self.line_no += 1
                     if re.match(r'^\s*@',self.line):
@@ -118,7 +120,7 @@ class UglyBibtex(object):
         elif self.stack == 0:   # Nach aktueller Zeile neuen Eintrag suchen
             self.worker = self.do_import
 
-        self.quotation_mark_stack = self.line.count('"')
+        self.quotation_mark_stack += self.line.count('"')
         self.bracket_stack += self.line.count("{")
         self.bracket_stack -= self.line.count("}")
 
@@ -128,7 +130,7 @@ class UglyBibtex(object):
             self.go_further = False
             self.bracket_stack = 0
             self.quotation_mark_stack = 0
-        if self.worker == self.do_import and self.go_further == True:
+        if self.worker == self.do_import and self.go_further:
             raise ValueError()  # Syntaxfehler
 
         key_val = self.line.split('=')
@@ -141,8 +143,6 @@ class UglyBibtex(object):
                     self.__insert_field(key_val)
                 except ValueError:
                     raise
-            elif field_end and self.go_further:
-                raise ValueError()
             else:
                 self.current_keyval = key_val
         elif len(key_val) == 1: # Nur noch Value Ergänzung
@@ -166,12 +166,12 @@ class UglyBibtex(object):
             try:
                 extras_doc_funcs.insert_doc(self.entry)
             except ValueError:
-                self.errout.write("Eintrag von DB nicht akzeptiert\n")
+                self.errout.write("Eintrag kein valides Format\n")
                 self.__log_error()
-            except DoesNotExist:    # TODO: korrekte Exception eintragen.
-                self.errout.write("Kategorie des Eintrages nicht bekannt\n")
-                self.__log.error()
-    
+            except UnknownCategoryError:    # TODO: korrekte Exception eintragen.
+                errmsg = "Kategorie %s nicht bekannt\n" % self.entry[u'category']
+                self.errout.write(errmsg)
+                self.__log_error()
 
     def __insert_field(self, key_val):
         if key_val[0] == u'author' or key_val[0] == u'keywords':
@@ -200,7 +200,6 @@ class UglyBibtex(object):
             self.extra_entry[key_val[0]] = key_val[1]
 
     def __log_error(self):
-        print "Fehler im Datensatz!"
         self.errout.write("Zeile %d: " % self.line_no)
         self.errout.write("Fehler bei: %s" % self.line) # loglvl 1
         self.errout.write("Bisher gelesen: %r\n" % self.entry) #lvl 2

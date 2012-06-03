@@ -1,11 +1,5 @@
-<html>
-  <head>
-  </head>
-
-  <body>
-  
-    <div class="mittlere_spalte">
-        <div class="inhalt">
+{% extends "index.html" %}
+{% block content %}
             <form method="post" action="?suchanfrage_starten">
                 <table>
                     <tr class="suchanfrage">
@@ -16,10 +10,4 @@
                     </tr> 
                 </table>
              </form>
-        </div>     
-                                
-                                    
-      
-	
-  </body>
-</html>
+{% endblock %}

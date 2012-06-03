@@ -1,4 +1,27 @@
 {% extends "index.html" %}
 {% block content %}
 	<h1>Erweiterte Suche</h1>
+	<form method="post" action="?pro_search_result">
+	  <table>
+		<tr>
+		  <td>Titel:</td>
+		  <td><input type="text" name="title" value="{{ searched_title }}" />
+		  </td>
+		</tr>
+		<tr>
+		  <td>Autor:</td>
+		  <td><input type="text" name="author" value="{{ searched_author }}" />
+		  </td>
+		</tr>
+		<tr>
+		  <td>Jahr:</td>
+		  <td><input type="text" name="year" value="{{ searched_year }}" />
+		  </td>
+		</tr>
+		<tr>
+		  <td><input type="submit" value="Suchanfrage starten" /> </td>
+		</tr>
+	  </table>
+	</form>
+
 {% endblock %}
