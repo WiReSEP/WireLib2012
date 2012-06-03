@@ -26,7 +26,6 @@ def is_valid(dict_data): #TODO
             auths = dict_data.get(u"author", [])
             extras = dict_data.get(u"extras", {})
             editors = extras.get(u"editor", [])
-#            print auths, editors, (auths + editors)
             if __lst_is_empty(auths + editors):
                 return False, u"Autor und Editor"
             if dict_data[u"title"] == u"":
@@ -141,7 +140,7 @@ def is_valid(dict_data): #TODO
             if dict_data[u"note"] == u"":
                 return False, u"Note"
     except KeyError, e:
-        return False, e
+        return False, e.message
     return True, u""
 
 def insert_doc(dict_insert):
@@ -181,7 +180,7 @@ def insert_doc(dict_insert):
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
     except KeyError:
-        raise ValueError(u"Data is not valid")
+        raise ValueError(u"Daten haben nicht die benötigten Felder")
     try:
         publisher_db, dummy = publisher.objects.get_or_create(name=publisher_f)
         try:

@@ -2,6 +2,7 @@
 # vim set fileencoding=utf-8
 from datetime import datetime
 from exceptions import UnknownCategoryError
+from exceptions import DuplicateKeyError
 import extras_doc_funcs
 import re
 import codecs
@@ -165,12 +166,16 @@ class UglyBibtex(object):
             self.entry[u'extras'] = self.extra_entry
             try:
                 extras_doc_funcs.insert_doc(self.entry)
-            except ValueError:
+            except ValueError, e:
                 self.errout.write("Eintrag kein valides Format\n")
+                self.errout.write(u"Begründung: " + e.message +"\n")
                 self.__log_error()
             except UnknownCategoryError:    # TODO: korrekte Exception eintragen.
                 errmsg = "Kategorie %s nicht bekannt\n" % self.entry[u'category']
                 self.errout.write(errmsg)
+                self.__log_error()
+            except DuplicateKeyError:
+                self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
 
     def __insert_field(self, key_val):
