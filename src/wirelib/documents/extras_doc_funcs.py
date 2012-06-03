@@ -99,7 +99,7 @@ def is_valid(dict_data): #TODO
             auths = dict_data.get(u"author", [])
             extras = dict_data.get(u"extras", {})
             editors = extras.get(u"editor", [])
-            print auths, editors, (auths + editors)
+#            print auths, editors, (auths + editors)
             if __lst_is_empty(auths + editors):
                 return False
             if dict_data[u"title"] == u"":
