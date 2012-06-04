@@ -29,19 +29,22 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}tubs_print.css" media="print" title="Layout für alle Seiten" />
       
 	<script type="text/javascript">
-	  function spoilIt(elem, idname) {
+	  function spoiler(elem, idname, showMessage, hideMessage) {
 		parNode = document.getElementById(idname);
 		if (parNode.style.display != '') {
 		  parNode.style.display = '';
 		  elem.innerText = '';
-		  elem.value = 'Hide';
+		  elem.value = hideMessage;
 		}
 		else {
 		  parNode.style.display = 'none';
 		  elem.innerText = '';
-		  elem.value = 'Show';
+		  elem.value = showMessage;
 		}
 	  }
+function spoilIt(elem, idname) {
+  spoiler(elem, idname, 'Show', 'Hide')
+}
 </script>
 
 </head>
