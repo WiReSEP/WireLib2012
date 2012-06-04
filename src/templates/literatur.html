@@ -1,8 +1,61 @@
 {% extends "index.html" %}
+
 {% block content %}
-    <h1> Literaturverzeichnis </h1>
-	{% for d in documents %}		
-	<a href="../doc/{{d.bib_no}}">{{d}}</a> 
-	<h1>{{d.year}}</h1>
-	{% endfor %}
-{% endblock content %}
+   <h1> Literaturverzeichnis </h1>
+   <table class="sortable" border = "3" bgcolor="#FFFFFF"> 
+  
+   
+
+       <th><a href="?order_by=d">Dokumententitel</a></th>
+       <th><a href="?order_by=category">Kategorie</a></th> 
+       <th><a href="?order_by=au">Authoren</a></th>    
+       <th><a href="?order_by=year">Veröffentlichung</a></th> 
+       <th><a href="?order_by=status">Status</a></th> 
+       <th><a href="?order_by=isbn">Isbn</a></th>
+      <!--- <th><a href="?order_by=bib_no">Bibliotheksnummer</a></th>--->
+      <!--- <th><a href="?order_by=inv_no">Inventarnummer</a></th>--->
+      <!--- <th><a href="?order_by=lib_of_con_nr">LibaryOfCongress-Nummer</a></th>--->
+      <!--- <th><a href="?order_by=last_update">Letztes Update</a></th>--->
+      <!--- <th><a href="?order_by=adress">Adresse</a></th>--->
+      <!--- <th><a href="?order_by=price">Preis</a></th>--->
+       <!---<th><a href="?order_by=currency">Währung</a></th>--->
+      <!--- <th><a href="?order_by=date_of_purchase">Bestellt am</a></th>--->
+      <!--- <th><a href="?order_by=comment">Kommentar</a></th>--->
+       	{% for d in documents %}		
+	<tr><td>{{d}}</td> 
+	<td>{{d.category}}</td>
+	   <td> {% for au in d.authors.all %}
+	    {{au}}
+	    {% endfor %}</td>
+	<td>{{d.year}}</td>
+	<td>
+	{% if d.status = 0 %}
+	Vorhanden
+	{% endif %}
+	{% if d.status = 1 %}
+	Verliehen
+	{% endif %}
+	{% if d.status = 2 %}
+	
+	{% endif %}
+	{% if d.status = 3 %}
+	
+	{% endif %}
+	{% if d.status = 4 %}
+	
+	{% endif %}
+	</td>
+	<td>{{d.isbn}}</td>
+	<!---<td>{{d.bib_no}}</td>--->
+	<!---<td>{{d.inv_no}}</td>--->
+	<!---<td>{{d.lib_of_con_nr}}</td>--->
+	<!---<td>{{d.last_update}}</td>--->
+	<!---<td>{{d.adress}}</td>--->
+	<!---<td>{{d.price}}</td>--->
+	<!---<td>{{d.currency}}</td>--->
+	<!---<td>{{d.date_of_purchase}}</td>--->
+	<!---<td>{{d.comment}}</td>--->
+	</tr>
+	
+	{% endfor %} </table>
+{% endblock %}     
