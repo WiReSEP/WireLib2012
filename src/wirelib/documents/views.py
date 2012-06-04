@@ -106,7 +106,7 @@ def doc_detail(request, bib_no_id):
         lending_query = document_query.lending_set.latest("date_lend")
     except lending.DoesNotExist:
         lending_query = None
-    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_id)
+    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_no_id)
     template = loader.get_template("doc_detail.html")
     context = Context({"documents" : document_query},
                       {"lending" : lending_query},
