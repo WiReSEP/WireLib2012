@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
+
 	<h1>{{ documents.title}} </h1>
 	<table width="100%">
 	    <tr>
@@ -54,8 +55,9 @@
 	                    <td>{{ documents.bibtex_id }}</td>
 	                </tr>
 	                <tr>
-	                    <td><b><u>Keywords:</u></b></td>
+	                    <td><b><u>Schlüsselwörter:</u></b></td>
 	                    <td>
+	                        <!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
 	                        {% if documents.keywords.all %}
 	                            {% for k in documents.keywords.all %}
 	                                {{ k.keyword }},
@@ -145,7 +147,6 @@
 	        </td>
 	    </tr>
 	</table>
-	
 	<script language="JavaScript" type="text/JavaScript">
 <!--
 function show(id) {
@@ -154,5 +155,5 @@ function show(id) {
 //-->
 </script>
 <input type="button" name="bibtex" value="BibTeX" onclick="spoiler(this,'spoiler','BibTeX','BibTeX verbergen')"> <br>
-<div id="spoiler" name="spoiler" style="display: none;"><textarea readonly=true>TODO BibTeX generieren</textarea></div>
+<div id="spoiler" name="spoiler" style="display: none;"><textarea cols=100 rows=15 readonly="true">{{ bi }}</textarea></div>
 {% endblock %}
