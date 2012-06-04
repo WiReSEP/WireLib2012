@@ -25,13 +25,35 @@ def functions_test(self):
     response["ContentType"] = "text/plain"
     return response
 
+headers = {'title':'asc', 
+            'category':'asc',
+            'authors':'asc',
+            'year':'asc',
+            'status':'asc',
+            'isbn':'asc'
+            
+            }
+def index(request):
+    sort = request.GET.get('sort')
+    documents = document.objects.all()
+    
+    if sort is not None:
+        documents = documents.order_by(sort)
+        if headers[sort] == "des":
+            documents = documents.reverse()
+            headers[sort] = "asc"
+    
+    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
+            
+            
+"""       
 def index(request): 	
-    """ Index der App.
+    Index der App.
     Bietet dem Benutzer nur eine Übersicht.
     TODO: Was sollte er auf dieser Seite noch sehen?
-    """
+
     documents = document.objects.all().order_by("-title")
-    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
+    return render_to_response("literatur.html", dict(documents=documents,       user=request.user, settings=settings))"""
 
 def search(request):
     """ Suche nach Dokumenten.
