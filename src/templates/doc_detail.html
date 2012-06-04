@@ -1,25 +1,24 @@
 {% extends "index.html" %}
 {% block content %}
-    {% for d in documents %}
-	<h1>{{ d.title}} </h1>
+	<h1>{{ documents.title}} </h1>
 	<table>
 	    <tr>
 	        <td><b><u>ID in der Bibliothek:</u></b></td>
-	        <td>{{ d.bib_no }}</td>
+	        <td>{{ documents.bib_no }}</td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Inventarnummer:</u></b></td>
-	        <td>{{ d.inv_no }}</td>
+	        <td>{{ documents.inv_no }}</td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Kategorie:</u></b></td>
-	        <td>{{ d.category }}</td>
+	        <td>{{ documents.category }}</td>
 	    </tr>
 	    <tr>
 	        <td><b><u>ISBN:</u></b></td>
 	        <td>
-	            {% if d.isbn %}
-	                {{ d.isbn }}
+	            {% if documents.isbn %}
+	                {{ documents.isbn }}
 	            {% else %}
 	                -
 	            {% endif %}
@@ -28,7 +27,7 @@
 	    <tr>
 	        <td><b><u>Autor:</u></b></td>
 	        <td>
-	            {% for a in d.authors.all %}
+	            {% for a in documents.authors.all %}
 	                    {{ a.first_name }} {{ a.last_name }},
 	            {% endfor %}
 	        </td>
@@ -36,8 +35,8 @@
 	    <tr>
 	        <td><b><u>Publisher:</u></b></td>
 	        <td>
-	            {% if d.publisher %}
-	                {{ d.publisher }}
+	            {% if documents.publisher %}
+	                {{ documents.publisher }}
 	            {% else %}
 	                -
 	            {% endif %}
@@ -45,17 +44,17 @@
 	    </tr>
 	    <tr>
 	        <td><b><u>Erscheinungsjahr:</u></b></td>
-	        <td>{{ d.year }}</td>
+	        <td>{{ documents.year }}</td>
 	    </tr>
 	    <tr>
 	        <td><b><u>BibTeX-ID:</u></b></td>
-	        <td>{{ d.bibtex_id }}</td>
+	        <td>{{ documents.bibtex_id }}</td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Keywords:</u></b></td>
 	        <td>
-	            {% if d.keywords.all %}
-	                {% for k in d.keywords.all %}
+	            {% if documents.keywords.all %}
+	                {% for k in documents.keywords.all %}
 	                    {{ k.keyword }},
 	                {% endfor %}
 	            {% else %}
@@ -66,8 +65,8 @@
 	    <tr>
 	        <td><b><u>LibraryOfCongressN:</u></b></td>
 	        <td>
-	            {% if d.lib_of_con_nr %}
-	                {{ d.lib_of_con_nr }}
+	            {% if documents.lib_of_con_nr %}
+	                {{ documents.lib_of_con_nr }}
 	            {% else %}
 	                -
 	            {% endif %}
@@ -76,8 +75,8 @@
 	    <tr>
 	        <td><b><u>Preis:</u></b></td>
 	        <td>
-	            {% if d.price and d.currency %}
-	                {{ d.price }}{{ d.currency }}
+	            {% if documents.price and documents.currency %}
+	                {{ documents.price }}{{ documents.currency }}
 	            {% else %}
 	                -
 	            {% endif %}
@@ -85,25 +84,28 @@
 	    </tr>
 	    	    <tr>
 	        <td><b><u>In der Bibliothek seit:</u></b></td>
-	        <td>{{ d.date_of_purchase }}</td>
+	        <td>{{ documents.date_of_purchase }}</td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Notizen:</u></b></td>
 	        <td>
-	            {% if d.comment %}
-	                {{ d.comment }}
+	            {% if documents.comment %}
+	                {{ documents.comment }}
 	            {% else %}
 	                -
 	            {% endif %}
 	        </td>
 	    </tr>
-	    {% for de in d.doc_extra %}    
+	    {% for de in documents.doc_extra %}    
 	        <tr>
 	            <td><b><u>{{ de.bib_field }}</u></b></td>
 	            <td>{{ de.content }}</td>
 	        </tr>
 	    {% endfor %}
 	</table>
+	{% if lending_query %}
+	{% endif %}
+	    
 	
 	<script language="JavaScript" type="text/JavaScript">
 <!--
@@ -114,6 +116,4 @@ function show(id) {
 </script>
 <input type="button" name="button" value="BibTeX" onclick="javascript: show('spoiler');"> <br>
 <div id="spoiler" name="spoiler" style="display: none;"><textarea readonly=true>TODO BibTeX generieren</textarea></div>
-
-	{% endfor %}
 {% endblock %}

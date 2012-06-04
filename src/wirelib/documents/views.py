@@ -5,7 +5,7 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
-from documents.models import document
+from documents.models import document, lending
 import settings
 
 from extras_bibtex import UglyBibtex
@@ -99,15 +99,14 @@ def doc_list(request):
 
 def doc_detail(request):
     bib_id = "K006009"
-    document_query = document.objects.filter(bib_no__icontains=bib_id)
-#    keyword_query = keywords.objects.filter(document__bib_no__icontains=bib_id)
-#    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_id)
-#    lend_query = lending.objects.filter(doc_id__bib_no__icontains=bib_id).order_by('-date_lend')
-#    user_query = User.objects.filter(id__doc_id__bib_no__icontains=bib_id)
+    document_query = document.objects.get(bib_no=bib_id)
+    try:
+        lending_query = document_query.lending_set.latest("date_lend")
+    except lending.DoesNotExist:
+        lending_query = None
     template = loader.get_template("doc_detail.html")
-    context = Context({"documents" : document_query})#,
-#                      {"keywords" : keyword_query},
-#                      {"doc_extra" : doc_extra_query})
+    context = Context({"documents" : document_query},
+                      {"lending" : lending_query})
     response = HttpResponse(template.render(context))
     return response
 
