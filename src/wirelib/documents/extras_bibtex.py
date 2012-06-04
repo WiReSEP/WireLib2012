@@ -248,7 +248,7 @@ class Bibtex(object):
         doc_str += u"  author = {"
         counter = 0
         last_element = len(authors) - 1
-        if 0 == last_element:
+        if -1 == last_element:
             doc_str += u"},\n"
         for auth in authors:
             doc_str += auth.last_name + u", " + auth.first_name
@@ -268,8 +268,8 @@ class Bibtex(object):
         doc_str += u"  libraryofcongressno = {" + locn + u"},\n"
         doc_str += u"  keywords = {"
         counter = 0
-        last_element = len(keywords)
-        if 0 == last_element:
+        last_element = len(keywords) - 1
+        if -1 == last_element:
             doc_str += u"},\n"
         for key in keywords:
             doc_str += key.keyword
