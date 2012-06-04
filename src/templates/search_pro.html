@@ -27,16 +27,30 @@
 		  <td>Schlüsselwörter:</td>
 		  <td><input type="text" name="keywords" value="{{ searched_keywords }}" />
 		  </td>
-		</tr>
-		<tr>
-		  <input value="Show" 
-		  onclick="spoilIt(this,'test1');spoilIt(this,'test2')" 
+	  </tr>
+	  <tr>
+		<td>
+		  <input value="--Kennnummern--" id="kennhide" 
+		  onclick="spoiler(this,'test1','--Kennnummern--',
+		  '--Kennnummern--');spoiler(this,'test2', '--Kennnummern--',
+		  '--Kennnummern--')" 
 		  type="button" 
-		  style="border-style:none;background-color:inherit;color:#0000CC">
+		  style="border-style:none;background-color:inherit;"
+		  onload="spoiler(this, 'test1','--Kennnummern--',
+		  '--Kennnummern');spoiler(this,'test2', '--Kennnummern--',
+		  '--Kennnummern--')">
+		  <script>
+			window.onload=function() {
+			  elem = document.getElementById('kennhide');
+			  spoiler(elem, 'test1', '--Kennnummern--', '--Kennnummern--');
+			  spoiler(elem, 'test2', '--Kennnummern--', '--Kennnummern--');
+			}
+		  </script>
+		</td>
 		</tr>
 		<tr id="test1">
 		  <td>Bibliotheks-Nummer:</td>
-		  <td><input type="text" name="bib_no" value="{{ searched_bib_no }}" />
+		  <td><input type="text" name="bib_no" value="{{ searched_bib_no }}"/>
 		  </td>
 		</tr>
 		<tr id="test2">
