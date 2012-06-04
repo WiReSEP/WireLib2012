@@ -29,17 +29,22 @@
 		  </td>
 		</tr>
 		<tr>
+		  <input value="Show" 
+		  onclick="spoilIt(this,'test1');spoilIt(this,'test2')" 
+		  type="button">
+		</tr>
+		<tr id="test1">
 		  <td>Bibliotheks-Nummer:</td>
 		  <td><input type="text" name="bib_no" value="{{ searched_bib_no }}" />
 		  </td>
 		</tr>
-		<tr>
+		<tr id="test2">
 		  <td>ISBN:</td>
 		  <td><input type="text" name="isbn" value="{{ searched_isbn }}" />
 		  </td>
 		</tr>
 		  <td><input type="submit" value="Suchanfrage starten" /> </td>
-		</tr>
+	  </tr>
 	  </table>
 	</form>
 

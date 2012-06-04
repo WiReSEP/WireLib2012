@@ -28,6 +28,22 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}tubs.css" media="all" title="Layout für alle Seiten" />
     <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}tubs_print.css" media="print" title="Layout für alle Seiten" />
       
+	<script type="text/javascript">
+	  function spoilIt(elem, idname) {
+		parNode = document.getElementById(idname);
+		if (parNode.style.display != '') {
+		  parNode.style.display = '';
+		  elem.innerText = '';
+		  elem.value = 'Hide';
+		}
+		else {
+		  parNode.style.display = 'none';
+		  elem.innerText = '';
+		  elem.value = 'Show';
+		}
+	  }
+</script>
+
 </head>
 
 <!-- Beginn des Inhaltsbereichs -->
