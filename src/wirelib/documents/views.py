@@ -97,9 +97,11 @@ def doc_list(request):
     """
     return render_to_response("doc_list.html")
 
-def doc_detail(request):
-    bib_id = "K006009"
-    document_query = document.objects.get(bib_no=bib_id)
+def doc_detail(request, bib_no_id):
+    try:
+        document_query = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
     try:
         lending_query = document_query.lending_set.latest("date_lend")
     except lending.DoesNotExist:
@@ -111,25 +113,6 @@ def doc_detail(request):
                       {"doc_extra" : doc_extra_query})
     response = HttpResponse(template.render(context))
     return response
-
-
-"""def doc_detail(request, bib_no_id):
-    "" Detailansicht zum Dokument
-    ""
-    try: 
-        d = document.objects.get(bib_no=bib_no_id)
-    except document.DoesNotExist:
-        raise Http404
-
-    document_query = document.objects.filter(bib_no__icontains=bib_no_id)
-    keyword_query = keywords.objects.filter(document__icontains=bib_no_id)
-    doc_extra_query = doc_extra.objects.filter(doc_id__icontains=bib_no_id)
-    template = loader.get_template("doc_detail.html")
-    context = Context({"documents" : document_query},
-                      {"keywords" : keyword_query},
-                      {"doc_extra" : doc_extra_query})
-    response = HttpResponse(template.render(d))
-    return response"""
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
