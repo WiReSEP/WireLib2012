@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from documents.models import document, lending, doc_extra
+from documents.extras_bibtex import Bibtex
 import settings
 
 from extras_bibtex import UglyBibtex
@@ -129,10 +130,12 @@ def doc_detail(request, bib_no_id):
     except lending.DoesNotExist:
         lending_query = None
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_no_id)
+    bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
-    context = Context({"documents" : document_query},
-                      {"lending" : lending_query},
-                      {"doc_extra" : doc_extra_query})
+    context = Context({"documents" : document_query,
+                      "lending" : lending_query,
+                      "doc_extra" : doc_extra_query,
+                      "bi" : bibtex_string})
     response = HttpResponse(template.render(context))
     return response
 

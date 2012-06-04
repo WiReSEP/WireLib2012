@@ -3,6 +3,7 @@
 from datetime import datetime
 from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
+#from models import document
 import extras_doc_funcs
 import re
 import codecs
@@ -212,6 +213,7 @@ class UglyBibtex(object):
 
 
 class Bibtex(object):
+
     def export_doc(document):
         """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
         String um.
@@ -227,17 +229,27 @@ class Bibtex(object):
         title = document.title
         isbn = document.isbn
         publisher = document.publisher.name
+        if publisher is None:
+            publisher = ""
         year = document.year
+        if year is None:
+            year = ""
         address = document.address
+        if address is None:
+            address = ""
         datePurchase = document.date_of_purchase
-        datePurchase = datetime.strftime(u"%d.%m.%Y", datePurchase)
+        datePurchase = datePurchase.strftime(u"%d.%m.%Y")
         comment = document.comment
+        if comment is None:
+            comment = ""
         keywords = list(document.keywords_set.all())
          # Beginn mit schreiben des Strings
         doc_str = u"@" + category + u"{" + bib_id + u",\n"
         doc_str += u"  author = {"
         counter = 0
         last_element = len(authors) - 1
+        if -1 == last_element:
+            doc_str += u"},\n"
         for auth in authors:
             doc_str += auth.last_name + u", " + auth.first_name
             if counter == last_element:
@@ -247,7 +259,7 @@ class Bibtex(object):
             counter += 1
         doc_str += u"  title = {" + title + u"},\n"
         doc_str += u"  publisher = {" + publisher + u"},\n"
-        doc_str += u"  year = {" + year + u"},\n"
+        doc_str += u"  year = {" + str(year) + u"},\n"
         doc_str += u"  address = {" + address + u"},\n"
         doc_str += u"  isbn = {" + isbn + u"},\n"
         doc_str += u"  dateofpurchase = {" + datePurchase + u"},\n"
@@ -256,7 +268,9 @@ class Bibtex(object):
         doc_str += u"  libraryofcongressno = {" + locn + u"},\n"
         doc_str += u"  keywords = {"
         counter = 0
-        last_element = len(keywords)
+        last_element = len(keywords) - 1
+        if -1 == last_element:
+            doc_str += u"},\n"
         for key in keywords:
             doc_str += key.keyword
             if counter == last_element:
@@ -269,3 +283,5 @@ class Bibtex(object):
             doc_str += u"  " + extra.bib_field + u" = {"
             doc_str += extra.content + u"},\n"
         doc_str += u"}"
+        return doc_str
+    export_doc = staticmethod(export_doc)

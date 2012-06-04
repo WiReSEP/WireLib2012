@@ -9,3 +9,9 @@ urlpatterns = patterns('documents.views',
         url(r'^doc/add$', 'doc_add'),
         url(r'^rent$', 'doc_rent'), # Ausleihliste
 )
+
+urlpatterns += patterns('django.contrib.auth.views',
+        url(r'^login$', 'login'),
+        url(r'^logout$', 'logout'),
+        
+)
