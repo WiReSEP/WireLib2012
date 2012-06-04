@@ -209,3 +209,63 @@ class UglyBibtex(object):
         self.errout.write("Fehler bei: %s" % self.line) # loglvl 1
         self.errout.write("Bisher gelesen: %r\n" % self.entry) #lvl 2
         self.errout.write('\n')
+
+
+class Bibtex:
+    def export_doc(document):
+        """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
+        String um.
+        """
+         # init der Variablen
+        extra_fields = list(document.doc_extra_set.all())
+        authors = list(document.authors.all())
+        category = document.category.name
+        bib_no = document.bib_no
+        inv_no = document.inv_no
+        bib_id = document.bibtex_id
+        locn = document.lib_of_con_nr
+        title = document.title
+        isbn = document.isbn
+        publisher = document.publisher.name
+        year = document.year
+        address = document.address
+        datePurchase = document.date_of_purchase
+        datePurchase = datetime.strftime(u"%d.%m.%Y", datePurchase)
+        comment = document.comment
+        keywords = list(document.keywords_set.all())
+         # Beginn mit schreiben des Strings
+        doc_str = u"@" + category + u"{" + bib_id + u",\n"
+        doc_str += u"  author = {"
+        counter = 0
+        last_element = len(authors) - 1
+        for auth in authors:
+            doc_str += auth.last_name + u", " + auth.first_name
+            if counter == last_element:
+                doc_str += u"},\n"
+            else :
+                doc_str += u" AND "
+            counter += 1
+        doc_str += u"  title = {" + title + u"},\n"
+        doc_str += u"  publisher = {" + publisher + u"},\n"
+        doc_str += u"  year = {" + year + u"},\n"
+        doc_str += u"  address = {" + address + u"},\n"
+        doc_str += u"  isbn = {" + isbn + u"},\n"
+        doc_str += u"  dateofpurchase = {" + datePurchase + u"},\n"
+        doc_str += u"  inventarno = {" + inv_no + u"},\n"
+        doc_str += u"  informatikbibno = {" + bib_no + u"},\n"
+        doc_str += u"  libraryofcongressno = {" + locn + u"},\n"
+        doc_str += u"  keywords = {"
+        counter = 0
+        last_element = len(keywords)
+        for key in keywords:
+            doc_str += key.keyword
+            if counter == last_element:
+                doc_str += u"},\n"
+            else :
+                doc_str += u" AND "
+            counter += 1
+        doc_str += u"  comment = {" + comment + u"},\n"
+        for extra in extra_fields:
+            doc_str += u"  " + extra.bib_field + u" = {"
+            doc_str += extra.content + u"},\n"
+        doc_str += u"}"
