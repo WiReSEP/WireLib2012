@@ -211,7 +211,7 @@ class UglyBibtex(object):
         self.errout.write('\n')
 
 
-class Bibtex:
+class Bibtex(object):
     def export_doc(document):
         """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
         String um.
