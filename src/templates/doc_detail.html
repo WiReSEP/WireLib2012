@@ -96,16 +96,33 @@
 	            {% endif %}
 	        </td>
 	    </tr>
-	    {% for de in documents.doc_extra %}    
+	    <!-- TODO -->
+	    {% for de in doc_extra %}    
 	        <tr>
 	            <td><b><u>{{ de.bib_field }}</u></b></td>
 	            <td>{{ de.content }}</td>
 	        </tr>
 	    {% endfor %}
 	</table>
-	{% if lending_query %}
+	{% if documents.status == 0 %}
+	    <input type="button" name="ausleihe" value="Ausleihen" /> <br>
+	{% else %}
+	    {% if documents.status == 1 %}    
+	        {% if lending_query %}
+
+	        {% endif %}
+	    {% else %}
+	        {% if documents.status == 2 %}
+	
+	        {% else %}
+	            {% if documents.status == 3 %}
+	
+	            {% else %}
+	
+	            {% endif %}  
+	        {% endif %}
+	    {% endif %}
 	{% endif %}
-	    
 	
 	<script language="JavaScript" type="text/JavaScript">
 <!--
@@ -114,6 +131,6 @@ function show(id) {
 }
 //-->
 </script>
-<input type="button" name="button" value="BibTeX" onclick="javascript: show('spoiler');"> <br>
+<input type="button" name="bibtex" value="BibTeX" onclick="spoilIt(this,'spoiler')"> <br>
 <div id="spoiler" name="spoiler" style="display: none;"><textarea readonly=true>TODO BibTeX generieren</textarea></div>
 {% endblock %}

@@ -5,7 +5,7 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
-from documents.models import document, lending
+from documents.models import document, lending, doc_extra
 import settings
 
 from extras_bibtex import UglyBibtex
@@ -104,9 +104,11 @@ def doc_detail(request):
         lending_query = document_query.lending_set.latest("date_lend")
     except lending.DoesNotExist:
         lending_query = None
+    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_id)
     template = loader.get_template("doc_detail.html")
     context = Context({"documents" : document_query},
-                      {"lending" : lending_query})
+                      {"lending" : lending_query},
+                      {"doc_extra" : doc_extra_query})
     response = HttpResponse(template.render(context))
     return response
 
