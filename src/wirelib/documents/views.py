@@ -164,6 +164,9 @@ def doc_rent(request):
     """
     return render_to_response("doc_rent.html")
 
+def export(request):
+    return render_to_response("export.html")
+
 def authorbooks (request, s_author):
     author_query = author.objects.filter(surname__icontains=s_author)
     book_titles=[]
