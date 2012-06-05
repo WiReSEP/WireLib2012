@@ -9,22 +9,6 @@ from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
 import settings
 
-from extras_bibtex import UglyBibtex
-import os
-
-def functions_test(self):
-    """
-    Um eine Funktion zu testen, die nur einen einfachen Text zurückgibt, 
-    einfach die Funktion statt dem String einfüge und die Seite ~/funktionstest aufrufen.
-    """
-    for file in os.listdir('olddb'):
-        try:
-            UglyBibtex('olddb/'+file).do_import()
-        except:
-            pass
-    response = HttpResponse("Datenbankimport abgeschlossen")
-    response["ContentType"] = "text/plain"
-    return response
 
 headers = {'title':'asc', 
             'category':'asc',
@@ -72,7 +56,7 @@ def search(request):
         return response
     else:
         context = Context()
-        template = loader.get_template("unsere_suche.html")
+        template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
 def search_pro(request):
@@ -173,32 +157,3 @@ def allegro_export(request):
 def bibtex_export(request):
     return render_to_response("bibtex_export.html")
 
-def authorbooks (request, s_author):
-    author_query = author.objects.filter(surname__icontains=s_author)
-    book_titles=[]
-    for document in author_query.objects.all():
-        book_titles.append(document.title)
-    response = HttpResponse("/n".join(book_titles))
-    response["Content-Type"] = "text/plain"
-    return response
-    
-def templatebeispiel (request, s_author):
-    author_query = author.objects.filter(surname__icontains=s_author)
-    template = loader.get_template("Beispielbuchausgabe.html")
-    context = Context({"authoren" : author_query.objects.all()})
-    return HttpResponse(template.render(context))
-    
-def unsere_suche (request):
-    context = Context()
-    if "suchanfrage_starten" in request.GET:
-        suchtext = request.POST.get('suche','')
-        document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("suchergebnis.html")
-        context = Context({"documents" : document_query})
-        response = HttpResponse(template.render(context))
-        #response["ContentType"] = "text/plain"
-        return response
-    else:
-        context = Context()
-        template = loader.get_template("unsere_suche.html")
-        return HttpResponse(template.render(context))
