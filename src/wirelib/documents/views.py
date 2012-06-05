@@ -167,6 +167,12 @@ def doc_rent(request):
 def export(request):
     return render_to_response("export.html")
 
+def allegro_export(request):
+    return render_to_response("allegro_export.html")
+
+def bibtex_export(request):
+    return render_to_response("bibtex_export.html")
+
 def authorbooks (request, s_author):
     author_query = author.objects.filter(surname__icontains=s_author)
     book_titles=[]
