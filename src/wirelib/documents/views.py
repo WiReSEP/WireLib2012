@@ -3,6 +3,7 @@ from models import author
 from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
+from django.template import RequestContext 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from documents.models import document, lending, doc_extra
@@ -18,18 +19,6 @@ headers = {'title':'asc',
             'isbn':'asc'
             
             }
-def literatur(request):
-    sort = request.GET.get('sort')
-    documents = document.objects.all()
-    
-    if sort is not None:
-        documents = documents.order_by(sort)
-        if headers[sort] == "des":
-            documents = documents.reverse()
-            headers[sort] = "asc"
-    
-    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
-            
             
 """       
 def index(request): 	
@@ -50,12 +39,12 @@ def search(request):
         suchtext = request.POST.get('suche','')
         document_query = document.objects.filter(title__icontains=suchtext)
         template = loader.get_template("search_result.html")
-        context = Context({"documents" : document_query})
+        context = Context({"documents" : document_query,"user" : request.user})
         response = HttpResponse(template.render(context))
         #response["ContentType"] = "text/plain"
         return response
     else:
-        context = Context()
+        context = Context({"user" : request.user})
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
@@ -88,11 +77,11 @@ def search_pro(request):
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
         template = loader.get_template("search_result.html")
-        context = Context({"documents" : s_documents})
+        context = Context({"documents" : s_documents,"user" : request.user})
         response = HttpResponse(template.render(context))
         return response
     else:
-        return render_to_response("search_pro.html")
+        return render_to_response("search_pro.html",context_instance=Context({"user" : request.user}))
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -110,7 +99,7 @@ def doc_list(request):
             documents = documents.reverse()
             headers[sort] = "asc"
     
-    return render_to_response("doc_list.html", dict(documents=documents, user=request.user, settings=settings))
+    return render_to_response("doc_list.html", dict(documents=documents, user=request.user, settings=settings), context_instance=RequestContext(request))
         
    
 
@@ -129,12 +118,13 @@ def doc_detail(request, bib_no_id):
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
-                      "bi" : bibtex_string})
+                      "bi" : bibtex_string,
+                      "user" : request.user})
     response = HttpResponse(template.render(context))
     return response
 
 def index(request): 
-    return render_to_response("home.html")
+    return render_to_response("home.html",context_instance=Context({"user" : request.user}))
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
@@ -143,20 +133,20 @@ def doc_add(request):
         * Import durch Formeingabe
         * Import durch Upload einer BibTeX-Datei
     """
-    return render_to_response("doc_add.html")
+    return render_to_response("doc_add.html",context_instance=Context({"user" : request.user}))
 
 def doc_rent(request):
     """ Des Benutzers Ausleihliste
     Alle Dokumente die der Benutzer ausgeliehen hat und die Dokumente für die
     der Benutzer für andere Bürgt.
     """
-    return render_to_response("doc_rent.html")
+    return render_to_response("doc_rent.html",context_instance=Context({"user" : request.user}))
 
 def export(request):
-    return render_to_response("export.html")
+    return render_to_response("export.html",context_instance=Context({"user" : request.user}))
 
 def allegro_export(request):
-    return render_to_response("allegro_export.html")
+    return render_to_response("allegro_export.html",context_instance=Context({"user" : request.user}))
 
 def bibtex_export(request):
-    return render_to_response("bibtex_export.html")
+    return render_to_response("bibtex_export.html",context_instance=Context({"user" : request.user}))
