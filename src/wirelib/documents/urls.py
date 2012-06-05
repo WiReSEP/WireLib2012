@@ -1,7 +1,8 @@
 from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('documents.views',
-        url(r'^$', 'index'),
+        url(r'^$', 'index'), 
+        url(r'^literatur$', 'literatur'), 
         url(r'^search$', 'search'),
         url(r'^search/pro$', 'search_pro'),
         url(r'^doc$', 'doc_list'),
@@ -14,4 +15,4 @@ urlpatterns += patterns('django.contrib.auth.views',
         url(r'^login$', 'login'),
         url(r'^logout$', 'logout'),
         
-)
+)   

@@ -6,15 +6,15 @@
   
    
 
-       <th><a href="?order_by=d">Dokumententitel</a></th>
-       <th><a href="?order_by=category">Kategorie</a></th> 
-       <th><a href="?order_by=au">Authoren</a></th>    
-       <th><a href="?order_by=year">Veröffentlichung</a></th> 
-       <th><a href="?order_by=status">Status</a></th> 
-       <th><a href="?order_by=isbn">Isbn</a></th>
+       <th><a href="?sort=title">Dokumententitel</a></th>
+       <th><a href="?sort=category">Kategorie</a></th> 
+       <th><a href="?sort=authors">Authoren</a></th>    
+       <th><a href="?sort=year">Veröffentlichung</a></th> 
+       <th><a href="?sort=status">Status</a></th> 
+       <th><a href="?sort=isbn">Isbn</a></th>
       
        	{% for d in documents %}		
-	<tr><td>{{d}}</td> 
+	<tr><td><a href="../doc/{{d.bib_no}}">{{d}}</a></td> 
 	<td>{{d.category}}</td>
 	   <td> {% for au in d.authors.all %}
 	    {{au}}

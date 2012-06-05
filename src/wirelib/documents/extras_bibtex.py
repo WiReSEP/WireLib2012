@@ -226,8 +226,12 @@ class Bibtex(object):
         inv_no = document.inv_no
         bib_id = document.bibtex_id
         locn = document.lib_of_con_nr
+        if locn is None:
+            locn = ""
         title = document.title
         isbn = document.isbn
+        if isbn is None:
+            isbn = ""
         publisher = document.publisher.name
         if publisher is None:
             publisher = ""

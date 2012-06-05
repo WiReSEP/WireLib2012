@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from documents.models import document, lending, doc_extra
+from documents.extras_bibtex import Bibtex
 import settings
 
 from extras_bibtex import UglyBibtex
@@ -25,13 +26,35 @@ def functions_test(self):
     response["ContentType"] = "text/plain"
     return response
 
+headers = {'title':'asc', 
+            'category':'asc',
+            'authors':'asc',
+            'year':'asc',
+            'status':'asc',
+            'isbn':'asc'
+            
+            }
+def literatur(request):
+    sort = request.GET.get('sort')
+    documents = document.objects.all()
+    
+    if sort is not None:
+        documents = documents.order_by(sort)
+        if headers[sort] == "des":
+            documents = documents.reverse()
+            headers[sort] = "asc"
+    
+    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
+            
+            
+"""       
 def index(request): 	
-    """ Index der App.
+    Index der App.
     Bietet dem Benutzer nur eine Übersicht.
     TODO: Was sollte er auf dieser Seite noch sehen?
-    """
+
     documents = document.objects.all().order_by("-title")
-    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
+    return render_to_response("literatur.html", dict(documents=documents,       user=request.user, settings=settings))"""
 
 def search(request):
     """ Suche nach Dokumenten.
@@ -107,12 +130,17 @@ def doc_detail(request, bib_no_id):
     except lending.DoesNotExist:
         lending_query = None
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_no_id)
+    bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
-    context = Context({"documents" : document_query},
-                      {"lending" : lending_query},
-                      {"doc_extra" : doc_extra_query})
+    context = Context({"documents" : document_query,
+                      "lending" : lending_query,
+                      "doc_extra" : doc_extra_query,
+                      "bi" : bibtex_string})
     response = HttpResponse(template.render(context))
     return response
+
+def index(request): 
+    return render_to_response("home.html")
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
