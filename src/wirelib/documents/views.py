@@ -65,7 +65,7 @@ def search(request):
     if "suchanfrage_starten" in request.GET:
         suchtext = request.POST.get('suche','')
         document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("suchergebnis.html")
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : document_query})
         response = HttpResponse(template.render(context))
         #response["ContentType"] = "text/plain"
@@ -103,7 +103,15 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
-        template = loader.get_template("suchergebnis.html")
+        c_docs = s_documents.count()
+        print c_docs
+        print s_documents
+        if c_docs == 1:
+            values_l = s_documents.values_list()
+            print values_l
+            print values_l[0][0]
+            return doc_detail(request, values_l[0][0])
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : s_documents})
         response = HttpResponse(template.render(context))
         return response
