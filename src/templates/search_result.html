@@ -1,9 +1,8 @@
 {% extends "index.html" %}
-{% load pagination_tags %}
 
-{% block content %}
+
    <h1> Suchergebnis </h1>
-   {% autopaginate documents 10 %}
+
    <table class="sortable" border = "3" bgcolor="#FFFFFF"> 
   
    
@@ -38,5 +37,5 @@
 	</tr>
 	
 	{% endfor %} </table>
-	{% paginate %}
+
 {% endblock %}     
