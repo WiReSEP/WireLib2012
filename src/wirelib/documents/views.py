@@ -49,7 +49,7 @@ def search(request):
     if "suchanfrage_starten" in request.GET:
         suchtext = request.POST.get('suche','')
         document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("suchergebnis.html")
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : document_query})
         response = HttpResponse(template.render(context))
         #response["ContentType"] = "text/plain"
@@ -87,7 +87,7 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
-        template = loader.get_template("suchergebnis.html")
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : s_documents})
         response = HttpResponse(template.render(context))
         return response
@@ -152,32 +152,11 @@ def doc_rent(request):
     """
     return render_to_response("doc_rent.html")
 
-def authorbooks (request, s_author):
-    author_query = author.objects.filter(surname__icontains=s_author)
-    book_titles=[]
-    for document in author_query.objects.all():
-        book_titles.append(document.title)
-    response = HttpResponse("/n".join(book_titles))
-    response["Content-Type"] = "text/plain"
-    return response
-    
-def templatebeispiel (request, s_author):
-    author_query = author.objects.filter(surname__icontains=s_author)
-    template = loader.get_template("Beispielbuchausgabe.html")
-    context = Context({"authoren" : author_query.objects.all()})
-    return HttpResponse(template.render(context))
-    
-def unsere_suche (request):
-    context = Context()
-    if "suchanfrage_starten" in request.GET:
-        suchtext = request.POST.get('suche','')
-        document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("suchergebnis.html")
-        context = Context({"documents" : document_query})
-        response = HttpResponse(template.render(context))
-        #response["ContentType"] = "text/plain"
-        return response
-    else:
-        context = Context()
-        template = loader.get_template("unsere_suche.html")
-        return HttpResponse(template.render(context))
+def export(request):
+    return render_to_response("export.html")
+
+def allegro_export(request):
+    return render_to_response("allegro_export.html")
+
+def bibtex_export(request):
+    return render_to_response("bibtex_export.html")
