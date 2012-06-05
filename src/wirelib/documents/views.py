@@ -9,22 +9,6 @@ from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
 import settings
 
-from extras_bibtex import UglyBibtex
-import os
-
-def functions_test(self):
-    """
-    Um eine Funktion zu testen, die nur einen einfachen Text zurückgibt, 
-    einfach die Funktion statt dem String einfüge und die Seite ~/funktionstest aufrufen.
-    """
-    for file in os.listdir('olddb'):
-        try:
-            UglyBibtex('olddb/'+file).do_import()
-        except:
-            pass
-    response = HttpResponse("Datenbankimport abgeschlossen")
-    response["ContentType"] = "text/plain"
-    return response
 
 headers = {'title':'asc', 
             'category':'asc',
@@ -65,14 +49,14 @@ def search(request):
     if "suchanfrage_starten" in request.GET:
         suchtext = request.POST.get('suche','')
         document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("suchergebnis.html")
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : document_query})
         response = HttpResponse(template.render(context))
         #response["ContentType"] = "text/plain"
         return response
     else:
         context = Context()
-        template = loader.get_template("unsere_suche.html")
+        template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
 def search_pro(request):
@@ -80,6 +64,8 @@ def search_pro(request):
     Hier kann der Benutzer mit einer übersichtlichen Form nach Dokumenten
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
+    TODO: Die Weiterleitung auf die Detailseite bei einem einzigen Dokument ist
+    bisher nur ein etwas unschönes Workaround.
     """
     if "pro_search_result" in request.GET:
         s_author = request.POST.get('author','')
@@ -103,7 +89,11 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
-        template = loader.get_template("suchergebnis.html")
+        c_docs = s_documents.count()
+        if c_docs == 1:
+            values_l = s_documents.values_list()
+            return doc_detail(request, values_l[0][0])
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : s_documents})
         response = HttpResponse(template.render(context))
         return response
@@ -158,32 +148,12 @@ def doc_rent(request):
     """
     return render_to_response("doc_rent.html")
 
-def authorbooks (request, s_author):
-    author_query = author.objects.filter(surname__icontains=s_author)
-    book_titles=[]
-    for document in author_query.objects.all():
-        book_titles.append(document.title)
-    response = HttpResponse("/n".join(book_titles))
-    response["Content-Type"] = "text/plain"
-    return response
-    
-def templatebeispiel (request, s_author):
-    author_query = author.objects.filter(surname__icontains=s_author)
-    template = loader.get_template("Beispielbuchausgabe.html")
-    context = Context({"authoren" : author_query.objects.all()})
-    return HttpResponse(template.render(context))
-    
-def unsere_suche (request):
-    context = Context()
-    if "suchanfrage_starten" in request.GET:
-        suchtext = request.POST.get('suche','')
-        document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("suchergebnis.html")
-        context = Context({"documents" : document_query})
-        response = HttpResponse(template.render(context))
-        #response["ContentType"] = "text/plain"
-        return response
-    else:
-        context = Context()
-        template = loader.get_template("unsere_suche.html")
-        return HttpResponse(template.render(context))
+def export(request):
+    return render_to_response("export.html")
+
+def allegro_export(request):
+    return render_to_response("allegro_export.html")
+
+def bibtex_export(request):
+    return render_to_response("bibtex_export.html")
+

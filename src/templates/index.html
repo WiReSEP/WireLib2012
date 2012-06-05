@@ -42,8 +42,16 @@
 		  elem.value = showMessage;
 		}
 	  }
+	  
 function spoilIt(elem, idname) {
   spoiler(elem, idname, 'Show', 'Hide')
+}
+
+function addInput(div_id, name) {
+    var new_div = document.createElement('input');
+    new_div.setAttribute('name',name);
+    new_div.setAtrribute('type', 'text');
+    document.getElementById(div_id).appendChild(new_div);
 }
 </script>
 
@@ -75,7 +83,7 @@ function spoilIt(elem, idname) {
 			<ul id="tu_navlist">
 		    <li id="tu_login" onmouseover="mouseonmenu(1)" 
 			onmouseout="cleandelay()" style="z-index:999;">
-			<a href="/login?url=/studium/studierende">LogIn</a>                                        
+			<a href="login">LogIn</a>                                        
 		    </li>
 			</ul>
 		</div>
@@ -102,7 +110,7 @@ function spoilIt(elem, idname) {
 			</div>
 		
 			<div class="navi1">
-			  <a href ="" style"display:block;">Export</a>
+			  <a href ="/export" style"display:block;">Export</a>
 			</div>
 
 			<div class="navi2">
@@ -152,7 +160,7 @@ function spoilIt(elem, idname) {
 				class="noborder" height="8" width="9" alt="hoch zum Seitenanfang" />
 			</a>
 
-			<p>
+			<p> 
 			</p>
 			<hr noshade="noshade" />
 		</div>
