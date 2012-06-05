@@ -42,8 +42,16 @@
 		  elem.value = showMessage;
 		}
 	  }
+	  
 function spoilIt(elem, idname) {
   spoiler(elem, idname, 'Show', 'Hide')
+}
+
+function addInput(div_id, name) {
+    var new_div = document.createElement('input');
+    new_div.setAttribute('name',name);
+    new_div.setAtrribute('type', 'text');
+    document.getElementById(div_id).appendChild(new_div);
 }
 </script>
 
@@ -152,7 +160,7 @@ function spoilIt(elem, idname) {
 				class="noborder" height="8" width="9" alt="hoch zum Seitenanfang" />
 			</a>
 
-			<p>
+			<p> 
 			</p>
 			<hr noshade="noshade" />
 		</div>

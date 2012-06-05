@@ -1,4 +1,63 @@
 {% extends "index.html" %}
 {% block content %}
-	<h1>Dokument hinzufügen</h1>
+
+	<h1>Import</h1>
+	<table>
+	    <tr>
+	        <td><b><u>bib_no:</u></b></td>
+	        <td> <input type='text' name='bib_no' maxlength=15 />
+	    </tr>
+        <tr>
+	        <td><b><u>inv_no:</u></b></td>
+	        <td> <input type='text' name='inv_no' maxlength=15 />
+	    </tr>  
+        <tr>
+	        <td><b><u>Kategorie:</u></b></td>
+	        <td> <input type='text' name='category' maxlength=100 />
+	    </tr>  
+	    <tr>
+	        <td><b><u>Status:</u></b></td>
+	        <td> <input type='text' name='status' maxlength=1 />
+	    </tr> 
+	    <tr>
+	        <td><b><u>Publisher:</u></b></td>
+	        <td> <input type='text' name='publisher' maxlength=35/>
+	    </tr>
+	    <tr>
+	        <td><b><u>Erscheinungsjahr:</u></b></td>
+	        <td> <input type='text' name='status' maxlength=4 />
+	    </tr> 
+	    <tr>
+	        <td><b><u>Adresse:</u></b></td>
+	        <td> <input type='text' name='address' />
+	    </tr>
+	    <tr>
+	        <td><b><u>Notizen:</u></b></td>
+	        <td> <input type='textfield' name='comment' />
+	    </tr>
+	    <tr>
+	        <td><b><u>Preis:</u></b></td>
+	        <td> <input type='text' name='price' />
+	    </tr>
+	    <tr>
+	        <td><b><u>Währung (K&uuml;rzel)</u></b></td>
+	        <td> <input type='text' name='status' />
+	    </tr>
+	    <tr>
+	        <td><b><u>Libary of Congress Number:</u></b></td>
+	        <td> <input type='text' name='lib_of_con_nr' />
+	    </tr>
+	</table>
+	<b><u>Autoren</u></b>
+	<input type='button' name='neuerAutor' value="+" onClick="addInput('au','author_first_name'); addInput('aln', 'author_last_name')" /> <br>
+	<table>
+	    <tr>
+	        <th>Vorname</th>
+	        <th>Nachname<th>
+	    </tr>
+	    <tr id=au>
+	        <td id=afn><input type='text' name='author_first_name' /></td>
+	        <td id=aln><input type='text' name='author_last_name' /></td>
+	    </tr>
+	</table> 
 {% endblock %}
