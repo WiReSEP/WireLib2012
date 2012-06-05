@@ -34,7 +34,7 @@ headers = {'title':'asc',
             'isbn':'asc'
             
             }
-def index(request):
+def literatur(request):
     sort = request.GET.get('sort')
     documents = document.objects.all()
     
@@ -146,6 +146,9 @@ def doc_detail(request, bib_no_id):
                       "bi" : bibtex_string})
     response = HttpResponse(template.render(context))
     return response
+
+def index(request): 
+    return render_to_response("home.html")
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
