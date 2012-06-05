@@ -1,7 +1,9 @@
 {% extends "index.html" %}
+{% load pagination_tags %}
 {% block content %}
-	<h1>Literaturverzeichnist</h1>
- <table class="sortable" border = "3" bgcolor="#FFFFFF"> 
+	<h1>Literaturverzeichnis</h1>
+	{% autopaginate documents 10 %}
+ <table width="100%" class="sortable" border = "3" bgcolor="#FFFFFF"> 
   
    
 
@@ -11,7 +13,8 @@
        <th><a href="?sort=year">Veröffentlichung</a></th> 
        <th><a href="?sort=status">Status</a></th> 
        <th><a href="?sort=isbn">Isbn</a></th>
-      
+       
+        
        	{% for d in documents %}		
 	<tr><td><a href="../doc/{{d.bib_no}}">{{d}}</a></td> 
 	<td>{{d.category}}</td>
@@ -35,4 +38,5 @@
 	</tr>
 	
 	{% endfor %} </table>
+	{% paginate %}
 {% endblock %}

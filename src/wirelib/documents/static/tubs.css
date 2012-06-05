@@ -234,7 +234,7 @@ ul#tu_navlist li#tu_sprachwahl a {
 
 
 /* LOGIN */
-ul#tu_navlist li#tu_login a {
+ul#tu_navlist li#tu_login_logout a {
 
 	background-color: #be1e3c;
         color: white;

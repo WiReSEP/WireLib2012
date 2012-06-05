@@ -3,6 +3,7 @@ from models import author
 from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
+from django.template import RequestContext 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
@@ -43,6 +44,7 @@ def index(request):
 
     documents = document.objects.all().order_by("-title")
     return render_to_response("literatur.html", dict(documents=documents,       user=request.user, settings=settings))"""
+
 
 def search(request):
     """ Suche nach Dokumenten.
@@ -124,11 +126,14 @@ def doc_list(request):
         if headers[sort] == "des":
             documents = documents.reverse()
             headers[sort] = "asc"
-    
     v_user = request.user
     perms =  v_user.has_perm('add_author')
     return render_to_response("doc_list.html", dict(documents=documents,
-                              user=v_user, settings=settings, perm=perms ))
+                              user=v_user, settings=settings, perm=perms ),
+                              context_instance=RequestContext(request))
+    return render_to_response("doc_list.html", dict(documents=documents, 
+                              user=request.user, settings=settings), 
+                              context_instance=RequestContext(request))
         
    
 
