@@ -5,59 +5,63 @@
 	<table>
 	    <tr>
 	        <td><b><u>bib_no:</u></b></td>
-	        <td> <input type='text' name='bib_no' maxlength=15 />
+	        <td> <input type='text' name='bib_no' maxlength=15 /></td>
 	    </tr>
         <tr>
 	        <td><b><u>inv_no:</u></b></td>
-	        <td> <input type='text' name='inv_no' maxlength=15 />
+	        <td> <input type='text' name='inv_no' maxlength=15 /></td>
 	    </tr>  
         <tr>
 	        <td><b><u>Kategorie:</u></b></td>
-	        <td> <input type='text' name='category' maxlength=100 />
+	        <td> <input type='text' name='category' maxlength=100 /></td>
 	    </tr>  
 	    <tr>
 	        <td><b><u>Status:</u></b></td>
-	        <td> <input type='text' name='status' maxlength=1 />
+	        <td> <input type='text' name='status' maxlength=1 /></td>
 	    </tr> 
 	    <tr>
 	        <td><b><u>Publisher:</u></b></td>
-	        <td> <input type='text' name='publisher' maxlength=35/>
+	        <td> <input type='text' name='publisher' maxlength=35/></td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Erscheinungsjahr:</u></b></td>
-	        <td> <input type='text' name='status' maxlength=4 />
+	        <td> <input type='text' name='status' maxlength=4 /></td>
 	    </tr> 
 	    <tr>
 	        <td><b><u>Adresse:</u></b></td>
-	        <td> <input type='text' name='address' />
+	        <td> <input type='text' name='address' maxlength=100 /></td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Notizen:</u></b></td>
-	        <td> <input type='textfield' name='comment' />
+	        <td> <input type='textfield' name='comment' /></td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Preis:</u></b></td>
-	        <td> <input type='text' name='price' />
+	        <td> <input type='text' name='price' maxlength=7 /></td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Währung (K&uuml;rzel)</u></b></td>
-	        <td> <input type='text' name='status' />
+	        <td> <input type='text' name='currency' maxlength=3 /></td>
 	    </tr>
 	    <tr>
 	        <td><b><u>Libary of Congress Number:</u></b></td>
-	        <td> <input type='text' name='lib_of_con_nr' />
+	        <td> <input type='text' name='lib_of_con_nr' maxlength=20 /></td>
 	    </tr>
 	</table>
 	<b><u>Autoren</u></b>
-	<input type='button' name='neuerAutor' value="+" onClick="addInput('au','author_first_name'); addInput('aln', 'author_last_name')" /> <br>
+	<input type='button' name='neuerAutor' value="+" onClick="addInput('afn','author_first_name'); addInput('aln', 'author_last_name')" /> <br>
 	<table>
 	    <tr>
 	        <th>Vorname</th>
-	        <th>Nachname<th>
+	        <th>Nachname</th>
 	    </tr>
-	    <tr id=au>
-	        <td id=afn><input type='text' name='author_first_name' /></td>
-	        <td id=aln><input type='text' name='author_last_name' /></td>
+	    <tr>
+	        <td><input type='text' name='author_first_name' maxlength=30 /></td>
+	        <td><input type='text' name='author_last_name' maxlength=30 /></td>
+	    </tr>
+	    <tr>
+	        <td id=afn></td>
+	        <td id=aln></td>
 	    </tr>
 	</table> 
 {% endblock %}
