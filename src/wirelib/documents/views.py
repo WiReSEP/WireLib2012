@@ -9,22 +9,6 @@ from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
 import settings
 
-from extras_bibtex import UglyBibtex
-import os
-
-def functions_test(self):
-    """
-    Um eine Funktion zu testen, die nur einen einfachen Text zurückgibt, 
-    einfach die Funktion statt dem String einfüge und die Seite ~/funktionstest aufrufen.
-    """
-    for file in os.listdir('olddb'):
-        try:
-            UglyBibtex('olddb/'+file).do_import()
-        except:
-            pass
-    response = HttpResponse("Datenbankimport abgeschlossen")
-    response["ContentType"] = "text/plain"
-    return response
 
 headers = {'title':'asc', 
             'category':'asc',
@@ -72,7 +56,7 @@ def search(request):
         return response
     else:
         context = Context()
-        template = loader.get_template("unsere_suche.html")
+        template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
 def search_pro(request):
