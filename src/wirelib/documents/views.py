@@ -128,11 +128,6 @@ def doc_list(request):
     return render_to_response("doc_list.html", dict(documents=documents,
                               user=v_user, settings=settings, perm=perms ),
                               context_instance=RequestContext(request))
-    return render_to_response("doc_list.html", dict(documents=documents, 
-                              user=request.user, settings=settings), 
-                              context_instance=RequestContext(request))
-        
-   
 
 def doc_detail(request, bib_no_id):
     try:
