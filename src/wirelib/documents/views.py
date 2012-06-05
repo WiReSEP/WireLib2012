@@ -5,6 +5,7 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import Permission
 from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
 import settings
@@ -28,7 +29,10 @@ def literatur(request):
             documents = documents.reverse()
             headers[sort] = "asc"
     
-    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("literatur.html", dict(documents=documents,
+        user=v_user, perm=perms, settings=settings))
             
             
 """       
@@ -50,12 +54,17 @@ def search(request):
         suchtext = request.POST.get('suche','')
         document_query = document.objects.filter(title__icontains=suchtext)
         template = loader.get_template("search_result.html")
-        context = Context({"documents" : document_query,"user" : request.user})
+        v_user = request.user
+        perms =  v_user.has_perm('add_author')
+        context = Context({"documents" : document_query,"user" : v_user, "perm"
+            : perms})
         response = HttpResponse(template.render(context))
         #response["ContentType"] = "text/plain"
         return response
     else:
-        context = Context({"user" : request.user})
+        v_user = request.user
+        perms =  v_user.has_perm('add_author')
+        context = Context({"user" : v_user, "perm" : perms})
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
@@ -87,12 +96,18 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
+        v_user = request.user
+        perms =  v_user.has_perm('add_author')
         template = loader.get_template("search_result.html")
-        context = Context({"documents" : s_documents,"user" : request.user})
+        context = Context({"documents" : s_documents,"user" : v_user, "perm" :
+                            perms})
         response = HttpResponse(template.render(context))
         return response
     else:
-        return render_to_response("search_pro.html",context_instance=Context({"user" : request.user}))
+        v_user = request.user
+        perms =  v_user.has_perm('add_author')
+        return render_to_response("search_pro.html",context_instance=Context({"user" :
+                       v_user, "perm" : perms}))
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -110,7 +125,10 @@ def doc_list(request):
             documents = documents.reverse()
             headers[sort] = "asc"
     
-    return render_to_response("doc_list.html", dict(documents=documents, user=request.user, settings=settings))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("doc_list.html", dict(documents=documents,
+                              user=v_user, settings=settings, perm=perms ))
         
    
 
@@ -126,16 +144,22 @@ def doc_detail(request, bib_no_id):
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
                       "bi" : bibtex_string,
-                      "user" : request.user})
+                      "user" : v_user,
+                      "perm" : perms})
     response = HttpResponse(template.render(context))
     return response
 
 def index(request): 
-    return render_to_response("home.html",context_instance=Context({"user" : request.user}))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("home.html",context_instance=Context({"user" :
+                              v_user, "perm" : perms}))
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
@@ -144,20 +168,35 @@ def doc_add(request):
         * Import durch Formeingabe
         * Import durch Upload einer BibTeX-Datei
     """
-    return render_to_response("doc_add.html",context_instance=Context({"user" : request.user}))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("doc_add.html",context_instance=Context({"user" :
+                              v_user, "perm" : perms}))
 
 def doc_rent(request):
     """ Des Benutzers Ausleihliste
     Alle Dokumente die der Benutzer ausgeliehen hat und die Dokumente für die
     der Benutzer für andere Bürgt.
     """
-    return render_to_response("doc_rent.html",context_instance=Context({"user" : request.user}))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("doc_rent.html",context_instance=Context({"user"
+                              : v_user, "perm" : perms}))
 
 def export(request):
-    return render_to_response("export.html",context_instance=Context({"user" : request.user}))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("export.html",context_instance=Context({"user" :
+                              v_user, "perm" : perms}))
 
 def allegro_export(request):
-    return render_to_response("allegro_export.html",context_instance=Context({"user" : request.user}))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("allegro_export.html",context_instance=Context({"user" :
+                              v_user, "perm" : perms}))
 
 def bibtex_export(request):
-    return render_to_response("bibtex_export.html",context_instance=Context({"user" : request.user}))
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    return render_to_response("bibtex_export.html",context_instance=Context({"user" :
+                              v_user, "perm" : perms}))
