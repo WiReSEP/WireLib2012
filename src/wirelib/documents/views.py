@@ -80,6 +80,8 @@ def search_pro(request):
     Hier kann der Benutzer mit einer übersichtlichen Form nach Dokumenten
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
+    TODO: Die Weiterleitung auf die Detailseite bei einem einzigen Dokument ist
+    bisher nur ein etwas unschönes Workaround.
     """
     if "pro_search_result" in request.GET:
         s_author = request.POST.get('author','')
@@ -104,12 +106,8 @@ def search_pro(request):
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
         c_docs = s_documents.count()
-        print c_docs
-        print s_documents
         if c_docs == 1:
             values_l = s_documents.values_list()
-            print values_l
-            print values_l[0][0]
             return doc_detail(request, values_l[0][0])
         template = loader.get_template("search_result.html")
         context = Context({"documents" : s_documents})
