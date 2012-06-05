@@ -1,4 +1,24 @@
 {% extends "index.html" %}
+{% block header %}
+function addAuthor(div_id, elem) {
+    var new_div = document.createElement('tr');
+    new_div.innerHTML = '<td><input type=text name="author_first_name" maxlength=30 /></td> <td><input onFocus="addAuthor(' + div_id + ', this)" type=text name="author_last_name" maxlength=30 /></td>';
+    elem.removeAttribute('onFocus');
+    document.getElementById(div_id).appendChild(new_div);
+}
+
+function addExtra(div_id) {
+    var new_div = document.createElement('tr');
+    new_div.innerHTML = '<td><input type=text name="doc_extra_name" /></td> <td><input type=text name="doc_extra_content" /></td>'
+    document.getElementById(div_id).appendChild(new_div);
+}
+
+function addKeyword(div_id) {
+    var new_div = document.createElement('tr');
+    new_div.innerHTML = '<td><input type=text name="keyword" /></td>'
+    document.getElementById(div_id).appendChild(new_div);
+}
+{% endblock header %}
 {% block content %}
 
 	<h1>Import</h1>
@@ -48,20 +68,44 @@
 	        <td> <input type='text' name='lib_of_con_nr' maxlength=20 /></td>
 	    </tr>
 	</table>
+	
 	<b><u>Autoren</u></b>
-	<input type='button' name='neuerAutor' value="+" onClick="addInput('afn','author_first_name'); addInput('aln', 'author_last_name')" /> <br>
+ <!--	<input type='button' name='neuerAutor' value="+" onClick="addAuthor('au')" /> --> <br>
 	<table>
+	    <tbody id=au>
 	    <tr>
 	        <th>Vorname</th>
 	        <th>Nachname</th>
 	    </tr>
 	    <tr>
-	        <td><input type='text' name='author_first_name' maxlength=30 /></td>
-	        <td><input type='text' name='author_last_name' maxlength=30 /></td>
+	        <td><input type="text" onFocus="addAuthor('au', this)" name="author_first_name" maxlength=30 /></td>
+	        <td><input type="text" name="author_last_name" maxlength=30 /></td>
+	    </tr>
+        </tbody>
+	</table>
+	
+	<b><u>Schl&uuml;sselw&ouml;rter:</u></b>
+	<input type="button" name="keyword" value="+" onClick="addKeyword('kw')" /> <br>
+	<table>
+	    <tbody id=kw>
+	    <tr>
+	        <td><input type="text" name="keyword" maxlength=30 /></td>
+	    </tr>
+        </tbody> 
+	</table>
+	
+	<b><u>Extrafelder:</u></b>
+	<input type="button" name="extrafeld" value="+" onClick="addExtra('ex')" /> <br>
+	<table>
+	    <tbody id=ex>
+	    <tr>
+	        <th>Feldname</th>
+	        <th>Feldinhalt</th>
 	    </tr>
 	    <tr>
-	        <td id=afn></td>
-	        <td id=aln></td>
+	        <td><input type="text" name="doc_extra_name" maxlength=30 /></td>
+	        <td><input type="text" name="doc_extra_content" maxlength=30 /></td>
 	    </tr>
-	</table> 
-{% endblock %}
+        </tbody> 
+	</table>
+{% endblock content %}
