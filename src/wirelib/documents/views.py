@@ -34,7 +34,7 @@ headers = {'title':'asc',
             'isbn':'asc'
             
             }
-def index(request):
+def literatur(request):
     sort = request.GET.get('sort')
     documents = document.objects.all()
     
@@ -65,7 +65,7 @@ def search(request):
     if "suchanfrage_starten" in request.GET:
         suchtext = request.POST.get('suche','')
         document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("suchergebnis.html")
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : document_query})
         response = HttpResponse(template.render(context))
         #response["ContentType"] = "text/plain"
@@ -80,6 +80,8 @@ def search_pro(request):
     Hier kann der Benutzer mit einer übersichtlichen Form nach Dokumenten
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
+    TODO: Die Weiterleitung auf die Detailseite bei einem einzigen Dokument ist
+    bisher nur ein etwas unschönes Workaround.
     """
     if "pro_search_result" in request.GET:
         s_author = request.POST.get('author','')
@@ -103,7 +105,11 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
-        template = loader.get_template("suchergebnis.html")
+        c_docs = s_documents.count()
+        if c_docs == 1:
+            values_l = s_documents.values_list()
+            return doc_detail(request, values_l[0][0])
+        template = loader.get_template("search_result.html")
         context = Context({"documents" : s_documents})
         response = HttpResponse(template.render(context))
         return response
@@ -138,6 +144,9 @@ def doc_detail(request, bib_no_id):
                       "bi" : bibtex_string})
     response = HttpResponse(template.render(context))
     return response
+
+def index(request): 
+    return render_to_response("home.html")
 
 def doc_add(request):
     """ Ein Dokument hinzufügen
