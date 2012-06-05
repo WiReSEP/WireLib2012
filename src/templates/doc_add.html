@@ -1,67 +1,118 @@
 {% extends "index.html" %}
+{% block header %}
+function addAuthor(div_id, elem) {
+    var new_div = document.createElement('tr');
+    new_div.innerHTML = '<td><input type=text name="author_first_name" maxlength=30 /></td> <td><input onFocus="addAuthor(\'' + div_id + '\', this)" type=text name="author_last_name" maxlength=30 /></td>';
+    elem.removeAttribute('onFocus');
+    document.getElementById(div_id).appendChild(new_div);
+}
+
+function addExtra(div_id, elem) {
+    var new_div = document.createElement('tr');
+    new_div.innerHTML = '<td><input type=text name="doc_extra_name" /></td> <td><input onFocus="addExtra(\'' + div_id + '\', this)" type=text name="doc_extra_content" /></td>'
+    elem.removeAttribute('onFocus');
+    document.getElementById(div_id).appendChild(new_div);
+}
+
+function addKeyword(div_id, elem) {
+    var new_div = document.createElement('tr');
+    new_div.innerHTML = '<td><input onFocus="addKeyword(\'' + div_id + '\', this)" type=text name="keyword" /></td>'
+    elem.removeAttribute('onFocus');
+    document.getElementById(div_id).appendChild(new_div);
+}
+{% endblock header %}
 {% block content %}
 
 	<h1>Import</h1>
-	<table>
-	    <tr>
-	        <td><b><u>bib_no:</u></b></td>
-	        <td> <input type='text' name='bib_no' maxlength=15 /></td>
-	    </tr>
-        <tr>
-	        <td><b><u>inv_no:</u></b></td>
-	        <td> <input type='text' name='inv_no' maxlength=15 /></td>
-	    </tr>  
-        <tr>
-	        <td><b><u>Kategorie:</u></b></td>
-	        <td> <input type='text' name='category' maxlength=100 /></td>
-	    </tr>  
-	    <tr>
-	        <td><b><u>Status:</u></b></td>
-	        <td> <input type='text' name='status' maxlength=1 /></td>
-	    </tr> 
-	    <tr>
-	        <td><b><u>Publisher:</u></b></td>
-	        <td> <input type='text' name='publisher' maxlength=35/></td>
-	    </tr>
-	    <tr>
-	        <td><b><u>Erscheinungsjahr:</u></b></td>
-	        <td> <input type='text' name='status' maxlength=4 /></td>
-	    </tr> 
-	    <tr>
-	        <td><b><u>Adresse:</u></b></td>
-	        <td> <input type='text' name='address' maxlength=100 /></td>
-	    </tr>
-	    <tr>
-	        <td><b><u>Notizen:</u></b></td>
-	        <td> <input type='textfield' name='comment' /></td>
-	    </tr>
-	    <tr>
-	        <td><b><u>Preis:</u></b></td>
-	        <td> <input type='text' name='price' maxlength=7 /></td>
-	    </tr>
-	    <tr>
-	        <td><b><u>Währung (K&uuml;rzel)</u></b></td>
-	        <td> <input type='text' name='currency' maxlength=3 /></td>
-	    </tr>
-	    <tr>
-	        <td><b><u>Libary of Congress Number:</u></b></td>
-	        <td> <input type='text' name='lib_of_con_nr' maxlength=20 /></td>
-	    </tr>
-	</table>
-	<b><u>Autoren</u></b>
-	<input type='button' name='neuerAutor' value="+" onClick="addInput('afn','author_first_name'); addInput('aln', 'author_last_name')" /> <br>
-	<table>
-	    <tr>
-	        <th>Vorname</th>
-	        <th>Nachname</th>
-	    </tr>
-	    <tr>
-	        <td><input type='text' name='author_first_name' maxlength=30 /></td>
-	        <td><input type='text' name='author_last_name' maxlength=30 /></td>
-	    </tr>
-	    <tr>
-	        <td id=afn></td>
-	        <td id=aln></td>
-	    </tr>
-	</table> 
-{% endblock %}
+	
+	<input type="button" name="HandImport" value="Import per Eingabe" onclick="spoiler(this,'spoiler','Import per Direkteingabe','Eingabe verbergen')"> <br>
+	<div id="spoiler" name="spoiler" style="display: none;">
+	    <table>
+	        <tr>
+	            <td><b><u>bib_no:</u></b></td>
+	            <td> <input type='text' name='bib_no' maxlength=15 /></td>
+	        </tr>
+            <tr>
+	            <td><b><u>inv_no:</u></b></td>
+	            <td> <input type='text' name='inv_no' maxlength=15 /></td>
+	        </tr>  
+            <tr>
+	            <td><b><u>Kategorie:</u></b></td>
+	            <td> <input type='text' name='category' maxlength=100 /></td>
+	        </tr>  
+	        <tr>
+	            <td><b><u>Status:</u></b></td>
+	            <td> <input type='text' name='status' maxlength=1 /></td>
+	        </tr> 
+	        <tr>
+	            <td><b><u>Publisher:</u></b></td>
+	            <td> <input type='text' name='publisher' maxlength=35/></td>
+	        </tr>
+	        <tr>
+	            <td><b><u>Erscheinungsjahr:</u></b></td>
+	            <td> <input type='text' name='status' maxlength=4 /></td>
+	        </tr> 
+	        <tr>
+	            <td><b><u>Adresse:</u></b></td>
+	            <td> <input type='text' name='address' maxlength=100 /></td>
+	        </tr>
+	        <tr>
+	            <td><b><u>Notizen:</u></b></td>
+	            <td> <input type='textfield' name='comment' /></td>
+	        </tr>
+	        <tr>
+	            <td><b><u>Preis:</u></b></td>
+	            <td> <input type='text' name='price' maxlength=7 /></td>
+	        </tr>
+	        <tr>
+	            <td><b><u>Währung (K&uuml;rzel)</u></b></td>
+	            <td> <input type='text' name='currency' maxlength=3 /></td>
+	        </tr>
+	        <tr>
+	            <td><b><u>Libary of Congress Number:</u></b></td>
+	            <td> <input type='text' name='lib_of_con_nr' maxlength=20 /></td>
+	        </tr>
+	    </table>
+	
+	    <b><u>Autoren</u></b> <br>
+	    <table>
+	        <tbody id=au>
+	        <tr>
+	            <th>Vorname</th>
+	            <th>Nachname</th>
+	        </tr>
+	        <tr>
+	            <td><input type="text" name="author_first_name" maxlength=30 /></td>
+	            <td><input type="text" onFocus="addAuthor('au', this)" name="author_last_name" maxlength=30 /></td>
+	        </tr>
+            </tbody>
+	    </table>
+	
+	    <b><u>Schl&uuml;sselw&ouml;rter:</u></b><br>
+	    <table>
+	        <tbody id=kw>
+	        <tr>
+	            <td><input type="text" onFocus="addKeyword('kw', this)" name="keyword" maxlength=30 /></td>
+	        </tr>
+            </tbody> 
+	    </table>
+	
+	    <b><u>Extrafelder:</u></b><br>
+	    <table>
+	        <tbody id=ex>
+	        <tr>
+	            <th>Feldname</th>
+	            <th>Feldinhalt</th>
+	        </tr>
+	        <tr>
+	            <td><input type="text" name="doc_extra_name" maxlength=30 /></td>
+	            <td><input type="text" onFocus="addExtra('ex', this)" name="doc_extra_content" maxlength=30 /></td>
+	        </tr>
+            </tbody> 
+	    </table>
+	    <input type="submit" name="submit" value="Dokument speichern" />
+	</div>
+	<br> <br> <br>
+	<input type="file" name="file" id="file_input" />
+    
+{% endblock content %}
