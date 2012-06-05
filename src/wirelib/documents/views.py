@@ -1,13 +1,11 @@
 # vim: set fileencoding=utf-8
-from models import author
 from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.urlresolvers import reverse
 from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
+from django.contrib.auth.decorators import login_required
 import settings
 
 
@@ -126,6 +124,7 @@ def doc_detail(request, bib_no_id):
 def index(request): 
     return render_to_response("home.html",context_instance=Context({"user" : request.user}))
 
+@login_required
 def doc_add(request):
     """ Ein Dokument hinzufügen
     Hier kann der Benutzer mit den entsprechenden Rechten ein Dokument der
@@ -135,6 +134,7 @@ def doc_add(request):
     """
     return render_to_response("doc_add.html",context_instance=Context({"user" : request.user}))
 
+@login_required
 def doc_rent(request):
     """ Des Benutzers Ausleihliste
     Alle Dokumente die der Benutzer ausgeliehen hat und die Dokumente für die
@@ -142,11 +142,14 @@ def doc_rent(request):
     """
     return render_to_response("doc_rent.html",context_instance=Context({"user" : request.user}))
 
+@login_required
 def export(request):
     return render_to_response("export.html",context_instance=Context({"user" : request.user}))
 
+@login_required
 def allegro_export(request):
     return render_to_response("allegro_export.html",context_instance=Context({"user" : request.user}))
 
+@login_required
 def bibtex_export(request):
     return render_to_response("bibtex_export.html",context_instance=Context({"user" : request.user}))
