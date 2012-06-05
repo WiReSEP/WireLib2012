@@ -81,10 +81,20 @@ function addInput(div_id, name) {
 
 		<div id="tu_navcontainer">
 			<ul id="tu_navlist">
-		    <li id="tu_login" onmouseover="mouseonmenu(1)" 
+			{% if user.is_authenticated %}
+            
+		    <li id="tu_logout" onmouseover="mouseonmenu(1)" 
 			onmouseout="cleandelay()" style="z-index:999;">
-			<a href="login">LogIn</a>                                        
+			<a href="/logout">LogOut</a>                                        
 		    </li>
+		    <li><p>Welcome, {{ user.username }}. Thanks for logging in.</p></li>
+		    {% else %}
+            <li id="tu_login" onmouseover="mouseonmenu(1)" 
+			onmouseout="cleandelay()" style="z-index:999;">
+			<a href="/login">LogIn</a>                                        
+		    </li>
+           <li> <p>Welcome, new user. Please log in.</p></li>
+            {% endif %}
 			</ul>
 		</div>
 
