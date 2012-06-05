@@ -47,12 +47,8 @@ function spoilIt(elem, idname) {
   spoiler(elem, idname, 'Show', 'Hide')
 }
 
-function addInput(div_id, name) {
-    var new_div = document.createElement('input');
-    new_div.setAttribute('name',name);
-    new_div.setAtrribute('type', 'text');
-    document.getElementById(div_id).appendChild(new_div);
-}
+{% block header %}
+{% endblock header %}
 </script>
 
 </head>
@@ -136,7 +132,7 @@ function addInput(div_id, name) {
 			</div>
 		
 			<div class="navi1">
-			<a href="/import" style="display:block;">
+			<a href="/doc/add" style="display:block;">
 			Import
 			</a>
 			</div>
@@ -174,7 +170,7 @@ function addInput(div_id, name) {
 			</p>
 			<hr noshade="noshade" />
 		</div>
-
+        </div>
 </div>
 </body>
 </html>

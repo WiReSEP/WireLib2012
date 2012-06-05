@@ -3,6 +3,7 @@ from models import author
 from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
+from django.template import RequestContext 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from documents.models import document, lending, doc_extra
@@ -18,18 +19,6 @@ headers = {'title':'asc',
             'isbn':'asc'
             
             }
-def literatur(request):
-    sort = request.GET.get('sort')
-    documents = document.objects.all()
-    
-    if sort is not None:
-        documents = documents.order_by(sort)
-        if headers[sort] == "des":
-            documents = documents.reverse()
-            headers[sort] = "asc"
-    
-    return render_to_response("literatur.html", dict(documents=documents, user=request.user, settings=settings))
-            
             
 """       
 def index(request): 	
@@ -110,7 +99,7 @@ def doc_list(request):
             documents = documents.reverse()
             headers[sort] = "asc"
     
-    return render_to_response("doc_list.html", dict(documents=documents, user=request.user, settings=settings))
+    return render_to_response("doc_list.html", dict(documents=documents, user=request.user, settings=settings), context_instance=RequestContext(request))
         
    
 
