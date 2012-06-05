@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from documents.models import publisher
 from documents.models import author
+from documents.models import keywords
+
+class keywords_admin(admin.ModelAdmin):
+    fields = ['keyword','document']
 
 class tel_user_inline(admin.StackedInline):
     model = tel_user
@@ -42,3 +46,4 @@ admin.site.register(category, category_admin)
 admin.site.register(document, document_admin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(keywords, keywords_admin)
