@@ -79,13 +79,13 @@ function spoilIt(elem, idname) {
 			<ul id="tu_navlist">
 			{% if user.is_authenticated %}
             
-		    <li id="tu_login" onmouseover="mouseonmenu(1)" 
+		    <li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 			onmouseout="cleandelay()" style="z-index:999;">
 			<a href="/logout">LogOut</a>                                        
 		    </li>
 		    <li><p>Welcome, {{ user.username }}. Thanks for logging in.</p></li>
 		    {% else %}
-            <li id="tu_login" onmouseover="mouseonmenu(1)" 
+            <li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 			onmouseout="cleandelay()" style="z-index:999;">
 			<a href="/login">LogIn</a>                                        
 		    </li>

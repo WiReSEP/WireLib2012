@@ -19,16 +19,7 @@ headers = {'title':'asc',
             'isbn':'asc'
             
             }
-            
-"""       
-def index(request): 	
-    Index der App.
-    Bietet dem Benutzer nur eine Übersicht.
-    TODO: Was sollte er auf dieser Seite noch sehen?
-
-    documents = document.objects.all().order_by("-title")
-    return render_to_response("literatur.html", dict(documents=documents,       user=request.user, settings=settings))"""
-
+           
 def search(request):
     """ Suche nach Dokumenten.
     Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
