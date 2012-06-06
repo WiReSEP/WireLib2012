@@ -1,5 +1,8 @@
 \section{Analyse von Funktion F100: Anmeldung}
 Der Benutzer meldet sich auf dem System unter seinem Benutzernamen an.
+Anschließend bietet ihm das System alle ihm zur Verfügung stehenden
+Möglichkeiten an, wie \zB die Entleihe von Büchern \ref{f:220}.
+
 
 Diese Funktion, die lediglich in der Komponente \textbf{View} vorkommt, ist
 eine Built-in-Funktion von \gls{glos:django}. Innerhalb von Django werden die Benutzer
@@ -7,6 +10,15 @@ in einer eigenen Datenstruktur  dargestellt. Diese Klasse muss erweitert werden,
 um die zusätzlichen Daten der Benutzer zu speichern. Da \gls{glos:django} eine Datenbank
 zugrunde liegt, müssen diese weiteren Daten in einer extra Klasse mit Referenz
 auf die Benutzer gesetzt werden.
+
+\fig{f100}
+
+In der Grafik \ref{fig:f100}\ ist zu erkennen, dass die Daten des Benutzers nach
+der Eingabe in einem Formular an dem Server zurückgegebn werden, welcher mit
+einer Datenbank-Abfrage prüft ob die eingegebenen Daten valide sind.
+Entsprechend bei einem erfolgreichen Ergebniss wird dem Webinterface das
+User-Cookie für die Session übergeben.
+
 
 \section{Analyse von Funktion F101: Anmeldung über LDAP}
 Der Benutzer meldet sich auf dem System über seinen \Gls{GITZ}-Benutzer (\zB
@@ -21,27 +33,42 @@ bereit gestellt.
 \section{Analyse von Funktion F102: Anbindung an die Universitätsbibliothek}
 Ein Benutzer mit hinreichenden Rechten erzeugt über das Frontend des Produktes
 eine Datei mit den aktuell zu exportierenden Daten. Nach der Generierung steht
-dem Benutzer eine Datei im \gls{glos:allegro}-Format zur Verfügung, die er
+dem Benutzer eine Datei im \gls{glos:Allegro} Format zur Verfügung, die er
 manuell an die \gls{UB} weiterleiten kann.
+
 
 Der zugrunde liegende Datensatz der Dokumente wird von einem, in den
 \textbf{Models} gelegenen Befehlssatz in ein Datenformat übersetzt, welches von
 der TU Braunschweig Universitätsbibliothek gelesen werden kann. 
 
+\fig{f102}
+In der Grafik \ref{fig:f102}\ ist zu erkennen, dass der Benutzer über das
+Webinterface eine Anfrage zur Erzeugung einer \gls{glos:Allegro} -Datei an den
+Server übermittelt, welcher aus der Datenbank die entsprechenden Datensätze
+herausholt und nach einer Übersetzung in das entsprechende Format die Datei auf
+dem Web-Interface bereitstellt.
+
 \section{Analyse von Funktion F103: Mailtexte ändern}
 Die Standard-Mails, die vom System an Benutzer verschickt werden, sollen geändert
-werden.
+werden. Diese Funktion dient einer flexiblen Administration, da ohne das Lesen
+und Suchen in Quelltexten diese Daten verändert werden können.
 
 Die Mailtexte sind Bestandteil einer veränderbaren, aber nicht großen Tabelle an
 Basisinformationen, wie auch andere Einstellungen für die Software. Um die
 Informationen bereit zu stellen, muss eine neue Klasse in den \textbf{Models}
 erzeugt werden, die alle Informationen für die App bereit stellt.
 
+\fig{f103}
+
 \section{Analyse von Funktion F200: Bib\TeX\ Import}
 Ein oder mehrere Dokumente werden zum System hinzugefügt. Dafür wählt der
 Benutzer den entsprechenden View aus und lädt über einen Upload-Dialog eine
 \BibTeX -Datei hoch. Das System analysiert die Datei auf Validität, erzeugt
-Objekte aus den Daten, die in eine Datenbank gespeichert werden.
+Objekte aus den Daten, die in eine Datenbank gespeichert werden. Fehler in der
+Datei werden dem Benutzer in Form von Zeilenangaben und leicht zu
+identifizierenden Fehlermeldungen zurückgegeben.
+
+\fig{f200}
 
 Für die Funktion wird also ein \textbf{View} benötigt, der den Upload bereit
 stellt.  Als Basis werden die Dokument-Objekte aus den \textbf{Models} benötigt,

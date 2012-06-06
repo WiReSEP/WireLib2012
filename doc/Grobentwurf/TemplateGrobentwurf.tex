@@ -19,7 +19,17 @@
 %makeindex -s datei.ist -t datei.slg -o datei.syi datei.syg
 
 \input{inhalt/glossar.tex}
+\newcommand{\fig}[1]{
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{bilder/#1.pdf}
+        \caption{Sequenzdiagramm für allgemeine (An-)Frage-Anwort-Anweisungen}
+        \label{fig:#1}
+    \end{center}
+\end{figure}
+}
 
+\newcommand{\zB}{\mbox{z.\,B.}\xspace}
 \newcommand{\BibTeX}{\gls{glos:BibTeX}\xspace}
 %------Beginn des Gesamtdokumentes----------------------------------------------
 \begin{document}
