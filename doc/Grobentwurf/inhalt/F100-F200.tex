@@ -9,7 +9,9 @@ zugrunde liegt, müssen diese weiteren Daten in einer extra Klasse mit Referenz
 auf die Benutzer gesetzt werden.
 
 \section{Analyse von Funktion F101: Anmeldung über LDAP}
-Der Benutzer meldet sich auf dem System über seinen \Gls{GITZ}-Benutzer an.
+Der Benutzer meldet sich auf dem System über seinen \Gls{GITZ}-Benutzer (\zB
+y-Nummer) an und hat seinem internen Status folgend entsprechende Rechte auf dem
+System.
 
 Diese Funktion wird in einer extra App dargestellt. Die \gls{LDAP}-Anmeldung muss
 dabei die normale Anmeldung erweitern und im View evtl. durch eine Checkbox zur
@@ -17,8 +19,10 @@ Verfügung gestellt werden. Die zugrundeliegende Datenstruktur wird von \gls{LDA
 bereit gestellt.
 
 \section{Analyse von Funktion F102: Anbindung an die Universitätsbibliothek}
-Ein Benutzer mit hinreichenden Rechten verschickt an die Universitätsbibliothek
-den Stand der aktuellen Datensätze.
+Ein Benutzer mit hinreichenden Rechten erzeugt über das Frontend des Produktes
+eine Datei mit den aktuell zu exportierenden Daten. Nach der Generierung steht
+dem Benutzer eine Datei im \gls{glos:allegro}-Format zur Verfügung, die er
+manuell an die \gls{UB} weiterleiten kann.
 
 Der zugrunde liegende Datensatz der Dokumente wird von einem, in den
 \textbf{Models} gelegenen Befehlssatz in ein Datenformat übersetzt, welches von
