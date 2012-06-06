@@ -116,32 +116,32 @@
 	  <!-- TODO Button eine Funktion zuordnen -->
 	  <form action="" method="post">
 		<input type="submit" name="lend" value="Ausleihen" /> 
-	  </form><br>
+	  </form><br />
 	  {% else %}
 	  {% if documents.status == 1 %}    
 	  {% if lending %}
 	  {% if lending.non_user_lend %}
-	  Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br>
-	  Als Bürge fungiert {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}. <br>
+	  Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br />
+	  Als Bürge fungiert {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}. <br />
 	  {% else %}
-	  Das Dokument ist von {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }} ausgeliehen. <br>
+	  Das Dokument ist von {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }} ausgeliehen. <br />
 	  {% endif %}
 	  <!-- TODO Button eine Funktion zuordnen -->
-	  <input type="button" name="uebertragen" value="&Uuml;bertragen" /> <br>
+	  <input type="button" name="uebertragen" value="&Uuml;bertragen" /> <br />
 	  {% endif %}
 	  {% else %}
 	  {% if documents.status == 2 %}
-	  Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br>
+	  Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br />
 	  {% else %}
 	  {% if documents.status == 3 %}
 	  <!-- TODO von wem und wann -->
-	  Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br>
+	  Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br />
 	  <!-- TODO Button eine Funktion zuordnen -->
-	  <input type="button" name="gefunden" value="Gefunden melden" /> <br>
+	  <input type="button" name="gefunden" value="Gefunden melden" /> <br />
 	  {% else %}
-	  Dieses Dokument gilt als verloren. <br>
+	  Dieses Dokument gilt als verloren. <br />
 	  <!-- TODO Button eine Funktion zuordnen -->
-	  <input type="button" name="gefunden" value="Gefunden melden" /> <br>
+	  <input type="button" name="gefunden" value="Gefunden melden" /> <br />
 	  {% endif %}  
 	  {% endif %}
 	  {% endif %}
@@ -149,6 +149,6 @@
 	</td>
   </tr>
 </table>
-<input type="button" name="bibtex" value="BibTeX" onclick="spoiler(this,'spoiler','BibTeX','BibTeX verbergen')"> <br>
+<input type="button" name="bibtex" value="BibTeX" onclick="spoiler(this,'spoiler','BibTeX','BibTeX verbergen')"> <br />
 <div id="spoiler" name="spoiler" style="display: none;"><textarea cols=100 rows=15 readonly="true">{{ bi }}</textarea></div>
 {% endblock %}
