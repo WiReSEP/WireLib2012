@@ -223,9 +223,10 @@ def insert_doc(dict_insert):
         extras_db = []
         for extra in extra_fields_f:
             value = extra_fields_f[extra]
-            extra_db, dummy = doc_extra.objects.get_or_create(
+            if value != "":
+                extra_db, dummy = doc_extra.objects.get_or_create(
                     doc_id=document_db, bib_field=extra, content=value)
-            extras_db.append(extra_db)
+                extras_db.append(extra_db)
         document_db.save()
     except IntegrityError, e:
         raise DuplicateKeyError(e.message) #TODO regex basteln für Feld

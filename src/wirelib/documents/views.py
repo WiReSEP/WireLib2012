@@ -24,8 +24,8 @@ def search(request):
     finden.
     """
     context = Context()
-    if "suchanfrage_starten" in request.GET:
-        suchtext = request.POST.get('suche','')
+    if "query" in request.GET:
+        suchtext = request.GET.get('query','')
         documents = document.objects.filter(title__icontains=suchtext)
         return __list(request, documents)
     else:
@@ -41,14 +41,14 @@ def search_pro(request):
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
     """
-    if "pro_search_result" in request.GET:
-        s_author = request.POST.get('author','')
-        s_title = request.POST.get('title','')
-        s_year = request.POST.get('year','')
-        s_publisher = request.POST.get('publisher','')
-        s_bib_no = request.POST.get('bib_no','Test')
-        s_isbn = request.POST.get('isbn','')
-        s_keywords = request.POST.get('keywords','')
+    if "title" in request.GET:
+        s_author = request.GET.get('author','')
+        s_title = request.GET.get('title','')
+        s_year = request.GET.get('year','')
+        s_publisher = request.GET.get('publisher','')
+        s_bib_no = request.GET.get('bib_no','Test')
+        s_isbn = request.GET.get('isbn','')
+        s_keywords = request.GET.get('keywords','')
         s_documents = document.objects.filter(title__icontains = s_title)
         if s_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =

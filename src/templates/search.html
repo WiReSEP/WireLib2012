@@ -1,10 +1,10 @@
 {% extends "index.html" %}
 {% block content %}
-            <form method="post" action="?suchanfrage_starten">
+            <form method="get" action="">
                 <table>
                     <tr class="suchanfrage">
                         <td class="such_wort"> Suche: </td>
-                          <td> <input type="text" name="suche"
+                          <td> <input type="text" name="query"
                                     value="{{ suchwort }}" /> </td>
                           <td>     <input type="submit" value="Suchanfrage starten" /> </td>
                     </tr> 
