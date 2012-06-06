@@ -1,152 +1,154 @@
 {% extends "index.html" %}
 {% block content %}
 
-	<h1>{{ documents.title}} </h1>
-	<table width="100%">
-	    <tr>
-	        <td>
-	            <table>
-	                <tr>
-	                    <td><b><u>ID in der Bibliothek:</u></b></td>
-	                    <td>{{ documents.bib_no }}</td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Inventarnummer:</u></b></td>
-	                    <td>{{ documents.inv_no }}</td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Kategorie:</u></b></td>
-	                    <td>{{ documents.category }}</td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>ISBN:</u></b></td>
-	                    <td>
-	                        {% if documents.isbn %}
-	                            {{ documents.isbn }}
-	                        {% else %}
-	                            -
-	                        {% endif %}
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Autor:</u></b></td>
-	                    <td>
-	                        {% for a in documents.authors.all %}
-	                                {{ a.first_name }} {{ a.last_name }},
-	                        {% endfor %}
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Publisher:</u></b></td>
-	                    <td>
-	                        {% if documents.publisher %}
-	                            {{ documents.publisher }}
-	                        {% else %}
-	                            -
-	                        {% endif %}
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Erscheinungsjahr:</u></b></td>
-	                    <td>{{ documents.year }}</td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>BibTeX-ID:</u></b></td>
-	                    <td>{{ documents.bibtex_id }}</td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Schlüsselwörter:</u></b></td>
-	                    <td>
-	                        <!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
-	                        {% if documents.keywords.all %}
-	                            {% for k in documents.keywords.all %}
-	                                {{ k.keyword }},
-	                            {% endfor %}
-	                        {% else %}
-	                            -
-	                        {% endif %}
-	                    </td>
-	                </tr>	    
-	                <tr>
-	                    <td><b><u>LibraryOfCongressN:</u></b></td>
-	                    <td>
-	                        {% if documents.lib_of_con_nr %}
-	                            {{ documents.lib_of_con_nr }}
-	                        {% else %}
-	                            -
-	                        {% endif %}
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Preis:</u></b></td>
-	                    <td>
-	                        {% if documents.price and documents.currency %}
-	                            {{ documents.price }}{{ documents.currency }}
-	                        {% else %}
-	                            -
-	                        {% endif %}
-	                    </td>
-	                </tr>
-	                	    <tr>
-	                    <td><b><u>In der Bibliothek seit:</u></b></td>
-	                    <td>{{ documents.date_of_purchase }}</td>
-	                </tr>
-	                <tr>
-	                    <td><b><u>Notizen:</u></b></td>
-	                    <td>
-	                        {% if documents.comment %}
-	                            {{ documents.comment }}
-	                        {% else %}
-	                            -
-	                        {% endif %}
-	                    </td>
-	                </tr>
-	                <!-- TODO doc_extra funktionsfähig machen -->
-	                {% for de in doc_extra %}    
-	                    <tr>
-	                        <td><b><u>{{ de.bib_field }}</u></b></td>
-	                        <td>{{ de.content }}</td>
-	                    </tr>
-	                {% endfor %}
-	            </table>
-	        </td>
-	        <td>
-	            <!-- TODO evtl Schriftfarben ändern -->
-	            {% if documents.status == 0 %}
-	                <!-- TODO Button eine Funktion zuordnen -->
-	                <input type="button" name="ausleihe" value="Ausleihen" /> <br>
-	            {% else %}
-	                {% if documents.status == 1 %}    
-	                    {% if lending %}
-	                        {% if lending.non_user_lend %}
-	                            Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br>
-	                            Als Bürge fungiert {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}. <br>
-	                        {% else %}
-                                Das Dokument ist von {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }} ausgeliehen. <br>
-                            {% endif %}
-                            <!-- TODO Button eine Funktion zuordnen -->
-                            <input type="button" name="uebertragen" value="&Uuml;bertragen" /> <br>
-	                    {% endif %}
-	                {% else %}
-	                    {% if documents.status == 2 %}
-	                        Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br>
-	                    {% else %}
-	                        {% if documents.status == 3 %}
-	                            <!-- TODO von wem und wann -->
-	                            Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br>
-	                            <!-- TODO Button eine Funktion zuordnen -->
-	                            <input type="button" name="gefunden" value="Gefunden melden" /> <br>
-	                        {% else %}
-	                            Dieses Dokument gilt als verloren. <br>
-	                            <!-- TODO Button eine Funktion zuordnen -->
-	                            <input type="button" name="gefunden" value="Gefunden melden" /> <br>
-	                        {% endif %}  
-	                    {% endif %}
-	                {% endif %}
-	            {% endif %}
-	        </td>
-	    </tr>
-	</table>
+<h1>{{ documents.title}} </h1>
+<table width="100%">
+  <tr>
+	<td>
+	  <table>
+		<tr>
+		  <td><b><u>ID in der Bibliothek:</u></b></td>
+		  <td>{{ documents.bib_no }}</td>
+		</tr>
+		<tr>
+		  <td><b><u>Inventarnummer:</u></b></td>
+		  <td>{{ documents.inv_no }}</td>
+		</tr>
+		<tr>
+		  <td><b><u>Kategorie:</u></b></td>
+		  <td>{{ documents.category }}</td>
+		</tr>
+		<tr>
+		  <td><b><u>ISBN:</u></b></td>
+		  <td>
+			{% if documents.isbn %}
+			{{ documents.isbn }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
+		</tr>
+		<tr>
+		  <td><b><u>Autor:</u></b></td>
+		  <td>
+			{% for a in documents.authors.all %}
+			{{ a.first_name }} {{ a.last_name }},
+			{% endfor %}
+		  </td>
+		</tr>
+		<tr>
+		  <td><b><u>Publisher:</u></b></td>
+		  <td>
+			{% if documents.publisher %}
+			{{ documents.publisher }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
+		</tr>
+		<tr>
+		  <td><b><u>Erscheinungsjahr:</u></b></td>
+		  <td>{{ documents.year }}</td>
+		</tr>
+		<tr>
+		  <td><b><u>BibTeX-ID:</u></b></td>
+		  <td>{{ documents.bibtex_id }}</td>
+		</tr>
+		<tr>
+		  <td><b><u>Schlüsselwörter:</u></b></td>
+		  <td>
+			<!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
+			{% if documents.keywords.all %}
+			{% for k in documents.keywords.all %}
+			{{ k.keyword }},
+			{% endfor %}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
+		</tr>	    
+		<tr>
+		  <td><b><u>LibraryOfCongressN:</u></b></td>
+		  <td>
+			{% if documents.lib_of_con_nr %}
+			{{ documents.lib_of_con_nr }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
+		</tr>
+		<tr>
+		  <td><b><u>Preis:</u></b></td>
+		  <td>
+			{% if documents.price and documents.currency %}
+			{{ documents.price }}{{ documents.currency }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
+		</tr>
+		<tr>
+		  <td><b><u>In der Bibliothek seit:</u></b></td>
+		  <td>{{ documents.date_of_purchase }}</td>
+		</tr>
+		<tr>
+		  <td><b><u>Notizen:</u></b></td>
+		  <td>
+			{% if documents.comment %}
+			{{ documents.comment }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
+		</tr>
+		<!-- TODO doc_extra funktionsfähig machen -->
+		{% for de in doc_extra %}    
+		<tr>
+		  <td><b><u>{{ de.bib_field }}</u></b></td>
+		  <td>{{ de.content }}</td>
+		</tr>
+		{% endfor %}
+	  </table>
+	</td>
+	<td>
+	  <!-- TODO evtl Schriftfarben ändern -->
+	  {% if documents.status == 0 %}
+	  <!-- TODO Button eine Funktion zuordnen -->
+	  <form action="" method="post">
+		<input type="submit" name="lend" value="Ausleihen" /> 
+	  </form><br>
+	  {% else %}
+	  {% if documents.status == 1 %}    
+	  {% if lending %}
+	  {% if lending.non_user_lend %}
+	  Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br>
+	  Als Bürge fungiert {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}. <br>
+	  {% else %}
+	  Das Dokument ist von {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }} ausgeliehen. <br>
+	  {% endif %}
+	  <!-- TODO Button eine Funktion zuordnen -->
+	  <input type="button" name="uebertragen" value="&Uuml;bertragen" /> <br>
+	  {% endif %}
+	  {% else %}
+	  {% if documents.status == 2 %}
+	  Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br>
+	  {% else %}
+	  {% if documents.status == 3 %}
+	  <!-- TODO von wem und wann -->
+	  Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br>
+	  <!-- TODO Button eine Funktion zuordnen -->
+	  <input type="button" name="gefunden" value="Gefunden melden" /> <br>
+	  {% else %}
+	  Dieses Dokument gilt als verloren. <br>
+	  <!-- TODO Button eine Funktion zuordnen -->
+	  <input type="button" name="gefunden" value="Gefunden melden" /> <br>
+	  {% endif %}  
+	  {% endif %}
+	  {% endif %}
+	  {% endif %}
+	</td>
+  </tr>
+</table>
 <input type="button" name="bibtex" value="BibTeX" onclick="spoiler(this,'spoiler','BibTeX','BibTeX verbergen')"> <br>
 <div id="spoiler" name="spoiler" style="display: none;"><textarea cols=100 rows=15 readonly="true">{{ bi }}</textarea></div>
 {% endblock %}

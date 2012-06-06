@@ -90,7 +90,9 @@ def doc_detail(request, bib_no_id):
         lending_query = document_query.lending_set.latest("date_lend")
     except lending.DoesNotExist:
         lending_query = None
-    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_no_id)
+    if 'lend' in request.POST and request.user.is_authenticated():
+        document_query.lend(request.user)
+    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
     v_user = request.user
@@ -154,6 +156,14 @@ def bibtex_export(request):
     perms =  v_user.has_perm('add_author')
     return render_to_response("bibtex_export.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
+
+@login_required
+def user(request):
+    lend_documents = document.objects.filter(
+            lending__date_return__exact = None,
+            lending__user_lend__exact = request.user,
+            lending__non_user_lend__exact = None)
+    return __list(request, lend_documents)
 
 def __list(request, documents):
     sort = request.GET.get('sort')
