@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from exceptions import LendingError
 
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
@@ -74,6 +75,19 @@ class document(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def lend(self, user, non_user=None, terminate=None):
+        if self.status != 0:
+            raise LendingError()
+        self.status = 1
+        l = lending(
+                doc_id=self,
+                date_term = terminate,
+                user_lend = user,
+                non_user_lend = non_user,
+        )
+        l.save()
+        self.save()
 
 class keywords(models.Model):
     document = models.ForeignKey(document)

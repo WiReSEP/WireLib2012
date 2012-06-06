@@ -1,99 +1,99 @@
 {% extends "index.html" %}
 {% block content %}
-	<h1>Erweiterte Suche</h1>
-	<form method="post" action="?pro_search_result">
-	  <table>
-	    <tr>
-		<td>
-		  <input value="--Basisinformationen--" id="bashide" 
-		  onclick="spoiler(this,'title_row','--Basisinformationen--',
-		  '--Basisinformationen--');spoiler(this,'author_row',
-		  '--Basisinformationen--','--Basisinformationen--');
-		  spoiler(this,'keyword_row','--Basisinformation--','--Basisinformation--')" 
-		  type="button" 
-		  style="border-style:none;background-color:inherit;">
+<h1>Erweiterte Suche</h1>
+<form method="get" action="">
+  <table>
+	<tr>
+	  <td>
+		<input value="--Basisinformationen--" id="bashide" 
+		onclick="spoiler(this,'title_row','--Basisinformationen--',
+		'--Basisinformationen--');spoiler(this,'author_row',
+		'--Basisinformationen--','--Basisinformationen--');
+		spoiler(this,'keyword_row','--Basisinformation--','--Basisinformation--')" 
+		type="button" 
+		style="border-style:none;background-color:inherit;">
+	  </td>
+	</tr>
+	<tr id="title_row">
+	  <td>Titel:</td>
+	  <td><input type="text" name="title" value="{{ searched_title }}" />
+	  </td>
+	</tr>
+	<tr id="author_row">
+	  <td>Autor:</td>
+	  <td><input type="text" name="author" value="{{ searched_author }}" />
+	  </td>
+	</tr>
+	<tr id="keyword_row">
+	  <td>Schlüsselwörter:</td>
+	  <td><input type="text" name="keywords" value="{{ searched_keywords }}" />
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+		<input value="--Publikationsinformationen--" id="pubhide" 
+		onclick="spoiler(this,'year','--Publikationsinformationen--',
+		'--Publikationsinformationen--');spoiler(this,'publisher',
+		'--Publikationsinformationen--',
+		'--Publikationsinformationen--')" 
+		type="button" 
+		style="border-style:none;background-color:inherit;">
+	  </td>
+	</tr>
+	<tr id = year>
+	  <td>Jahr:</td>
+	  <td><input type="text" name="year" value="{{ searched_year }}" />
+	  </td>
+	</tr>
+	<tr id = publisher>
+	  <td>Herausgeber:</td>
+	  <td><input type="text" name="publisher" value="{{ searched_publisher }}" />
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+		<input value="--Kennnummern--" id="kennhide" 
+		onclick="spoiler(this,'test1','--Kennnummern--',
+		'--Kennnummern--');spoiler(this,'test2', '--Kennnummern--',
+		'--Kennnummern--')" 
+		type="button" 
+		style="border-style:none;background-color:inherit;">
+		<script>
+		  window.onload=function() {
+			elem = document.getElementById('kennhide');
+			spoiler(elem, 'test1', '--Kennnummern--', '--Kennnummern--');
+			spoiler(elem, 'test2', '--Kennnummern--', '--Kennnummern--');
+			elem = document.getElementById('pubhide');
+			spoiler(elem, 'year', '--Publikationsinformationen--',
+			'--Publikationsinformationen--');
+			spoiler(elem, 'publisher', '--Publikationsinformationen--',
+			'--Publikationsinformationen--');
+			elem = document.getElementById('bashide');
+			spoiler(elem,'title_row','--Basisinformationen--',
+			'--Basisinformationen--');
+			spoiler(elem,'author_row', '--Basisinformationen--',
+			'--Basisinformationen--');
+			spoiler(elem,'keyword_row','--Basisinformation--',
+			'--Basisinformation--') 
+		  }
+		</script>
+	  </td>
+	</tr>
+	<div id="knummern">
+	  <tr id="test1">
+		<td>Bibliotheks-Nummer:</td>
+		<td><input type="text" name="bib_no" value="{{ searched_bib_no }}"/>
 		</td>
-	    </tr>
-		<tr id="title_row">
-		  <td>Titel:</td>
-		  <td><input type="text" name="title" value="{{ searched_title }}" />
-		  </td>
-		</tr>
-		<tr id="author_row">
-		  <td>Autor:</td>
-		  <td><input type="text" name="author" value="{{ searched_author }}" />
-		  </td>
-		</tr>
-		<tr id="keyword_row">
-		  <td>Schlüsselwörter:</td>
-		  <td><input type="text" name="keywords" value="{{ searched_keywords }}" />
-		  </td>
-	    </tr>
-	    <tr>
-		<td>
-		  <input value="--Publikationsinformationen--" id="pubhide" 
-		  onclick="spoiler(this,'year','--Publikationsinformationen--',
-		  '--Publikationsinformationen--');spoiler(this,'publisher',
-		  '--Publikationsinformationen--',
-		  '--Publikationsinformationen--')" 
-		  type="button" 
-		  style="border-style:none;background-color:inherit;">
-		</td>
-	    </tr>
-		<tr id = year>
-		  <td>Jahr:</td>
-		  <td><input type="text" name="year" value="{{ searched_year }}" />
-		  </td>
-		</tr>
-		<tr id = publisher>
-		  <td>Herausgeber:</td>
-		  <td><input type="text" name="publisher" value="{{ searched_publisher }}" />
-		  </td>
-		</tr>
-	    <tr>
-		<td>
-		  <input value="--Kennnummern--" id="kennhide" 
-		  onclick="spoiler(this,'test1','--Kennnummern--',
-		  '--Kennnummern--');spoiler(this,'test2', '--Kennnummern--',
-		  '--Kennnummern--')" 
-		  type="button" 
-		  style="border-style:none;background-color:inherit;">
-		  <script>
-			window.onload=function() {
-			  elem = document.getElementById('kennhide');
-			  spoiler(elem, 'test1', '--Kennnummern--', '--Kennnummern--');
-			  spoiler(elem, 'test2', '--Kennnummern--', '--Kennnummern--');
-			  elem = document.getElementById('pubhide');
-			  spoiler(elem, 'year', '--Publikationsinformationen--',
-			          '--Publikationsinformationen--');
-			  spoiler(elem, 'publisher', '--Publikationsinformationen--',
-			          '--Publikationsinformationen--');
-			  elem = document.getElementById('bashide');
-		      spoiler(elem,'title_row','--Basisinformationen--',
-			          '--Basisinformationen--');
-			  spoiler(elem,'author_row', '--Basisinformationen--',
-			           '--Basisinformationen--');
-			  spoiler(elem,'keyword_row','--Basisinformation--',
-			          '--Basisinformation--') 
-			}
-		  </script>
-		</td>
-	    </tr>
-		<div id="knummern">
-		<tr id="test1">
-		  <td>Bibliotheks-Nummer:</td>
-		  <td><input type="text" name="bib_no" value="{{ searched_bib_no }}"/>
-		  </td>
-		</tr>
-		<tr id="test2">
-		  <td>ISBN:</td>
-		  <td><input type="text" name="isbn" value="{{ searched_isbn }}" />
-		  </td>
-		</tr>
-	    </div>
-		  <td><input type="submit" value="Suchanfrage starten" /> </td>
 	  </tr>
-	  </table>
+	  <tr id="test2">
+		<td>ISBN:</td>
+		<td><input type="text" name="isbn" value="{{ searched_isbn }}" />
+		</td>
+	  </tr>
+	</div>
+	<td><input type="submit" value="Suchanfrage starten" /> </td>
+  </tr>
+</table>
 	</form>
 
-{% endblock %}
+	{% endblock %}

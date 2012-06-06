@@ -6,6 +6,7 @@ from django.template import RequestContext
 from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
 from django.contrib.auth.decorators import login_required
+from django.http import QueryDict
 import settings
 
 
@@ -17,49 +18,17 @@ headers = {'title':'asc',
             'isbn':'asc'
             
             }
-def literatur(request):
-    sort = request.GET.get('sort')
-    documents = document.objects.all()
-    
-    if sort is not None:
-        documents = documents.order_by(sort)
-        if headers[sort] == "des":
-            documents = documents.reverse()
-            headers[sort] = "asc"
-    
-    v_user = request.user
-    perms =  v_user.has_perm('add_author')
-    return render_to_response("literatur.html", dict(documents=documents,
-        user=v_user, perm=perms, settings=settings))
             
-            
-"""       
-def index(request): 	
-    Index der App.
-    Bietet dem Benutzer nur eine Übersicht.
-    TODO: Was sollte er auf dieser Seite noch sehen?
-
-    documents = document.objects.all().order_by("-title")
-    return render_to_response("literatur.html", dict(documents=documents,       user=request.user, settings=settings))"""
-
-
 def search(request):
     """ Suche nach Dokumenten.
     Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
     finden.
     """
     context = Context()
-    if "suchanfrage_starten" in request.GET:
-        suchtext = request.POST.get('suche','')
-        document_query = document.objects.filter(title__icontains=suchtext)
-        template = loader.get_template("search_result.html")
-        v_user = request.user
-        perms =  v_user.has_perm('add_author')
-        context = Context({"documents" : document_query,"user" : v_user, "perm"
-            : perms})
-        response = HttpResponse(template.render(context))
-        #response["ContentType"] = "text/plain"
-        return response
+    if "query" in request.GET:
+        suchtext = request.GET.get('query','')
+        documents = document.objects.filter(title__icontains=suchtext)
+        return __list(request, documents)
     else:
         v_user = request.user
         perms =  v_user.has_perm('add_author')
@@ -73,14 +42,14 @@ def search_pro(request):
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
     """
-    if "pro_search_result" in request.GET:
-        s_author = request.POST.get('author','')
-        s_title = request.POST.get('title','')
-        s_year = request.POST.get('year','')
-        s_publisher = request.POST.get('publisher','')
-        s_bib_no = request.POST.get('bib_no','Test')
-        s_isbn = request.POST.get('isbn','')
-        s_keywords = request.POST.get('keywords','')
+    if "title" in request.GET:
+        s_author = request.GET.get('author','')
+        s_title = request.GET.get('title','')
+        s_year = request.GET.get('year','')
+        s_publisher = request.GET.get('publisher','')
+        s_bib_no = request.GET.get('bib_no','Test')
+        s_isbn = request.GET.get('isbn','')
+        s_keywords = request.GET.get('keywords','')
         s_documents = document.objects.filter(title__icontains = s_title)
         if s_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
@@ -95,13 +64,7 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
-        v_user = request.user
-        perms =  v_user.has_perm('add_author')
-        template = loader.get_template("search_result.html")
-        context = Context({"documents" : s_documents,"user" : v_user, "perm" :
-                            perms})
-        response = HttpResponse(template.render(context))
-        return response
+        return __list(request, s_documents)
     else:
         v_user = request.user
         perms =  v_user.has_perm('add_author')
@@ -116,18 +79,8 @@ def doc_list(request):
     Jedes Dokument muss selbständig abgeholt werden, wir haften nicht für den
     Reiseweg!
     """
-    sort = request.GET.get('sort')
     documents = document.objects.all()
-    if sort is not None:
-        documents = documents.order_by(sort)
-        if headers[sort] == "des":
-            documents = documents.reverse()
-            headers[sort] = "asc"
-    v_user = request.user
-    perms =  v_user.has_perm('add_author')
-    return render_to_response("doc_list.html", dict(documents=documents,
-                              user=v_user, settings=settings, perm=perms ),
-                              context_instance=RequestContext(request))
+    return __list(request, documents)
 
 def doc_detail(request, bib_no_id):
     try:
@@ -138,7 +91,9 @@ def doc_detail(request, bib_no_id):
         lending_query = document_query.lending_set.latest("date_lend")
     except lending.DoesNotExist:
         lending_query = None
-    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__icontains=bib_no_id)
+    if 'lend' in request.POST and request.user.is_authenticated():
+        document_query.lend(request.user)
+    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
     v_user = request.user
@@ -202,3 +157,35 @@ def bibtex_export(request):
     perms =  v_user.has_perm('add_author')
     return render_to_response("bibtex_export.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
+
+@login_required
+def user(request):
+    lend_documents = document.objects.filter(
+            lending__date_return__exact = None,
+            lending__user_lend__exact = request.user,
+            lending__non_user_lend__exact = None)
+    return __list(request, lend_documents)
+
+def __list(request, documents):
+    sort = request.GET.get('sort')
+    if sort is not None:
+        documents = documents.order_by(sort)
+        if headers[sort] == "des":
+            documents = documents.reverse()
+            headers[sort] = "asc"
+    v_user = request.user
+    perms =  v_user.has_perm('add_author')
+    params = request.GET.copy()
+    if 'sort' in params:
+        params_tmp = u""
+        for key in params:
+            if not key == 'sort':
+                params_tmp += key + u"=" + params[key] + u"&"
+        params = QueryDict(params_tmp)
+    return render_to_response("doc_list.html", 
+            dict(documents=documents,
+                user=v_user, 
+                settings=settings, 
+                perm=perms,
+                path_vars=params.urlencode() ),
+            context_instance=RequestContext(request))
