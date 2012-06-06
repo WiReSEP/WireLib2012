@@ -6,6 +6,7 @@ from django.template import RequestContext
 from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
 from django.contrib.auth.decorators import login_required
+from django.http import QueryDict
 import settings
 
 
@@ -174,6 +175,17 @@ def __list(request, documents):
             headers[sort] = "asc"
     v_user = request.user
     perms =  v_user.has_perm('add_author')
-    return render_to_response("doc_list.html", dict(documents=documents,
-                              user=v_user, settings=settings, perm=perms ),
-                              context_instance=RequestContext(request))
+    params = request.GET.copy()
+    if 'sort' in params:
+        params_tmp = u""
+        for key in params:
+            if not key == 'sort':
+                params_tmp += key + u"=" + params[key] + u"&"
+        params = QueryDict(params_tmp)
+    return render_to_response("doc_list.html", 
+            dict(documents=documents,
+                user=v_user, 
+                settings=settings, 
+                perm=perms,
+                path_vars=params.urlencode() ),
+            context_instance=RequestContext(request))

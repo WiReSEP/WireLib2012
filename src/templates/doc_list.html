@@ -7,12 +7,12 @@
   
    
 
-       <th><a href="?sort=title">Dokumententitel</a></th>
-       <th><a href="?sort=category">Kategorie</a></th> 
-       <th><a href="?sort=authors">Authoren</a></th>    
-       <th><a href="?sort=year">Veröffentlichung</a></th> 
-       <th><a href="?sort=status">Status</a></th> 
-       <th><a href="?sort=isbn">Isbn</a></th>
+   <th><a href="?{{ path_vars }}&sort=title">Dokumententitel</a></th>
+   <th><a href="?{{path_vars }}&sort=category">Kategorie</a></th>
+	<th><a href="?{{ path_vars }}&sort=authors">Authoren</a></th>
+	<th><a href="?{{ path_vars }}&sort=year">Veröffentlichung</a></th>
+	<th><a href="?{{ path_vars }}&sort=status">Status</a></th>
+	<th><a href="?{{ path_vars }}&sort=isbn">Isbn</a></th>
        
         
        	{% for d in documents %}		
