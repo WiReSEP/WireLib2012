@@ -18,7 +18,7 @@ Server besteht aus der \gls{glos:django}-App, den Templates und der Datenbank. D
 benötigt noch die Views und den Adminbereich zur Kommunikation mit dem Client
 und die Models für den Zugriff auf die Datenbank.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \begin{center}
 \includegraphics[width=0.8\linewidth]{bilder/Komponentendiagramm.pdf}
 \caption[Komponentendiagramm]{Komponentendiagramm}
@@ -74,7 +74,7 @@ Für jede dieser Komponenten ist eine Wiederverwendung begrenzt sinnvoll, da all
  größtem Anpassungsbedarf.
 
 \subsection{Client}
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/KompClient.pdf}
 \caption{Statechart für die Komponente Client}
 \label{StClient}
@@ -92,7 +92,7 @@ Javascripte. Damit ist die Seite komplett geladen und der Client in seinem
 Endzustand.
 
 \subsection{View}
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/KompView.pdf}
 \caption{Statechart für die Komponente View}
 \label{StView}
@@ -105,7 +105,7 @@ Response zurückgegeben. Alternativ kann die Rückgabe auch aus einem Fehler 500
 bestehen.
 
 \subsection{Model}
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/KompModel.pdf}
 \caption{Statechart für die Komponente Model}
 \label{StModel}
@@ -124,7 +124,7 @@ wird das Objekt vom Garbage Collector gelöscht und damit in seinen Endzustand
 versetzt.
 
 \subsection{Admin}
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/KompAdmin.pdf}
 \caption{Statechart für die Komponente Admin}
 \label{StAdmin}

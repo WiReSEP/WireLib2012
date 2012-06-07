@@ -8,9 +8,15 @@ Built-In-Funktionen von \gls{glos:django}, mit dessen Hilfe die Datenbank
 erweitert bzw.\ ein Datensatz geupdatet werden kann. Es gehört zum 
 \textbf{View}-Komponent im Zusammenhang zur \textbf{DB}.
 
-Das Sequenzdiagramm ist strukturell das selbe wie Abb.\ \ref{fig:221}. Es muss 
-nur keine Eingabe von \gls{glos:ext}n getätigt werden. Daher entfallen die 
-Schritte 1.1 und 1.2. 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth]{bilder/seq-uebertragen.pdf}
+\caption{Sequenzdiagramm für eine Ausleihe}
+\label{fig:220}
+\end{center}
+\end{figure}
+
+Das Sequenzdiagramm verdeutlicht nochmal, dass erst der Ausleihwunsch an den Server übermittelt wird. Dieser wandelt diesen Wunsch dann für die Datenbank verständlich um, wodurch dort die Datensätze geupdatet werden. Darauf folgt ein Okay an den Server der diesen ans Web-Interface weitergibt.
 
 \section{Analyse von Funktion F221: Ausleihe an Externe}
 \label{f:221}
@@ -22,19 +28,14 @@ Entleihen die Möglichkeit gegeben, Daten über den \gls{glos:ext}n anzugeben,
 dessen Daten dann gespeichert und beim Entleihen vermerkt werden. Auch hierbei 
 wird eine Built-In-Funktion zum Erweitern der Datenbank genutzt.
 
-Das Sequenzdiagramm der Abb. \ref{fig:221} ist nur der Hauptteil. Vorher müsste 
-erst eine Suchanfrage getätigt werden (wie in Abb.\ \ref{fig:F-A}) bzw.\ eine 
-Überprüfung, ob das gewünschte Dokument derzeit vorhanden ist. Außerdem sei 
-erwähnt, dass nach jedem Schritt, falls ein Fehler aufgetreten sein sollte, eine 
-Fehlermeldung ausgegeben wird.
-
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.8\linewidth]{bilder/Seq-Ausleihe.pdf}
 \caption{Sequenzdiagramm für Ausleihe an Externe}
 \label{fig:221}
 \end{center}
 \end{figure}
+Wie das Sequenzdiagramm aufzeigt, wird zuerst die ein Ausleihwunsch mit Eingabe eines Externen getätigt. Diese Daten gelangen an den Server, der zuerst den Externen in die Datenbank einträgt und dann die Verleihdaten aktualisiert. Sollte alles so abgelaufen sein wie es gewollt ist, bekommt der Server ein Okay zurück und gibt dieses weiter ans Web-Interface.
 
 \section{Analyse von Funktion F222: Ausleihe übertragen}
 \label{f:222}
@@ -46,10 +47,14 @@ System vermerkt dieses Austausch dann in der Datenbank mittels einer
 Built-In-Funktion von \gls{glos:django}. Auch diese gehört zur 
 \textbf{View}-Komponente mit Zugriff auf die \textbf{DB}.
 
-Auch dieses Sequenzdiagramm ist strukturgleich mit Abb.\ \ref{fig:221}. Bei 
-dieser Funktion muss vorher allerdings geprüft werden, ob das Dokument wirklich 
-ausgeliehen ist (auch nur eine Suchanfrage wie in Abb.\ \ref{fig:F-A}). Außerdem 
-entfällt wieder die Eingabe von \gls{glos:ext}n (Schritte 1.1 und 1.2).
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth]{bilder/seq-uebertragen.pdf}
+\caption{Sequenzdiagramm für eine Ausleihe übertragen}
+\label{fig:222}
+\end{center}
+\end{figure}
+Auch hier verdeutlich das Sequenzdiagramm, dass nur ein Ausleihwunsch an den Server übermittelt wird, worauf dieser, nach einer Historieupdate-Anweisung an die Datenbank, ein Okay von dieser zurückbekommen sollte und das Okay sofort an das Web-Interface weitergibt.
 
 \section{Analyse von Funktion F223: Ausleihe zurückgeben}
 \label{f:223}
@@ -60,10 +65,14 @@ wählen und das Dokument wird auch im Datensatz mittels Built-In-Funktionen von
 \gls{glos:django} mit dem Status 0 versehen. Die Funktion ist dem \textbf{View} 
 zugeordnet, benötigt aber auch die \textbf{DB}.
 
-Wieder ist die Struktur wie bei Abb. \ref{fig:221} vorzufinden. Hierbei muss 
-vorher geprüft werden, ob der Benutzer auch wirklich das Dokument ausgeliehen 
-hat (Suchanfrage nach Abb.\ \ref{fig:F-A}. Die Schritte 1.1 und 1.2 zur 
-\gls{glos:ext}nausgabe wird wieder weggelassen.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth]{bilder/seq-zurueck.pdf}
+\caption{Sequenzdiagramm für eine Ausliehe zurückgeben}
+\label{fig:223}
+\end{center}
+\end{figure}
+Wie im Sequenzdiagramm zu sehen, wird zuallererst einmal ein Rückgabewunsch an den Server getätigt. Der gibt die entsprechenden Anweisungen an die Datenbank weiter. Daraufhin erfolgt ein Okay von der Datenbank an den Server und von dort aus ans Web-Interface.
 
 \section{Analyse von Funktion F224: Ausleihe vermisst melden}
 \label{f:224}
@@ -75,14 +84,14 @@ Meldung auf der Homepage angezeigt. Hierfür stellt \gls{glos:django} wieder
 Built-In-Funktionen bereit. Das Ganze gehört dann zu \textbf{View} und 
 \textbf{DB}.
 
-Das dazugehörige Sequenzdiagramm ist Abb.\ \ref{fig:224}.
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.8\linewidth]{bilder/Seq-Vermisst.pdf}
 \caption{Sequenzdiagramm für eine Vermisstmeldung}
 \label{fig:224}
 \end{center}
 \end{figure}
+Diesmal beginnt das Ganze mit einer Meldung an den Server. Dieser lässt die Datenbank den Status des Dokumentes ändern und sollte darauf eine Bestätigung erhalten. Danach werden Mailtext und E-Mail-Adressen angefordert, welche die Datenbank beide an den Server ausgeben müsste. Daraufhin bekommen sämtliche User eine E-Mail vom Server zugeschickt und ans Web-Interface geht eine Bestätigung.
 
 \section{Analyse von Funktion F225: Ausleihe verloren melden}
 \label{f:225}
@@ -93,7 +102,11 @@ bei weiteren Suchanfragen ausgeschlossen. Dies erfolgt wieder innerhalb der
 \textbf{View}- und \textbf{DB}-Komponenten durch eine Built-In-Funktion von 
 \gls{glos:django}.
 
-Das gewünschte Sequenzdiagramm ist strukturell gleich dem von Abb.\ 
-\ref{fig:224}. Dabei muss nur vorher geprüft werden, ob der Nutzer die 
-entsprechenden Rechte besitzt (Abb.\ \ref{fig:F-A}), und Schritt 1.3 bis 1.7 
-entfällt, da keine E-Mails verschickt werden.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth]{bilder/seq-verloren.pdf}
+\caption{Sequenzdiagramm für eine Verlorenmeldung}
+\label{fig:225}
+\end{center}
+\end{figure}
+Auch hier beginnt alles mit einer Meldung an den Server. Jedoch wird darauf nur ein Statusänderungsauftrag an die Datenbank weiter gegeben und schon erfolgt ein Okay an den Server, der diesen ans Web-Interface weiterreicht.
