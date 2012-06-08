@@ -28,9 +28,11 @@ gespeichert. Diese Komponente gehört ebenfalls zur Komponente
 Alle Informationen zu den Benutzern werden in einer Datenbank gespeichert. Änderungen an bestehenden Benutzern und das Hinzufügen neuer Benutzer wird durch ein Webformular von einem Benutzer mit ausreichenden Rechte eingeleitet. Mithilfe von \gls{glos:django} werden die Informationen aus dem Formular gelesen und alle Änderungen in der Datenbank eingetragen. Das Sequenzdiagramm ist trivial, da nur einfach Frage/Antwort-Vorgänge zwischen Server und Datenbank stattfinden. Diese Komponente gehört zur Komponente \textbf{Admin}.
 
 \begin{figure}[H]
-\includegraphics[width=0.8\linewidth]{bilder/f300.pdf}
-\caption[Benutzerverwaltung]{Benutzerverwaltung}
-\label{fig:300}
+  \begin{center}
+	\includegraphics[width=0.6\linewidth]{bilder/f300.pdf}
+	\caption[Benutzerverwaltung]{Benutzerverwaltung}
+	\label{fig:300}
+  \end{center}
 \end{figure}
 
 In dem Diagramm sieht man, dass zuerst die Rechte als Dateneingabe in das
@@ -44,9 +46,11 @@ Die Rechte einer Rolle werden in einer eigenen Tabelle der Datenbank gespeichert
 
 
 \begin{figure}[H]
-\includegraphics[width=0.8\linewidth]{bilder/f300.pdf}
-\caption[Rechtezuweisung für Rollen]{Rechtezuweisung für Rollen}
-\label{fig:301}
+  \begin{center}
+	\includegraphics[width=0.6\linewidth]{bilder/f300.pdf}
+	\caption[Rechtezuweisung für Rollen]{Rechtezuweisung für Rollen}
+	\label{fig:301}
+  \end{center}
 \end{figure}
 
 In dem Diagramm sieht man, dass die Änderungen der Rollenrechte zuerst im
@@ -60,9 +64,11 @@ Ausgabemeldung an das Web-Interface zurück.
 Die Rollen eines Benutzer werden in einer speziellen Tabelle in der Datenbank gespeichert. Ein Benutzer mit ausreichenden Rechten kann über ein Webformular Änderungen eingeben. Diese Änderungen werden mithilfe von \gls{glos:django} aus dem Formular ausgelesen und in der entsprechenden Datenbank gespeichert. Das Sequenzdiagramm ist trivial, da nur einfach Frage/Antwort-Vorgänge zwischen Server und Datenbank stattfinden. Diese Funktion gehört zur Komponente \textbf{Admin}.
 
 \begin{figure}[H]
-\includegraphics[width=0.8\linewidth]{bilder/f302.pdf}
-\caption[Benutzer Rolle(n) zuweisen]{Benutzer Rolle(n) zuweisen}
-\label{fig:302}
+  \begin{center}
+	\includegraphics[width=0.6\linewidth]{bilder/f302.pdf}
+	\caption[Benutzer Rolle(n) zuweisen]{Benutzer Rolle(n) zuweisen}
+	\label{fig:302}
+  \end{center}
 \end{figure}
 
 In dem Sequenzdiagram sieht man, dass die Änderungen an der Relation zuerst im

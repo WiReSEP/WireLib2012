@@ -11,7 +11,7 @@ um die zusätzlichen Daten der Benutzer zu speichern. Da \gls{glos:django} eine 
 zugrunde liegt, müssen diese weiteren Daten in einer extra Klasse mit Referenz
 auf die Benutzer gesetzt werden.
 
-\fig{f100}
+\smallfig[Anmeldung]{f100}
 
 In der Grafik \ref{fig:f100}\ ist zu erkennen, dass die Daten des Benutzers nach
 der Eingabe in einem Formular an dem Server zurückgegebn werden, welcher mit
@@ -25,10 +25,16 @@ Der Benutzer meldet sich auf dem System über seinen \Gls{GITZ}-Benutzer (\zB
 y-Nummer) an und hat seinem internen Status folgend entsprechende Rechte auf dem
 System.
 
+
 Diese Funktion wird in einer extra App dargestellt. Die \gls{LDAP}-Anmeldung muss
 dabei die normale Anmeldung erweitern und im View evtl. durch eine Checkbox zur
 Verfügung gestellt werden. Die zugrundeliegende Datenstruktur wird von \gls{LDAP}
 bereit gestellt.
+
+\fig[LDAP-Anmeldung]{f101}
+In der Grafik \ref{fig:f101}\ ist der Verlauf der Anmeldung über das \gls{LDAP} zu
+erkennen. Die Anmeldung unterscheided sich lediglich in dem Server, der zur
+Autorisierung dient von der Grafik \ref{fig:f100}
 
 \section{Analyse von Funktion F102: Anbindung an die Universitätsbibliothek}
 Ein Benutzer mit hinreichenden Rechten erzeugt über das Frontend des Produktes
@@ -41,7 +47,7 @@ Der zugrunde liegende Datensatz der Dokumente wird von einem, in den
 \textbf{Models} gelegenen Befehlssatz in ein Datenformat übersetzt, welches von
 der TU Braunschweig Universitätsbibliothek gelesen werden kann. 
 
-\fig{f102}
+\smallfig[Anbindung an die Universitätsbibliothek]{f102}
 In der Grafik \ref{fig:f102}\ ist zu erkennen, dass der Benutzer über das
 Webinterface eine Anfrage zur Erzeugung einer \gls{glos:Allegro} -Datei an den
 Server übermittelt, welcher aus der Datenbank die entsprechenden Datensätze
@@ -58,7 +64,11 @@ Basisinformationen, wie auch andere Einstellungen für die Software. Um die
 Informationen bereit zu stellen, muss eine neue Klasse in den \textbf{Models}
 erzeugt werden, die alle Informationen für die App bereit stellt.
 
-\fig{f103}
+\smallfig[Mailtexte ändern]{f103}
+Das Ändern der Mailtexte kann vom Benutzer des Systems bequem über den
+Administrativen Bereich des Web-Interfaces erledigt werden. In der Grafik
+\ref{fig:f103} ist dazu zu erkennen, wie der Administrator jene neuen Daten an
+das System überträgt.
 
 \section{Analyse von Funktion F200: Bib\TeX\ Import}
 Ein oder mehrere Dokumente werden zum System hinzugefügt. Dafür wählt der
@@ -68,9 +78,12 @@ Objekte aus den Daten, die in eine Datenbank gespeichert werden. Fehler in der
 Datei werden dem Benutzer in Form von Zeilenangaben und leicht zu
 identifizierenden Fehlermeldungen zurückgegeben.
 
-\fig{f200}
+\smallfig[Bib\TeX\ Import]{f200}
 
 Für die Funktion wird also ein \textbf{View} benötigt, der den Upload bereit
 stellt.  Als Basis werden die Dokument-Objekte aus den \textbf{Models} benötigt,
 die auch von vielen weiteren Funktionen verwendet werden und die auch über
-\gls{glos:django} die Datenbankeinträge verwalten.
+\gls{glos:django} die Datenbankeinträge verwalten. Der Verlauf der Kommunikation
+zwischen Views, die das Web-Interface erzeugen bis zu den Models, die in Django
+die Datenbankstruktur festlegen und die Entsprechende Kommunikation
+bereitstellen wird in Abb. \ref{fig:f200}\ dargestellt.

@@ -19,15 +19,25 @@
 %makeindex -s datei.ist -t datei.slg -o datei.syi datei.syg
 
 \input{inhalt/glossar.tex}
-\newcommand{\fig}[1]{
+\newcommand{\fig}[2][\ ]{
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{bilder/#1.pdf}
-        \caption{Sequenzdiagramm für allgemeine (An-)Frage-Anwort-Anweisungen}
-        \label{fig:#1}
+        \includegraphics[width=0.8\linewidth]{bilder/#2.pdf}
+        \caption{#1}
+        \label{fig:#2}
     \end{center}
 \end{figure}
 }
+\newcommand{\smallfig}[2][]{
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{bilder/#2.pdf}
+        \caption{#1}
+        \label{fig:#2}
+    \end{center}
+\end{figure}
+}
+
 
 \newcommand{\zB}{\mbox{z.\,B.}\xspace}
 \newcommand{\BibTeX}{\gls{glos:BibTeX}\xspace}

@@ -5,11 +5,15 @@ bietet, um die Daten für einzelne Dokumente in das System einzupflegen. Dafür
 wird ihm vom System ein Formular auf dem View angeboten, in dem er alle
 Informationen zu einem Buch eintragen kann.
 
-\fig{f201}
-
 Als Teil der Komponente \textbf{View} stellt diese Funktion für den
 Benutzer eine weitere Schnittstelle zur internen \BibTeX -Verwaltung zur Verfügung. Es wird
 daher ein Zugriff auf die Komponente der \textbf{Models} benötigt.
+
+\smallfig[Webinterface-Import]{f201}
+Wie in der Grafik \ref{fig:f201}\ zu erkennen, wird von dem Benutzer durch das
+Absenden seines Formulars der Import in die Datenbank eingeleitet. Nach
+Abschluss dieses Vorganges wird dem Benutzer ein entsprechender Status zurück
+geliefert.
 
 \section{Analyse von Funktion F202: Editieren von Dokumenten}
 Der Benutzer, der entsprechende Rechte hat, nimmt auf der Detailansicht eines
@@ -18,19 +22,22 @@ Dokumentes die Möglichkeit wahr, die Daten dieses Dokumentes nachträglich zu
 Seite ähnlich der aus \ref{f:201} \nameref{f:201} mit einer ausgefüllten Maske
 geleitet.
 
+\fig[Editieren von Dokumenten]{f202}
 Diese Funktion muss zu erst das Dokument auslesen, um den View zu erzeugen und
 dann die Einträge des Dokumentes entsprechend zu ändern. Eine solche Veränderung
 von den Objekten benötigt lediglich entsprechende set- und get-Methoden für die
 Dokumente und einen entsprechenden View für \gls{glos:django}. Der in der
 \textbf{DB} zugrundeliegende Datensatz wird also über \textbf{View} mit
-den \textbf{Models} manipuliert. 
+den \textbf{Models} manipuliert. Der Verlauf dieser Funktion wird in der Grafik
+\ref{fig:f202}\ dargestellt.
+
 
 \section{Analyse von Funktion F203: Löschen von Dokumenten}
 Der Administrator, als einziger Benutzer mit den entsprechenden Privilegien,
 löscht ein Dokument vollständig aus der Datenbank inkl. der Ausleihhistory.
 Diese Aktion wird über einen View im Backend erledigt, der dort bereit steht.
 
-\fig{f203}
+\smallfig[Löschen von Dokumenten]{f203}
 
 Benötigt wird für \gls{glos:django} ein entsprechender \textbf{View} im Backend, der die
 Möglichkeit bietet, die eingetragenen Dokumente im Backend einzusehen. Weiter
@@ -43,7 +50,7 @@ Der Benutzer gibt in eine Suchmaske einen oder mehrere Begriffe ein, um seine
 Suche zu spezifizieren. Nach der Bestätigung der Eingabe gibt das System
 entsprechende Treffer dem Benutzer in einer Liste zurück.
 
-\fig{f210}
+\smallfig[Generelle Suche]{f210}
 
 Die zugrundeliegenden Funktionen der Objekt-Suche nach bestimmten Parametern
 wird bereits durch \gls{glos:django} bereit gestellt. Der Such-View arbeitet dabei auf
