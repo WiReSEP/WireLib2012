@@ -26,18 +26,30 @@ worden sind.
 \end{center}
 \end{figure}
 
-Im \ref{Seq-Übersicht} \nameref{Seq-Übersicht} werden grobe Abläufe im System veraunschaulicht um eine
-Übersicht über die Anwendung zu bekommen.
+Im \ref{Seq-Übersicht} \nameref{Seq-Übersicht} werden grobe Abläufe im System 
+veraunschaulicht um eine Übersicht über die Anwendung zu bekommen.
 Da die Anmeldung zeitlich nicht festsetzbar ist, ist sie nicht in diesem
 Diagramm vorhanden.
 
 \subsection{Client}
-Über das Web-Interface erhält der als Client fungierende Browser Zugriff auf die Datenbank und kann verschiedene Funktionen nutzen.
+Über das Web-Interface erhält der als Client fungierende Browser Zugriff 
+auf die Datenbank.
+Dort hat der Nutzer verschieden Funktionen zur Auswahl.
+Es wird keinerlei Speicher auf dem Client benötigt, da durch die Anwendung
+keine Daten auf dem Client gespeichert werden.
 
 \subsection{Server}
-Auf dem Server läuft die Anwendung, welche verschiedene Funktionen zum Auslesen und Verwalten der Datenbank bereitstellt. 
-Auch stellt der Server die Datenbank bereit und baut eine sichere Verbindung zum Client auf.
+Auf dem Server läuft die Anwendung, welche durch die Anwendung von Python und 
+Django Code dynamisch HTML-Seiten generiert.
+Sie stellt verschiedene Funktionen bereit, darunter Funktionen zum Auslesen 
+und Verwalten der Datenbank. 
+Auch stellt der Server die Datenbank bereit und baut eine sichere Verbindung 
+zum Client auf.
 
 \subsection{Datenbank}
 In der Datenbank werden die Dokumente, sowie die Nutzerrechte verwaltet.
-Auch werden Daten zu den einzelnen Nutzern gespeichert, um diese zu identifizieren und im Falle des Ablaufs der Verleihfrist zu benachrichtigen.
+Auch werden Daten zu den einzelnen Nutzern gespeichert, um diese zu 
+identifizieren und im Falle des Ablaufs der Verleihfrist mit einer E-Mail 
+zu benachrichtigen.
+Es wird auch der Status der Dokumente gespeichert, sowie an wen sie verliehen
+wurden.
