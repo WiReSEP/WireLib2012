@@ -1,7 +1,7 @@
 \section{Analyse von Funktion F230: Bib\TeX -Export}
 Diese Funktion gehört zur Komponente \textbf{View:Export}. Die für diesen Export nötigen Informationen sind vollständig in der Datenbank enthalten und müssen mit \gls{glos:django} ermittelt werden. Die so erhaltenen Daten werden dem Benutzer in einer View im \BibTeX -Format zum Kopieren angezeigt. Verdeutlicht wird dies in dem Sequenzdiagramm \ref{fig:BibTeX-Export}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Seq-BibTex.pdf}
 \caption[BibTeX-Export]{BibTeX-Export}
 \label{fig:BibTeX-Export}
@@ -18,7 +18,7 @@ gespeichert. Diese Komponente gehört ebenfalls zur Komponente
 \textbf{View:Export}. Veranschaulicht wird der Vorgang in dem Sequenzdiagramm
 \ref{fig:Allegro-Export}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Seq-BibTex.pdf}
 \caption[Allegro-Export]{Allegro-Export}
 \label{fig:Allegro-Export}
@@ -27,7 +27,7 @@ gespeichert. Diese Komponente gehört ebenfalls zur Komponente
 \section{Analyse von Funktion F300: Benutzerverwaltung}
 Alle Informationen zu den Benutzern werden in einer Datenbank gespeichert. Änderungen an bestehenden Benutzern und das Hinzufügen neuer Benutzer wird durch ein Webformular von einem Benutzer mit ausreichenden Rechte eingeleitet. Mithilfe von \gls{glos:django} werden die Informationen aus dem Formular gelesen und alle Änderungen in der Datenbank eingetragen. Das Sequenzdiagramm ist trivial, da nur einfach Frage/Antwort-Vorgänge zwischen Server und Datenbank stattfinden. Diese Komponente gehört zur Komponente \textbf{Admin}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/f300.pdf}
 \caption[Benutzerverwaltung]{Benutzerverwaltung}
 \label{fig:300}
@@ -43,7 +43,7 @@ Web-Interface zurückgibt.
 Die Rechte einer Rolle werden in einer eigenen Tabelle der Datenbank gespeichert. Ein Benutzer mit ausreichenden Rechten kann über ein Webformular Änderungen eingeben. Diese Änderungen werden mithilfe von \gls{glos:django} aus dem Webformular ausgelesen und in der Tabelle der Datenbank gespeichert. Das Sequenzdiagramm ist trivial, da nur einfach Frage/Antwort-Vorgänge zwischen Server und Datenbank stattfinden. Diese Funktion gehört zur Komponente \textbf{Admin}.
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/f300.pdf}
 \caption[Rechtezuweisung für Rollen]{Rechtezuweisung für Rollen}
 \label{fig:301}
@@ -59,7 +59,7 @@ Ausgabemeldung an das Web-Interface zurück.
 \section{Analyse von Funktion F302: Benutzer Rolle(n) zuweisen}
 Die Rollen eines Benutzer werden in einer speziellen Tabelle in der Datenbank gespeichert. Ein Benutzer mit ausreichenden Rechten kann über ein Webformular Änderungen eingeben. Diese Änderungen werden mithilfe von \gls{glos:django} aus dem Formular ausgelesen und in der entsprechenden Datenbank gespeichert. Das Sequenzdiagramm ist trivial, da nur einfach Frage/Antwort-Vorgänge zwischen Server und Datenbank stattfinden. Diese Funktion gehört zur Komponente \textbf{Admin}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/f302.pdf}
 \caption[Benutzer Rolle(n) zuweisen]{Benutzer Rolle(n) zuweisen}
 \label{fig:302}
