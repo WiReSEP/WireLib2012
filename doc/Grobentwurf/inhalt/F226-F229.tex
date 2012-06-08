@@ -4,7 +4,7 @@ Datenbank abgerufen und an die E-Mail Adressen der beiden Entleiher(Bürge/Entle
 
 Hierfür muss eine neue App erstellt werden, welche alle benötigten Informationen enthält bzw. sich aus der Datenbank holt, um diese Funktion zu bewerkstelligen.
 Diese Funktion gehört zur Komponente \textbf{Models}, natürlich in Interaktion mit \textbf{DB}.
-\begin{figure}
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/SeqMail.pdf}
 \caption{Sequenzdiagramm: Ausleihfrist abgelaufen}
 \label{fig:226}
@@ -15,14 +15,22 @@ Diese Funktion gehört zur Komponente \textbf{Models}, natürlich in Interaktion
 Die Ausleihhistory ist eine Liste von Personen, welche bereits ein bestimmtes Dokument ausgeliehen hatten bzw.\ immer noch haben.
 Es wird ein Filter über die Dokument-Objekte gelegt, damit nur bestimmte bzw.\ das gewünschte Dokument und deren bisherige Ausleiher ausgegeben werden. Diese so erhaltenen Daten müssen nun noch durch ein Frontend-View an geeigneter Stelle der Web-Seite angezeigt werden.
 Diese Funktion ist eine Built-In-Funktion von \gls{glos:django} und wird über \textbf{View} benutzt. Da die Informationen wiederum nur in der Datenbank liegen, muss diese Komponente bei jeder Anfrage auf \textbf{DB} zugreifen.
-Das Sequenz-Diagramm wird hier nicht dargestellt, da es eine einfache Suchanfrage an die DB mit anschließendem, gefilterten Ergebnis ist, siehe auch Abb.\ \ref{fig:F-A}.
+\begin{figure}[H]
+\includegraphics[width=0.8\linewidth]{bilder/F227.pdf}
+\caption{Sequenzdiagramm: Ausleihhistory}
+\label{fig:227}
+\end{figure}
 
 \section{Analyse von Funktion F228: Derzeitiger Leihender}
 \label{f:228}
 Die Funktion Derzeitiger Leihender gibt die Person aus, welche gerade ein bestimmtes Dokument ausgeliehen hat.
 Da in \gls{glos:django} die User durch eine eigene Klasse dargestellt werden, muss diese Klasse auf die Rechte des momentan angemeldeten Benutzers überprüft werden. Falls diese Rechte ausreichend sind, wird wiederum durch ein Queryset+Filter die jeweiligen Dokumente und der dazugehörige Leihende durch einen View ausgegeben.
 Auch diese Funktion benutzt die Komponente \textbf{View} in Zusammenhang mit \textbf{DB} (siehe auch \ref{f:227} \nameref{f:227}).
-Auch hier wird auf eine Angabe des Sequenzdiagrammes verzichtet, da es wie auch in \ref{f:227} \nameref{f:227} eine einfache gefilterte Suchanfrage ist.
+\begin{figure}[H]
+\includegraphics[width=0.8\linewidth]{bilder/F228.pdf}
+\caption{Sequenzdiagramm: Derzeitiger Leihender}
+\label{fig:228}
+\end{figure}
 
 
 
@@ -30,4 +38,8 @@ Auch hier wird auf eine Angabe des Sequenzdiagrammes verzichtet, da es wie auch 
 Wenn der Benutzer angemeldet ist, ist er im Stande, sich alle seine momentan entliehenen Dokumente als Liste anzeigen zu lassen.
 
 Diese Funktion greift auf die Komponente \textbf{View} zu, um die Informationen dafür zu erhalten, muss vorher jedoch auf die \textbf{DB} zugegriffen werden.
-Das Sequenzdiagramm für diese Funktion wird hier nicht angegeben, siehe \ref{f:227} \nameref{f:227} oder \ref{f:228} \nameref{f:228}.
+\begin{figure}[H]
+\includegraphics[width=0.8\linewidth]{bilder/F229.pdf}
+\caption{Sequenzdiagramm: Entleihliste}
+\label{fig:229}
+\end{figure}
