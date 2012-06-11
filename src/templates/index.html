@@ -30,19 +30,21 @@
       
 	<script type="text/javascript">
 	  function spoiler(elem, idname, showMessage, hideMessage) {
-		parNode = document.getElementById(idname);
-		if (parNode.style.display != '') {
-		  parNode.style.display = '';
-		  elem.innerText = '';
-		  elem.value = hideMessage;
-		}
-		else {
-		  parNode.style.display = 'none';
-		  elem.innerText = '';
-		  elem.value = showMessage;
-		}
+		try {
+		  parNode = document.getElementById(idname);
+		  if (parNode.style.display != '') {
+			parNode.style.display = '';
+			elem.innerText = '';
+			elem.value = hideMessage;
+		  }
+		  else {
+			parNode.style.display = 'none';
+			elem.innerText = '';
+			elem.value = showMessage;
+		  }
+		} catch(e) {}
 	  }
-	  
+
 function spoilIt(elem, idname) {
   spoiler(elem, idname, 'Show', 'Hide')
 }
