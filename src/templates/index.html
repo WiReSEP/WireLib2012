@@ -85,13 +85,12 @@ function spoilIt(elem, idname) {
 			onmouseout="cleandelay()" style="z-index:999;">
 			<a href="/logout">LogOut</a>                                        
 		    </li>
-			<li id="tu_welcome">Willkommen zurück, <a href='/user'>{{ user.username }}</a>.</li>
+			 
+			<li id="tu_profil"> <a href="/user">Profil</a></li>
 		    {% else %}
             <li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 			onmouseout="cleandelay()" style="z-index:999;">
-			<a href="/login">LogIn</a>                                        
-		    </li>
-           <li id="tu_welcome">Willkommen, Besucher. Sie sind nicht angemeldet.</li>
+			<a href="/login">LogIn</a>                                   
             {% endif %}
 			</ul>
 		</div>
