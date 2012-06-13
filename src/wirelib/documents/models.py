@@ -62,7 +62,8 @@ class document(models.Model):
         #(2) bestellt
         #(3) vermisst
         #(4) verloren
-    last_updated = models.DateField(auto_now=True) 
+    last_updated = models.DateField()
+    recent_user = models.ForeignKey(User)
     publisher = models.ForeignKey(publisher, null=True)
     year = models.IntegerField(null=True)
     address = models.CharField(max_length=100, null=True)
@@ -70,6 +71,7 @@ class document(models.Model):
     currency = models.CharField(max_length=3, null=True)
     date_of_purchase = models.DateField(auto_now_add=True)
     ub_date = models.DateField(null=True)
+    bib_date = models.DateField(null=True)
     comment = models.TextField(null=True)
     authors = models.ManyToManyField(author)
 
@@ -164,4 +166,7 @@ class lending(models.Model):
     date_term = models.DateTimeField(null=True)
     user_lend = models.ForeignKey(User)
     non_user_lend = models.ForeignKey(non_user, null=True)
+
+class emails(models.Model):
+    text = models.TextField()
 
