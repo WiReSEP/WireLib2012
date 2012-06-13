@@ -1,5 +1,7 @@
 FILE=Feinentwurf
 
+default: all
+
 pdf:
 	pdflatex ${FILE}
 all:
