@@ -83,6 +83,7 @@ def doc_list(request):
     return __list(request, documents)
 
 def doc_detail(request, bib_no_id):
+    v_user = request.user
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -92,11 +93,12 @@ def doc_detail(request, bib_no_id):
     except lending.DoesNotExist:
         lending_query = None
     if 'lend' in request.POST and request.user.is_authenticated():
-        document_query.lend(request.user)
+        document_query.lend(v_user)
+    if 'restitution' in request.POST and request.user.is_authenticated():
+        document_query.restitution(v_user)
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
-    v_user = request.user
     perms =  v_user.has_perm('add_author')
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
