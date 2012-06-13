@@ -12,6 +12,8 @@ urlpatterns = patterns('documents.views',
         url(r'^doc/add$', 'doc_add'),
         url(r'^rent$', 'doc_rent'), # Ausleihliste
         url(r'^user$', 'user'),
+        url(r'^user/profile$', 'profile'), 
+        url(r'^user/profile/settings$', 'profile_settings'),         
 )
 
 urlpatterns += patterns('django.contrib.auth.views',
