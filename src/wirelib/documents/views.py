@@ -124,9 +124,7 @@ def profile_settings(request):
     perms =  v_user.has_perm('add_author')
     return render_to_response("profile_settings.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
-
-                              
-    
+                  
 
 
 @login_required
