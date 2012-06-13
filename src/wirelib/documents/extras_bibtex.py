@@ -138,9 +138,10 @@ class UglyBibtex(object):
         key_val = self.line.split('=')
         if len(key_val) == 2:   # Einfacher Key = Value
             key_val[0] = key_val[0].lower().strip()
-            key_val[1] = re.sub(r'(^[\s"{]*)|(["}\s]*,\s*\n)','',key_val[1])
+            key_val[1] = re.sub(r'(^[\s"{]*)|(["}\s]*(,|})\s*\n)','',key_val[1])
             field_end = re.match('.*,$',self.line.strip())
-            if field_end and not self.go_further: 
+            if (field_end and not self.go_further)  \
+                  or self.worker == self.do_import: 
                 try:
                     self.__insert_field(key_val)
                 except ValueError:
