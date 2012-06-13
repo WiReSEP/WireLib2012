@@ -245,16 +245,20 @@ ul#tu_navlist li#tu_login_logout a {
 }
 
 
-
-/*WELCOME, ...*/
-ul#tu_navlist li#tu_welcome {
+/* Profil */
+ul#tu_navlist li#tu_profil a  {
 
     background-color: #be1e3c;
         color: white;
-        text-align:left;
+        width:70px;
+        text-align:center;
         border-left:1px solid white;
 
 }
+
+
+
+
 /*SUCHOPTIONEN */
 ul#tu_navlist li#tu_suchoptionen a {
 
