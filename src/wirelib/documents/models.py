@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from exceptions import LendingError
-
+from datetime import datetime
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
     def __init__(self, *args, **kwargs):
@@ -89,6 +89,17 @@ class document(models.Model):
                 non_user_lend = non_user,
         )
         l.save()
+        self.save()
+
+    def restitution(self, user):
+        self.status = 0
+        lend = lending.objects.get(
+            doc_id = self,
+            date_return = None,
+            user_lend = user,
+        )
+        lend.date_return = datetime.now()
+        lend.save()
         self.save()
 
 class keywords(models.Model):
