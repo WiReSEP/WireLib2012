@@ -79,7 +79,7 @@ class document(models.Model):
         return self.title
 
     def lend(self, user, non_user=None, terminate=None):
-        if self.status != 0:
+        if self.status != 0 and self.status != 3 :
             raise LendingError()
         self.status = 1
         l = lending(
@@ -93,13 +93,24 @@ class document(models.Model):
 
     def restitution(self, user):
         self.status = 0
-        lend = lending.objects.get(
+        l = lending.objects.get(
             doc_id = self,
             date_return = None,
             user_lend = user,
         )
-        lend.date_return = datetime.now()
-        lend.save()
+        l.date_return = datetime.now()
+        l.save()
+        self.save()
+
+    def lost(self, user):
+        self.status = 3
+        l = lending.objects.get(
+            doc_id = self,
+            date_return = None,
+            user_lend = user,
+        )
+        l.date_return = datetime.now()
+        l.save()
         self.save()
 
 class keywords(models.Model):

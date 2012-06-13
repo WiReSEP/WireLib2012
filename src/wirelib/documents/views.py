@@ -96,6 +96,10 @@ def doc_detail(request, bib_no_id):
         document_query.lend(v_user)
     if 'restitution' in request.POST and request.user.is_authenticated():
         document_query.restitution(v_user)
+    if 'lost' in request.POST and request.user.is_authenticated():
+        document_query.lost(v_user)
+    if 'found' in request.POST and request.user.is_authenticated():
+        document_query.lend(v_user)
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
