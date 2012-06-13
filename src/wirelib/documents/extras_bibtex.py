@@ -227,27 +227,16 @@ class Bibtex(object):
         inv_no = document.inv_no
         bib_id = document.bibtex_id
         locn = document.lib_of_con_nr
-        if locn is None:
-            locn = ""
         title = document.title
         isbn = document.isbn
-        if isbn is None:
-            isbn = ""
         publisher = document.publisher.name
-        if publisher is None:
-            publisher = ""
         year = document.year
-        if year is None:
-            year = ""
         address = document.address
-        if address is None:
-            address = ""
         datePurchase = document.date_of_purchase
         datePurchase = datePurchase.strftime(u"%d.%m.%Y")
         comment = document.comment
-        if comment is None:
-            comment = ""
         keywords = list(document.keywords_set.all())
+
          # Beginn mit schreiben des Strings
         doc_str = u"@" + category + u"{" + bib_id + u",\n"
         doc_str += u"  author = {"
@@ -263,14 +252,19 @@ class Bibtex(object):
                 doc_str += u" AND "
             counter += 1
         doc_str += u"  title = {" + title + u"},\n"
-        doc_str += u"  publisher = {" + publisher + u"},\n"
-        doc_str += u"  year = {" + str(year) + u"},\n"
-        doc_str += u"  address = {" + address + u"},\n"
-        doc_str += u"  isbn = {" + isbn + u"},\n"
+        if publisher != None:
+            doc_str += u"  publisher = {" + publisher + u"},\n"
+        if year != None:
+            doc_str += u"  year = {" + str(year) + u"},\n"
+        if address != None:
+            doc_str += u"  address = {" + address + u"},\n"
+        if  isbn != None:
+            doc_str += u"  isbn = {" + isbn + u"},\n"
         doc_str += u"  dateofpurchase = {" + datePurchase + u"},\n"
         doc_str += u"  inventarno = {" + inv_no + u"},\n"
         doc_str += u"  informatikbibno = {" + bib_no + u"},\n"
-        doc_str += u"  libraryofcongressno = {" + locn + u"},\n"
+        if locn != None:
+            doc_str += u"  libraryofcongressno = {" + locn + u"},\n"
         doc_str += u"  keywords = {"
         counter = 0
         last_element = len(keywords) - 1
@@ -283,7 +277,8 @@ class Bibtex(object):
             else :
                 doc_str += u" AND "
             counter += 1
-        doc_str += u"  comment = {" + comment + u"},\n"
+        if comment != None:
+            doc_str += u"  comment = {" + comment + u"},\n"
         for extra in extra_fields:
             doc_str += u"  " + extra.bib_field + u" = {"
             doc_str += extra.content + u"},\n"
