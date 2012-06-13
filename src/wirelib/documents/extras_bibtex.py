@@ -3,7 +3,7 @@
 from datetime import datetime
 from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
-#from models import document
+from django.contrib.auth.models import User
 import extras_doc_funcs
 import re
 import codecs
@@ -166,7 +166,7 @@ class UglyBibtex(object):
         if self.worker == self.do_import:   # Eintrag in DB schreiben
             self.entry[u'extras'] = self.extra_entry
             try:
-                extras_doc_funcs.insert_doc(self.entry)
+                extras_doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
             except ValueError, e:
                 self.errout.write("Eintrag kein valides Format\n")
                 self.errout.write(u"Begründung: " + e.message +"\n")

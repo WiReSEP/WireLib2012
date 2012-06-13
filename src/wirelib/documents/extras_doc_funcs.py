@@ -143,7 +143,7 @@ def is_valid(dict_data): #TODO
         return False, e.message
     return True, u""
 
-def insert_doc(dict_insert):
+def insert_doc(dict_insert, user):
     """Fügt ein Dokument aus einem dict in die Datenbank ein, nachdem es auf
     Validität überprüft wurde.
     """
@@ -179,6 +179,8 @@ def insert_doc(dict_insert):
         author_f = dict_insert[u"author"]
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
+        last_updated_f = datetime.date.today()
+        recent_user_f = user
     except KeyError:
         raise ValueError(u"Daten haben nicht die benötigten Felder")
     try:
@@ -187,13 +189,26 @@ def insert_doc(dict_insert):
             category_db = category.objects.get(name=category_f)
         except category.DoesNotExist:
             raise UnknownCategoryError(category_f)
-        document_db = document(bib_no=bib_no_f, inv_no=inv_no_f,
-                bibtex_id=bibtex_id_f, lib_of_con_nr=lib_of_con_nr_f,
-                title=title_f, isbn=isbn_f, category=category_db, status=status_f,
-                publisher=publisher_db, year=year_f, address=address_f,
-                price=price_f, currency=currency_f,
-                date_of_purchase=date_of_purchase_f, ub_date=ub_date_f,
-                comment=comment_f)
+        document_db = document(
+                bib_no=bib_no_f, 
+                inv_no=inv_no_f,
+                bibtex_id=bibtex_id_f, 
+                lib_of_con_nr=lib_of_con_nr_f,
+                title=title_f, 
+                isbn=isbn_f, 
+                category=category_db, 
+                status=status_f,
+                publisher=publisher_db, 
+                year=year_f, 
+                address=address_f,
+                price=price_f, 
+                currency=currency_f,
+                date_of_purchase=date_of_purchase_f, 
+                ub_date=ub_date_f,
+                comment=comment_f,
+                last_updated= last_updated_f,
+                recent_user = recent_user_f,
+                )
         authors_db = []
         for auth in author_f:
             au = auth.split(", ", 2)
