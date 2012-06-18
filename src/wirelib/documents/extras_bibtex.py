@@ -4,6 +4,7 @@ from datetime import datetime
 from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
 from django.contrib.auth.models import User
+import thread
 import extras_doc_funcs
 import re
 import codecs
@@ -215,6 +216,7 @@ class UglyBibtex(object):
 
 class Bibtex(object):
 
+    active = False
     def export_doc(document):
         """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
         String um.
@@ -229,7 +231,7 @@ class Bibtex(object):
         locn = document.lib_of_con_nr
         title = document.title
         isbn = document.isbn
-        publisher = document.publisher.name
+        publisher = unicode(document.publisher)
         year = document.year
         address = document.address
         datePurchase = document.date_of_purchase
@@ -284,4 +286,29 @@ class Bibtex(object):
             doc_str += extra.content + u"},\n"
         doc_str += u"}"
         return doc_str
+
+    def export_docs(documents):
+        """ Viele Dokumente werden in eine Datei exportiert.
+        """
+        global active
+        lock = thread.allocate_lock()
+        lock.acquire()
+        if active == True:
+            return
+        lock.release()
+
+        for doc in documents:
+            print unicode(doc)
+            doc_year = doc.date_of_purchase.year
+            bib_filename = "bibtex/bib_%i"%doc_year     # TODO neues setting
+            print "hier kommt '%s'"%doc.bib_no
+            with codecs.open(bib_filename, mode='a', encoding='utf-8') \
+                    as bib_file:
+                bib_file.write(Bibtex.export_doc(doc))
+
+        lock.acquire()
+        active = False
+        lock.release()
+
     export_doc = staticmethod(export_doc)
+    export_docs = staticmethod(export_docs)

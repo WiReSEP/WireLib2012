@@ -8,6 +8,7 @@ from documents.extras_bibtex import Bibtex
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 import settings
+import thread
 
 
 headers = {'title':'asc', 
@@ -173,6 +174,17 @@ def allegro_export(request):
 
 @login_required
 def bibtex_export(request):
+    """ Seite um den Datenbankexport in BibTeX zu initiieren und für den
+    Zugriff auf bisher exportierte BibTeX-Exporte.
+    TODO: Zugriff nur auf Benutzer beschränken, die Dokumente hinzufügen
+    dürfen.
+    """
+    if "bibtex_export" in request.POST:
+        export_documents = document.objects.filter(
+                bib_date__isnull=True,
+                )
+        thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
+
     v_user = request.user
     perms =  v_user.has_perm('add_author')
     return render_to_response("bibtex_export.html",context_instance=Context({"user" :
