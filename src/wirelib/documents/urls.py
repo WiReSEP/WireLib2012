@@ -8,7 +8,6 @@ urlpatterns = patterns('documents.views',
         url(r'^search$', 'search'),
         url(r'^search/pro$', 'search_pro'),
         url(r'^doc_list$', 'doc_list'),
-        url(r'^doc_list/a-c$', 'a_c'),
         url(r'^doc/(?P<bib_no_id>\w\d+)$', 'doc_detail'),
         url(r'^doc/add$', 'doc_add'),
         url(r'^rent$', 'doc_rent'), # Ausleihliste
