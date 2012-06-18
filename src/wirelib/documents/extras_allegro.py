@@ -86,3 +86,4 @@ def __doc_to_string(document):
     doc_str += allegro_dict[u"keywords"] + u" " + keywords + line_end
     doc_str += allegro_dict[u"year"] + u" " + str(document.year) + line_end
     return doc_str
+# TODO: Check für migration

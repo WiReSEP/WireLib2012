@@ -23,3 +23,4 @@ urlpatterns += patterns('django.contrib.auth.views',
         url(r'^password_reset/done$', 'password_reset_done'), 
         
 )   
+# TODO: Check für migration

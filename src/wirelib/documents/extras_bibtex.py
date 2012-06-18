@@ -311,3 +311,4 @@ class Bibtex(object):
         lock.acquire()
         Bibtex.active = False
         lock.release()
+# TODO: Check für migration

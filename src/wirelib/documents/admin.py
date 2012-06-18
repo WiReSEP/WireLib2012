@@ -47,3 +47,4 @@ admin.site.register(document, document_admin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(keywords, keywords_admin)
+# TODO: Check für migration

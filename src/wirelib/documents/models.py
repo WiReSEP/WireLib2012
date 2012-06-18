@@ -201,3 +201,4 @@ class doc_status(models.Model):
 class emails(models.Model):
     text = models.TextField()
 
+# TODO: Check für migration

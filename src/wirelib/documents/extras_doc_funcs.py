@@ -253,3 +253,4 @@ def __lst_is_empty(list_data):
         if i == "":
             return True
     return False
+# TODO: Check für migration

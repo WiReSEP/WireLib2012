@@ -9,3 +9,4 @@ class DuplicateKeyError(Exception):
 
 class LendingError(Exception):
     pass
+# TODO: Check für migration

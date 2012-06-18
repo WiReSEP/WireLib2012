@@ -301,3 +301,4 @@ def __filter_names(documents, request):
     elif sw == "all":
         documents = documents.all()                     
     return documents
+# TODO: Check für migration
