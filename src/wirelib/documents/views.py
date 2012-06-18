@@ -74,74 +74,8 @@ def search_pro(request):
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
-    Dem Benutzer wird ein reichhaltiges Angebot an Dokumenten angeboten und
-    übersichtlich präsentiert. Er kann nach belieben zwischen Dokumenten die
-    'A' beginnend oder Autoren mit 'Z' beginnend wählen.
-    Jedes Dokument muss selbständig abgeholt werden, wir haften nicht für den
-    Reiseweg!
     """
-    sw = request.GET.get('starts', '')
-    if sw == "0-9":
-        documents = document.objects.filter(
-                         Q(title__istartswith='0') | 
-                         Q(title__istartswith='1') | 
-                         Q(title__istartswith='2') |
-                         Q(title__istartswith='3') |
-                         Q(title__istartswith='4') |
-                         Q(title__istartswith='5') |
-                         Q(title__istartswith='6') |
-                         Q(title__istartswith='7') |
-                         Q(title__istartswith='8') |
-                         Q(title__istartswith='9')) 
-    elif sw == "a-c":
-        documents = document.objects.filter(
-                         Q(title__istartswith='a') |
-                         Q(title__istartswith='ä') |
-                         Q(title__istartswith='b') | 
-                         Q(title__istartswith='c'))
-    elif sw == "d-f": 
-        documents = document.objects.filter(
-                         Q(title__istartswith='d') | 
-                         Q(title__istartswith='e') | 
-                         Q(title__istartswith='f'))
-    elif sw == "g-i":
-        documents = document.objects.filter(
-                         Q(title__istartswith='g') | 
-                         Q(title__istartswith='h') | 
-                         Q(title__istartswith='i'))
-    elif sw == "j-l":
-        documents = document.objects.filter(
-                         Q(title__istartswith='j') | 
-                         Q(title__istartswith='k') | 
-                         Q(title__istartswith='l'))
-    elif sw == "m-o":
-        documents = document.objects.filter(
-                         Q(title__istartswith='m') | 
-                         Q(title__istartswith='n') | 
-                         Q(title__istartswith='o') |
-                         Q(title__istartswith='ö'))
-    elif sw == "p-s":
-        documents = document.objects.filter(
-                         Q(title__istartswith='p') | 
-                         Q(title__istartswith='q') | 
-                         Q(title__istartswith='r') |
-                         Q(title__istartswith='s'))
-    elif sw == "t-v":
-        documents = document.objects.filter(
-                         Q(title__istartswith='t') | 
-                         Q(title__istartswith='u') |
-                         Q(title__istartswith='ü') | 
-                         Q(title__istartswith='v'))
-    elif sw == "w-z":
-        documents = document.objects.filter(
-                         Q(title__istartswith='w') | 
-                         Q(title__istartswith='x') | 
-                         Q(title__istartswith='y') |
-                         Q(title__istartswith='z'))
-    elif sw == "all":
-        documents = document.objects.all()                     
-    else:
-        documents = document.objects.all()
+    documents = document.objects.all()
     return __list(request, documents)
     
 #def a_c(request):
@@ -256,6 +190,7 @@ def user(request):
     return __list(request, lend_documents)
 
 def __list(request, documents):
+    documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
     if sort is not None:
         documents = documents.order_by(sort)
@@ -264,17 +199,92 @@ def __list(request, documents):
             headers[sort] = "asc"
     v_user = request.user
     perms =  v_user.has_perm('add_author')
-    params = request.GET.copy()
-    if 'sort' in params:
-        params_tmp = u""
-        for key in params:
-            if not key == 'sort':
-                params_tmp += key + u"=" + params[key] + u"&"
-        params = QueryDict(params_tmp)
+    params_sort = __truncate_get(request, 'sort')
+    params_starts = __truncate_get(request, 'starts')
     return render_to_response("doc_list.html", 
             dict(documents=documents,
                 user=v_user, 
                 settings=settings, 
                 perm=perms,
-                path_vars=params.urlencode() ),
+                path_sort=params_sort, 
+                path_starts=params_starts ),
             context_instance=RequestContext(request))
+
+def __truncate_get(request, var):
+    params = request.GET.copy()
+    if var in params:
+        params_tmp = u""
+        for key in params:
+            if not key == var:
+                params_tmp += key + u"=" + params[key] + u"&"
+        params = QueryDict(params_tmp)
+    return params.urlencode()
+
+def __filter_names(documents, request):
+    """ Dem Benutzer wird ein reichhaltiges Angebot an Dokumenten angeboten und
+    übersichtlich präsentiert. Er kann nach belieben zwischen Dokumenten die
+    'A' beginnend oder Autoren mit 'Z' beginnend wählen.
+    Jedes Dokument muss selbständig abgeholt werden, wir haften nicht für den
+    Reiseweg!
+    """
+    sw = request.GET.get('starts', '')
+    if sw == "0-9":
+        documents = documents.filter(
+                         Q(title__istartswith='0') | 
+                         Q(title__istartswith='1') | 
+                         Q(title__istartswith='2') |
+                         Q(title__istartswith='3') |
+                         Q(title__istartswith='4') |
+                         Q(title__istartswith='5') |
+                         Q(title__istartswith='6') |
+                         Q(title__istartswith='7') |
+                         Q(title__istartswith='8') |
+                         Q(title__istartswith='9')) 
+    elif sw == "a-c":
+        documents = documents.filter(
+                         Q(title__istartswith='a') |
+                         Q(title__istartswith='ä') |
+                         Q(title__istartswith='b') | 
+                         Q(title__istartswith='c'))
+    elif sw == "d-f": 
+        documents = documents.filter(
+                         Q(title__istartswith='d') | 
+                         Q(title__istartswith='e') | 
+                         Q(title__istartswith='f'))
+    elif sw == "g-i":
+        documents = documents.filter(
+                         Q(title__istartswith='g') | 
+                         Q(title__istartswith='h') | 
+                         Q(title__istartswith='i'))
+    elif sw == "j-l":
+        documents = documents.filter(
+                         Q(title__istartswith='j') | 
+                         Q(title__istartswith='k') | 
+                         Q(title__istartswith='l'))
+    elif sw == "m-o":
+        documents = documents.filter(
+                         Q(title__istartswith='m') | 
+                         Q(title__istartswith='n') | 
+                         Q(title__istartswith='o') |
+                         Q(title__istartswith='ö'))
+    elif sw == "p-s":
+        documents = documents.filter(
+                         Q(title__istartswith='p') | 
+                         Q(title__istartswith='q') | 
+                         Q(title__istartswith='r') |
+                         Q(title__istartswith='s'))
+    elif sw == "t-v":
+        documents = documents.filter(
+                         Q(title__istartswith='t') | 
+                         Q(title__istartswith='u') |
+                         Q(title__istartswith='ü') | 
+                         Q(title__istartswith='v'))
+    elif sw == "w-z":
+        documents = documents.filter(
+                         Q(title__istartswith='w') | 
+                         Q(title__istartswith='x') | 
+                         Q(title__istartswith='y') |
+                         Q(title__istartswith='z'))
+    elif sw == "all":
+        documents = documents.all()                     
+    return documents
