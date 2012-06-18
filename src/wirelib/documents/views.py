@@ -7,6 +7,7 @@ from documents.models import document, lending, doc_extra
 from documents.extras_bibtex import Bibtex
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
+from django.db.models import Q
 import settings
 
 
@@ -80,6 +81,13 @@ def doc_list(request):
     Reiseweg!
     """
     documents = document.objects.all()
+    return __list(request, documents)
+    
+def a_c(request):
+    documents = document.objects.filter(
+                        Q(title__istartswith='a') | 
+                        Q(title__istartswith='b') | 
+                        Q(title__istartswith='c'))
     return __list(request, documents)
 
 def doc_detail(request, bib_no_id):

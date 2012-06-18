@@ -1,7 +1,18 @@
 {% extends "index.html" %}
 {% load pagination_tags %}
 {% block content %}
+
+   
 	<h1>Literaturverzeichnis</h1>
+	<a href="doc_list/0-9">0-9</a>
+    <a href="doc_list/a-c">A-C</a>
+    <a href="doc_list/d-f">D-F</a>
+    <a href="doc_list/g-i">G-I</a>
+    <a href="doc_list/j-k">J-K</a>
+    <a href="doc_list/m-o">M-O</a>
+    <a href="doc_list/p-s">P-S</a>
+    <a href="doc_list/t-v">T-V</a>
+    <a href="doc_list/w-z">W-Z</a>
 	{% autopaginate documents 10 %}
  <table width="100%" class="sortable" border = "3" bgcolor="#FFFFFF"> 
   
