@@ -52,17 +52,19 @@ class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
     bibtex_id = models.CharField(max_length=120, unique=True)
-    lib_of_con_nr = models.CharField(max_length=20, null=True) #LibraryOfCongressN
+    lib_of_con_nr = models.CharField(max_length=20, null=True) 
+        #LibraryOfCongressN
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
-    status = models.IntegerField()
+    #TODO Referenz einbauen
+    #status = models.IntegerField()
         #(0) vorhanden
         #(1) ausgeliehen
         #(2) bestellt
         #(3) vermisst
         #(4) verloren
-    last_updated = models.DateField()
+    last_updated = models.DateField(auto_now=True)
     # TODO recent_user = models.ForeignKey(User)
     publisher = models.ForeignKey(publisher, null=True)
     year = models.IntegerField(null=True)
@@ -70,8 +72,10 @@ class document(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     currency = models.CharField(max_length=3, null=True)
     date_of_purchase = models.DateField(auto_now_add=True)
-    ub_date = models.DateField(null=True)
-    bib_date = models.DateField(null=True)
+    ub_date = models.DateField(null=True) 
+        #Datum des Allegro-Exports
+    bib_date = models.DateField(null=True) 
+        #Datum des BibTeX-Exports
     comment = models.TextField(null=True)
     authors = models.ManyToManyField(author)
 
@@ -168,8 +172,6 @@ class non_user(models.Model):
     number = models.CharField(max_length=5)
     zipcode = models.CharField(max_length=5)
     city = models.CharField(max_length=58)
-    class Meta:
-        unique_together = ('last_name', 'first_name')
 
     def __unicode__(self):
         return (self.last_name + ', ' + self.first_name)
@@ -182,13 +184,19 @@ class tel_non_user(models.Model):
         unique_together = ('non_user', 'tel_nr')
 
 class doc_status(models.Model):
-    recent_user = models.ForeignKey(User)
-    doc_id = models.ForeignKey(document)
-    status = models.IntegerField()
-    date = models.DateTimeField(auto_now_add=True)
-    date_term_lend = models.DateTimeField(null=True)
-    user_lend = models.ForeignKey(User, null=True)
-    non_user_lend = models.ForeignKey(non_user, null=True)
+    recent_user = models.ForeignKey(User) 
+        #auftraggebender User
+    doc_id = models.ForeignKey(document) 
+    status = models.IntegerField() 
+        #in welchen Status wurde geändert?
+    date = models.DateTimeField(auto_now_add=True) 
+        #Datum an dem es geschah
+    date_term_lend = models.DateTimeField(null=True) 
+        #Ende der Rückgabefrist
+    user_lend = models.ForeignKey(User, null=True) 
+        #ausleihender User
+    non_user_lend = models.ForeignKey(non_user, null=True) 
+        #ausleihender non_User
 
 class emails(models.Model):
     text = models.TextField()
