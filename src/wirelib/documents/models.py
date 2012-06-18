@@ -63,7 +63,7 @@ class document(models.Model):
         #(3) vermisst
         #(4) verloren
     last_updated = models.DateField()
-    recent_user = models.ForeignKey(User)
+    # TODO recent_user = models.ForeignKey(User)
     publisher = models.ForeignKey(publisher, null=True)
     year = models.IntegerField(null=True)
     address = models.CharField(max_length=100, null=True)
@@ -181,12 +181,13 @@ class tel_non_user(models.Model):
     class Meta:
         unique_together = ('non_user', 'tel_nr')
 
-class lending(models.Model):
+class doc_status(models.Model):
+    recent_user = models.ForeignKey(User)
     doc_id = models.ForeignKey(document)
-    date_lend = models.DateTimeField(auto_now_add=True)
-    date_return = models.DateTimeField(null=True)
-    date_term = models.DateTimeField(null=True)
-    user_lend = models.ForeignKey(User)
+    status = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+    date_term_lend = models.DateTimeField(null=True)
+    user_lend = models.ForeignKey(User, null=True)
     non_user_lend = models.ForeignKey(non_user, null=True)
 
 class emails(models.Model):

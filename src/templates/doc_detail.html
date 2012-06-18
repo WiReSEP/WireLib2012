@@ -58,8 +58,8 @@
 		  <td><b><u>Schlüsselwörter:</u></b></td>
 		  <td>
 			<!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
-			{% if documents.keywords.all %}
-			{% for k in documents.keywords.all %}
+			{% if documents.keywords_set.all %}
+			{% for k in documents.keywords_set.all %}
 			{{ k.keyword }},
 			{% endfor %}
 			{% else %}
