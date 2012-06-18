@@ -138,8 +138,8 @@ def doc_list(request):
                          Q(title__istartswith='x') | 
                          Q(title__istartswith='y') |
                          Q(title__istartswith='z'))
-    
-    
+    elif sw == "all":
+        documents = document.objects.all()                     
     else:
         documents = document.objects.all()
     return __list(request, documents)
