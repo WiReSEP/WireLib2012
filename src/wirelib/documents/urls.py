@@ -19,5 +19,7 @@ urlpatterns = patterns('documents.views',
 urlpatterns += patterns('django.contrib.auth.views',
         url(r'^login$', 'login'),
         url(r'^logout$', 'logout'),
+        url(r'^password_reset$', 'password_reset'), 
+        url(r'^password_reset/done$', 'password_reset_done'), 
         
 )   
