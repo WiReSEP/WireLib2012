@@ -216,7 +216,7 @@ class UglyBibtex(object):
 
 class Bibtex(object):
 
-    active = False
+    @staticmethod
     def export_doc(document):
         """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
         String um.
@@ -287,28 +287,27 @@ class Bibtex(object):
         doc_str += u"}"
         return doc_str
 
+    active = False
+
+    @staticmethod
     def export_docs(documents):
         """ Viele Dokumente werden in eine Datei exportiert.
         """
-        global active
         lock = thread.allocate_lock()
         lock.acquire()
-        if active == True:
+        if Bibtex.active == True:
             return
         lock.release()
 
         for doc in documents:
             print unicode(doc)
             doc_year = doc.date_of_purchase.year
-            bib_filename = "bibtex/bib_%i"%doc_year     # TODO neues setting
+            bib_filename = "bibtex/lib_%i.bib"%doc_year     # TODO neues setting
             print "hier kommt '%s'"%doc.bib_no
             with codecs.open(bib_filename, mode='a', encoding='utf-8') \
                     as bib_file:
                 bib_file.write(Bibtex.export_doc(doc))
 
         lock.acquire()
-        active = False
+        Bibtex.active = False
         lock.release()
-
-    export_doc = staticmethod(export_doc)
-    export_docs = staticmethod(export_docs)

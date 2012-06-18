@@ -178,6 +178,7 @@ def bibtex_export(request):
     Zugriff auf bisher exportierte BibTeX-Exporte.
     TODO: Zugriff nur auf Benutzer beschränken, die Dokumente hinzufügen
     dürfen.
+    TODO: Dateien für entsprechende Benutzer publizieren.
     """
     if "bibtex_export" in request.POST:
         export_documents = document.objects.filter(
