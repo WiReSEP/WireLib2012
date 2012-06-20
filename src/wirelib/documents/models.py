@@ -57,13 +57,6 @@ class document(models.Model):
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
-    #TODO Referenz einbauen
-    #status = models.IntegerField()
-        #(0) vorhanden
-        #(1) ausgeliehen
-        #(2) bestellt
-        #(3) vermisst
-        #(4) verloren
     last_updated = models.DateField(auto_now=True)
     # TODO recent_user = models.ForeignKey(User)
     publisher = models.ForeignKey(publisher, null=True)
@@ -79,43 +72,94 @@ class document(models.Model):
     comment = models.TextField(null=True)
     authors = models.ManyToManyField(author)
 
+    stat_available = 0  #vorhanden
+    stat_lend = 1       #ausgeliehen
+    stat_ordered = 2    #bestellt
+    stat_miss = 3       #vermisst
+    stat_lost = 4       #verloren
+    
+    
+    def __status(self):
+        """ 
+        Ausgeben des aktuellen Status'
+        """
+        try:
+            retVal = self.doc_status_set.latest('date').status
+        except:
+            retVal = 0
+        return retVal
+        
+    def __init__(self, *args, **kwargs):
+        models.Model.__init__(self, *args, **kwargs)
+        self.status = self.__status()
+
     def __unicode__(self):
         return self.title
-
-    def lend(self, user, non_user=None, terminate=None):
-        if self.status != 0 and self.status != 3 :
-            raise LendingError()
-        self.status = 1
-        l = lending(
-                doc_id=self,
-                date_term = terminate,
-                user_lend = user,
-                non_user_lend = non_user,
-        )
-        l.save()
-        self.save()
-
-    def restitution(self, user):
-        self.status = 0
-        l = lending.objects.get(
+    
+    def __set_status(self, 
+                     editor, 
+                     stat, 
+                     terminate=None, 
+                     user=None, 
+                     non_user=None):
+        """ 
+        Methode zum Ändern des Status'
+        Paramenter:
+            editor - recent_user
+            stat - status
+            terminate - date_term_lend
+            user - user_lend
+            non_user - non_user_lend
+        """
+        self.doc_status_set.latest('date').update(return_lend=True)
+        l = doc_status(
+            recent_user = editor,
             doc_id = self,
-            date_return = None,
+            status = stat,
+            date_term_lend = terminate,
             user_lend = user,
+            non_user_lend = non_user
         )
-        l.date_return = datetime.now()
         l.save()
-        self.save()
+
+    def lend(self, user, editor=None, non_user=None, terminate=None):
+        """ 
+        Methode zum Ausleihen, Übertragen und beim Wiederfinden
+        Parameter:
+            user - user_lend (evtl recent_user)
+            editor - recent_user
+            non_user - non_user_lend
+            terminate - date_term_lend
+        """
+        # fürs Übertragen
+        if self.status == stat_lend:
+            dstat = self.doc_status_set.latest('date')
+            if dstat.user_lend == user and dstats.non_user_lend == non_user:
+                raise LendingError()
+        # zum Ausleihen oder Wiederfinden
+        elif self.status != stat_available and self.status != stat_miss :
+            raise LendingError()
+        if editor == None:
+            editor = user
+        self.__set_status(editor, stat_lend, terminate, user, non_user)
+
+    def unlend(self, user):
+        """ 
+        Methode zum zurückgeben 
+        """
+        self.__set_status(user, stat_available)
 
     def lost(self, user):
-        self.status = 3
-        l = lending.objects.get(
-            doc_id = self,
-            date_return = None,
-            user_lend = user,
-        )
-        l.date_return = datetime.now()
-        l.save()
-        self.save()
+        """ 
+        Methode zum "Verloren" setzen
+        """
+        self.__set_status(user, stat_lost)
+        
+    def missing(self, user):
+        """ 
+        Methode für Vermisstmeldungen
+        """
+        self.__set_status(user, stat_miss)
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
@@ -160,7 +204,7 @@ post_save.connect(create_user_profile, sender=User)
 class tel_user(models.Model):
     user = models.ForeignKey(User)
     tel_nr = models.CharField(max_length=20)
-    #todo
+    # TODO eigene Telefonnummerklasse
     class Meta:
         unique_together = ('user', 'tel_nr')
 
@@ -179,21 +223,23 @@ class non_user(models.Model):
 class tel_non_user(models.Model):
     non_user = models.ForeignKey(non_user)
     tel_nr = models.CharField(max_length=20)
-        #todo
+    # TODO eigene Telefonnummerklasser
     class Meta:
         unique_together = ('non_user', 'tel_nr')
 
 class doc_status(models.Model):
-    recent_user = models.ForeignKey(User) 
+    recent_user = models.ForeignKey(User, related_name='recent_user') 
         #auftraggebender User
     doc_id = models.ForeignKey(document) 
     status = models.IntegerField() 
         #in welchen Status wurde geändert?
     date = models.DateTimeField(auto_now_add=True) 
         #Datum an dem es geschah
+    return_lend = models.BooleanField(default=False)
+        #Datum der Rückgabe
     date_term_lend = models.DateTimeField(null=True) 
         #Ende der Rückgabefrist
-    user_lend = models.ForeignKey(User, null=True) 
+    user_lend = models.ForeignKey(User, null=True, related_name='user_lend') 
         #ausleihender User
     non_user_lend = models.ForeignKey(non_user, null=True) 
         #ausleihender non_User
@@ -201,4 +247,4 @@ class doc_status(models.Model):
 class emails(models.Model):
     text = models.TextField()
 
-# TODO: Check für migration
+# TODO: Check für migration (documents.recent_user)

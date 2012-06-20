@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
-from documents.models import document, lending, doc_extra
+from documents.models import document, doc_status, doc_extra
 from documents.extras_bibtex import Bibtex
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
@@ -93,15 +93,19 @@ def doc_detail(request, bib_no_id):
     except document.DoesNotExist:
         raise Http404
     try:
-        lending_query = document_query.lending_set.latest("date_lend")
-    except lending.DoesNotExist:
+        lending_query = document_query.doc_status_set.latest("date")
+    except doc_status.DoesNotExist:
         lending_query = None
+    #selbst ausleihen, wenn Status vorhanden
     if 'lend' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
+    #zurückgeben
     if 'restitution' in request.POST and request.user.is_authenticated():
-        document_query.restitution(v_user)
+        document_query.unlend(v_user)
+    #vermisst melden
     if 'lost' in request.POST and request.user.is_authenticated():
         document_query.lost(v_user)
+    #wiedergefunden melden
     if 'found' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
@@ -197,9 +201,9 @@ def bibtex_export(request):
 @login_required
 def user(request):
     lend_documents = document.objects.filter(
-            lending__date_return__exact = None,
-            lending__user_lend__exact = request.user,
-            lending__non_user_lend__exact = None)
+            doc_status__return_lend__exact = False,
+            doc_status__user_lend__exact = request.user,
+            doc_status__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
 def __list(request, documents):
@@ -301,4 +305,3 @@ def __filter_names(documents, request):
     elif sw == "all":
         documents = documents.all()                     
     return documents
-# TODO: Check für migration

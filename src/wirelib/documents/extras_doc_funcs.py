@@ -166,7 +166,6 @@ def insert_doc(dict_insert, user):
         title_f = dict_insert[u"title"]
         isbn_f = dict_insert.get(u"isbn", None)
         category_f = dict_insert[u"category"]
-        status_f = dict_insert.get(u"status", 0)
         publisher_f = dict_insert.get(u"publisher", None)
         year_f = dict_insert.get(u"year", None)
         address_f = dict_insert.get(u"address", None)
@@ -197,7 +196,6 @@ def insert_doc(dict_insert, user):
                 title=title_f, 
                 isbn=isbn_f, 
                 category=category_db, 
-                status=status_f,
                 publisher=publisher_db, 
                 year=year_f, 
                 address=address_f,
@@ -253,4 +251,4 @@ def __lst_is_empty(list_data):
         if i == "":
             return True
     return False
-# TODO: Check für migration
+# TODO Vergleich recent_user in documents

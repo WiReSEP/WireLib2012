@@ -10,8 +10,7 @@ def export_allegro():
     """
     allegro_query = document.objects.select_related().filter(
             ub_date__isnull=True, 
-            category__name__iexact='book', 
-            status__lte=1)
+            category__name__iexact='book')
     date = datetime.today()
     date = date.date()
     filepath = getattr(settings, 'EXPORT_PATH', "documents/exports/")
@@ -19,8 +18,9 @@ def export_allegro():
     tmp_file = open(filepath + filename, "w")
     print len(list(allegro_query))
     for doc in list(allegro_query):
-        print >> tmp_file, u"#00"
-        print >> tmp_file, __doc_to_string(doc).encode("iso-8859-1", "strict")
+        if doc.status <= 1:
+            print >> tmp_file, u"#00"
+            print >> tmp_file, __doc_to_string(doc).encode("iso-8859-1", "strict")
     tmp_file.close()
     allegro_query.update(ub_date=date)
     for doc in allegro_query:
@@ -86,4 +86,3 @@ def __doc_to_string(document):
     doc_str += allegro_dict[u"keywords"] + u" " + keywords + line_end
     doc_str += allegro_dict[u"year"] + u" " + str(document.year) + line_end
     return doc_str
-# TODO: Check für migration
