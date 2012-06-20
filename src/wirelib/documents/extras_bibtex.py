@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # vim set fileencoding=utf-8
-from datetime import datetime
 from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
 from django.contrib.auth.models import User
+
+import os
+import datetime
 import thread
 import extras_doc_funcs
 import re
@@ -299,14 +301,21 @@ class Bibtex(object):
             return
         lock.release()
 
+        if not os.path.isdir("bibtex"):
+            os.mkdir("bibtex")
+
         for doc in documents:
-            print unicode(doc)
             doc_year = doc.date_of_purchase.year
-            bib_filename = "bibtex/lib_%i.bib"%doc_year     # TODO neues setting
-            print "hier kommt '%s'"%doc.bib_no
+#            TODO: Bibtex-Pfad über settings exportieren.
+#            TODO: einen "schönen" Namen für die Dateien setzen.
+            bib_filename = "bibtex/lib_%i_%s.bib" % (
+                    doc_year,
+                    datetime.date.today()
+                    )
             with codecs.open(bib_filename, mode='a', encoding='utf-8') \
                     as bib_file:
                 bib_file.write(Bibtex.export_doc(doc))
+        documents.update(bib_date=datetime.date.today())
 
         lock.acquire()
         Bibtex.active = False
