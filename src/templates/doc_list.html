@@ -2,8 +2,9 @@
 {% load pagination_tags %}
 {% block content %}
 
-   
-	<h1>Literaturverzeichnis</h1>
+<h1>{{ page_title }}</h1>
+<p>{{ page_text }}</p>
+<p>
 	<a href="?{{ path_starts }}&starts=0-9">0-9</a>
     <a href="?{{ path_starts }}&starts=a-c">A-C</a>
     <a href="?{{ path_starts }}&starts=d-f">D-F</a>
@@ -15,18 +16,38 @@
     <a href="?{{ path_starts }}&starts=w-z">W-Z</a>
     <a href="?{{ path_starts }}&starts=all">alle</a>
 	{% autopaginate documents 10 %}
- <table width="100%" class="sortable" border = "3" bgcolor="#FFFFFF"> 
-  
-   
+   <a href="?{{ path_sort }}&sort=title">Dokumententitel</a>
+   <a href="?{{ path_sort }}&sort=category">Kategorie</a>
+	<a href="?{{ path_sort }}&sort=authors">Authoren</a>
+	<a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
+	<a href="?{{ path_sort }}&sort=status">Status</a>
+	<a href="?{{ path_sort }}&sort=isbn">Isbn</a>
 
-   <th><a href="?{{ path_sort }}&sort=title">Dokumententitel</a></th>
-   <th><a href="?{{ path_sort }}&sort=category">Kategorie</a></th>
-	<th><a href="?{{ path_sort }}&sort=authors">Authoren</a></th>
-	<th><a href="?{{ path_sort }}&sort=year">Veröffentlichung</a></th>
-	<th><a href="?{{ path_sort }}&sort=status">Status</a></th>
-	<th><a href="?{{ path_sort }}&sort=isbn">Isbn</a></th>
-       
-        
+	{% for d in documents %}
+	<div id="list_body">
+	  <div id="title">
+		  {% if form == 0 %}
+			{{ d.status }} 
+		  {% else %}{% if form == 1 %}
+			<!-- TODO: non-user null? Grafik-->
+		  {% endif %}{% endif %}
+		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a> <!-- TODO: date_term --> </div>
+	  <div id="authors">
+		{% for au in d.authors.all %} 
+		{{ au.first_name }} 
+		{{ au.last_name }}{% if not forloop.last %}, {% endif %}
+		{% endfor %}
+	  </div>
+	  <div id="year">{{ d.year }}</div>
+	  <div id="volume"><!-- TODO  hier einfügen --></div>
+	  <div id="publisher">{{ d.publisher|default_if_none:"" }}</div>
+	  {% if form == 1 %}
+		<div id="date_lend">Ausgeliehen seit:  <!-- TODO --></div>
+	  {% endif %}
+
+	</div>
+	{% endfor %}
+	<!-- 
        	{% for d in documents %}		
 	<tr><td><a href="../doc/{{d.bib_no}}">{{d}}</a></td> 
 	<td>{{d.category}}</td>
@@ -50,5 +71,7 @@
 	</tr>
 	
 	{% endfor %} </table>
+  -->
+</p>
 	{% paginate %}
 {% endblock %}
