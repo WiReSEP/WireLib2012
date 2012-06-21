@@ -28,15 +28,15 @@
 	</div>
 	{% autopaginate documents 10 %}
 
+	<ul id="list_body">
 	{% for d in documents %}
-	<div id="list_body">
-	  <div id="status">
+	  <li id="status_{% spaceless %}
 		  {% if form == 0 %}
 			{{ d.status }} 
 		  {% else %}{% if form == 1 %}
 			<!-- TODO: non-user null? Grafik-->
 		  {% endif %}{% endif %}
-		</div>
+		  {% endspaceless %}">
 	  <div id="title">
 		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a> <!-- TODO: date_term --> </div>
 		<div id="extras">
@@ -53,8 +53,9 @@
 		<div id="date_lend">Ausgeliehen seit:  <!-- TODO --></div>
 	  {% endif %}
 	  </div>
-	</div>
+	</li>
 	{% endfor %}
+	</ul>
 </p>
 	{% paginate %}
 {% endblock %}

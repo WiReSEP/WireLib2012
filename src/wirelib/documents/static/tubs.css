@@ -605,40 +605,44 @@ div.metas {
   border-bottom: 1px solid silver;
 }
 
-.inhalt div#list_body{
+.inhalt ul#list_body li{
   padding-top: 8px;
   padding-bottom: 13px;
   width: 100%;
   border-bottom: 1px dotted silver;
 }
 
-.inhalt div#list_body div{
+.inhalt ul#list_body li{
+  color: red;
+}
+
+.inhalt ul#list_body li div{
   padding-right: 5px;
 }
 
-.inhalt div#list_body div#status{
+.inhalt ul#list_body li div#status{
   float: left;
 }
-.inhalt div#list_body div#title{
+.inhalt ul#list_body li div#title{
   padding-bottom: 2px;
   margin: 0;
 }
 
-.inhalt div#list_body div#title a{
+.inhalt ul#list_body li div#title a{
   font-size: 1.1em;
   display: table-row;
 }
 
-.inhalt div#list_body div#extras{
+.inhalt ul#list_body li div#extras{
   padding-left: 20px;
 }
 
-.inhalt div#list_body div#authors{
+.inhalt ul#list_body li div#authors{
   float: clear;
   font-style: italic;
 }
 
-.inhalt div#list_body div#year{
+.inhalt ul#list_body li div#year{
   font-weight: 700;
   float: left;
 }
