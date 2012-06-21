@@ -5,34 +5,42 @@
 <h1>{{ page_title }}</h1>
 <p>{{ page_text }}</p>
 <p>
-	<a href="?{{ path_starts }}&starts=0-9">0-9</a>
-    <a href="?{{ path_starts }}&starts=a-c">A-C</a>
-    <a href="?{{ path_starts }}&starts=d-f">D-F</a>
-    <a href="?{{ path_starts }}&starts=g-i">G-I</a>
-    <a href="?{{ path_starts }}&starts=j-l">J-K</a>
-    <a href="?{{ path_starts }}&starts=m-o">M-O</a>
-    <a href="?{{ path_starts }}&starts=p-s">P-S</a>
-    <a href="?{{ path_starts }}&starts=t-v">T-V</a>
-    <a href="?{{ path_starts }}&starts=w-z">W-Z</a>
-    <a href="?{{ path_starts }}&starts=all">alle</a>
+	<div id="list_startfilter">
+	  <a href="?{{ path_starts }}&starts=0-9">0-9</a>
+	  <a href="?{{ path_starts }}&starts=a-c">A-C</a>
+	  <a href="?{{ path_starts }}&starts=d-f">D-F</a>
+	  <a href="?{{ path_starts }}&starts=g-i">G-I</a>
+	  <a href="?{{ path_starts }}&starts=j-l">J-K</a>
+	  <a href="?{{ path_starts }}&starts=m-o">M-O</a>
+	  <a href="?{{ path_starts }}&starts=p-s">P-S</a>
+	  <a href="?{{ path_starts }}&starts=t-v">T-V</a>
+	  <a href="?{{ path_starts }}&starts=w-z">W-Z</a>
+	  <a href="?{{ path_starts }}&starts=all">alle</a>
+	</div>
+
+	<div id="list_sort">
+	  <a href="?{{ path_sort }}&sort=title">Dokumententitel</a>
+	  <a href="?{{ path_sort }}&sort=category">Kategorie</a>
+	  <a href="?{{ path_sort }}&sort=authors">Authoren</a>
+	  <a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
+	  <a href="?{{ path_sort }}&sort=status">Status</a>
+	  <a href="?{{ path_sort }}&sort=isbn">Isbn</a>
+	</div>
 	{% autopaginate documents 10 %}
-   <a href="?{{ path_sort }}&sort=title">Dokumententitel</a>
-   <a href="?{{ path_sort }}&sort=category">Kategorie</a>
-	<a href="?{{ path_sort }}&sort=authors">Authoren</a>
-	<a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
-	<a href="?{{ path_sort }}&sort=status">Status</a>
-	<a href="?{{ path_sort }}&sort=isbn">Isbn</a>
 
 	{% for d in documents %}
 	<div id="list_body">
-	  <div id="title">
+	  <div id="status">
 		  {% if form == 0 %}
 			{{ d.status }} 
 		  {% else %}{% if form == 1 %}
 			<!-- TODO: non-user null? Grafik-->
 		  {% endif %}{% endif %}
+		</div>
+	  <div id="title">
 		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a> <!-- TODO: date_term --> </div>
-	  <div id="authors">
+		<div id="extras">
+		<div id="authors">
 		{% for au in d.authors.all %} 
 		{{ au.first_name }} 
 		{{ au.last_name }}{% if not forloop.last %}, {% endif %}
@@ -44,34 +52,9 @@
 	  {% if form == 1 %}
 		<div id="date_lend">Ausgeliehen seit:  <!-- TODO --></div>
 	  {% endif %}
-
+	  </div>
 	</div>
 	{% endfor %}
-	<!-- 
-       	{% for d in documents %}		
-	<tr><td><a href="../doc/{{d.bib_no}}">{{d}}</a></td> 
-	<td>{{d.category}}</td>
-	   <td> {% for au in d.authors.all %}
-	    {{au}}
-	    {% endfor %}</td>
-	<td>{{d.year}}</td>
-	<td>
-	{% if d.status = 0 %}
-	Vorhanden
-	{% endif %}
-	{% if d.status = 1 %}
-	Verliehen
-	{% endif %}
-	{% if d.status = 2 %}
-	Betsellt
-	{% endif %}
-	</td>
-	<td>{{d.isbn}}</td>
-	
-	</tr>
-	
-	{% endfor %} </table>
-  -->
 </p>
 	{% paginate %}
 {% endblock %}
