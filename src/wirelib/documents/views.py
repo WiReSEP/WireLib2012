@@ -202,7 +202,7 @@ def user(request):
             lending__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents, form=0):
+def __list(request, documents, form=1):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
