@@ -605,24 +605,62 @@ div.metas {
   border-bottom: 1px solid silver;
 }
 
+.inhalt ul#list_body{
+  list-style-type: none;
+}
+
 .inhalt ul#list_body li{
   padding-top: 8px;
   padding-bottom: 13px;
   width: 100%;
   border-bottom: 1px dotted silver;
+  list-style-type: none;
 }
 
-.inhalt ul#list_body li{
-  color: red;
+/* verfügbar */
+.inhalt ul#list_body li#status_0:before{
+  padding-right: 5px;
+  content: "✓";
+  color: green;
+  float: left;
+}
+
+/* ausgeliehen */
+.inhalt ul#list_body li#status_1:before{
+  padding-right: 5px;
+  content: "✗";
+  color: #888800;
+  float: left;
+}
+
+/* bestellt */
+.inhalt ul#list_body li#status_2:before{
+  padding-right: 5px;
+  content: "✉";
+  color: #888800;
+  float: left;
+}
+
+/* vermisst */
+.inhalt ul#list_body li#status_3:before{
+  padding-right: 5px;
+  content: "✘";
+  color: #cc0000;
+  float: left;
+}
+
+/* verlohren */
+.inhalt ul#list_body li#status_4:before{
+  padding-right: 5px;
+  content: "✗";
+  color: #888800;
+  float: left;
 }
 
 .inhalt ul#list_body li div{
   padding-right: 5px;
 }
 
-.inhalt ul#list_body li div#status{
-  float: left;
-}
 .inhalt ul#list_body li div#title{
   padding-bottom: 2px;
   margin: 0;
@@ -646,7 +684,6 @@ div.metas {
   font-weight: 700;
   float: left;
 }
-
 /******************************************************
 	RECHTE SPALTE
 *******************************************************/
@@ -1088,7 +1125,6 @@ li {
 }
 
 ul li {
-	list-style-image: url('/icons/tubsdesign/quadrat.jpg');
 	list-style-type: square;
 }
 
