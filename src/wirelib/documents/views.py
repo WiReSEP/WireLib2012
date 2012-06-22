@@ -202,14 +202,12 @@ def user(request):
             lending__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents, form=1):
+def __list(request, documents, form=0):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
     """
     documents = __filter_names(documents, request)
-    for d in documents:    
-        print "hallo" #d.objects.get( bib_field = "volume")
     sort = request.GET.get('sort')
     if sort is not None:
         documents = documents.order_by(sort)
