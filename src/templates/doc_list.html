@@ -47,15 +47,15 @@
 		  {% endif %}
 		   </div>
 		<div id="extras">
-		<div id="authors">
+		<div id="authors">{% spaceless %}
 		{% for au in d.authors.all %} 
 		{{ au.first_name }} 
 		{{ au.last_name }}{% if not forloop.last %}, {% endif %}
 		{% endfor %}
-	  </div>
+	 {% endspaceless %}</div>
 	  <div id="year">{{ d.year }}</div>
-	  <div id="publisher">{{ d.publisher|default_if_none:"" }}</div>
 	  <div id="volume">{% spaceless %}
+	  <div id="publisher">{{ d.publisher|default_if_none:"" }}</div>
             {# TODO ersetzen durch schöneren Aufruf #}      
             
             {% for b in d.doc_extra_set.all %}
@@ -64,13 +64,14 @@
                 {% endif %}
             {% endfor %}    
             {% endspaceless %}</div>
-	  
-	  <div id="date_lend">Ausgeliehen seit: 
-    	{% if form == 1 %}	  
+	
+    	{% if form == 1 %}	
+        <div id="date_lend"> 
+    	  Ausgeliehen seit:
     	    {{ d.lending.date_lending }}
+    	</div>
     	{% endif %}
-		</div>
-	  
+		  
 	  </div>
 	</li>
 	{% endfor %}
