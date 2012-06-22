@@ -82,9 +82,9 @@ class document(models.Model):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
-        #TODO nach Datenbankerstellung überprüfen, ob die if-Anweisung noch benötigt wird
+        #TODO nach Datenbankerstellung überprüfen, ob die if-Anweisung noch benötigt wird bzw. dat user None sein muss
         if user == None:
-            user = User.objects.get(id=0)
+            user = User.objects.get(id=1)
         self.last_edit_by=user
         super(document, self).save(*args, **kwargs)
     
@@ -185,6 +185,7 @@ class keywords(models.Model):
         Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
         aktualisiert werden kann
         """
+        #TODO nach Datenbankerstellung testen, ob user None sein muss
         self.document.save(user)
         super(keywords, self).save(*args, **kwargs)   
 
@@ -204,6 +205,7 @@ class doc_extra(models.Model):
         Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
         aktualisiert werden kann
         """
+        #TODO nach Datenbankerstellung testen, ob user None sein muss
         self.doc_id.save(user)
         super(doc_extra, self).save(*args, **kwargs)
 
