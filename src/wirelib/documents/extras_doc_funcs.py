@@ -166,7 +166,6 @@ def insert_doc(dict_insert, user):
         title_f = dict_insert[u"title"]
         isbn_f = dict_insert.get(u"isbn", None)
         category_f = dict_insert[u"category"]
-        status_f = dict_insert.get(u"status", 0)
         publisher_f = dict_insert.get(u"publisher", None)
         year_f = dict_insert.get(u"year", None)
         address_f = dict_insert.get(u"address", None)
@@ -180,7 +179,7 @@ def insert_doc(dict_insert, user):
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
         last_updated_f = datetime.date.today()
-        recent_user_f = user
+        last_edit_by_f = user
     except KeyError:
         raise ValueError(u"Daten haben nicht die benötigten Felder")
     try:
@@ -197,7 +196,6 @@ def insert_doc(dict_insert, user):
                 title=title_f, 
                 isbn=isbn_f, 
                 category=category_db, 
-                status=status_f,
                 publisher=publisher_db, 
                 year=year_f, 
                 address=address_f,
@@ -207,7 +205,7 @@ def insert_doc(dict_insert, user):
                 ub_date=ub_date_f,
                 comment=comment_f,
                 last_updated= last_updated_f,
-                recent_user = recent_user_f,
+                last_edit_by = last_edit_by_f,
                 )
         authors_db = []
         for auth in author_f:
@@ -227,7 +225,7 @@ def insert_doc(dict_insert, user):
                 auth_db = author(last_name=last_name_f,
                         first_name=first_name_f)
                 # auth_db.documents.add(document_db)
-            auth_db.save()
+            auth_db.save(last_edit_by_f)
             authors_db.append(auth_db)
             document_db.authors.add(auth_db)
         keywords_db = []

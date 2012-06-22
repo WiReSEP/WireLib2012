@@ -39,50 +39,61 @@ function addKeyword(div_id, elem) {
 	
 	<input type="button" name="HandImport" value="Import per Eingabe" onclick="spoiler(this,'spoiler','Import per Direkteingabe','Eingabe verbergen')"> <br />
 	<div id="spoiler" name="spoiler" style="display: none;">
+	  <form method="post" action="">
 	    <table>
 	        <tr>
+	            <td><b><u>Titel:</u></b></td>
+	            <td> <input type="text" name="title" maxlength=200 /></td>
+	        </tr>
+	        <tr>
 	            <td><b><u>bib_no:</u></b></td>
-	            <td> <input type='text' name='bib_no' maxlength=15 /></td>
+	            <td> <input type="text" name="bib_no" maxlength=15 /></td>
 	        </tr>
             <tr>
 	            <td><b><u>inv_no:</u></b></td>
-	            <td> <input type='text' name='inv_no' maxlength=15 /></td>
+	            <td> <input type="text" name="inv_no" maxlength=15 /></td>
 	        </tr>  
             <tr>
 	            <td><b><u>Kategorie:</u></b></td>
-	            <td> <input type='text' name='category' maxlength=100 /></td>
+	            <td> 
+	                <select name="category" size="1">
+	                    {% for c in category %}
+	                        <option value="{{ c }}">{{ c }}</option>
+	                    {% endfor %}
+	                </select>
+	            </td>
 	        </tr>  
 	        <tr>
-	            <td><b><u>Status:</u></b></td>
-	            <td> <input type='text' name='status' maxlength=1 /></td>
-	        </tr> 
+	            <td><b><u>ISBN:</u></b></td>
+	            <td> <input type="text" name="isbn" maxlength=35/></td>
+	        </tr>
 	        <tr>
 	            <td><b><u>Publisher:</u></b></td>
-	            <td> <input type='text' name='publisher' maxlength=35/></td>
+	            <td> <input type="text" name="publisher" maxlength=35/></td>
 	        </tr>
 	        <tr>
 	            <td><b><u>Erscheinungsjahr:</u></b></td>
-	            <td> <input type='text' name='status' maxlength=4 /></td>
+	            <td> <input type="text" name="year" maxlength=4 /></td>
 	        </tr> 
 	        <tr>
 	            <td><b><u>Adresse:</u></b></td>
-	            <td> <input type='text' name='address' maxlength=100 /></td>
+	            <td> <input type="text" name="address" maxlength=100 /></td>
 	        </tr>
 	        <tr>
 	            <td><b><u>Notizen:</u></b></td>
-	            <td> <input type='textfield' name='comment' /></td>
+	            <td> <input type="textfield" name="comment" /></td>
 	        </tr>
 	        <tr>
 	            <td><b><u>Preis:</u></b></td>
-	            <td> <input type='text' name='price' maxlength=7 /></td>
+	            <td> <input type="text" name="price" maxlength=7 /></td>
 	        </tr>
 	        <tr>
 	            <td><b><u>Währung (K&uuml;rzel)</u></b></td>
-	            <td> <input type='text' name='currency' maxlength=3 /></td>
+	            <td> <input type="text" name="currency" maxlength=3 /></td>
 	        </tr>
 	        <tr>
 	            <td><b><u>Libary of Congress Number:</u></b></td>
-	            <td> <input type='text' name='lib_of_con_nr' maxlength=20 /></td>
+	            <td> <input type="text" name="lib_of_con_nr" maxlength=20 /></td>
 	        </tr>
 	    </table>
 	
@@ -94,11 +105,11 @@ function addKeyword(div_id, elem) {
 	            <th>Nachname</th>
 	        </tr>
 	        <tr>
-	            <td><input type="text" name="author_first_name" maxlength=30 /></td>
+	            <td><input type="text" name="author_first_name"  maxlength=30 /></td>
 	            <td><input type="text" name="author_last_name" maxlength=30 /></td>
 	        </tr>
 			<tr>
-				<td><input type="text" name="author_first_name" maxlength=30 /></td>
+				<td><input type="text" name="author_first_name"  maxlength=30 /></td>
 				<td><input type="text" onFocus="addAuthor('au', this)" name="author_last_name" maxlength=30 /></td>
 			</tr>
             </tbody>
@@ -130,8 +141,13 @@ function addKeyword(div_id, elem) {
             </tbody> 
 	    </table>
 	    <input type="submit" name="submit" value="Dokument speichern" />
+	  </form>
 	</div>
-	<br /> <br /> <br />
-	<input type="file" name="file" id="file_input" />
-    
+	<br /> 
+	<hr />
+	<br />
+	<form method="post" action="">
+  	<input type="file" name="file" id="file_input" />
+	  <input type=button name="starten" value="Start" />
+  </form>
 {% endblock content %}
