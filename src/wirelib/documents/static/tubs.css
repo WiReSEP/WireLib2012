@@ -1094,7 +1094,7 @@ a:visited {
 
 a:hover {
 	color: #ffffff;
-	background-color:  transparent; 
+	background-color:  #be1e3c; 
 	text-decoration: none;
 }
 
@@ -1522,4 +1522,9 @@ ul#sb_leiste2 li {
 }
 #search .result .url {
   color: #6d8300;
+}
+
+div.logo a {
+    background-color: transparent;
+    
 }
