@@ -39,7 +39,7 @@ class publisher(models.Model):
 
 
 class author(models.Model):
-    first_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30)
     class Meta:
         unique_together = ('first_name', 'last_name')
@@ -58,7 +58,7 @@ class document(models.Model):
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
     last_updated = models.DateField(auto_now=True)
-    # TODO recent_user = models.ForeignKey(User)
+    last_edit_by = models.ForeignKey(User)
     publisher = models.ForeignKey(publisher, null=True)
     year = models.IntegerField(null=True)
     address = models.CharField(max_length=100, null=True)
@@ -78,6 +78,12 @@ class document(models.Model):
     stat_miss = 3       #vermisst
     stat_lost = 4       #verloren
     
+    def save(self, user, *args, **kwargs):
+        """
+        Methode zum Speichern des letzten Bearbeiters des Dokumentes
+        """
+        self.last_edit_by=user
+        super(document, self).save(*args, **kwargs)
     
     def __status(self):
         """ 
@@ -170,6 +176,14 @@ class keywords(models.Model):
     
     def __unicode__(self):
         return self.keyword
+        
+    def save(self, user, *args, **kwargs):
+        """
+        Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
+        aktualisiert werden kann
+        """
+        self.document.save(user)
+        super(keywords, self).save(*args, **kwargs)   
 
 class doc_extra(models.Model):
     """
@@ -181,6 +195,14 @@ class doc_extra(models.Model):
     class Meta:
         unique_together = ('doc_id', 'bib_field')
     #primary_key(docId, bibField)
+    
+    def save(self, user, *args, **kwargs):
+        """
+        Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
+        aktualisiert werden kann
+        """
+        self.doc_id.save(user)
+        super(doc_extra, self).save(*args, **kwargs)
 
 class user_profile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
@@ -246,5 +268,3 @@ class doc_status(models.Model):
 
 class emails(models.Model):
     text = models.TextField()
-
-# TODO: Check für migration (documents.recent_user)
