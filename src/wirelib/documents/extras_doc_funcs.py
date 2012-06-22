@@ -179,7 +179,7 @@ def insert_doc(dict_insert, user):
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
         last_updated_f = datetime.date.today()
-        recent_user_f = user
+        last_edit_by_f = user
     except KeyError:
         raise ValueError(u"Daten haben nicht die benötigten Felder")
     try:
@@ -205,7 +205,7 @@ def insert_doc(dict_insert, user):
                 ub_date=ub_date_f,
                 comment=comment_f,
                 last_updated= last_updated_f,
-                recent_user = recent_user_f,
+                last_edit_by = last_edit_by_f,
                 )
         authors_db = []
         for auth in author_f:
@@ -251,4 +251,3 @@ def __lst_is_empty(list_data):
         if i == "":
             return True
     return False
-# TODO Vergleich recent_user in documents
