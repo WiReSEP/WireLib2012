@@ -606,7 +606,7 @@ div.metas {
 }
 
 .inhalt ul#list_body{
-  list-style-type: none;
+  padding-left: 8px;
 }
 
 .inhalt ul#list_body li{
@@ -617,44 +617,39 @@ div.metas {
   list-style-type: none;
 }
 
+.inhalt ul#list_body li:before{
+  padding-right: 5px;
+  float: left;
+}
+
 /* verfügbar */
 .inhalt ul#list_body li#status_0:before{
-  padding-right: 5px;
   content: "✓";
   color: green;
-  float: left;
 }
 
 /* ausgeliehen */
 .inhalt ul#list_body li#status_1:before{
-  padding-right: 5px;
   content: "✗";
   color: #888800;
-  float: left;
 }
 
 /* bestellt */
 .inhalt ul#list_body li#status_2:before{
-  padding-right: 5px;
   content: "✉";
   color: #888800;
-  float: left;
 }
 
 /* vermisst */
 .inhalt ul#list_body li#status_3:before{
-  padding-right: 5px;
   content: "✘";
   color: #cc0000;
-  float: left;
 }
 
 /* verlohren */
 .inhalt ul#list_body li#status_4:before{
-  padding-right: 5px;
   content: "✗";
   color: #888800;
-  float: left;
 }
 
 .inhalt ul#list_body li div{
@@ -672,7 +667,7 @@ div.metas {
 }
 
 .inhalt ul#list_body li div#extras{
-  padding-left: 20px;
+  padding-left: 25px;
 }
 
 .inhalt ul#list_body li div#authors{
