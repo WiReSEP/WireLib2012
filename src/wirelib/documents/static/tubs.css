@@ -70,7 +70,7 @@ div#symbolpic {
 
 div#logo {
      position:absolute;
-     left:628px;
+     left:780px;
      top: 6px; 
      z-index:3;
      width: 350px;
@@ -85,10 +85,10 @@ div#tu_titelzeile {
 }
 
 /* Stellt den Hover-Effekt der Links für die Kopfnavigation ab */
-div#tu_titelzeile a:hover{
+/*div#tu_titelzeile a:hover{
 	background-color: transparent;
 }
-
+*/
 /* Der umgebende Container fuer die Navigationsliste  */
 div#tu_navcontainer {
 
@@ -1522,4 +1522,9 @@ ul#sb_leiste2 li {
 }
 #search .result .url {
   color: #6d8300;
+}
+
+div.logo a {
+    background-color: transparent;
+    
 }
