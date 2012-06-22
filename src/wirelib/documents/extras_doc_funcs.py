@@ -225,7 +225,7 @@ def insert_doc(dict_insert, user):
                 auth_db = author(last_name=last_name_f,
                         first_name=first_name_f)
                 # auth_db.documents.add(document_db)
-            auth_db.save()
+            auth_db.save(last_edit_by_f)
             authors_db.append(auth_db)
             document_db.authors.add(auth_db)
         keywords_db = []
