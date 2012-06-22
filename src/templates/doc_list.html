@@ -54,13 +54,17 @@
 		{% endfor %}
 	  </div>
 	  <div id="year">{{ d.year }}</div>
-	  <div id="volume">
-            {{% if d.doc_extra.object.get( == "volume") %}}
-                {{d.doc_extra(object.content.get)}}
-            {{% endif %}}
-            
-	  <!-- TODO  hier einfügen --></div>
 	  <div id="publisher">{{ d.publisher|default_if_none:"" }}</div>
+	  <div id="volume">{% spaceless %}
+            {# TODO ersetzen durch schöneren Aufruf #}      
+            
+            {% for b in d.doc_extra_set.all %}
+                {% if b.bib_field == "volume" %}     
+                    Seitenzahl:   {{ b }}
+                {% endif %}
+            {% endfor %}    
+            {% endspaceless %}</div>
+	  
 	  <div id="date_lend">Ausgeliehen seit: 
     	{% if form == 1 %}	  
     	    {{ d.lending.date_lending }}

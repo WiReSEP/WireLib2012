@@ -133,6 +133,9 @@ class doc_extra(models.Model):
     class Meta:
         unique_together = ('doc_id', 'bib_field')
     #primary_key(docId, bibField)
+    
+    def __unicode__(self):
+        return unicode(self.content) 
 
 class user_profile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
