@@ -30,6 +30,7 @@
 
 	<ul id="list_body">
 	{% for d in documents %}
+	
 	  <li id="status_{% spaceless %}
 		  {% if form == 0 %}
 			{{ d.status }} 
@@ -39,12 +40,12 @@
 		  {% endspaceless %}">
 	  <div id="title">
 		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a>
-		   {% if form == 1 %}
-		    {% if non_user_lend == True %}
-		    {{lending.date_term}}
-		    {% endif %}
+		  {% if form == 1 %}
+		        {% if d.lending.non_user_lend == True %}		        
+		              {{ d.lending.date_term }}		    
+		        {% endif  %}   
 		  {% endif %}
-		   <!-- TODO: date_term --> </div>
+		   </div>
 		<div id="extras">
 		<div id="authors">
 		{% for au in d.authors.all %} 
@@ -53,18 +54,19 @@
 		{% endfor %}
 	  </div>
 	  <div id="year">{{ d.year }}</div>
-	  <div id="volume"><!-- TODO  hier einfügen --></div>
+	  <div id="volume">
+            {{% if d.doc_extra.object.get( == "volume") %}}
+                {{d.doc_extra(object.content.get)}}
+            {{% endif %}}
+            
+	  <!-- TODO  hier einfügen --></div>
 	  <div id="publisher">{{ d.publisher|default_if_none:"" }}</div>
-	  {% if form == 1 %}
-		<div id="date_lend">Ausgeliehen seit: 
-		{% if form == 1 %}
-		    {% if non_user_lend == False %}
-		    {{lending.date_lending}}
-		    {% endif %}
-		  {% endif %}
-		
-		 <!-- TODO --></div>
-	  {% endif %}
+	  <div id="date_lend">Ausgeliehen seit: 
+    	{% if form == 1 %}	  
+    	    {{ d.lending.date_lending }}
+    	{% endif %}
+		</div>
+	  
 	  </div>
 	</li>
 	{% endfor %}

@@ -208,6 +208,8 @@ def __list(request, documents, form=1):
         1 = Ausleihe
     """
     documents = __filter_names(documents, request)
+    for d in documents:    
+        print "hallo" #d.objects.get( bib_field = "volume")
     sort = request.GET.get('sort')
     if sort is not None:
         documents = documents.order_by(sort)
