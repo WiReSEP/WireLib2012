@@ -70,7 +70,7 @@ div#symbolpic {
 
 div#logo {
      position:absolute;
-     left:628px;
+     left:780px;
      top: 6px; 
      z-index:3;
      width: 350px;
