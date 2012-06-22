@@ -84,7 +84,7 @@ class document(models.Model):
         """
         #TODO nach Datenbankerstellung überprüfen, ob die if-Anweisung noch benötigt wird
         if user == None:
-            user = User.get(username='admin')
+            user = User.objects.get(id=0)
         self.last_edit_by=user
         super(document, self).save(*args, **kwargs)
     
