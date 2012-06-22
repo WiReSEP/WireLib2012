@@ -6,8 +6,32 @@
 %geschieht durch explizite Nennung aller Konfigurationsdateien und notwendiger
 %Eintr\"age.
 Im folgenden eine vollständige Installationsbeschreibung am Beispiel eines
-\Gls{glos:ubuntu} Servers.
+\Gls{glos:ubuntu} Servers mit \Gls{glos:lighttpd} und \Gls{glos:fastcgi}.
 
 \section{Installation notwendiger Programme}
-Erforderlich für die Installation 
+Für die Installation müssen zuerst die notwendigen Pakete installiert werden,
+dies sind die folgenden:
 
+#Packete
+##Webserver: lighttpd
+Erstmal deaktivieren: service lighttpd stop
+
+##Mysql: mysql-server
+##Django: python-django
+##Git: git
+##pip: python-pip
+
+#pagination: pip install django-pagination 
+
+# Mysql-Server einrichten
+
+#Django-Seite initieren:
+  cd /var/www
+  django-admin startproject wire
+
+  cd /var/www
+  git clone https://github.com/WiReSEP/WireLib2012.git
+  ln -s WireLib2012/src/wirelib/documents wire/documents
+
+#Webseite einrichten:
+Zuerst die settings.py
