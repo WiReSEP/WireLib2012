@@ -78,10 +78,13 @@ class document(models.Model):
     stat_miss = 3       #vermisst
     stat_lost = 4       #verloren
     
-    def save(self, user, *args, **kwargs):
+    def save(self, user=None, *args, **kwargs):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
+        #TODO nach Datenbankerstellung überprüfen, ob die if-Anweisung noch benötigt wird
+        if user == None:
+            user = User.get(username='admin')
         self.last_edit_by=user
         super(document, self).save(*args, **kwargs)
     
@@ -177,7 +180,7 @@ class keywords(models.Model):
     def __unicode__(self):
         return self.keyword
         
-    def save(self, user, *args, **kwargs):
+    def save(self, user=None, *args, **kwargs):
         """
         Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
         aktualisiert werden kann
@@ -196,7 +199,7 @@ class doc_extra(models.Model):
         unique_together = ('doc_id', 'bib_field')
     #primary_key(docId, bibField)
     
-    def save(self, user, *args, **kwargs):
+    def save(self, user=None, *args, **kwargs):
         """
         Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
         aktualisiert werden kann
