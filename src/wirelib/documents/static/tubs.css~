@@ -85,10 +85,10 @@ div#tu_titelzeile {
 }
 
 /* Stellt den Hover-Effekt der Links für die Kopfnavigation ab */
-div#tu_titelzeile a:hover{
+/*div#tu_titelzeile a:hover{
 	background-color: transparent;
 }
-
+*/
 /* Der umgebende Container fuer die Navigationsliste  */
 div#tu_navcontainer {
 
@@ -1094,7 +1094,7 @@ a:visited {
 
 a:hover {
 	color: #ffffff;
-	background-color:  #be1e3c; 
+	background-color:  transparent; 
 	text-decoration: none;
 }
 
