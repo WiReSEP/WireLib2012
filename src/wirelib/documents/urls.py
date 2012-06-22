@@ -16,10 +16,20 @@ urlpatterns = patterns('documents.views',
         url(r'^user/profile/settings$', 'profile_settings'),         
 )
 
+
+
+urlpatterns += patterns('', 
+        url(r'^accounts/password_reset$', 'django.contrib.auth.views.password_reset',
+            {'template_name': 'account/password_reset.html', 
+             'email_template_name': 'email/password_reset_email.txt'}),
+        url(r'^accounts/password/change$', 'django.contrib.auth.views.password_change',
+            {'template_name': 'account/password_change.html'}),
+        url(r'^accounts/password/change/done$', 'django.contrib.auth.views.password_change_done',
+            {'template_name': 'account/password_change_done.html'}),  
+) 
+
 urlpatterns += patterns('django.contrib.auth.views',
         url(r'^login$', 'login'),
         url(r'^logout$', 'logout'),
-        url(r'^password_reset$', 'password_reset'), 
-        url(r'^password_reset/done$', 'password_reset_done'), 
         
 )   

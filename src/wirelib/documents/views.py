@@ -217,7 +217,7 @@ def __list(request, documents):
     v_user = request.user
     perms =  v_user.has_perm('add_author')
     params_sort = __truncate_get(request, 'sort')
-    params_starts = __truncate_get(request, 'starts')
+    params_starts = __truncate_get(request, 'starts', 'page')
     return render_to_response("doc_list.html", 
             dict(documents=documents,
                 user=v_user, 
@@ -227,14 +227,19 @@ def __list(request, documents):
                 path_starts=params_starts ),
             context_instance=RequestContext(request))
 
-def __truncate_get(request, var):
+def __truncate_get(request, *var):
     params = request.GET.copy()
-    if var in params:
-        params_tmp = u""
-        for key in params:
-            if not key == var:
-                params_tmp += key + u"=" + params[key] + u"&"
-        params = QueryDict(params_tmp)
+    test = False
+    for arg in var:
+        if arg in params:
+            test = True
+    if not test:
+        return params.urlencode() # no need to truncate
+    params_tmp = u""
+    for key in params:
+        if not key in var:
+            params_tmp += key + u"=" + params[key] + u"&"
+    params = QueryDict(params_tmp)
     return params.urlencode()
 
 def __filter_names(documents, request):
