@@ -208,6 +208,7 @@ def insert_doc(dict_insert, user):
                 last_edit_by = last_edit_by_f,
                 )
         authors_db = []
+        document_db.save()
         for auth in author_f:
             au = auth.split(", ", 2)
             if len(au) > 1:
