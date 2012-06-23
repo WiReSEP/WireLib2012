@@ -272,4 +272,6 @@ class doc_status(models.Model):
         #ausleihender non_User
 
 class emails(models.Model):
+    name = models.CharField(max_length=20)
+    subject = models.CharField(max_length=30)
     text = models.TextField()
