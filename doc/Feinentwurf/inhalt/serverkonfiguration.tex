@@ -15,8 +15,10 @@ dies sind die folgenden:
 #Packete
 ##Webserver: lighttpd
 Erstmal deaktivieren: service lighttpd stop
+Für adminer noch installieren: php5-mysql php5-cgi
 
 ##Mysql: mysql-server
+noch zusätzliches Paket: python-mysqldb
 ##Django: python-django
 ##Git: git
 ##pip: python-pip
@@ -35,3 +37,20 @@ Erstmal deaktivieren: service lighttpd stop
 
 #Webseite einrichten:
 Zuerst die settings.py
+ 0. DEBUG= False
+ 1. Datenbank zugriff eintragen.
+% 2. Autocommit ausschalten: 'OPTIONS'\ldots
+ 2. Templatedir eintragen: /var/www/WireLib2012/src/templates
+ 3. installed_apps eintragen: 
+  'pagination'
+  'documents'
+  'django.contrib.admin' (auskommentieren)
+
+dann urls.py
+ 1. import nachtragen: 
+ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+ 2. zwei Zeilen für admin auskommentieren.
+ 3. urlpatterns erweitern:
+ zuerst admin-sektion: url(r'^admin/', include(admin.site.urls)),
+ dann url(r'^', include('documents.urls'))
+ 4. urlpatterns += staticfiles_urlpatterns()
