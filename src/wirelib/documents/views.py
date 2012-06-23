@@ -255,7 +255,11 @@ def user(request):
             doc_status__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents):
+def __list(request, documents, form=0):
+    """ Erzeugt eine Liste vom Typ "form".
+        0 = Literaturverzeichnis oder Suchergebnis
+        1 = Ausleihe
+    """
     documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
     if sort is not None:
@@ -268,12 +272,13 @@ def __list(request, documents):
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     return render_to_response("doc_list.html", 
-            dict(documents=documents,
-                user=v_user, 
-                settings=settings, 
-                perm=perms,
-                path_sort=params_sort, 
-                path_starts=params_starts ),
+            dict(documents = documents,
+                user = v_user, 
+                settings = settings, 
+                perm = perms,
+                path_sort = params_sort, 
+                path_starts = params_starts,
+                form = form),
             context_instance=RequestContext(request))
 
 def __truncate_get(request, *var):

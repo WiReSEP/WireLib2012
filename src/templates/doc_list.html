@@ -2,53 +2,80 @@
 {% load pagination_tags %}
 {% block content %}
 
-   
-	<h1>Literaturverzeichnis</h1>
-	<a href="?{{ path_starts }}&starts=0-9">0-9</a>
-    <a href="?{{ path_starts }}&starts=a-c">A-C</a>
-    <a href="?{{ path_starts }}&starts=d-f">D-F</a>
-    <a href="?{{ path_starts }}&starts=g-i">G-I</a>
-    <a href="?{{ path_starts }}&starts=j-l">J-K</a>
-    <a href="?{{ path_starts }}&starts=m-o">M-O</a>
-    <a href="?{{ path_starts }}&starts=p-s">P-S</a>
-    <a href="?{{ path_starts }}&starts=t-v">T-V</a>
-    <a href="?{{ path_starts }}&starts=w-z">W-Z</a>
-    <a href="?{{ path_starts }}&starts=all">alle</a>
-	{% autopaginate documents 10 %}
- <table width="100%" class="sortable" border = "3" bgcolor="#FFFFFF"> 
-  
-   
+<h1>{{ page_title }}</h1>
+<p>{{ page_text }}</p>
+<p>
+	<div id="list_startfilter">
+	  <a href="?{{ path_starts }}&starts=0-9">0-9</a>
+	  <a href="?{{ path_starts }}&starts=a-c">A-C</a>
+	  <a href="?{{ path_starts }}&starts=d-f">D-F</a>
+	  <a href="?{{ path_starts }}&starts=g-i">G-I</a>
+	  <a href="?{{ path_starts }}&starts=j-l">J-K</a>
+	  <a href="?{{ path_starts }}&starts=m-o">M-O</a>
+	  <a href="?{{ path_starts }}&starts=p-s">P-S</a>
+	  <a href="?{{ path_starts }}&starts=t-v">T-V</a>
+	  <a href="?{{ path_starts }}&starts=w-z">W-Z</a>
+	  <a href="?{{ path_starts }}&starts=all">alle</a>
+	</div>
 
-   <th><a href="?{{ path_sort }}&sort=title">Dokumententitel</a></th>
-   <th><a href="?{{ path_sort }}&sort=category">Kategorie</a></th>
-	<th><a href="?{{ path_sort }}&sort=authors">Authoren</a></th>
-	<th><a href="?{{ path_sort }}&sort=year">Veröffentlichung</a></th>
-	<th><a href="?{{ path_sort }}&sort=status">Status</a></th>
-	<th><a href="?{{ path_sort }}&sort=isbn">Isbn</a></th>
-       
-        
-       	{% for d in documents %}		
-	<tr><td><a href="../doc/{{d.bib_no}}">{{d}}</a></td> 
-	<td>{{d.category}}</td>
-	   <td> {% for au in d.authors.all %}
-	    {{au}}
-	    {% endfor %}</td>
-	<td>{{d.year}}</td>
-	<td>
-	{% if d.status = 0 %}
-	Vorhanden
-	{% endif %}
-	{% if d.status = 1 %}
-	Verliehen
-	{% endif %}
-	{% if d.status = 2 %}
-	Betsellt
-	{% endif %}
-	</td>
-	<td>{{d.isbn}}</td>
+	<div id="list_sort">
+	  <a href="?{{ path_sort }}&sort=title">Dokumententitel</a>
+	  <a href="?{{ path_sort }}&sort=category">Kategorie</a>
+	  <a href="?{{ path_sort }}&sort=authors">Authoren</a>
+	  <a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
+	  <a href="?{{ path_sort }}&sort=status">Status</a>
+	  <a href="?{{ path_sort }}&sort=isbn">Isbn</a>
+	</div>
+	{% autopaginate documents 10 %}
+
+	<ul id="list_body">
+	{% for d in documents %}
 	
-	</tr>
+	  <li id="status_{% spaceless %}
+		  {% if form == 0 %}
+			{{ d.status }} 
+		  {% else %}{% if form == 1 %}
+			<!-- TODO: non-user null? Grafik-->
+		  {% endif %}{% endif %}
+		  {% endspaceless %}">
+	  <div id="title">
+		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a>
+		  {% if form == 1 %}
+		        {% if d.lending.non_user_lend == True %}		        
+		              {{ d.lending.date_term }}		    
+		        {% endif  %}   
+		  {% endif %}
+		   </div>
+		<div id="extras">
+		<div id="authors">{% spaceless %}
+		{% for au in d.authors.all %} 
+		{{ au.first_name }} 
+		{{ au.last_name }}{% if not forloop.last %}, {% endif %}
+		{% endfor %}
+	 {% endspaceless %}</div>
+	  <div id="year">{{ d.year }}</div>
+	  <div id="volume">{% spaceless %}
+	  <div id="publisher">{{ d.publisher|default_if_none:"" }}</div>
+            {# TODO ersetzen durch schöneren Aufruf #}      
+            
+            {% for b in d.doc_extra_set.all %}
+                {% if b.bib_field == "volume" %}     
+                    Seitenzahl:   {{ b }}
+                {% endif %}
+            {% endfor %}    
+            {% endspaceless %}</div>
 	
-	{% endfor %} </table>
+    	{% if form == 1 %}	
+        <div id="date_lend"> 
+    	  Ausgeliehen seit:
+    	    {{ d.lending.date_lending }}
+    	</div>
+    	{% endif %}
+		  
+	  </div>
+	</li>
+	{% endfor %}
+	</ul>
+</p>
 	{% paginate %}
 {% endblock %}

@@ -200,6 +200,9 @@ class doc_extra(models.Model):
         unique_together = ('doc_id', 'bib_field')
     #primary_key(docId, bibField)
     
+    def __unicode__(self):
+        return unicode(self.content) 
+
     def save(self, user=None, *args, **kwargs):
         """
         Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
