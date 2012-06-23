@@ -19,7 +19,7 @@ def is_valid(dict_data): #TODO
         bib_no_r = r"[PKDRM]\d+"#TODO regex im backend zur bearbeitung freigeben
         if not re.match(bib_no_r, dict_data["bib_no"]):
             return False, u"InformatikBibNo hat falsches Format"
-        inv_no_r = r"\d{4}/\d{3}"
+        inv_no_r = r"\d{4}/\d+"
         if not re.match(inv_no_r, dict_data[u"inv_no"]):
             return False, u"Inventar-Nummer hat falsches Format"
         if dict_data[u"category"] == u"book": #checking book

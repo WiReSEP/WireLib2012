@@ -175,7 +175,7 @@ class UglyBibtex(object):
                 self.errout.write("Eintrag kein valides Format\n")
                 self.errout.write(u"Begründung: " + e.message +"\n")
                 self.__log_error()
-            except UnknownCategoryError:    # TODO: korrekte Exception eintragen.
+            except UnknownCategoryError:
                 errmsg = "Kategorie %s nicht bekannt\n" % self.entry[u'category']
                 self.errout.write(errmsg)
                 self.__log_error()
