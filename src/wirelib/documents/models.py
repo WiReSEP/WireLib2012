@@ -32,7 +32,7 @@ class category(models.Model):
         return self.name
     
 class publisher(models.Model):
-    name = models.CharField(max_length=35, primary_key=True)
+    name = models.CharField(max_length=100, primary_key=True)
     
     def __unicode__(self):
         return self.name
