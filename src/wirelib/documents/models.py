@@ -81,7 +81,6 @@ class document(models.Model):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
-        #TODO nach Datenbankerstellung überprüfen, ob die if-Anweisung noch benötigt wird bzw. dat user None sein muss
         if user == None:
             user = User.objects.get(id=1)
         self.last_edit_by=user
@@ -119,7 +118,10 @@ class document(models.Model):
             user - user_lend
             non_user - non_user_lend
         """
-        self.doc_status_set.latest('date').update(return_lend=True)
+        try: # Wenn es was zum updaten gibt:
+            self.doc_status_set.latest('date').update(return_lend=True)
+        except:
+            pass
         l = doc_status(
             recent_user = editor,
             doc_id = self,
