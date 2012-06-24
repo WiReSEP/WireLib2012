@@ -180,9 +180,13 @@
 <input type="button" name="bibtex" value="BibTeX" onclick="spoiler(this,'spoiler','BibTeX','BibTeX verbergen')"> <br />
 <div id="spoiler" name="spoiler" style="display: none;"><textarea cols="63"
 	rows="15" readonly="true">{{ bi }}</textarea></div>
-    History dieses Dokuments
+	
+	
+    <h3>History dieses Dokuments</h3>
     
     <table border = "3">
-    <tr><td>test</td><td>spalte 2</td></tr>
+    {% for s in documents.doc_status.all %}
+    <tr><td>{{s.date}}</td><td>{{s.status}}</td><td>{{s.recent_user}}</td></tr>
+    {% endfor %}
     </table>
 {% endblock %}
