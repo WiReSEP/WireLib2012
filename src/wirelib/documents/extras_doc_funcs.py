@@ -207,7 +207,6 @@ def insert_doc(dict_insert, user):
                 last_updated= last_updated_f,
                 last_edit_by = last_edit_by_f,
                 )
-        authors_db = []
         document_db.save()
         for auth in author_f:
             au = auth.split(", ", 2)
@@ -227,8 +226,8 @@ def insert_doc(dict_insert, user):
                         first_name=first_name_f)
                 # auth_db.documents.add(document_db)
             auth_db.save(last_edit_by_f)
-            authors_db.append(auth_db)
             document_db.authors.add(auth_db)
+            document_db.save()
         keywords_db = []
         for key in keywords_f:
             key_db, dummy = keywords.objects.get_or_create(document=document_db,
@@ -241,7 +240,6 @@ def insert_doc(dict_insert, user):
                 extra_db, dummy = doc_extra.objects.get_or_create(
                     doc_id=document_db, bib_field=extra, content=value)
                 extras_db.append(extra_db)
-        document_db.save()
     except IntegrityError, e:
         raise DuplicateKeyError(e.message) #TODO regex basteln für Feld
 
