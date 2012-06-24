@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from exceptions import LendingError
-from datetime import datetime
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
     def __init__(self, *args, **kwargs):
@@ -72,11 +71,11 @@ class document(models.Model):
     comment = models.TextField(null=True)
     authors = models.ManyToManyField(author)
 
-    stat_available = 0  #vorhanden
-    stat_lend = 1       #ausgeliehen
-    stat_ordered = 2    #bestellt
-    stat_miss = 3       #vermisst
-    stat_lost = 4       #verloren
+    AVAILABLE= 0  #vorhanden
+    LEND = 1       #ausgeliehen
+    ORDERED = 2    #bestellt
+    MISSING = 3       #vermisst
+    LOST = 4       #verloren
     
     def save(self, user=None, *args, **kwargs):
         """
@@ -141,34 +140,35 @@ class document(models.Model):
             terminate - date_term_lend
         """
         # fürs Übertragen
-        if self.status == stat_lend:
+        if self.status == document.LEND:
             dstat = self.doc_status_set.latest('date')
-            if dstat.user_lend == user and dstats.non_user_lend == non_user:
+            if dstat.user_lend == user and dstat.non_user_lend == non_user:
                 raise LendingError()
         # zum Ausleihen oder Wiederfinden
-        elif self.status != stat_available and self.status != stat_miss :
+        elif self.status != document.AVAILABLE \
+              and self.status != document.MISSING:
             raise LendingError()
         if editor == None:
             editor = user
-        self.__set_status(editor, stat_lend, terminate, user, non_user)
+        self.__set_status(editor, document.LEND, terminate, user, non_user)
 
     def unlend(self, user):
         """ 
         Methode zum zurückgeben 
         """
-        self.__set_status(user, stat_available)
+        self.__set_status(user, document.AVAILABLE)
 
     def lost(self, user):
         """ 
         Methode zum "Verloren" setzen
         """
-        self.__set_status(user, stat_lost)
+        self.__set_status(user, document.LOST)
         
     def missing(self, user):
         """ 
         Methode für Vermisstmeldungen
         """
-        self.__set_status(user, stat_miss)
+        self.__set_status(user, document.MISSING)
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
