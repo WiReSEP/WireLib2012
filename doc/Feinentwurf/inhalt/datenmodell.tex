@@ -106,7 +106,7 @@ Versuch 1: \\
   \hline
   auth\_user & leiht/bürgt gerade für & n\\
   \hline
-  auth\_user & TODO django\_admin\_log & n\\
+  auth\_user & aktualisiert & n\\
   \hline
   auth\_user & bekam & n\\
   \hline\hline\hline
@@ -160,7 +160,7 @@ Versuch 1: \\
   \hline
   auth\_permission & die Gruppe hat & n \\
   \hline
-  auth\_permission & TODO django\_content\_type & 1 \\
+  auth\_permission & referenziert & 1 \\
   \hline
 \end{tabular}
 
@@ -173,14 +173,14 @@ Versuch 1: \\
   \hline\hline
   django\_admin\_log & getätigt von  & 1 \\
   \hline
-  auth\_admin\_log & TODO django\_content\_type & 1 \\
+  auth\_admin\_log & referenziert & 1 \\
   \hline\hline\hline
   
   Content\_Type:  & Name der Beziehung &  Kardinalit\"at\\
   \hline\hline
-  django\_content\_type & TODO auth\_permission & n \\
+  django\_content\_type & stellt Referenz & n \\
   \hline
-  django\_content\_type & TODO django\_admin\_log & n \\
+  django\_content\_type & ändert & n \\
   \hline\hline\hline
 \end{tabular}
 
@@ -279,7 +279,7 @@ Versuch 2: \\
   \hline
   documents\_doc\_status & leiht/bürgt gerade für & n\\
   \hline
-  django\_admin\_log & TODO django\_admin\_log & n\\
+  django\_admin\_log & aktualisiert & n\\
   \hline
   auth\_message & bekam & n\\
   \hline\hline\hline
@@ -333,7 +333,7 @@ Versuch 2: \\
   \hline
   auth\_group\_permissions & die Gruppe hat & n \\
   \hline
-  django\_content\_type & TODO & 1 \\
+  django\_content\_type & referenziert & 1 \\
   \hline
 \end{tabular}
 
@@ -346,13 +346,13 @@ Versuch 2: \\
   \hline\hline
   auth\_user & getätigt von  & 1 \\
   \hline
-  django\_content\_type & TODO & 1 \\
+  django\_content\_type & referenziert & 1 \\
   \hline\hline\hline
   
   django\_content\_type:  & Name der Beziehung &  Kardinalit\"at\\
   \hline\hline
-  auth\_permission & TODO  & n \\
+  auth\_permission & stellt Referenz  & n \\
   \hline
-  django\_admin\_log & TODO & n \\
+  django\_admin\_log & ändert & n \\
   \hline\hline\hline
 \end{tabular}

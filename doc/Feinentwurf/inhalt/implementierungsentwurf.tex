@@ -3,29 +3,157 @@
 % die dann mit dem \include-Befehl eingebunden werden.
 %-------------------------------------------------------------------------------
 \chapter{Implementierungsentwurf}
-Dieser Abschnitt hat die Aufgabe, alle verwendeten Klassen und Bibliotheken zu
-dokumentieren. Dabei wird jede Komponente aus dem Grobentwurf gesondert
-betrachtet. F\"ur Entwurfsentscheidungen, die mehr als eine Komponente betreffen,
-wird mit Verweisen zwischen den Dokumentationen der Komponente gearbeitet.  Es
-sind dabei so viele Unterabschnitte einzuf\"ugen, wie Komponenten vorhanden sind.
+%Dieser Abschnitt hat die Aufgabe, alle verwendeten Klassen und Bibliotheken zu
+%dokumentieren. Dabei wird jede Komponente aus dem Grobentwurf gesondert
+%betrachtet. F\"ur Entwurfsentscheidungen, die mehr als eine Komponente betreffen,
+%wird mit Verweisen zwischen den Dokumentationen der Komponente gearbeitet.  Es
+%sind dabei so viele Unterabschnitte einzuf\"ugen, wie Komponenten vorhanden sind.
 
 
 \section{Gesamtsystem}
-F\"ugen Sie hier bitte das Komponentendiagramm aus dem Grobentwurf ein und
-erl\"autern Sie kurz die Funktionen der Komponenten.
+%F\"ugen Sie hier bitte das Komponentendiagramm aus dem Grobentwurf ein und
+%erl\"autern Sie kurz die Funktionen der Komponenten.
 
 \section{Implementierung von Komponente
-         <ID aus Grobentwurf>: <Komponentenname>:}
+         1: Client:}
 
-Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
-bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
-Implementierung wird dabei durch Klassendiagramme dokumentiert.
+%Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
+%bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
+%Implementierung wird dabei durch Klassendiagramme dokumentiert.
+
+Der Client dient als Schnittstelle des Benutzers mit dem eigentlichen Programm
+auf dem Server. Mittels eines Browsers der von uns nicht festgelegt wird, werden
+die Webseitencodes, die der Server an den Clienten auf dessen Anfragen sendet,
+in die für den Benutzer verständliche Form einer Webseite gebracht.
 
 \subsection{Paketdiagramm}
+\begin{figure}[H]
+\includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_client.pdf}
+\caption{Paketdiagramm Client}
+\label{fig:PDclient}
+\end{figure}
 \subsection{Erl\"auterung}
 
-Die verwendeten Attribute, Aufgaben und Kommunikationspartner sind f\"ur jede
-Klasse kurz zu erl\"autern. Die ankommenden Nachrichten beziehen sich dabei auf
-die Sequenzdiagramme der Feinanalyse im Grobentwurf und stellen meist
-aufzurufende Methoden der Klasse dar.  Reine get- / set-Methoden oder
-Bibliotheksfunktionen brauchen nicht aufgef\"uhrt zu werden.
+Da als Client mehrere verschieden Browser in Frage kommen, können die genauen
+Funktionen dieser Komponente hier nicht beschrieben werden. Die für uns
+wichtigen Funktionen sind die Möglichkeit eine Anfrage an unseren Server zu
+stellen, einen Webseitencode darstellen zu können und eine Datei lokal zu
+speichern. Dabei funktioniert die Kommunikation mit dem Server über
+Http-Requests und Http-Responses. Für die Korrektheit der Ergebnisse mancher
+Anfragen wird der lokale Cookie benötigt und deswegen mitgesendet. 
+Auf eine Anfrage per HttpRequest kann der Browser entweder einen Webseitencode 
+oder eine Datei als Http-Response erhalten. Je nachdem was er erhält, ruft er 
+die passende Funktion auf. 
+
+%Die verwendeten Attribute, Aufgaben und Kommunikationspartner sind f\"ur jede
+%Klasse kurz zu erl\"autern. Die ankommenden Nachrichten beziehen sich dabei auf
+%die Sequenzdiagramme der Feinanalyse im Grobentwurf und stellen meist
+%aufzurufende Methoden der Klasse dar.  Reine get- / set-Methoden oder
+%Bibliotheksfunktionen brauchen nicht aufgef\"uhrt zu werden.
+
+\section{Implementierung von Komponente
+         2: View:}
+
+%Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
+%bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
+%Implementierung wird dabei durch Klassendiagramme dokumentiert.
+
+Die Views sind einer der essentiellen Bestandteile des Django-Frameworks. Sie
+bestimmen die Art und Weise wie Templates aufgerufen werden, welche
+Informationen die Templates bekommen und wie die Daten aus den Templates
+verarbeitet werden. Sie sind die Schnittstelle zwischen den Templates und dem
+Rest des Programms.
+
+\subsection{Paketdiagramm}
+\begin{figure}[H]
+\includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_views.pdf}
+\caption{Paketdiagramm Views}
+\label{fig:PDviews}
+\end{figure}
+\subsection{Erl\"auterung}
+Die Komponente View besteht aus einem einzigen Paket, welches für jede
+beachbsichtigte Art des Aufrufs eines Templates eine Funktion zur Verfügung
+stellt. Dabei erhalten die Funktionen über einen Http-Request Informationen die
+in der Funktion verarbeitet werden und geben einen Http-Response zurück, welche
+den fertigen Webseitencode enthält. Da die Funktion doc\_detail benötigt
+teilweise indirekt von anderen Funktionen der Komponente view aufgerufen wird
+benötigt sie noch den zusätzlichen Parameter der ihr mitteilt, welches Dokument
+dargestellt werden soll.
+
+
+\section{Implementierung von Komponente
+         3: Models:}
+
+%Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
+%bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
+%Implementierung wird dabei durch Klassendiagramme dokumentiert.
+
+Die Komponente Models stellt die Struktur der Datenbank dar. Das
+Django-Framework nimmt diese Struktur und setzt sie selbstständig in eine SQLite Datenbank
+um. Jede Klasse dieser Komponente ist das Muster für eine Tabelle in der
+Datenbank.
+
+\subsection{Paketdiagramm}
+\begin{figure}[H]
+\includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_models.pdf}
+\caption{Paketdiagramm Models}
+\label{fig:PDmodels}
+\end{figure}
+\subsection{Erl\"auterung}
+Jede Klasse stellt eine Tabelle in der Datenbank dar und jedes Attribut eine
+Spalte dieser Tabelle. Wenn ein Attribut den Typ einer anderen Klasse aus den
+Models besitzt stellt dies eine Beziehung in der späteren Datenbank dar.
+Mehrere Klassen haben die unicode-Funktion. Diese Funktion definiert wie eine
+Tabelle bzw. eine Zeile dieser Tabelle als String dargestellt werden soll.
+Mehrere Klassen haben die save-Funktion, welche gerade durchgeführte Änderungen
+unter Angabe des Editors sofort speichert. Die Klasse \"documents\" hat außerdem
+die Funktionen lost, missing, unlend und lend welche den Status des jeweiligen
+Dokumentes ändern können.
+
+\section{Implementierung von Komponente
+         4: Admin:}
+
+%Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
+%bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
+%Implementierung wird dabei durch Klassendiagramme dokumentiert.
+
+Die Komponente Admin stellt die Funktionen zur Veränderung von Daten Verfügung, die nicht von
+normalen Benutzern durchgeführt werden sollen.
+
+\subsection{Paketdiagramm}
+\begin{figure}[H]
+\includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_admin.pdf}
+\caption{Paketdiagramm Admin}
+\label{fig:PDadmin}
+\end{figure}
+\subsection{Erl\"auterung}
+Die Eingabe der Daten für die Adminofunktionen funktioniert auch hier über
+einen Http-Request. Die Http-Response besteht hier allerdings nur aus einer
+Nachricht, dass die Änderung funktioniert hat und eventuell der Ansicht der
+geänderten Daten. Es ist mit diesen Funktionen möglich in der Datenbank neue
+User zu erstellen und zu ändern, die verfügbaren Rollen zu bearbeiten und die
+gerellen Einstellungen des Servers zu ändern. 
+
+\section{Implementierung von Komponente
+         5: DB und Template:}
+
+%Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
+%bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
+%Implementierung wird dabei durch Klassendiagramme dokumentiert.
+
+Die Datenbank ist eine SQLite Datenbank. Dabei übernimmt allerdings das
+Django-Framework die komplette Kommunikation mithilfe der Komponente Models. 
+Die Templates sind eine statische Komponente auf die das Django-Framework
+zugreift sobald sie von der Komponente View benötigt werden. 
+
+\subsection{Paketdiagramm}
+Die Paketdiagramme wurden weggelassen. Siehe dazu den Punkt Erläuterung.
+
+\subsection{Erl\"auterung}
+Die Datenbank ist eine SQLite-Datenbank. Ein Paketdiagramm für das komplette
+SQLite würde die Maße dieses Dokumentes sprengen und wird deswegen weggelassen.
+Auf ein Paketdiagramm für die Komponente Templates wird verzichtet, da diese
+keinerlei Funktionen besitzt sondern nur von anderen Komponenten mit Daten
+gefüllt und weitergeleitet wird. Diese Kommunikation wird von Django-Framework
+durchgeführt für das ein Paketdiagram ebenfalls die Maße dieses Dokumentes
+sprengen würde.

@@ -70,6 +70,13 @@ class document(models.Model):
         #Datum des BibTeX-Exports
     comment = models.TextField(null=True)
     authors = models.ManyToManyField(author)
+    class Meta:
+        permissions = (("cs_price", "Can see price"),
+                       ("cs_locn", "Can see library of congress number"),
+                       ("cs_last_updated", "Can see last updated"),
+                       ("cs_last_edit_by", "Can see last editor"),
+                       ("cs_dop", "Can see date of purchase"),
+                       ("cs_export", "Can see dates of export"),)
 
     AVAILABLE= 0  #vorhanden
     LEND = 1       #ausgeliehen
@@ -220,6 +227,11 @@ class user_profile(models.Model):
     number = models.CharField(max_length=5)
     zipcode = models.CharField(max_length=5)
     city = models.CharField(max_length=58)
+    class Meta:
+        permissions = (("cs_admin", "Can see the adminpanel"),
+                       ("c_update", "Can update non-user"),
+                       ("c_import", "Can import"),
+                       ("c_export", "Can export"),)
 
     def __unicode__(self):
         return unicode(self.user)
@@ -275,8 +287,19 @@ class doc_status(models.Model):
         #ausleihender User
     non_user_lend = models.ForeignKey(non_user, null=True) 
         #ausleihender non_User
+    class Meta:
+        permissions = (("c_lend", "Can lend documents"),
+                       ("c_unlend_find", "Can unlend/find documents"),
+                       ("c_miss", "Can report documents as missed"),
+                       ("c_lost", "Can report documents as lost"),
+                       ("c_order", "Can order documents"),
+                       ("cs_history", "Can see documenthistory"),
+                       ("c_transfer", "Can transfer to other (non-) users"),)
+
 
 class emails(models.Model):
     name = models.CharField(max_length=20)
     subject = models.CharField(max_length=30)
     text = models.TextField()
+    class Meta:
+        permissions = (("can_send", "Can send Emails"),)
