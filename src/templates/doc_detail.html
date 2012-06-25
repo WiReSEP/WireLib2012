@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
 
-<h1>{{ documents.title}}</h1> 
+<h1>{{ documents.title }}</h1> 
 <table width="100%" >
 <tr>
 		  <td><b>Status:   </td>   </b>
@@ -24,8 +24,7 @@
 </td>
 		</tr>
 
-  <tr>
-	<td>
+  
 	  
 	  <tr>
 		  <td><b>Autor:</b></td>
@@ -183,10 +182,19 @@
 	
 	
     <h3>History dieses Dokuments</h3>
+   
+     
     
-    <table border = "3">
-    {% for s in documents.doc_status.all %}
-    <tr><td>{{s.date}}</td><td>{{s.status}}</td><td>{{s.recent_user}}</td></tr>
+    
+    <table> 
+    {% for i in 0123456789|make_list %}
+    <tr>{{z}}
+    <td>{{ documents.doc_status.date }}</td>
+    <td>{{ documents.doc_status.status }}</td>
+    <td>{{ documents.doc_status.recent_user }}</td>
+    </tr>
     {% endfor %}
     </table>
+    
+    
 {% endblock %}
