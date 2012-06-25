@@ -34,7 +34,7 @@ def search(request):
         return __list(request, documents)
     else:
         v_user = request.user
-        perms =  v_user.has_perm('add_author')
+        perms =  v_user.has_perm('cs_admin')
         context = Context({"user" : v_user, "perm" : perms})
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
@@ -70,7 +70,7 @@ def search_pro(request):
         return __list(request, s_documents)
     else:
         v_user = request.user
-        perms =  v_user.has_perm('add_author')
+        perms =  v_user.has_perm('cs_admin')
         return render_to_response("search_pro.html",context_instance=Context({"user" :
                        v_user, "perm" : perms}))
 
@@ -112,7 +112,7 @@ def doc_detail(request, bib_no_id):
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
@@ -124,19 +124,19 @@ def doc_detail(request, bib_no_id):
 
 def index(request): 
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     return render_to_response("home.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
 
 def profile(request): 
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     return render_to_response("profile.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
 
 def profile_settings(request): 
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     return render_to_response("profile_settings.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
                   
@@ -198,7 +198,7 @@ def doc_add(request):
         
         insert_doc(insert, v_user)
         #documents.extras_doc_funcs.insert_doc(insert,v_user) 
-    perms = v_user.has_perm('add_author')
+    perms = v_user.has_perm('cs_admin')
     cat = category.objects.filter()
     return render_to_response("doc_add.html",context_instance=Context({"user" :
                               v_user, "perm" : perms, "category" : cat}))
@@ -210,21 +210,21 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     return render_to_response("doc_rent.html",context_instance=Context({"user"
                               : v_user, "perm" : perms}))
 
 @login_required
 def export(request):
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     return render_to_response("export.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
 
 @login_required
 def allegro_export(request):
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     return render_to_response("allegro_export.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
 
@@ -243,7 +243,7 @@ def bibtex_export(request):
         thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
 
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     return render_to_response("bibtex_export.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
 
@@ -268,7 +268,7 @@ def __list(request, documents, form=0):
             documents = documents.reverse()
             headers[sort] = "asc"
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    perms =  v_user.has_perm('cs_admin')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     return render_to_response("doc_list.html", 
