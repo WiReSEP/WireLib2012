@@ -19,6 +19,27 @@
 \label{fig:KompDiagramm}
 \end{figure}
 
+Die Komponente Clent fungiert als Schnittstelle zwischen Benutzer und der 
+Applikation Documents. Sie nimmt Eingaben des Benutzers entgegen und bereitet 
+HttpResponses des Servers auf.
+
+Die Komponente Views prozessiert HttpRequests des Clients, leitet Aufrufe an die
+jeweiligen Templates weiter und füllt diese mit geforderten Informationen.
+
+Die Komponente Models bildet die Struktur der DB ab.
+
+Die Komponente Admin stellt die gesamten Admin-Funktionen zur Verfügung, also 
+Funktionen, welche nicht von normalen Benutzern durchgeführt werden sollen.
+
+Die Komponente DB stellt die Datenbank der gesamten Applikation dar.
+Sie liefert gewünschte Informationen, z.B. über Dokumente, Benutzer, deren 
+ausgeliehenen Bücher etc.
+
+Die Komponente Templates stellt die HTML-Seiten dar, welche durch andere 
+Komponenten(Views,Admin...) mit Informationen befüllt    
+
+
+
 \section{Implementierung von Komponente
          1: Client:}
 
