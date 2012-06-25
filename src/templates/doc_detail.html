@@ -1,35 +1,33 @@
 {% extends "index.html" %}
 {% block content %}
 
-<h1>{{ documents.title}} </h1>
-<table width="100%">
-  <tr>
-	<td>
-	  <table>
-		<tr>
-		  <td><b><u>ID in der Bibliothek:</u></b></td>
-		  <td>{{ documents.bib_no }}</td>
-		</tr>
-		<tr>
-		  <td><b><u>Inventarnummer:</u></b></td>
-		  <td>{{ documents.inv_no }}</td>
-		</tr>
-		<tr>
-		  <td><b><u>Kategorie:</u></b></td>
-		  <td>{{ documents.category }}</td>
-		</tr>
-		<tr>
-		  <td><b><u>ISBN:</u></b></td>
+<h1>{{ documents.title }}</h1> 
+<table width="100%" >
+<tr>
+		  <td><b>Status:   </td>   </b>
 		  <td>
-			{% if documents.isbn %}
-			{{ documents.isbn }}
-			{% else %}
-			-
-			{% endif %}
-		  </td>
+{% if documents.status == 0 %}
+         Vorhanden
+{% endif %}     
+{% if documents.status == 1 %}
+    Ausgeliehen
+{% endif %} 
+{% if documents.status == 2 %}
+    Bestellt
+{% endif %} 
+{% if documents.status == 3 %}
+    Vermisst
+{% endif %} 
+{% if documents.status == 4 %}
+    Verloren
+{% endif %} 
+</td>
 		</tr>
-		<tr>
-		  <td><b><u>Autor:</u></b></td>
+
+  
+	  
+	  <tr>
+		  <td><b>Autor:</b></td>
 		  <td>
 			{% for a in documents.authors.all %}
 			{{ a.first_name }} {{ a.last_name }},
@@ -37,7 +35,11 @@
 		  </td>
 		</tr>
 		<tr>
-		  <td><b><u>Publisher:</u></b></td>
+		  <td><b>Kategorie:</b></td>
+		  <td>{{ documents.category }}</td>
+		</tr>
+		<tr>
+		  <td><b>Publisher:</b></td>
 		  <td>
 			{% if documents.publisher %}
 			{{ documents.publisher }}
@@ -45,17 +47,12 @@
 			-
 			{% endif %}
 		  </td>
-		</tr>
 		<tr>
-		  <td><b><u>Erscheinungsjahr:</u></b></td>
+		  <td><b>Erscheinungsjahr:</b></td>
 		  <td>{{ documents.year }}</td>
 		</tr>
 		<tr>
-		  <td><b><u>BibTeX-ID:</u></b></td>
-		  <td>{{ documents.bibtex_id }}</td>
-		</tr>
-		<tr>
-		  <td><b><u>Schlüsselwörter:</u></b></td>
+		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
 			<!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
 			{% if documents.keywords_set.all %}
@@ -68,17 +65,7 @@
 		  </td>
 		</tr>	    
 		<tr>
-		  <td><b><u>LibraryOfCongressN:</u></b></td>
-		  <td>
-			{% if documents.lib_of_con_nr %}
-			{{ documents.lib_of_con_nr }}
-			{% else %}
-			-
-			{% endif %}
-		  </td>
-		</tr>
-		<tr>
-		  <td><b><u>Preis:</u></b></td>
+		  <td><b>Preis:</b></td>
 		  <td>
 			{% if documents.price and documents.currency %}
 			{{ documents.price }}{{ documents.currency }}
@@ -88,11 +75,11 @@
 		  </td>
 		</tr>
 		<tr>
-		  <td><b><u>In der Bibliothek seit:</u></b></td>
+		  <td><b>In der Bibliothek seit:</b></td>
 		  <td>{{ documents.date_of_purchase }}</td>
 		</tr>
 		<tr>
-		  <td><b><u>Notizen:</u></b></td>
+		  <td><b>Notizen:</b></td>
 		  <td>
 			{% if documents.comment %}
 			{{ documents.comment }}
@@ -104,11 +91,44 @@
 		<!-- TODO doc_extra funktionsfähig machen -->
 		{% for de in doc_extra %}    
 		<tr>
-		  <td><b><u>{{ de.bib_field }}</u></b></td>
+		  <td><b>{{ de.bib_field }}</b></td>
 		  <td>{{ de.content }}</td>
+		</tr>
+		<tr>
+		  <td><b>ID in der Bibliothek:</b></td>
+		  <td>{{ documents.bib_no }}</td>
+		</tr>
+		<tr>
+		  <td><b>Inventarnummer:</b></td>
+		  <td>{{ documents.inv_no }}</td>
+		</tr>
+		<tr>
+		  <td><b>ISBN:</b></td>
+		  <td>
+			{% if documents.isbn %}
+			{{ documents.isbn }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
+		</tr>
+		<tr>
+		  <td><b>BibTeX-ID:</b></td>
+		  <td>{{ documents.bibtex_id }}</td>
+		</tr>
+		<tr>
+		  <td><b>LibraryOfCongressN:</b></td>
+		  <td>
+			{% if documents.lib_of_con_nr %}
+			{{ documents.lib_of_con_nr }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
 		</tr>
 		{% endfor %}
 	  </table>
+	  
 	</td>
 	<td>
 	  <!-- TODO evtl Schriftfarben ändern -->
@@ -155,7 +175,26 @@
 	</td>
   </tr>
 </table>
+
 <input type="button" name="bibtex" value="BibTeX" onclick="spoiler(this,'spoiler','BibTeX','BibTeX verbergen')"> <br />
 <div id="spoiler" name="spoiler" style="display: none;"><textarea cols="63"
 	rows="15" readonly="true">{{ bi }}</textarea></div>
+	
+	
+    <h3>History dieses Dokuments</h3>
+   
+     
+    
+    
+    <table> 
+    {% for i in 0123456789|make_list %}
+    <tr>{{z}}
+    <td>{{ documents.doc_status.date }}</td>
+    <td>{{ documents.doc_status.status }}</td>
+    <td>{{ documents.doc_status.recent_user }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    
+    
 {% endblock %}

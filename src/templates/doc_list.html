@@ -20,10 +20,10 @@
 
 	<div id="list_sort">
 	  <a href="?{{ path_sort }}&sort=title">Dokumententitel</a>
-	  <a href="?{{ path_sort }}&sort=category">Kategorie</a>
+	<!---  <a href="?{{ path_sort }}&sort=category">Kategorie</a>--->
 	  <a href="?{{ path_sort }}&sort=authors">Authoren</a>
 	  <a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
-	  <a href="?{{ path_sort }}&sort=status">Status</a>
+	 <!--- <a href="?{{ path_sort }}&sort=status">Status</a>-->
 	  <a href="?{{ path_sort }}&sort=isbn">Isbn</a>
 	</div>
 	{% autopaginate documents 10 %}
@@ -42,7 +42,7 @@
 		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a>
 		  {% if form == 1 %}
 		        {% if d.lending.non_user_lend == True %}		        
-		              {{ d.lending.date_term }}		    
+		              {{ d.doc_status.date_term_lend }}		    
 		        {% endif  %}   
 		  {% endif %}
 		   </div>
@@ -68,7 +68,7 @@
     	{% if form == 1 %}	
         <div id="date_lend"> 
     	  Ausgeliehen seit:
-    	    {{ d.lending.date_lending }}
+    	    {{ d.doc_status.date }}
     	</div>
     	{% endif %}
 		  
