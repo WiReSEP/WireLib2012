@@ -3,7 +3,8 @@ from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
-from documents.models import document, lending, doc_extra
+from documents.models import document, doc_status, doc_extra, category
+from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
@@ -93,15 +94,19 @@ def doc_detail(request, bib_no_id):
     except document.DoesNotExist:
         raise Http404
     try:
-        lending_query = document_query.lending_set.latest("date_lend")
-    except lending.DoesNotExist:
+        lending_query = document_query.doc_status_set.latest("date")
+    except doc_status.DoesNotExist:
         lending_query = None
+    #selbst ausleihen, wenn Status vorhanden
     if 'lend' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
+    #zurückgeben
     if 'restitution' in request.POST and request.user.is_authenticated():
-        document_query.restitution(v_user)
+        document_query.unlend(v_user)
+    #vermisst melden
     if 'lost' in request.POST and request.user.is_authenticated():
         document_query.lost(v_user)
+    #wiedergefunden melden
     if 'found' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
@@ -145,10 +150,58 @@ def doc_add(request):
         * Import durch Formeingabe
         * Import durch Upload einer BibTeX-Datei
     """
+    #TODO Rechtekontrolle
     v_user = request.user
-    perms =  v_user.has_perm('add_author')
+    if 'file' in request.POST:
+        #TODO Datei speichern, Importer starten, Datei löschen
+        pass
+    if 'title' in request.POST:
+        insert = {}
+        insert[u"title"] = request.POST.get('title','')
+        insert[u"bib_no"] = request.POST.get('bib_no','').upper()
+        insert[u"inv_no"] = request.POST.get('inv_no','')
+        insert[u"category"] = request.POST.get('category','')
+        insert[u"publisher"] = request.POST.get('publisher','')
+        insert[u"year"] = request.POST.get('year','')
+        insert[u"address"] = request.POST.get('address','')
+        insert[u"comment"] = request.POST.get('comment','')
+        insert[u"currency"] = request.POST.get('currency','')
+        insert[u"lib_of_con_nr"] = request.POST.get('lib_of_con_nr','')
+        insert[u"isbn"] = request.POST.get('isbn','')
+        
+        firstnames = request.POST.getlist('author_first_name')
+        lastnames = request.POST.getlist('author_last_name')
+        authors = []
+        bibtex = u""
+        for a in range(0,len(firstnames)-1):
+            if not lastnames[a] == '':
+                authors.append(lastnames[a] + u", " + firstnames[a])
+                bibtex += lastnames[a]
+        bibtex += insert[u"inv_no"]
+        insert[u"bibtex_id"] = bibtex
+        insert[u"author"] = authors
+        
+        key = []
+        keyword = request.POST.getlist('keyword')
+        for k in range(0,len(keyword)-1):
+            if not keyword[k] == '':
+                key.append(keyword[k])
+        insert[u"keywords"] = key
+        
+        extras = {}
+        names = request.POST.getlist('doc_extra_name')
+        content = request.POST.getlist('doc_extra_content')
+        for i in range(0, len(names)-1):
+            if not names == '':
+                extras[names[i]] = content[i]
+        insert[u"extras"] = extras
+        
+        insert_doc(insert, v_user)
+        #documents.extras_doc_funcs.insert_doc(insert,v_user) 
+    perms = v_user.has_perm('add_author')
+    cat = category.objects.filter()
     return render_to_response("doc_add.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms}))
+                              v_user, "perm" : perms, "category" : cat}))
 
 @login_required
 def doc_rent(request):
@@ -197,12 +250,16 @@ def bibtex_export(request):
 @login_required
 def user(request):
     lend_documents = document.objects.filter(
-            lending__date_return__exact = None,
-            lending__user_lend__exact = request.user,
-            lending__non_user_lend__exact = None)
+            doc_status__return_lend__exact = False,
+            doc_status__user_lend__exact = request.user,
+            doc_status__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents):
+def __list(request, documents, form=0):
+    """ Erzeugt eine Liste vom Typ "form".
+        0 = Literaturverzeichnis oder Suchergebnis
+        1 = Ausleihe
+    """
     documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
     if sort is not None:
@@ -215,12 +272,13 @@ def __list(request, documents):
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     return render_to_response("doc_list.html", 
-            dict(documents=documents,
-                user=v_user, 
-                settings=settings, 
-                perm=perms,
-                path_sort=params_sort, 
-                path_starts=params_starts ),
+            dict(documents = documents,
+                user = v_user, 
+                settings = settings, 
+                perm = perms,
+                path_sort = params_sort, 
+                path_starts = params_starts,
+                form = form),
             context_instance=RequestContext(request))
 
 def __truncate_get(request, *var):

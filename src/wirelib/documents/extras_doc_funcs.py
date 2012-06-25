@@ -19,7 +19,7 @@ def is_valid(dict_data): #TODO
         bib_no_r = r"[PKDRM]\d+"#TODO regex im backend zur bearbeitung freigeben
         if not re.match(bib_no_r, dict_data["bib_no"]):
             return False, u"InformatikBibNo hat falsches Format"
-        inv_no_r = r"\d{4}/\d{3}"
+        inv_no_r = r"\d{4}/\d+"
         if not re.match(inv_no_r, dict_data[u"inv_no"]):
             return False, u"Inventar-Nummer hat falsches Format"
         if dict_data[u"category"] == u"book": #checking book
@@ -166,7 +166,6 @@ def insert_doc(dict_insert, user):
         title_f = dict_insert[u"title"]
         isbn_f = dict_insert.get(u"isbn", None)
         category_f = dict_insert[u"category"]
-        status_f = dict_insert.get(u"status", 0)
         publisher_f = dict_insert.get(u"publisher", None)
         year_f = dict_insert.get(u"year", None)
         address_f = dict_insert.get(u"address", None)
@@ -180,7 +179,7 @@ def insert_doc(dict_insert, user):
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
         last_updated_f = datetime.date.today()
-        recent_user_f = user
+        last_edit_by_f = user
     except KeyError:
         raise ValueError(u"Daten haben nicht die benötigten Felder")
     try:
@@ -197,7 +196,6 @@ def insert_doc(dict_insert, user):
                 title=title_f, 
                 isbn=isbn_f, 
                 category=category_db, 
-                status=status_f,
                 publisher=publisher_db, 
                 year=year_f, 
                 address=address_f,
@@ -207,9 +205,9 @@ def insert_doc(dict_insert, user):
                 ub_date=ub_date_f,
                 comment=comment_f,
                 last_updated= last_updated_f,
-                recent_user = recent_user_f,
+                last_edit_by = last_edit_by_f,
                 )
-        authors_db = []
+        document_db.save()
         for auth in author_f:
             au = auth.split(", ", 2)
             if len(au) > 1:
@@ -227,9 +225,9 @@ def insert_doc(dict_insert, user):
                 auth_db = author(last_name=last_name_f,
                         first_name=first_name_f)
                 # auth_db.documents.add(document_db)
-            auth_db.save()
-            authors_db.append(auth_db)
+            auth_db.save(last_edit_by_f)
             document_db.authors.add(auth_db)
+            document_db.save()
         keywords_db = []
         for key in keywords_f:
             key_db, dummy = keywords.objects.get_or_create(document=document_db,
@@ -242,7 +240,6 @@ def insert_doc(dict_insert, user):
                 extra_db, dummy = doc_extra.objects.get_or_create(
                     doc_id=document_db, bib_field=extra, content=value)
                 extras_db.append(extra_db)
-        document_db.save()
     except IntegrityError, e:
         raise DuplicateKeyError(e.message) #TODO regex basteln für Feld
 

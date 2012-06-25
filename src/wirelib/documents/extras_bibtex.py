@@ -175,7 +175,7 @@ class UglyBibtex(object):
                 self.errout.write("Eintrag kein valides Format\n")
                 self.errout.write(u"Begründung: " + e.message +"\n")
                 self.__log_error()
-            except UnknownCategoryError:    # TODO: korrekte Exception eintragen.
+            except UnknownCategoryError:
                 errmsg = "Kategorie %s nicht bekannt\n" % self.entry[u'category']
                 self.errout.write(errmsg)
                 self.__log_error()
@@ -196,7 +196,7 @@ class UglyBibtex(object):
             if len(key_val) > 2:
                 raise ValueError()
             try:
-                mydatetime = datetime.strptime(
+                mydatetime = datetime.datetime.strptime(
                         key_val[1],'%d.%m.%Y')
             except ValueError:
                 return           # Mal wieder das falsche Format

@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from exceptions import LendingError
-from datetime import datetime
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
     def __init__(self, *args, **kwargs):
@@ -32,14 +31,14 @@ class category(models.Model):
         return self.name
     
 class publisher(models.Model):
-    name = models.CharField(max_length=35, primary_key=True)
+    name = models.CharField(max_length=100, primary_key=True)
     
     def __unicode__(self):
         return self.name
 
 
 class author(models.Model):
-    first_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30)
     class Meta:
         unique_together = ('first_name', 'last_name')
@@ -52,66 +51,126 @@ class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
     bibtex_id = models.CharField(max_length=120, unique=True)
-    lib_of_con_nr = models.CharField(max_length=20, null=True) #LibraryOfCongressN
+    lib_of_con_nr = models.CharField(max_length=20, null=True) 
+        #LibraryOfCongressN
     title = models.CharField(max_length=200)
     isbn = models.CharField(max_length=17, null=True)
     category = models.ForeignKey(category)
-    status = models.IntegerField()
-        #(0) vorhanden
-        #(1) ausgeliehen
-        #(2) bestellt
-        #(3) vermisst
-        #(4) verloren
-    last_updated = models.DateField()
-    recent_user = models.ForeignKey(User)
+    last_updated = models.DateField(auto_now=True)
+    last_edit_by = models.ForeignKey(User)
     publisher = models.ForeignKey(publisher, null=True)
     year = models.IntegerField(null=True)
     address = models.CharField(max_length=100, null=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     currency = models.CharField(max_length=3, null=True)
     date_of_purchase = models.DateField(auto_now_add=True)
-    ub_date = models.DateField(null=True)
-    bib_date = models.DateField(null=True)
+    ub_date = models.DateField(null=True) 
+        #Datum des Allegro-Exports
+    bib_date = models.DateField(null=True) 
+        #Datum des BibTeX-Exports
     comment = models.TextField(null=True)
     authors = models.ManyToManyField(author)
 
+    AVAILABLE= 0  #vorhanden
+    LEND = 1       #ausgeliehen
+    ORDERED = 2    #bestellt
+    MISSING = 3       #vermisst
+    LOST = 4       #verloren
+    
+    def save(self, user=None, *args, **kwargs):
+        """
+        Methode zum Speichern des letzten Bearbeiters des Dokumentes
+        """
+        if user == None:
+            user = User.objects.get(id=1)
+        self.last_edit_by=user
+        super(document, self).save(*args, **kwargs)
+    
+    def __status(self):
+        """ 
+        Ausgeben des aktuellen Status'
+        """
+        try:
+            retVal = self.doc_status_set.latest('date').status
+        except:
+            retVal = 0
+        return retVal
+        
+    def __init__(self, *args, **kwargs):
+        models.Model.__init__(self, *args, **kwargs)
+        self.status = self.__status()
+
     def __unicode__(self):
         return self.title
-
-    def lend(self, user, non_user=None, terminate=None):
-        if self.status != 0 and self.status != 3 :
-            raise LendingError()
-        self.status = 1
-        l = lending(
-                doc_id=self,
-                date_term = terminate,
-                user_lend = user,
-                non_user_lend = non_user,
-        )
-        l.save()
-        self.save()
-
-    def restitution(self, user):
-        self.status = 0
-        l = lending.objects.get(
+    
+    def __set_status(self, 
+                     editor, 
+                     stat, 
+                     terminate=None, 
+                     user=None, 
+                     non_user=None):
+        """ 
+        Methode zum Ändern des Status'
+        Paramenter:
+            editor - recent_user
+            stat - status
+            terminate - date_term_lend
+            user - user_lend
+            non_user - non_user_lend
+        """
+        try: # Wenn es was zum updaten gibt:
+            self.doc_status_set.latest('date').update(return_lend=True)
+        except:
+            pass
+        l = doc_status(
+            recent_user = editor,
             doc_id = self,
-            date_return = None,
+            status = stat,
+            date_term_lend = terminate,
             user_lend = user,
+            non_user_lend = non_user
         )
-        l.date_return = datetime.now()
         l.save()
-        self.save()
+
+    def lend(self, user, editor=None, non_user=None, terminate=None):
+        """ 
+        Methode zum Ausleihen, Übertragen und beim Wiederfinden
+        Parameter:
+            user - user_lend (evtl recent_user)
+            editor - recent_user
+            non_user - non_user_lend
+            terminate - date_term_lend
+        """
+        # fürs Übertragen
+        if self.status == document.LEND:
+            dstat = self.doc_status_set.latest('date')
+            if dstat.user_lend == user and dstat.non_user_lend == non_user:
+                raise LendingError()
+        # zum Ausleihen oder Wiederfinden
+        elif self.status != document.AVAILABLE \
+              and self.status != document.MISSING:
+            raise LendingError()
+        if editor == None:
+            editor = user
+        self.__set_status(editor, document.LEND, terminate, user, non_user)
+
+    def unlend(self, user):
+        """ 
+        Methode zum zurückgeben 
+        """
+        self.__set_status(user, document.AVAILABLE)
 
     def lost(self, user):
-        self.status = 3
-        l = lending.objects.get(
-            doc_id = self,
-            date_return = None,
-            user_lend = user,
-        )
-        l.date_return = datetime.now()
-        l.save()
-        self.save()
+        """ 
+        Methode zum "Verloren" setzen
+        """
+        self.__set_status(user, document.LOST)
+        
+    def missing(self, user):
+        """ 
+        Methode für Vermisstmeldungen
+        """
+        self.__set_status(user, document.MISSING)
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
@@ -122,6 +181,15 @@ class keywords(models.Model):
     
     def __unicode__(self):
         return self.keyword
+        
+    def save(self, user=None, *args, **kwargs):
+        """
+        Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
+        aktualisiert werden kann
+        """
+        #TODO nach Datenbankerstellung testen, ob user None sein muss
+        self.document.save(user)
+        super(keywords, self).save(*args, **kwargs)   
 
 class doc_extra(models.Model):
     """
@@ -133,6 +201,18 @@ class doc_extra(models.Model):
     class Meta:
         unique_together = ('doc_id', 'bib_field')
     #primary_key(docId, bibField)
+    
+    def __unicode__(self):
+        return unicode(self.content) 
+
+    def save(self, user=None, *args, **kwargs):
+        """
+        Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
+        aktualisiert werden kann
+        """
+        #TODO nach Datenbankerstellung testen, ob user None sein muss
+        self.doc_id.save(user)
+        super(doc_extra, self).save(*args, **kwargs)
 
 class user_profile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
@@ -156,7 +236,7 @@ post_save.connect(create_user_profile, sender=User)
 class tel_user(models.Model):
     user = models.ForeignKey(User)
     tel_nr = models.CharField(max_length=20)
-    #todo
+    # TODO eigene Telefonnummerklasse
     class Meta:
         unique_together = ('user', 'tel_nr')
 
@@ -168,8 +248,6 @@ class non_user(models.Model):
     number = models.CharField(max_length=5)
     zipcode = models.CharField(max_length=5)
     city = models.CharField(max_length=58)
-    class Meta:
-        unique_together = ('last_name', 'first_name')
 
     def __unicode__(self):
         return (self.last_name + ', ' + self.first_name)
@@ -177,18 +255,28 @@ class non_user(models.Model):
 class tel_non_user(models.Model):
     non_user = models.ForeignKey(non_user)
     tel_nr = models.CharField(max_length=20)
-        #todo
+    # TODO eigene Telefonnummerklasser
     class Meta:
         unique_together = ('non_user', 'tel_nr')
 
-class lending(models.Model):
-    doc_id = models.ForeignKey(document)
-    date_lend = models.DateTimeField(auto_now_add=True)
-    date_return = models.DateTimeField(null=True)
-    date_term = models.DateTimeField(null=True)
-    user_lend = models.ForeignKey(User)
-    non_user_lend = models.ForeignKey(non_user, null=True)
+class doc_status(models.Model):
+    recent_user = models.ForeignKey(User, related_name='recent_user') 
+        #auftraggebender User
+    doc_id = models.ForeignKey(document) 
+    status = models.IntegerField() 
+        #in welchen Status wurde geändert?
+    date = models.DateTimeField(auto_now_add=True) 
+        #Datum an dem es geschah
+    return_lend = models.BooleanField(default=False)
+        #Datum der Rückgabe
+    date_term_lend = models.DateTimeField(null=True) 
+        #Ende der Rückgabefrist
+    user_lend = models.ForeignKey(User, null=True, related_name='user_lend') 
+        #ausleihender User
+    non_user_lend = models.ForeignKey(non_user, null=True) 
+        #ausleihender non_User
 
 class emails(models.Model):
+    name = models.CharField(max_length=20)
+    subject = models.CharField(max_length=30)
     text = models.TextField()
-

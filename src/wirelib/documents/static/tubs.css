@@ -70,7 +70,7 @@ div#symbolpic {
 
 div#logo {
      position:absolute;
-     left:628px;
+     left:780px;
      top: 6px; 
      z-index:3;
      width: 350px;
@@ -85,10 +85,10 @@ div#tu_titelzeile {
 }
 
 /* Stellt den Hover-Effekt der Links für die Kopfnavigation ab */
-div#tu_titelzeile a:hover{
+/*div#tu_titelzeile a:hover{
 	background-color: transparent;
 }
-
+*/
 /* Der umgebende Container fuer die Navigationsliste  */
 div#tu_navcontainer {
 
@@ -590,17 +590,95 @@ DIV.separated { BORDER-TOP: #ffffff 1px solid; }
 	float:left;
 	width: 530px;
 	font-family: Arial;
-        font-weight:normal;
+	font-weight: normal;
 	
 }
 
 div.metas {
- clear:both;
-padding-top:10px;
- width:530px;
-
+  clear:both;
+  padding-top:10px;
+  width:530px;
 }
 
+.inhalt div#list_sort{
+  padding-bottom: 15px;
+  border-bottom: 1px solid silver;
+}
+
+.inhalt ul#list_body{
+  padding-left: 8px;
+}
+
+.inhalt ul#list_body li{
+  padding-top: 8px;
+  padding-bottom: 13px;
+  width: 100%;
+  border-bottom: 1px dotted silver;
+  list-style-type: none;
+}
+
+.inhalt ul#list_body li:before{
+  padding-right: 5px;
+  float: left;
+}
+
+/* verfügbar */
+.inhalt ul#list_body li#status_0:before{
+  content: "✓";
+  color: green;
+}
+
+/* ausgeliehen */
+.inhalt ul#list_body li#status_1:before{
+  content: "✗";
+  color: #888800;
+}
+
+/* bestellt */
+.inhalt ul#list_body li#status_2:before{
+  content: "✉";
+  color: #888800;
+}
+
+/* vermisst */
+.inhalt ul#list_body li#status_3:before{
+  content: "✘";
+  color: #cc0000;
+}
+
+/* verlohren */
+.inhalt ul#list_body li#status_4:before{
+  content: "✗";
+  color: #888800;
+}
+
+.inhalt ul#list_body li div{
+  padding-right: 5px;
+}
+
+.inhalt ul#list_body li div#title{
+  padding-bottom: 2px;
+  margin: 0;
+}
+
+.inhalt ul#list_body li div#title a{
+  font-size: 1.1em;
+  display: table-row;
+}
+
+.inhalt ul#list_body li div#extras{
+  padding-left: 25px;
+}
+
+.inhalt ul#list_body li div#authors{
+  float: clear;
+  font-style: italic;
+}
+
+.inhalt ul#list_body li div#year{
+  font-weight: 700;
+  float: left;
+}
 /******************************************************
 	RECHTE SPALTE
 *******************************************************/
@@ -1042,7 +1120,6 @@ li {
 }
 
 ul li {
-	list-style-image: url('/icons/tubsdesign/quadrat.jpg');
 	list-style-type: square;
 }
 
@@ -1522,4 +1599,9 @@ ul#sb_leiste2 li {
 }
 #search .result .url {
   color: #6d8300;
+}
+
+div.logo a {
+    background-color: transparent;
+    
 }

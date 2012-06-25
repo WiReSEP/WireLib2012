@@ -12,17 +12,347 @@ Datenbank geplant ist.
 
 Eigenes Klassendiagramm einsetzen
 \section{Erl\"auterung}
-Die Tabelle ist um so viele Eintr\"age zu erweitern, wie es Entities im obigen
-Klassendiagramm gibt. F\"ur jede Entity sind so viele Eintr\"age in der
-Beziehungs-Subtabelle einzuf\"ugen, wie es Beziehungen zu dieser Entity gibt.
-
-
-\begin{tabular}[ht]{|l|c|}
+Versuch 1: \\
+\begin{tabular}[ht]{|l||c|c|}
   \hline
-  Entit\"at & Beziehungen\\
-  \hline\hline
-  <Entity ... ID>:  & Name der Beziehung |  Kardinalit\"at\\
+  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
   \hline\hline\hline
-  <Bezeichnung> & <Name der Beziehung> | <Kardinalit\"at>\\
+  
+  Autoren:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_author & hat geschrieben & 1,n \\
+  \hline\hline\hline
+  
+  Autor\_Dokument: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_documents\_authors & wurde geschrieben von & 1\\
   \hline
+  documents\_documents\_authors & hat geschrieben & 1\\
+  \hline\hline\hline
+  
+  Dokument: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_document & wurde geschrieben von & 1,n\\
+  \hline
+  documents\_document & gehört zur Kategorie & 1\\
+  \hline
+  documents\_document & wurde veröffentlicht von & 1\\
+  \hline
+  documents\_document & besitzt die Schlüsselwörter & n\\  
+  \hline
+  documents\_document & besitzt die Extrafelder & n\\
+  \hline
+  documents\_document & hat den Status/verliehen an & n\\
+  \hline\hline\hline
+  
+  Schlüsselwörter:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_keywords & gehört zum Dokument & 1 \\
+  \hline\hline\hline
+  
+  Publisher:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_publisher & hat veröffentlicht & 1,n \\
+  \hline\hline\hline
+  
+  Kategorie:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_category & enthält & n \\
+  \hline\hline\hline
+  
+  Extrafelder:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_doc\_extra & gehört zu & 1 \\
+  \hline\hline\hline
+  
+  Status: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_doc\_status & gehört zum Dokument & 1\\
+  \hline
+  documents\_doc\_status & wurde geändert von & 1\\
+  \hline
+  documents\_doc\_status & wurde ausgeliehen von & 0,1\\
+  \hline
+  documents\_doc\_status & wurde weitergegeben an & 0,1\\
+  \hline\hline\hline
+  
+  Non\_User: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_non\_user & entlieh & 1,n\\
+  \hline
+  documents\_non\_user & hat die Telefonnummern & 1,n\\
+  \hline\hline\hline
+  
+  Telefonnummer von Non\_Usern:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_tel\_non\_user & gehört zu & 1 \\
+  \hline
+\end{tabular}
+
+\begin{tabular}[ht]{|l||c|c|}
+  \hline
+  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
+  \hline\hline\hline
+    
+  User: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  auth\_user & wohnt & 1\\
+  \hline
+  auth\_user & hat die Telefonnumern & 1,n\\
+  \hline
+  auth\_user & hat die Rechte & n\\
+  \hline
+  auth\_user & änderte den Status & n\\  
+  \hline
+  auth\_user & leiht/bürgt gerade für & n\\
+  \hline
+  auth\_user & TODO django\_admin\_log & n\\
+  \hline
+  auth\_user & bekam & n\\
+  \hline\hline\hline
+  
+  Telefonnummer von Usern:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_tel\_user & gehört zu & 1 \\
+  \hline\hline\hline 
+  
+  Message: & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_message & gesendet an & 1 \\
+  \hline\hline\hline 
+  
+  Anschrift:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_user\_profile & Anschrift von & 1 \\
+  \hline\hline\hline
+  
+  User\_Gruppe:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user\_groups & der User & 1 \\
+  \hline
+  auth\_user\_groups & gehört zur Gruppe & 1 \\
+  \hline\hline\hline
+  
+  Gruppe: & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_group & besitzt die Mitglieder & n \\
+  \hline
+  auth\_group & hat die Rechte & n \\
+  \hline\hline\hline 
+
+  Gruppe\_Rechte: & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_group\_permissions & die Gruppe & 1 \\
+  \hline
+  auth\_group\_permissions & hat das Recht & 1 \\
+  \hline\hline\hline 
+  
+  User\_Rechte:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user\_user\_permissions & der User & 1 \\
+  \hline
+  auth\_user\_user\_permissions & hat das Recht & 1 \\
+  \hline\hline\hline 
+  
+  Rechte:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_permission & der User hat  & n \\
+  \hline
+  auth\_permission & die Gruppe hat & n \\
+  \hline
+  auth\_permission & TODO django\_content\_type & 1 \\
+  \hline
+\end{tabular}
+
+\begin{tabular}[ht]{|l||c|c|}
+  \hline
+  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
+  \hline\hline\hline
+  
+  Adminlog:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  django\_admin\_log & getätigt von  & 1 \\
+  \hline
+  auth\_admin\_log & TODO django\_content\_type & 1 \\
+  \hline\hline\hline
+  
+  Content\_Type:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  django\_content\_type & TODO auth\_permission & n \\
+  \hline
+  django\_content\_type & TODO django\_admin\_log & n \\
+  \hline\hline\hline
+\end{tabular}
+
+
+Versuch 2: \\
+\begin{tabular}[ht]{|l||c|c|}
+  \hline
+  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
+  \hline\hline\hline
+  
+  documents\_author  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_documents\_authors & hat geschrieben & 1,n \\
+  \hline\hline\hline
+  
+  documents\_documents\_authors & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_author & wurde geschrieben von & 1,n\\
+  \hline
+  documents\_document & hat geschrieben & 1,n\\
+  \hline\hline\hline
+  
+  documents\_document: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_documents\_authors & wurde geschrieben von & 1,n\\
+  \hline
+  documents\_category & gehört zur Kategorie & 1\\
+  \hline
+  documents\_publisher & wurde veröffentlicht von & 1\\
+  \hline
+  documents\_keywords & besitzt die Schlüsselwörter & n\\  
+  \hline
+  documents\_doc\_extra & besitzt die Extrafelder & n\\
+  \hline
+  documents\_doc\_status & hat den Status/verliehen an & n\\
+  \hline\hline\hline
+  
+  documents\_keywords:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_document & gehört zum Dokument & 1 \\
+  \hline\hline\hline
+  
+  documents\_publisher:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_document & hat veröffentlicht & 1,n \\
+  \hline\hline\hline
+  
+  documents\_category:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_document & enthält & n \\
+  \hline\hline\hline
+  
+  documents\_doc\_extra:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_document & gehört zu & 1 \\
+  \hline\hline\hline
+  
+  documents\_doc\_status: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_document & gehört zum Dokument & 1\\
+  \hline
+  auth\_user & wurde geändert von & 1\\
+  \hline
+  auth\_user & wurde ausgeliehen von & 0,1\\
+  \hline
+  documents\_non\_user & wurde weitergegeben an & 0,1\\
+  \hline\hline\hline
+  
+  documents\_non\_user: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_doc\_status & entlieh & 1,n\\
+  \hline
+  documents\_tel\_non\_user & hat die Telefonnummern & 1,n\\
+  \hline\hline\hline
+  
+  documents\_tel\_non\_user:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  documents\_non\_user & gehört zu & 1 \\
+  \hline
+\end{tabular}
+
+\begin{tabular}[ht]{|l||c|c|}
+  \hline
+  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
+  \hline\hline\hline
+    
+  auth\_user: & Name der Beziehung & Kardinalität\\
+  \hline\hline
+  documents\_user\_profile & wohnt & 1\\
+  \hline
+  documents\_tel\_user & hat die Telefonnumern & 1,n\\
+  \hline
+  auth\_user\_user\_permissions & hat die Rechte & n\\
+  \hline
+  documents\_doc\_status & änderte den Status & n\\  
+  \hline
+  documents\_doc\_status & leiht/bürgt gerade für & n\\
+  \hline
+  django\_admin\_log & TODO django\_admin\_log & n\\
+  \hline
+  auth\_message & bekam & n\\
+  \hline\hline\hline
+  
+  documents\_tel\_user:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user & gehört zu & 1 \\
+  \hline\hline\hline 
+  
+  auth\_message: & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user & gesendet an & 1 \\
+  \hline\hline\hline 
+  
+  documents\_user\_profile:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user & Anschrift von & 1 \\
+  \hline\hline\hline
+  
+  auth\_user\_groups:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user & der User & 1 \\
+  \hline
+  auth\_group & gehört zur Gruppe & 1 \\
+  \hline\hline\hline
+  
+  auth\_group: & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user\_groups & besitzt die Mitglieder & n \\
+  \hline
+  auth\_group\_permissions & hat die Rechte & n \\
+  \hline\hline\hline 
+
+  auth\_group\_permissions: & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_group & die Gruppe & 1 \\
+  \hline
+  auth\_permission & hat das Recht & 1 \\
+  \hline\hline\hline 
+  
+  auth\_user\_user\_permissions:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user & der User & 1 \\
+  \hline
+  auth\_permission & hat das Recht & 1 \\
+  \hline\hline\hline 
+  
+  auth\_permission:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user\_user\_permissions & der User hat  & n \\
+  \hline
+  auth\_group\_permissions & die Gruppe hat & n \\
+  \hline
+  django\_content\_type & TODO & 1 \\
+  \hline
+\end{tabular}
+
+\begin{tabular}[ht]{|l||c|c|}
+  \hline
+  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
+  \hline\hline\hline
+  
+  django\_admin\_log:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_user & getätigt von  & 1 \\
+  \hline
+  django\_content\_type & TODO & 1 \\
+  \hline\hline\hline
+  
+  django\_content\_type:  & Name der Beziehung &  Kardinalit\"at\\
+  \hline\hline
+  auth\_permission & TODO  & n \\
+  \hline
+  django\_admin\_log & TODO & n \\
+  \hline\hline\hline
 \end{tabular}
