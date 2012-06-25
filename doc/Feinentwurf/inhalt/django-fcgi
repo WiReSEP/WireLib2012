@@ -1,0 +1,16 @@
+#!/bin/bash
+PROJECTDIR="/var/www/wire"
+PIDFILE="$PROJECTDIR/django.pid"
+SOCKETFILE="$PROJECTDIR/wire.sock"
+DAEMON=true
+
+cd $PROJECTDIR
+
+if [ -f $PIDFILE ];then
+	kill $(cat -- $PIDFILE)
+	rm -f -- $PIDFILE
+fi
+
+sudo -u www-data \
+	python manage.py runfcgi \
+	socket=$SOCKETFILE daemonize=$DAEMON pidfile=$PIDFILE
