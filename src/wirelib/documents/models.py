@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from exceptions import LendingError
+from django.template import loader, Context 
+from django.conf import settings
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
     def __init__(self, *args, **kwargs):
@@ -290,6 +292,83 @@ class doc_status(models.Model):
                        ("c_lost_order", "Can order and miss documents"),
                        ("cs_history", "Can see documenthistory"),
                        ("c_transfer", "Can transfer to other (non-) users"),)
+
+class EmailValidationManager(models.Manager):
+    """
+    Email validation manager
+    """
+    def verify(self, key):
+        try:
+            verify = self.get(key=key)
+            if not verify.is_expired():
+                verify.user.email = verify.email
+                verify.user.save()
+                verify.delete()
+                return True
+            else:
+                verify.delete()
+                return False
+        except:
+            return False
+
+    def getuser(self, key):
+        try:
+            return self.get(key=key).user
+        except:
+            return False
+
+    def add(self, user, email):
+        """
+        Add a new validation process entry
+        """
+        while True:
+            key = User.objects.make_random_password(70)
+            try:
+                EmailValidation.objects.get(key=key)
+            except EmailValidation.DoesNotExist:
+                self.key = key
+                break
+
+        template_body = "userprofile/email/validation.txt"
+        template_subject = "userprofile/email/validation_subject.txt"
+        site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
+        body = loader.get_template(template_body).render(Context(locals()))
+        subject = loader.get_template(template_subject).render(Context(locals())).strip()
+        send_mail(subject=subject, message=body, from_email=None, recipient_list=[email])
+        user = User.objects.get(username=str(user))
+        self.filter(user=user).delete()
+        return self.create(user=user, key=key, email=email)
+
+
+class EmailValidation(models.Model):
+
+    user = models.ForeignKey(User, unique=True)
+    email = models.EmailField(blank=True)
+    key = models.CharField(max_length=70, unique=True, db_index=True)
+    created = models.DateTimeField(auto_now_add=True)
+    objects = EmailValidationManager()
+    
+    def __unicode__(self): 
+        return _("Emailverifikationsprozess für %(user)s") % { 'user': self.user }
+    
+    def is_expired(self):
+        return (datetime.datetime.today() - self.created).days > 0
+
+    def resend(self):
+        """
+        Resend validation email
+        """
+        template_body = "account/email/validation.txt"
+        template_subject = "account/email/validation_subject.txt"
+        site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
+        key = self.key
+        body = loader.get_template(template_body).render(Context(locals()))
+        subject = loader.get_template(template_subject).render(Context(locals())).strip()
+        send_mail(subject=subject, message=body, from_email=None, recipient_list=[self.email])
+        self.created = datetime.datetime.now()
+        self.save()
+        return True
+        
 
 
 class emails(models.Model):
