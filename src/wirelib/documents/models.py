@@ -77,6 +77,7 @@ class document(models.Model):
                        ("cs_last_edit_by", "Can see last editor"),
                        ("cs_dop", "Can see date of purchase"),
                        ("cs_export", "Can see dates of export"),)
+        ordering = ['title']
 
     AVAILABLE= 0  #vorhanden
     LEND = 1       #ausgeliehen

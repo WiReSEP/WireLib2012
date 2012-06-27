@@ -65,16 +65,6 @@
 		  </td>
 		</tr>	    
 		<tr>
-		  <td><b>Preis:</b></td>
-		  <td>
-			{% if documents.price and documents.currency %}
-			{{ documents.price }}{{ documents.currency }}
-			{% else %}
-			-
-			{% endif %}
-		  </td>
-		</tr>
-		<tr>
 		  <td><b>In der Bibliothek seit:</b></td>
 		  <td>{{ documents.date_of_purchase }}</td>
 		</tr>
@@ -112,6 +102,14 @@
 			{% endif %}
 		  </td>
 		</tr>
+		<td><b>Preis:</b></td>
+		  <td>
+			{% if documents.price and documents.currency %}
+			{{ documents.price }}{{ documents.currency }}
+			{% else %}
+			-
+			{% endif %}
+		  </td>
 		<tr>
 		  <td><b>BibTeX-ID:</b></td>
 		  <td>{{ documents.bibtex_id }}</td>
@@ -188,10 +186,12 @@
     
     <table> 
     {% for i in 0123456789|make_list %}
-    <tr>{{z}}
-    <td>{{ documents.doc_status.date }}</td>
-    <td>{{ documents.doc_status.status }}</td>
-    <td>{{ documents.doc_status.recent_user }}</td>
+    <tr>
+    <td>{{ for s in document.doc_status.all }}
+        {{ s.date }}</td>
+    <td>{{ s.status }}</td>
+    <td>{{ s.recent_user }}
+        {% endfor %}</td>
     </tr>
     {% endfor %}
     </table>
