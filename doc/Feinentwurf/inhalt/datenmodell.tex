@@ -4,7 +4,7 @@
 %-------------------------------------------------------------------------------
 \chapter{Datenmodell}
 \label{kap4}
-Im folgenden Kapitel wird auf die verwendete Strunktur der Datenbank
+Im folgenden Kapitel wird auf die verwendete Struktur der Datenbank
 eingegangen. Die Datenbank muss Nutzer und deren Rechte speichern, sowie
 Dokumente mit allen dazugehörenden Informationen. Das Modell zur Darstellung
 der Struktur wurde für bessere Übersichtlichkeit auf zwei Pakete verteilt, die
@@ -21,7 +21,7 @@ im Folgenden näher erläutert werden.
 
 Das Diagramm veranschaulicht die Paketisierung des Modells und die
 Abhängigkeiten der Pakete. Auf die Relationen zwischen den Tabellen wird bei
-der Beschreibung der Modelle nicht eingegangen. Relationen sind in 
+der Beschreibung der Modelle nicht eingegangen. Relationen sind in Abb.
 \ref{db_erläuterung} beschrieben.
 
 \begin{figure}[H]
@@ -37,7 +37,7 @@ der Tabelle \lstinline{doc_status} werden alle Statusänderungen eines Dokumente
 festgehalten, einschließlich der Ausleihe eines Dokumentes. Die Tabelle
 \lstinline{doc_extra} speichert zusätzliche Inhalte eines Dokumentes, die aufgrund
 seltenen Gebrauchs nicht lohnen, in document direkt aufgenommen zu werden. In
-der Tabelle emails werden die E-Mail-Templates gespeichert, die verschickt
+der Tabelle \lstinline{emails} werden die E-Mail-Templates gespeichert, die verschickt
 werden, wenn die Ausleihfrist eines Dokumentes abläuft oder in ähnlichen
 Fällen. Die Tabellen \lstinline{auth_user} und \lstinline{non_user} sind in der Teilstruktur Benutzer
 und hier nur als Referenz gedacht zur besseren Übersicht. \lstinline{authors}
@@ -67,7 +67,7 @@ Erweiterung der Django-Tabelle \lstinline{auth_user}, um auch Adressen
 speichern zu können.
 
 % Eigenes Klassendiagramm einsetzen
-\section{Erläuterung}
+\section{Erläuterun}
 \label{db_erläuterung}
 Im Folgenden sind alle Relationen von einer Tabelle zu einer anderen 
 in der Datenbank angezeigt. Dabei ist jeweils oben die ausgehende Tabelle und 
@@ -85,14 +85,16 @@ maximal unendlich viele Verbindungen zur Relationstabelle.
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   document\_authors & hat geschrieben & 1,n \\
   
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} document\_authors} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   author & wurde geschrieben von & 1,1 \\
   document & hat geschrieben & 1,1\\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} document} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
@@ -103,31 +105,36 @@ maximal unendlich viele Verbindungen zur Relationstabelle.
   doc\_extra & besitzt die Extrafelder & 0,n\\
   doc\_status & hat den Status/verliehen an & 0,n\\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} keywords} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   document & gehört zum Dokument & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} publisher} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   document & hat veröffentlicht & 1,n \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} category} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   document & enthält & 0,n \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} doc\_extra} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   document & gehört zu & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} doc\_status} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
@@ -136,20 +143,23 @@ maximal unendlich viele Verbindungen zur Relationstabelle.
   auth\_user & wurde ausgeliehen von & 0,1\\
   non\_user & wurde weitergegeben an & 0,1\\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} non\_user} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   doc\_status & entlieh & 1,n\\
   tel\_non\_user & hat die Telefonnummern & 1,n\\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} tel\_non\_user} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   non\_user & gehört zu & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_user} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
@@ -162,53 +172,61 @@ maximal unendlich viele Verbindungen zur Relationstabelle.
   auth\_message & bekam & 0,n\\
   auth\_user\_groups & ist in Gruppe & 0,n\\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} tel\_user} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_user & gehört zu & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_message} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_user & gesendet an & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} user\_profile} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_user & Anschrift von & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_user\_groups} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_user & der User & 1,1 \\
   auth\_group & gehört zur Gruppe & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_group} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_user\_groups & besitzt die Mitglieder & 0,n \\
   auth\_group\_permissions & hat die Rechte & 0,n \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_group\_permissions} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_group & die Gruppe & 1,1 \\
   auth\_permission & hat das Recht & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_user\_user\_permissions} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_user & der User & 1,1 \\
   auth\_permission & hat das Recht & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_permission} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
@@ -216,14 +234,16 @@ maximal unendlich viele Verbindungen zur Relationstabelle.
   auth\_group\_permissions & die Gruppe hat & 0,n \\
   django\_content\_type & referenziert & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} django\_admin\_log} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   auth\_user & getätigt von  & 1,1 \\
   django\_content\_type & referenziert & 1,1 \\
 
-  \toprule
+  \bottomrule
+  \noalign{\smallskip}
   \multicolumn{3}{c}{\emph{Tabelle:} django\_content\_type} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
