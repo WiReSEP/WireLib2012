@@ -84,17 +84,17 @@ Nach Abschluss dieser Vorbereitungen kann die \emph{adminer.php} gelöscht und
 
 \section{Django einrichten}
 
-Um das Produkt unter Django zum laufen zu bringen werden zwei weitere
-Python-Pakete benötigt die mittels \Gls{glos:pip} installiert werden können.
+Um das Produkt unter Django zum laufen zu bringen, werden zwei weitere
+Python-Pakete benötigt, die mittels \Gls{glos:pip} installiert werden können.
 Mit 
 \begin{lstlisting}
   pip install django-pagination flup
 \end{lstlisting}
 werden die letzten Abhängigkeiten für das Produkt erfüllt.
 
-\subsection{Django Projekt initieren}
+\subsection{Django Projekt initiieren}
 
-Um das Projekt ein zu richten sind die folgenden Schritte notwendig:
+Um das Projekt einzurichten sind die folgenden Schritte notwendig:
 \begin{enumerate}
   \item Mit \lstinline{cd /var/www} in den Webordner wechseln
   \item Mit \lstinline{django-admin startproject wire} das Projekt starten
@@ -106,9 +106,9 @@ Um das Projekt ein zu richten sind die folgenden Schritte notwendig:
 \end{enumerate}
 
 \subsection{Django Projekt einrichten}
-Um das Produkt fertig einzurichten müssen im Projekt zwei Dateien editiert
+Um das Produkt fertig einzurichten, müssen im Projekt zwei Dateien editiert
 werden, deren Setup im folgenden näher beschrieben wird. Evtl. Anpassungen an
-spezielle Bedürfnisse inerhalb einer Django-Projektes müssten wahrscheinlich
+spezielle Bedürfnisse innerhalb einer Django-Projektes müssen
 hier vorgenommen werden.
 
 \subsubsection{settings.py}
@@ -144,7 +144,7 @@ MIDDLEWARE_CLASSES = (
 )
 \end{lstlisting}
 
-Gefolgt von dem folgenden Templateverzeichnis:
+Gefolgt von folgendem Templateverzeichnis:
 \begin{lstlisting}
 TEMPLATE_DIRS = (
     '/var/www/WireLib2012/src/templates',
@@ -168,7 +168,7 @@ INSTALLED_APPS(
 )
 \end{lstlisting}
 
-Zu guter letzt folgen einige Anweisungen für den Template Prozessor:
+Zu guter Letzt folgen einige Anweisungen für den Template Prozessor:
 \begin{lstlisting}
   TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
@@ -182,14 +182,14 @@ Zu guter letzt folgen einige Anweisungen für den Template Prozessor:
 \end{lstlisting}
 
 \subsubsection{urls.py}
-Die \emph{urls.py} stellt die Weiche für einkommende Verbindungen dar, alle
+Die \emph{urls.py} stellt die Weiche für einkommende Verbindungen dar; alle
 Wege auf die Apps und die \emph{views.py} einer jeden App  wird hier
 festgelegt.  Für den vollen Funktionsumfang des Produktes wird das
 Admin-Backend benötigt. Für dieses Backend muss auch eine entsprechende Weiche
 bereit stehen. Weiter wird eine Erweiterung für statische Dateien benötigt, die
-nicht von Django interpretiert werden sollen. Zu guter letzt ist natürlich auch
+nicht von Django interpretiert werden sollen. Zu guter Letzt ist natürlich auch
 noch ein Eintrag für das Produkt notwendig, der im folgenden Beispiel den
-gesammten Root-Ordner mit Außnahme von den Ordnern \emph{static/} und
+gesamten Root-Ordner mit Ausnahme von den Ordnern \emph{static/} und
 \emph{admin/}.
 
 \begin{lstlisting}
@@ -251,7 +251,7 @@ url.rewrite-once = (
  \subsection{Django FCGI-Skript}
 Das folgende Skript kann als Grundlage für ein \Gls{cgi}-Start-Skript verwendet
 werden. \emph{Wichtig} ist für das Skript allein, dass der Ordner
-\lstinline{$PROJECTDIR} dem Benutzer des Webserver (meist \lstinline{www-data})
+\lstinline{$PROJECTDIR} dem Benutzer des Webservers (meist \lstinline{www-data})
 gehört:
 
 \begin{lstlisting}
