@@ -23,7 +23,7 @@ Teilstrukturen der Datenbank für bessere Übersicht dargestellt.
 
 
 \begin{figure}[!htb]
-\includegraphics[width=0.8\linewidth]{bilder/database-wirelib_cluster-doc.pdf}
+\includegraphics[width=1\linewidth]{bilder/database-wirelib_cluster-doc.pdf}
 \caption{Datenbankmodell: Bibliothek}
 \label{fig:DB_docDiagramm}
 \end{figure}
@@ -43,7 +43,7 @@ beschriebenen Inhalt.
 
 
 \begin{figure}[!htb]
-\includegraphics[width=0.8\linewidth]{bilder/database-wirelib_cluster-user.pdf}
+\includegraphics[width=1\linewidth]{bilder/database-wirelib_cluster-user.pdf}
 \caption{Datenbankmodell: Benutzer}
 \label{fig:DB_UserDiagramm}
 \end{figure}
@@ -65,7 +65,7 @@ Adressen speichern zu können.
 % Eigenes Klassendiagramm einsetzen
 \section{Erl\"auterung}
 
-\begin{tabular}[ht]{|l||c|c|}
+\begin{longtable}{|p{5cm}||m{5cm}|c|}
   \hline
   Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
   \hline\hline\hline
@@ -115,7 +115,9 @@ Adressen speichern zu können.
   doc\_extra:  & Name der Beziehung &  Kardinalit\"at\\
   \hline\hline
   document & gehört zu & 1 \\
-  \hline\hline\hline
+  \hline
+  \pagebreak
+  \hline\hline
   
   doc\_status: & Name der Beziehung & Kardinalität\\
   \hline\hline
@@ -138,14 +140,8 @@ Adressen speichern zu können.
   tel\_non\_user:  & Name der Beziehung &  Kardinalit\"at\\
   \hline\hline
   non\_user & gehört zu & 1 \\
-  \hline
-\end{tabular}
-
-\begin{tabular}[ht]{|l||c|c|}
-  \hline
-  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
   \hline\hline\hline
-    
+  
   auth\_user: & Name der Beziehung & Kardinalität\\
   \hline\hline
   user\_profile & wohnt & 1\\
@@ -197,7 +193,9 @@ Adressen speichern zu können.
   auth\_group & die Gruppe & 1 \\
   \hline
   auth\_permission & hat das Recht & 1 \\
-  \hline\hline\hline 
+  \hline
+  \pagebreak
+  \hline\hline 
   
   auth\_user\_user\_permissions:  & Name der Beziehung &  Kardinalit\"at\\
   \hline\hline
@@ -213,12 +211,6 @@ Adressen speichern zu können.
   auth\_group\_permissions & die Gruppe hat & n \\
   \hline
   django\_content\_type & referenziert & 1 \\
-  \hline
-\end{tabular}
-
-\begin{tabular}[ht]{|l||c|c|}
-  \hline
-  Entit\"at & \multicolumn{2}{c|}{Beziehungen} \\
   \hline\hline\hline
   
   django\_admin\_log:  & Name der Beziehung &  Kardinalit\"at\\
@@ -233,5 +225,5 @@ Adressen speichern zu können.
   auth\_permission & stellt Referenz  & n \\
   \hline
   django\_admin\_log & ändert & n \\
-  \hline\hline\hline
-\end{tabular}
+  \hline
+\end{longtable}
