@@ -10,6 +10,14 @@ Im folgenden eine vollständige Installationsbeschreibung am Beispiel eines
 Beschreibung berücksichtigt einige Anforderungen für ein Produktivsystem nicht
 und ist für ein solches Setup nur als Hilfsreferenz verwendbar. 
 
+Das im folgenden beschriebene Setup weicht in Bezug auf das Datenbanksystem von
+dem Pflichtenheft ab, in dem die Verwendung einer \Gls{glos:sqlite}-Datenbank
+angesetzt wurde. Dieser Punkt des Pflichtenheftes kann ohne Probleme bei Bedarf
+verwendet werden, ist aber \emph{nicht} zu empfehlen für ein Produktivsystem aufgrund
+von Einschränkungen durch \Gls{glos:sqlite}\footnote{Eine SQLite Datenbank wird
+bei Schreibzugriffen vollständig gesperrt und arbeitet durch ihre persistenz
+langsamer als eine MySQL-Datenbank}.
+
 \section{Installation notwendiger Programme}
 Um das System über einen Webserver verfügbar machen zu können muss ersteinmal
 die nötige Software installiert werden. In dieser Beschreibung wird auf den
