@@ -41,7 +41,7 @@ Komponenten(Views,Admin...) mit Informationen befüllt werden.
 
 
 \section{Implementierung von Komponente
-         1: Client:}
+         1: Client}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
@@ -59,7 +59,7 @@ in die für den Benutzer verständliche Form einer Webseite gebracht.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDclient} : Das Paketdiagramm der Komponente Client.
-\begin{figure}[!htb]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_client.pdf}
 \caption{Paketdiagramm Client}
 \label{fig:PDclient}
@@ -84,7 +84,7 @@ die passende Funktion auf.
 %Bibliotheksfunktionen brauchen nicht aufgef\"uhrt zu werden.
 
 \section{Implementierung von Komponente
-         2: View:}
+         2: View}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
@@ -98,7 +98,7 @@ Rest des Programms.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDviews} : Das Paketdiagramm der Komponente Views.
-\begin{figure}[!htb]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_views.pdf}
 \caption{Paketdiagramm Views}
 \label{fig:PDviews}
@@ -115,7 +115,7 @@ dargestellt werden soll.
 
 
 \section{Implementierung von Komponente
-         3: Models:}
+         3: Models}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
@@ -128,8 +128,8 @@ Datenbank.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDmodels} : Das Paketdiagramm der Komponente Models.
-\begin{figure}[!htb]
-\includegraphics[width=0.72\linewidth]{bilder/Paketdiagramm_models.pdf}
+\begin{figure}[H]
+\includegraphics[width=0.9\linewidth]{bilder/Paketdiagramm_models.pdf}
 \caption{Paketdiagramm Models}
 \label{fig:PDmodels}
 \end{figure}
@@ -140,12 +140,12 @@ Models besitzt, stellt dies eine Beziehung in der späteren Datenbank dar.
 Mehrere Klassen haben die unicode-Funktion. Diese Funktion definiert, wie eine
 Tabelle bzw. eine Zeile dieser Tabelle als String dargestellt werden soll.
 Mehrere Klassen haben die save-Funktion, welche gerade durchgeführte Änderungen
-unter Angabe des Editors sofort speichert. Die Klasse \"documents\" hat außerdem
+unter Angabe des Editors sofort speichert. Die Klasse \textbf{documents} hat außerdem
 die Funktionen lost, missing, unlend und lend, welche den Status des jeweiligen
 Dokumentes ändern können.
 
 \section{Implementierung von Komponente
-         4: Admin:}
+         4: Admin}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
@@ -156,7 +156,7 @@ die nicht von normalen Benutzern durchgeführt werden sollen.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDadmin} : Das Paketdiagramm der Komponente Admin.
-\begin{figure}[!htb]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_admin.pdf}
 \caption{Paketdiagramm Admin}
 \label{fig:PDadmin}
@@ -170,14 +170,15 @@ User zu erstellen und zu ändern, die verfügbaren Rollen zu bearbeiten und die
 gerellen Einstellungen des Servers zu ändern. 
 
 \section{Implementierung von Komponente
-         5: DB und Template:}
+         5: DB und Template}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
 %Implementierung wird dabei durch Klassendiagramme dokumentiert.
 
-Die Datenbank ist eine SQLite Datenbank. Dabei übernimmt allerdings das
-Django-Framework die komplette Kommunikation mithilfe der Komponente Models. 
+Die Komponente DB besteht aus einem Datenbanksystem. 
+Dabei übernimmt das Django-Framework die komplette Kommunikation mithilfe 
+der Komponente Models. 
 Die Templates sind eine statische Komponente auf die das Django-Framework
 zugreift, sobald sie von der Komponente View benötigt werden. 
 
@@ -185,8 +186,9 @@ zugreift, sobald sie von der Komponente View benötigt werden.
 Die Paketdiagramme wurden weggelassen. Siehe dazu den Punkt Erläuterung.
 
 \subsection{Erl\"auterung}
-Die Datenbank ist eine SQLite-Datenbank. Ein Paketdiagramm für das komplette
-SQLite würde die Maße dieses Dokumentes sprengen und wird deswegen weggelassen.
+Ein Paketdiagramm für das komplette Datenbanksystem wird nicht eingefügt, da es
+sich um ein bestehendes System handelt. Genaueres zu der Struktur der
+Datenbank wird in \ref{kap4} erläutert.
 Auf ein Paketdiagramm für die Komponente Templates wird verzichtet, da diese
 keinerlei Funktionen besitzt, sondern nur von anderen Komponenten mit Daten
 gefüllt und weitergeleitet wird. Diese Kommunikation wird von Django-Framework
