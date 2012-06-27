@@ -5,8 +5,8 @@
 %erforderlich sein, so ist hier dessen Konfiguration zu beschreiben. Dies
 %geschieht durch explizite Nennung aller Konfigurationsdateien und notwendiger
 %Eintr\"age.
-Im folgenden eine vollständige Installationsbeschreibung am Beispiel eines
-\Gls{glos:ubuntu} Servers mit \Gls{glos:lighttpd}. Diese
+Im folgenden wird eine vollständige Installationsbeschreibung am Beispiel eines
+\Gls{glos:ubuntu} Servers mit \Gls{glos:lighttpd} vorgestellt. Diese
 Beschreibung berücksichtigt einige Anforderungen für ein Produktivsystem nicht
 und ist für ein solches Setup nur als Hilfsreferenz verwendbar. 
 
@@ -19,7 +19,7 @@ bei Schreibzugriffen vollständig gesperrt und arbeitet durch ihre Persistenz
 langsamer als eine MySQL-Datenbank}.
 
 \section{Installation notwendiger Programme}
-Um das System über einen Webserver verfügbar machen zu können muss erst einmal
+Um das System über einen Webserver verfügbar machen zu können, muss erst einmal
 die nötige Software installiert werden. In dieser Beschreibung wird auf den
 schlanken und flexiblen Webserver \Gls{glos:lighttpd} gesetzt, als
 Datenbanksystem wird ein \Gls{glos:mysql} Datenbanksystem verwendet.
@@ -36,13 +36,13 @@ Zu installierende Pakete:
 Die Installation kann mit \zB \lstinline{apt-get install lighttpd} getätigt
 werden.
 
-Sobald diese Pakete installiert sind muss die \Gls{glos:mysql} Datenbank
+Sobald diese Pakete installiert sind, muss die \Gls{glos:mysql} Datenbank
 vorbereitet werden.
 
 \section{MySQL einrichten}
-Um die Datenbank ein zu richten, wird in dieser Beschreibung auf das in
-\Gls{glos:php} geschriebene Programm \Gls{glos:adminer}. Um dies jedoch
-verwenden zu können, müssen die folgenden zwei weitere Pakete installiert
+Um die Datenbank einzurichten, wird in dieser Beschreibung auf das in
+\Gls{glos:php} geschriebene Programm \Gls{glos:adminer} zurückgegriffen.
+Um dies jedoch verwenden zu können, müssen die folgenden zwei Pakete installiert
 werden.
 
 \begin{itemize}
@@ -66,13 +66,13 @@ fastcgi.server = ( ".php" => ((
 
 Nun kann \Gls{glos:adminer} herunter geladen werden und unter \emph{/var/www}
 gespeichert werden. Nach einem Neustart von \Gls{glos:lighttpd} mit
-\lstinline{service lighttpd restart} kann man über Adminer mit einem Webbrowser
-ansteuern und damit auf die lokale \Gls{glos:mysql}-Datenbank verbinden. Zuerst
+\lstinline{service lighttpd restart} kann man über einen Webbrowser Adminer
+ansteuern und damit auf die lokale \Gls{glos:mysql}-Datenbank zugreifen. Zuerst
 sollten zur Absicherung die leeren Benutzer (über "`Rechte"') von der Datenbank
 entfernt werden. Zusätzlich müssen noch die zwei Datensätze, die die leeren
 Benutzer betreffen unter "`mysql/db"' gelöscht werden.  Danach wird ein neuer
 Benutzer "`wirelib"' mit Rechten auf die Datenbank "`wirelib"' erzeugt. Die
-Rechte des Benutzers müssen und sollten nur alle Rechte auf Tabelle und Spalte
+Rechte des Benutzers müssen und sollten nur alle Rechte auf "`Tabelle"' und "`Spalte"'
 haben.
 
 Da nun der zukünftige Benutzer auf der Datenbank existiert, muss nur noch die
