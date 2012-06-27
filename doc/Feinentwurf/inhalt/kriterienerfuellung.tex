@@ -11,52 +11,55 @@ erfüllt werden und worauf geachtet wird.
 Die folgenden Kriterien sind unabdingbar und werden durch das Produkt erfüllt:
 \begin{description}
   \item[/M10/] Es muss eine gut funktionierende Suchfunktion vorhanden sein.
-  \item[/M20/] Den Benutzern werden verschiedene Rollen zugewiesen
-  \item[/M21/] Gäste können Bücher suchen und sich Informationen zu diesen Anzeigen
-			   lassen
-  \item[/M22/] Normale Nutzer können auf alle Funktionen, die für den allgemeinen
-			   allgemeinen Gebrauch nötig sind, zugreifen. So zum Beispiel das Entleihen von
-			   Dokumenten, oder die Einsicht in ihre derzeitig ausgeliehen Dokumente.
-  \item[/M23/] Verwaltung
+  \item[/M20/] Den Benutzern werden verschiedene Rollen zugewiesen.
+  \item[/M21/] Gäste können Bücher suchen und sich Informationen zu diesen
+	anzeigen lassen.
+  \item[/M22/] Normale Nutzer können auf alle Funktionen, die für den
+	allgemeinen Gebrauch nötig sind, zugreifen. So zum Beispiel
+	das Entleihen von Dokumenten oder die Einsicht in ihre derzeitig
+	ausgeliehen Dokumente.
+  \item[/M23/] Die Benutzerverwaltung wird durch die Rolle User-Admin realisiert.
   \item[/M24/] Der Bibliothekar besitzt Verwaltungsrechte für Dokumente.
-  \item[/M25/] Der Administrator besitzt Volzugriff auf ddas System.
-  \item[/M30/] Es ist für Externe möglich sich ein Dokument auszuleihen indem ihnen
-ein registrierter Nutzer dieses Überträgt.
-  \item[/M40/] Jedes Dokument besitzt verschiedene Eigenschaften wie eine Kategorie,
-Authoren und weitere. Auch kann eine Ausleih-Historie zu jedem Dokument
-abgefragt werden.
-  \item[/M50/] Das Layout ist an das Corporate Design der Technischen Universität
-Braunschweig angepasst und ist klar Strukturiert.
-  \item[/M60/] Für die Zeichencodierung wird UTF-8 verwendet.
-Ein Import von BibTeX Dateien ist möglich, sowie ein Export in BibTeX, als
-Backup, und in ein für Allegro lesbares Datenformat.
-  \item[/M70/] Sicheres Protokoll?
-\end {description}
+  \item[/M25/] Der Administrator besitzt Vollzugriff auf das System.
+  \item[/M30/] Es ist für \gls{glos:ext} möglich, sich ein Dokument auszuleihen,
+	indem ihnen ein registrierter Nutzer dieses überträgt.
+  \item[/M40/] Jedes Dokument besitzt verschiedene Eigenschaften, wie eine
+	Kategorie, Autoren und weitere. Auch kann eine Ausleih-Historie zu jedem
+	Dokument abgefragt werden.
+  \item[/M50/] Das Layout ist an das \gls{glos:copdes} der Technischen
+	Universität Braunschweig angepasst und ist klar strukturiert.
+  \item[/M60/] Für die Zeichencodierung wird UTF-8, welches eine Form von
+	\gls{glos:unicode} ist, verwendet.
+	Ein Import von \gls{glos:BibTeX} Dateien ist möglich, sowie ein Export in
+	\gls{glos:BibTeX}, als Backup, und eine adt-Datei für \gls{glos:Allegro}.
+  \item[/M70/] Für den sicheren Datentransfer wird \gls{glos:ssl}/\gls{glos:https} verwendet.
+\end{description}
 
 \section{Wunschkriterien}
 Die Erfüllung folgender Kriterien für das abzugebende Produkt wird angestrebt:
 \begin{description}
-  \item[/W10/] Die einzelnen Rechte von Rollen können flexibel zu jeder Zeit von der
-Verwaltung oder dem Administrator geändert werden.
-Dieses Kriterium wird erfüllt.
-  \item[/W20/] Ein Filter in der Suche nach dem Vorbild des Thunderbird Message Filters.
-  \item[/W30/] Verschicken von Erinnerungsmails sobald die Ausleihfrist abgelaufen ist.
-  \item[/W40/] Eine Authentifizierung über Lightweight Directory Access Protocoll (LDAP)
-wird nicht realisiert werden.
+  \item[/W10/] Die einzelnen Rechte von Rollen können flexibel zu jeder Zeit
+	von der Verwaltung oder dem Administrator geändert werden. Dieses
+	Kriterium wird erfüllt.
+  \item[/W20/] Ein Filter in der Suche nach dem Vorbild des \gls{glos:thmefi}s.
+  \item[/W30/] Verschicken von Erinnerungsmails, sobald die Ausleihfrist
+	abgelaufen ist.
+  \item[/W40/] Eine Authentifizierung über \gls{LDAP} wird nicht realisiert werden.
 \end{description}
 
 \section{Abgrenzungskriterien}
 Folgende Funktionalitäten werden nicht durch das Produkt, sondern wie folgt
 beschrieben anderweitig erfüllt:
 \begin{description}
-  \item[/A10/] Es findet kein direkter Datentransfer mit der UB statt, dies wird über
-den Export einer von Allegro lesbaren Datei realisiert.
-  \item[/A20/] Das System wird nicht darauf ausgelegt mehr als 100 Benutzer oder mehr
-als 5000 Dokumente zu beinhalten.
-  \item[/A30/] Es wird keine Möglichkeit geben sich das Layout in einer anderen Sprache
-anzeigen zu lassen außer Deutsch.
-  \item[/A40/] Bei Importfehlern wird keine dynamische Fehlerbehebung durchgeführt. Es
-wird ein Zeichen gesetzt das der Datensatz fehlerhaft ist und muss dann manuell
-behoben werden.
-  \item[/A50/] Es wird kein spezielles Layout für mobile Endgeräte geben.
+\item[/A10/] Es findet kein direkter Datentransfer mit der \gls{UB} statt.
+	Dies wird über den Export einer adt-Datei, welche für \gls{glos:Allegro}
+	lesbar ist, realisiert.
+  \item[/A20/] Das System wird nicht darauf ausgelegt, mehr als 100 Benutzer
+	oder mehr als 5000 Dokumente zu beinhalten.
+  \item[/A30/] Es wird keine Möglichkeit geben, sich das Layout in einer anderen
+	Sprache, außer Deutsch, anzeigen zu lassen.
+  \item[/A40/] Bei Importfehlern wird keine dynamische Fehlerbehebung 
+	durchgeführt. Es wird ein Zeichen gesetzt, dass der Datensatz fehlerhaft
+	ist, und muss dann manuell behoben werden.
+  \item[/A50/] Es wird kein spezielles Layout für mobile Endgeräte erstellt.
 \end{description}

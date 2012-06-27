@@ -19,7 +19,7 @@
 \label{fig:KompDiagramm}
 \end{figure}
 
-Die Komponente Clent fungiert als Schnittstelle zwischen Benutzer und der 
+Die Komponente Client fungiert als Schnittstelle zwischen Benutzer und der 
 Applikation Documents. Sie nimmt Eingaben des Benutzers entgegen und bereitet 
 HttpResponses des Servers auf.
 
@@ -41,7 +41,7 @@ Komponenten(Views,Admin...) mit Informationen befüllt werden.
 
 
 \section{Implementierung von Komponente
-         1: Client:}
+         1: Client}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
@@ -53,20 +53,20 @@ Programmcode bei auftretenden Fehlern angepasst. Die Integration dieser
 Komponente ist wichtig, da das Systen später nicht nur von wenigen Browsern aus
 funktionieren soll.
 Der Client dient als Schnittstelle des Benutzers mit dem eigentlichen Programm
-auf dem Server. Mittels eines Browsers der von uns nicht festgelegt wird, werden
+auf dem Server. Mittels eines Browsers, der von uns nicht festgelegt wird, werden
 die Webseitencodes, die der Server an den Clienten auf dessen Anfragen sendet,
 in die für den Benutzer verständliche Form einer Webseite gebracht.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDclient} : Das Paketdiagramm der Komponente Client.
-\begin{figure}[!htb]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_client.pdf}
 \caption{Paketdiagramm Client}
 \label{fig:PDclient}
 \end{figure}
 \subsection{Erl\"auterung}
 
-Da als Client mehrere verschieden Browser in Frage kommen, können die genauen
+Da als Client mehrere verschiedene Browser in Frage kommen, können die genauen
 Funktionen dieser Komponente hier nicht beschrieben werden. Die für uns
 wichtigen Funktionen sind die Möglichkeit eine Anfrage an unseren Server zu
 stellen, einen Webseitencode darstellen zu können und eine Datei lokal zu
@@ -84,7 +84,7 @@ die passende Funktion auf.
 %Bibliotheksfunktionen brauchen nicht aufgef\"uhrt zu werden.
 
 \section{Implementierung von Komponente
-         2: View:}
+         2: View}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
@@ -94,11 +94,11 @@ Die Views sind einer der essentiellen Bestandteile des Django-Frameworks. Sie
 bestimmen die Art und Weise wie Templates aufgerufen werden, welche
 Informationen die Templates bekommen und wie die Daten aus den Templates
 verarbeitet werden. Sie sind die Schnittstelle zwischen den Templates und dem
-Rest des Programms.
+Rest des Programmes.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDviews} : Das Paketdiagramm der Komponente Views.
-\begin{figure}[!htb]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_views.pdf}
 \caption{Paketdiagramm Views}
 \label{fig:PDviews}
@@ -109,13 +109,13 @@ beachbsichtigte Art des Aufrufs eines Templates eine Funktion zur Verfügung
 stellt. Dabei erhalten die Funktionen über einen Http-Request Informationen, die
 in der Funktion verarbeitet werden und geben einen Http-Response zurück, welche
 den fertigen Webseitencode enthält. Da die Funktion doc\_detail
-teilweise indirekt von anderen Funktionen der Komponente view aufgerufen wird,
+teilweise indirekt von anderen Funktionen der Komponente View aufgerufen wird,
 benötigt sie noch den zusätzlichen Parameter, der ihr mitteilt, welches Dokument
 dargestellt werden soll.
 
 
 \section{Implementierung von Komponente
-         3: Models:}
+         3: Models}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
@@ -128,8 +128,8 @@ Datenbank.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDmodels} : Das Paketdiagramm der Komponente Models.
-\begin{figure}[!htb]
-\includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_models.pdf}
+\begin{figure}[H]
+\includegraphics[width=0.9\linewidth]{bilder/Paketdiagramm_models.pdf}
 \caption{Paketdiagramm Models}
 \label{fig:PDmodels}
 \end{figure}
@@ -140,23 +140,23 @@ Models besitzt, stellt dies eine Beziehung in der späteren Datenbank dar.
 Mehrere Klassen haben die unicode-Funktion. Diese Funktion definiert, wie eine
 Tabelle bzw. eine Zeile dieser Tabelle als String dargestellt werden soll.
 Mehrere Klassen haben die save-Funktion, welche gerade durchgeführte Änderungen
-unter Angabe des Editors sofort speichert. Die Klasse \"documents\" hat außerdem
+unter Angabe des Editors sofort speichert. Die Klasse \lstinline{documents} hat außerdem
 die Funktionen lost, missing, unlend und lend, welche den Status des jeweiligen
 Dokumentes ändern können.
 
 \section{Implementierung von Komponente
-         4: Admin:}
+         4: Admin}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
 %Implementierung wird dabei durch Klassendiagramme dokumentiert.
 
-Die Komponente Admin stellt die Funktionen zur Veränderung von Daten Verfügung,
+Die Komponente Admin stellt die Funktionen zur Veränderung von Daten zur Verfügung,
 die nicht von normalen Benutzern durchgeführt werden sollen.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDadmin} : Das Paketdiagramm der Komponente Admin.
-\begin{figure}[!htb]
+\begin{figure}[H]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_admin.pdf}
 \caption{Paketdiagramm Admin}
 \label{fig:PDadmin}
@@ -167,28 +167,30 @@ einen Http-Request. Die Http-Response besteht hier allerdings nur aus einer
 Nachricht, dass die Änderung funktioniert hat und aus eventuell der Ansicht der
 geänderten Daten. Es ist mit diesen Funktionen möglich, in der Datenbank neue
 User zu erstellen und zu ändern, die verfügbaren Rollen zu bearbeiten und die
-gerellen Einstellungen des Servers zu ändern. 
+generellen Einstellungen des Servers zu ändern. 
 
 \section{Implementierung von Komponente
-         5: DB und Template:}
+         5: DB und Template}
 
 %Beschreiben Sie hier bitte die Implementierung der Komponente. Erl\"autern Sie
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
 %Implementierung wird dabei durch Klassendiagramme dokumentiert.
 
-Die Datenbank ist eine SQLite Datenbank. Dabei übernimmt allerdings das
-Django-Framework die komplette Kommunikation mithilfe der Komponente Models. 
-Die Templates sind eine statische Komponente auf die das Django-Framework
+Die Komponente DB besteht aus einem Datenbanksystem. 
+Dabei übernimmt das Django-Framework die komplette Kommunikation mithilfe 
+der Komponente Models. 
+Die Templates sind eine statische Komponente, auf die das Django-Framework
 zugreift, sobald sie von der Komponente View benötigt werden. 
 
 \subsection{Paketdiagramm}
 Die Paketdiagramme wurden weggelassen. Siehe dazu den Punkt Erläuterung.
 
 \subsection{Erl\"auterung}
-Die Datenbank ist eine SQLite-Datenbank. Ein Paketdiagramm für das komplette
-SQLite würde die Maße dieses Dokumentes sprengen und wird deswegen weggelassen.
+Ein Paketdiagramm für das komplette Datenbanksystem wird nicht eingefügt, da es
+sich um ein bestehendes System handelt. Genaueres zu der Struktur der
+Datenbank wird in \ref{kap4} erläutert.
 Auf ein Paketdiagramm für die Komponente Templates wird verzichtet, da diese
 keinerlei Funktionen besitzt, sondern nur von anderen Komponenten mit Daten
-gefüllt und weitergeleitet wird. Diese Kommunikation wird von Django-Framework
+gefüllt und weitergeleitet wird. Diese Kommunikation wird vom Django-Framework
 durchgeführt, für das ein Paketdiagram ebenfalls die Maße dieses Dokumentes
 sprengen würde.
