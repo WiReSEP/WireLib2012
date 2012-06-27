@@ -40,6 +40,7 @@ class user_profile_inline(admin.StackedInline):
 class CustomUserAdmin(UserAdmin):
     inlines = [user_profile_inline, tel_user_inline]
 
+#Registrierung aller anzuzeigenden Tabellen.
 admin.site.register(publisher, publisher_admin)
 admin.site.register(author, author_admin)
 admin.site.register(category, category_admin)
