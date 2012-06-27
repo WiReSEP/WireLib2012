@@ -5,11 +5,13 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext 
 from documents.models import document, doc_status, doc_extra, category, EmailValidation
 from documents.extras_doc_funcs import insert_doc
-from documents.extras_bibtex import Bibtex
-from documents.forms import EmailValidationForm
+from documents.extras_bibtex import Bibtex, UglyBibtex
+from documents.forms import EmailValidationForm, UploadFileForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.db.models import Q
+import datetime
+import os
 import settings
 import thread
 
@@ -180,10 +182,28 @@ def doc_add(request):
     """
     #TODO Rechtekontrolle
     v_user = request.user
-    if 'file' in request.POST:
-        #TODO Datei speichern, Importer starten, Datei löschen
-        pass
-    if 'title' in request.POST:
+    if len(request.FILES) > 0:
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            date = datetime.datetime.today()
+            filename = 'imports/' + datetime.datetime.strftime(date, '%s') + '.bib'
+            destination = open(filename, 'wb+')
+            for chunk in request.FILES['file'].chunks():
+                destination.write(chunk)
+            destination.close()
+            UglyBibtex(filename).do_import()
+            os.remove(filename)
+            filesize = os.path.getsize(filename + '.err')
+            if filesize == 0:
+                message = 'Datei erfolgreich übernommen'
+            else:
+                errfile = open(filename + '.err', 'r')
+                message = 'Datei konnte nicht vollständig übernommen werden <br /> /n <br /> /n'
+                for line in errfile:
+                    message += line + '<br /> /n'
+                errfile.close()
+            os.remove(filename + '.err')
+    elif 'title' in request.POST:
         insert = {}
         insert[u"title"] = request.POST.get('title','')
         insert[u"bib_no"] = request.POST.get('bib_no','').upper()
@@ -225,11 +245,20 @@ def doc_add(request):
         insert[u"extras"] = extras
         
         insert_doc(insert, v_user)
+        message = 'Daten erfolgreich übernommen'
         #documents.extras_doc_funcs.insert_doc(insert,v_user) 
+    else:
+        message = ''
+    form = UploadFileForm()
     perms = v_user.has_perm('cs_admin')
     cat = category.objects.filter()
-    return render_to_response("doc_add.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "category" : cat}))
+    return render_to_response("doc_add.html",
+                              context_instance=Context(
+                                  {"user" : v_user, 
+                                   "perm" : perms, 
+                                   "category" : cat,
+                                   "form" : form,
+                                   "message" : message}))
 
 @login_required
 def doc_rent(request):

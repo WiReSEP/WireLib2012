@@ -21,5 +21,8 @@ class EmailValidationForm(forms.Form):
             return email
 
         raise forms.ValidationError(_("Die Email existiert schon."))
+        
+class UploadFileForm(forms.Form):
+    file  = forms.FileField()
 
 
