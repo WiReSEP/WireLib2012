@@ -3,9 +3,10 @@ from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
-from documents.models import document, doc_status, doc_extra, category
+from documents.models import document, doc_status, doc_extra, category, EmailValidation
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
+from documents.forms import EmailValidationForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.db.models import Q
@@ -140,18 +141,32 @@ def index(request):
     perms =  v_user.has_perm('cs_admin')
     return render_to_response("home.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
-
+@login_required
 def profile(request): 
     v_user = request.user
     perms =  v_user.has_perm('cs_admin')
     return render_to_response("profile.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
-
+@login_required
 def profile_settings(request): 
     v_user = request.user
     perms =  v_user.has_perm('cs_admin')
     return render_to_response("profile_settings.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
+                              
+def email_validation(request): 
+    
+    if request.method == 'POST': 
+        form = EmailValidationForm(request.POST)
+        if form.is_valid(): 
+            EmailValidation.objects.add(user=request.user, email=form.cleaned_data.get('email'))
+            return HttpResponseRedirect('%sprocessed/' % request.path_info)
+    else: 
+        form = EmailValidationForm()
+    
+    template = "account/email_validation.html"
+    data = { 'form': form, }
+    return render_to_response(template, data, context_instance=RequestContext(request))
                   
 
 
@@ -377,3 +392,5 @@ def __filter_names(documents, request):
     elif sw == "all":
         documents = documents.all()                     
     return documents
+
+
