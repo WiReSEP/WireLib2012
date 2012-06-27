@@ -73,8 +73,7 @@ class document(models.Model):
     class Meta:
         permissions = (("cs_price", "Can see price"),
                        ("cs_locn", "Can see library of congress number"),
-                       ("cs_last_updated", "Can see last updated"),
-                       ("cs_last_edit_by", "Can see last editor"),
+                       ("cs_last_update_info", "Can see last update info"),
                        ("cs_dop", "Can see date of purchase"),
                        ("cs_export", "Can see dates of export"),)
 
@@ -287,11 +286,8 @@ class doc_status(models.Model):
     non_user_lend = models.ForeignKey(non_user, null=True) 
         #ausleihender non_User
     class Meta:
-        permissions = (("c_lend", "Can lend documents"),
-                       ("c_unlend_find", "Can unlend/find documents"),
-                       ("c_miss", "Can report documents as missed"),
-                       ("c_lost", "Can report documents as lost"),
-                       ("c_order", "Can order documents"),
+        permissions = (("c_lend_miss", "Can (un)lend and miss documents"),
+                       ("c_lost_order", "Can order and miss documents"),
                        ("cs_history", "Can see documenthistory"),
                        ("c_transfer", "Can transfer to other (non-) users"),)
 
