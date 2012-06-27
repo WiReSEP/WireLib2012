@@ -48,7 +48,9 @@ def search_pro(request):
     suchen. Diese Suche soll auch dem Benutzer, der nicht mit Google umgehen
     kann die Möglichkeit geben ein Dokument spezifisch zu suchen und zu finden!
     """
+    #Abfrage ob bereits eine Suche gestartet wurde
     if "title" in request.GET:
+        #Auslesen der benötigten Variablen aus dem Request
         s_author = request.GET.get('author','')
         s_title = request.GET.get('title','')
         s_year = request.GET.get('year','')
@@ -56,6 +58,7 @@ def search_pro(request):
         s_bib_no = request.GET.get('bib_no','Test')
         s_isbn = request.GET.get('isbn','')
         s_keywords = request.GET.get('keywords','')
+        #Aufeinanderfolgendes Filtern nach Suchbegriffen
         s_documents = document.objects.filter(title__icontains = s_title)
         if s_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
@@ -72,6 +75,7 @@ def search_pro(request):
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
         return __list(request, s_documents)
     else:
+        #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
         v_user = request.user
         perms =  v_user.has_perm('cs_admin')
         return render_to_response("search_pro.html",context_instance=Context({"user" :
