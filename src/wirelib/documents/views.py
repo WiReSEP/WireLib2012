@@ -79,13 +79,6 @@ def doc_list(request):
     """
     documents = document.objects.all()
     return __list(request, documents)
-    
-#def a_c(request):
- #   documents = document.objects.filter(
-  #                      Q(title__istartswith='a') | 
-   #                     Q(title__istartswith='b') | 
-    #                    Q(title__istartswith='c'))
-    #return __list(request, documents)
 
 def doc_detail(request, bib_no_id):
     v_user = request.user
@@ -112,13 +105,33 @@ def doc_detail(request, bib_no_id):
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
+    #auslesen der für die doc_detail.html benötigten Rechte
     perms =  v_user.has_perm('cs_admin')
+    c_lm = v_user.has_perm('c_lend_miss')
+    c_lo = v_user.has_perm('c_lost_order')
+    cs_history = v_user.has_perm('cs_history')
+    c_transfer = v_user.has_perm('c_transfer')
+    cs_price = v_user.has_perm('cs_price')
+    cs_locn = v_user.has_perm('cs_locn')
+    cs_lui = v_user.has_perm('cs_last_update_info')
+    cs_dop = v_user.has_perm('cs_dop')
+    cs_export = v_user.has_perm('cs_export')
+
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
                       "bi" : bibtex_string,
                       "user" : v_user,
-                      "perm" : perms})
+                      "perm" : perms,
+                      "c_lo" : c_lo,
+                      "cs_history" : cs_history,
+                      "c_transfer" : c_transfer,
+                      "cs_price" : cs_price,
+                      "cs_locn" : cs_locn,
+                      "cs_lui" : cs_lui,
+                      "cs_dop" : cs_dop,
+                      "cs_export" : cs_export,
+                      "c_lm" : c_lm})
     response = HttpResponse(template.render(context))
     return response
 
