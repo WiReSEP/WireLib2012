@@ -77,25 +77,25 @@ Adressen speichern zu können.
   \multicolumn{3}{c}{\emph{Tabelle:} document\_authors} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  author & wurde geschrieben von & 1\\
-  document & hat geschrieben & 1\\
+  author & wurde geschrieben von & 1,1 \\
+  document & hat geschrieben & 1,1\\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} document} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
   document\_authors & wurde geschrieben von & 1,n\\
-  category & gehört zur Kategorie & 1\\
-  publisher & wurde veröffentlicht von & 1\\
-  keywords & besitzt die Schlüsselwörter & n\\  
-  doc\_extra & besitzt die Extrafelder & n\\
-  doc\_status & hat den Status/verliehen an & n\\
+  category & gehört zur Kategorie & 1,1\\
+  publisher & wurde veröffentlicht von & 1,1\\
+  keywords & besitzt die Schlüsselwörter & 0,n\\  
+  doc\_extra & besitzt die Extrafelder & 0,n\\
+  doc\_status & hat den Status/verliehen an & 0,n\\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} keywords} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  document & gehört zum Dokument & 1 \\
+  document & gehört zum Dokument & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} publisher} \\
@@ -107,20 +107,20 @@ Adressen speichern zu können.
   \multicolumn{3}{c}{\emph{Tabelle:} category} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  document & enthält & n \\
+  document & enthält & 0,n \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} doc\_extra} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  document & gehört zu & 1 \\
+  document & gehört zu & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} doc\_status} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  document & gehört zum Dokument & 1\\
-  auth\_user & wurde geändert von & 1\\
+  document & gehört zum Dokument & 1,1\\
+  auth\_user & wurde geändert von & 1,1\\
   auth\_user & wurde ausgeliehen von & 0,1\\
   non\_user & wurde weitergegeben an & 0,1\\
 
@@ -135,86 +135,86 @@ Adressen speichern zu können.
   \multicolumn{3}{c}{\emph{Tabelle:} tel\_non\_user} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  non\_user & gehört zu & 1 \\
+  non\_user & gehört zu & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_user} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  user\_profile & wohnt & 1\\
+  user\_profile & wohnt & 1,1\\
   tel\_user & hat die Telefonnumern & 1,n\\
-  auth\_user\_user\_permissions & hat die Rechte & n\\
-  doc\_status & änderte den Status & n\\  
-  doc\_status & leiht/bürgt gerade für & n\\
-  django\_admin\_log & aktualisiert & n\\
-  auth\_message & bekam & n\\
-  auth\_user\_groups & ist in Gruppe & n\\
+  auth\_user\_user\_permissions & hat die Rechte & 0,n\\
+  doc\_status & änderte den Status & 0,n\\  
+  doc\_status & leiht/bürgt gerade für & 0,n\\
+  django\_admin\_log & aktualisiert & 0,n\\
+  auth\_message & bekam & 0,n\\
+  auth\_user\_groups & ist in Gruppe & 0,n\\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} tel\_user} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user & gehört zu & 1 \\
+  auth\_user & gehört zu & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_message} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user & gesendet an & 1 \\
+  auth\_user & gesendet an & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} user\_profile} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user & Anschrift von & 1 \\
+  auth\_user & Anschrift von & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_user\_groups} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user & der User & 1 \\
-  auth\_group & gehört zur Gruppe & 1 \\
+  auth\_user & der User & 1,1 \\
+  auth\_group & gehört zur Gruppe & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_group} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user\_groups & besitzt die Mitglieder & n \\
-  auth\_group\_permissions & hat die Rechte & n \\
+  auth\_user\_groups & besitzt die Mitglieder & 0,n \\
+  auth\_group\_permissions & hat die Rechte & 0,n \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_group\_permissions} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_group & die Gruppe & 1 \\
-  auth\_permission & hat das Recht & 1 \\
+  auth\_group & die Gruppe & 1,1 \\
+  auth\_permission & hat das Recht & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_user\_user\_permissions} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user & der User & 1 \\
-  auth\_permission & hat das Recht & 1 \\
+  auth\_user & der User & 1,1 \\
+  auth\_permission & hat das Recht & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} auth\_permission} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user\_user\_permissions & der User hat  & n \\
-  auth\_group\_permissions & die Gruppe hat & n \\
-  django\_content\_type & referenziert & 1 \\
+  auth\_user\_user\_permissions & der User hat  & 0,n \\
+  auth\_group\_permissions & die Gruppe hat & 0,n \\
+  django\_content\_type & referenziert & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} django\_admin\_log} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_user & getätigt von  & 1 \\
-  django\_content\_type & referenziert & 1 \\
+  auth\_user & getätigt von  & 1,1 \\
+  django\_content\_type & referenziert & 1,1 \\
 
   \toprule
   \multicolumn{3}{c}{\emph{Tabelle:} django\_content\_type} \\
   Relation zu & Name der Beziehung & Kardinalität \\
   \cmidrule(lr){1-1}\cmidrule(lr){2-2}\cmidrule(lr){3-3}
-  auth\_permission & stellt Referenz  & n \\
-  django\_admin\_log & ändert & n \\
+  auth\_permission & stellt Referenz  & 0,n \\
+  django\_admin\_log & ändert & 0,n \\
 \end{longtable}
