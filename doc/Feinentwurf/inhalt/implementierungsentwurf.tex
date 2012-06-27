@@ -19,7 +19,7 @@
 \label{fig:KompDiagramm}
 \end{figure}
 
-Die Komponente Clent fungiert als Schnittstelle zwischen Benutzer und der 
+Die Komponente Client fungiert als Schnittstelle zwischen Benutzer und der 
 Applikation Documents. Sie nimmt Eingaben des Benutzers entgegen und bereitet 
 HttpResponses des Servers auf.
 
@@ -53,7 +53,7 @@ Programmcode bei auftretenden Fehlern angepasst. Die Integration dieser
 Komponente ist wichtig, da das Systen später nicht nur von wenigen Browsern aus
 funktionieren soll.
 Der Client dient als Schnittstelle des Benutzers mit dem eigentlichen Programm
-auf dem Server. Mittels eines Browsers der von uns nicht festgelegt wird, werden
+auf dem Server. Mittels eines Browsers, der von uns nicht festgelegt wird, werden
 die Webseitencodes, die der Server an den Clienten auf dessen Anfragen sendet,
 in die für den Benutzer verständliche Form einer Webseite gebracht.
 
@@ -66,7 +66,7 @@ Hier die Abbildung \ref{fig:PDclient} : Das Paketdiagramm der Komponente Client.
 \end{figure}
 \subsection{Erl\"auterung}
 
-Da als Client mehrere verschieden Browser in Frage kommen, können die genauen
+Da als Client mehrere verschiedene Browser in Frage kommen, können die genauen
 Funktionen dieser Komponente hier nicht beschrieben werden. Die für uns
 wichtigen Funktionen sind die Möglichkeit eine Anfrage an unseren Server zu
 stellen, einen Webseitencode darstellen zu können und eine Datei lokal zu
@@ -94,7 +94,7 @@ Die Views sind einer der essentiellen Bestandteile des Django-Frameworks. Sie
 bestimmen die Art und Weise wie Templates aufgerufen werden, welche
 Informationen die Templates bekommen und wie die Daten aus den Templates
 verarbeitet werden. Sie sind die Schnittstelle zwischen den Templates und dem
-Rest des Programms.
+Rest des Programmes.
 
 \subsection{Paketdiagramm}
 Hier die Abbildung \ref{fig:PDviews} : Das Paketdiagramm der Komponente Views.
@@ -109,7 +109,7 @@ beachbsichtigte Art des Aufrufs eines Templates eine Funktion zur Verfügung
 stellt. Dabei erhalten die Funktionen über einen Http-Request Informationen, die
 in der Funktion verarbeitet werden und geben einen Http-Response zurück, welche
 den fertigen Webseitencode enthält. Da die Funktion doc\_detail
-teilweise indirekt von anderen Funktionen der Komponente view aufgerufen wird,
+teilweise indirekt von anderen Funktionen der Komponente View aufgerufen wird,
 benötigt sie noch den zusätzlichen Parameter, der ihr mitteilt, welches Dokument
 dargestellt werden soll.
 
@@ -151,7 +151,7 @@ Dokumentes ändern können.
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
 %Implementierung wird dabei durch Klassendiagramme dokumentiert.
 
-Die Komponente Admin stellt die Funktionen zur Veränderung von Daten Verfügung,
+Die Komponente Admin stellt die Funktionen zur Veränderung von Daten zur Verfügung,
 die nicht von normalen Benutzern durchgeführt werden sollen.
 
 \subsection{Paketdiagramm}
@@ -167,7 +167,7 @@ einen Http-Request. Die Http-Response besteht hier allerdings nur aus einer
 Nachricht, dass die Änderung funktioniert hat und aus eventuell der Ansicht der
 geänderten Daten. Es ist mit diesen Funktionen möglich, in der Datenbank neue
 User zu erstellen und zu ändern, die verfügbaren Rollen zu bearbeiten und die
-gerellen Einstellungen des Servers zu ändern. 
+generellen Einstellungen des Servers zu ändern. 
 
 \section{Implementierung von Komponente
          5: DB und Template}
@@ -179,7 +179,7 @@ gerellen Einstellungen des Servers zu ändern.
 Die Komponente DB besteht aus einem Datenbanksystem. 
 Dabei übernimmt das Django-Framework die komplette Kommunikation mithilfe 
 der Komponente Models. 
-Die Templates sind eine statische Komponente auf die das Django-Framework
+Die Templates sind eine statische Komponente, auf die das Django-Framework
 zugreift, sobald sie von der Komponente View benötigt werden. 
 
 \subsection{Paketdiagramm}
@@ -191,6 +191,6 @@ sich um ein bestehendes System handelt. Genaueres zu der Struktur der
 Datenbank wird in \ref{kap4} erläutert.
 Auf ein Paketdiagramm für die Komponente Templates wird verzichtet, da diese
 keinerlei Funktionen besitzt, sondern nur von anderen Komponenten mit Daten
-gefüllt und weitergeleitet wird. Diese Kommunikation wird von Django-Framework
+gefüllt und weitergeleitet wird. Diese Kommunikation wird vom Django-Framework
 durchgeführt, für das ein Paketdiagram ebenfalls die Maße dieses Dokumentes
 sprengen würde.

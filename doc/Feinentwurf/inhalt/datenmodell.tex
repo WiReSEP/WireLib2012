@@ -19,9 +19,8 @@ Datenbank geplant ist.
 \end{figure}
 
 Das Diagramm gibt eine grobe Übersicht über die Struktur der zugrundeliegenden
-relationalen Datenbank. Im Folgenden werden die beiden wichtigsten
-Teilstrukturen der Datenbank für bessere Übersicht dargestellt.
-
+relationalen Datenbank. Im Folgenden werden die beiden Teilstrukturen der
+Datenbank für bessere Übersicht dargestellt.
 
 \begin{figure}[H]
 \includegraphics[width=1.0\linewidth]{bilder/database-wirelib_cluster-doc.pdf}
@@ -30,17 +29,17 @@ Teilstrukturen der Datenbank für bessere Übersicht dargestellt.
 \end{figure}
 
 Dieses Diagramm gibt eine Übersicht über alle Tabellen der Datenbank, die im
-Zusammenhang mit der Bibliothek stehen. Die wichtigste Tabelle ist document, in
-der die vorhandenen Dokumente eingetragen werden. In der Tabelle doc\_status
-werden alle Statusänderungen eines Dokumentes festgehalten, einschließlich der
-Ausleihe eines Dokumentes. Die Tabelle doc\_extra speichert zusätzliche Inhalte
-eines Dokumentes, die aufgrund seltenen Gebrauchs nicht lohnen, in document
-direkt aufgenommen zu werden. In der Tabelle emails werden die E-Mail-Templates
-gespeichert, die verschickt werden, wenn die Ausleihfrist eines Dokumentes
-abläuft oder in ähnlichen Fällen. Die Tabellen auth\_user und non\_user sind
-in der Teilstruktur Benutzer und hier nur als Referenz gedacht zur besseren
-Übersicht. Die verbleibenden Tabellen speichern trivialerweise den
-beschriebenen Inhalt.
+Zusammenhang mit der Bibliothek stehen. Die wichtigste Tabelle ist
+\lstinline{document}, in der die vorhandenen Dokumente eingetragen werden. In
+der Tabelle \lstinline{doc_status} werden alle Statusänderungen eines Dokumentes
+festgehalten, einschließlich der Ausleihe eines Dokumentes. Die Tabelle
+\lstinline{doc_extra} speichert zusätzliche Inhalte eines Dokumentes, die aufgrund
+seltenen Gebrauchs nicht lohnen, in document direkt aufgenommen zu werden. In
+der Tabelle emails werden die E-Mail-Templates gespeichert, die verschickt
+werden, wenn die Ausleihfrist eines Dokumentes abläuft oder in ähnlichen
+Fällen. Die Tabellen \lstinline{auth_user} und \lstinline{non_user} sind in der Teilstruktur Benutzer
+und hier nur als Referenz gedacht zur besseren Übersicht. Die verbleibenden
+Tabellen speichern trivialerweise den beschriebenen Inhalt.
 
 
 \begin{figure}[H]
@@ -55,13 +54,14 @@ mit dem Präfix \emph{auth\_} beginnen, sind von Django generiert und werden fü
 eine erleichterte Handhabung von Benutzern und Rechtevergabe genutzt. Tabellen
 mit dem Präfix \emph{django\_} werden ebenfalls von Django generiert und dienen
 dem Admin-Interface von Django und dem Session-Managment von eingeloggten
-Benutzern. Die Tabelle non\_user ist für Nutzer gedacht, die nicht am Institut
-für Wissenschaftliches Rechnen arbeiten und trotzdem ein Dokument ausleihen
-wollen. Sie haben so keine Möglichkeit, sich auf der Webseite einzuloggen,
-können aber trotzdem Dokumente ausleihen. Die Tabellen tel\_user und
-tel\_non\_user werden benötigt, um Telefonnumern zu Benutzern zu speichern.
-user\_profile ist zur Erweiterung der Django-Tabelle auth\_user, um auch
-Adressen speichern zu können.
+Benutzern. Die Tabelle \lstinline{non_user} ist für Externe gedacht, die nicht
+am Institut für Wissenschaftliches Rechnen arbeiten und trotzdem ein Dokument
+ausleihen wollen. Sie haben so keine Möglichkeit, sich auf der Webseite
+einzuloggen, können aber trotzdem Dokumente ausleihen. Die Tabellen
+\lstinline{tel_user} und \lstinline{tel_non_user} werden benötigt, um
+Telefonnumern zu Benutzern zu speichern.  \lstinline{user_profile} ist zur
+Erweiterung der Django-Tabelle \lstinline{auth_user}, um auch Adressen
+speichern zu können.
 
 % Eigenes Klassendiagramm einsetzen
 \section{Erläuterung}
