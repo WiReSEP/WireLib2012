@@ -10,6 +10,14 @@ Im folgenden eine vollständige Installationsbeschreibung am Beispiel eines
 Beschreibung berücksichtigt einige Anforderungen für ein Produktivsystem nicht
 und ist für ein solches Setup nur als Hilfsreferenz verwendbar. 
 
+Das im folgenden beschriebene Setup weicht in Bezug auf das Datenbanksystem von
+dem Pflichtenheft ab, in dem die Verwendung einer \Gls{glos:sqlite}-Datenbank
+angesetzt wurde. Dieser Punkt des Pflichtenheftes kann ohne Probleme bei Bedarf
+verwendet werden, ist aber \emph{nicht} zu empfehlen für ein Produktivsystem aufgrund
+von Einschränkungen durch \Gls{glos:sqlite}\footnote{Eine SQLite Datenbank wird
+bei Schreibzugriffen vollständig gesperrt und arbeitet durch ihre persistenz
+langsamer als eine MySQL-Datenbank}.
+
 \section{Installation notwendiger Programme}
 Um das System über einen Webserver verfügbar machen zu können muss ersteinmal
 die nötige Software installiert werden. In dieser Beschreibung wird auf den
@@ -32,9 +40,9 @@ Sobald diese Pakete installiert sind muss die \Gls{glos:mysql} Datenbank
 vorbereitet werden.
 
 \section{MySQL einrichten}
-Um die Datenbank ein zu richten wird in dieser Beschreibung auf das in
+Um die Datenbank ein zu richten, wird in dieser Beschreibung auf das in
 \Gls{glos:php} geschriebene Programm \Gls{glos:adminer}. Um dies jedoch
-verwenden zu können müssen die folgenden zwei weitere Pakete installiert
+verwenden zu können, müssen die folgenden zwei weitere Pakete installiert
 werden.
 
 \begin{itemize}
@@ -61,13 +69,13 @@ gespeichert werden. Nach einem Neustart von \Gls{glos:lighttpd} mit
 \lstinline{service lighttpd restart} kann man über Adminer mit einem Webbrowser
 ansteuern und damit auf die lokale \Gls{glos:mysql}-Datenbank verbinden. Zuerst
 sollten zur Absicherung die leeren Benutzer (über "`Rechte"') von der Datenbank
-entfernt werden. Zusätzlich müssen noch die zwei Datensätze die, die leeren
+entfernt werden. Zusätzlich müssen noch die zwei Datensätze, die die leeren
 Benutzer betreffen unter "`mysql/db"' gelöscht werden.  Danach wird ein neuer
 Benutzer "`wirelib"' mit Rechten auf die Datenbank "`wirelib"' erzeugt. Die
 Rechte des Benutzers müssen und sollten nur alle Rechte auf Tabelle und Spalte
 haben.
 
-Da nun der zukünftige Benutzer auf der Datenbank existiert muss nur noch die
+Da nun der zukünftige Benutzer auf der Datenbank existiert, muss nur noch die
 Datenbank "`wirelib"' erzeugt werden. Die Datenbank heißt "`wirelib"' und
 bekommt den Zeichensatz "`utf8\_unicode\_ci"'.
 
@@ -105,7 +113,7 @@ hier vorgenommen werden.
 
 \subsubsection{settings.py}
 Ein \Gls{glos:django}-Projekt wird über die \emph{settings.py} eingerichtet.
-Um das Produkt aber zu verwalten muss die \emph{settings.py} noch editiert
+Um das Produkt aber zu verwalten, muss die \emph{settings.py} noch editiert
 werden. Den Anfang machen dabei die Zugriffsdaten für die Datenbank, die wie
 folgt eingerichtet werden:
 
@@ -201,7 +209,7 @@ urlpatterns += staticfiles_urlpatterns()
 
  \subsection{Django Setup abschließen}
  Der Projektordner ist nun bereit für einen Webserver. Was dem Projekt noch
- fehlt ist die Datenbank um seine Daten ablegen zu können.
+ fehlt, ist die Datenbank, um seine Daten ablegen zu können.
 
  Die Datenbank wird wie folgt initialisiert:
 \begin{lstlisting}
@@ -216,7 +224,7 @@ Module aktiviert werden. Das sind die folgenden:
  'mod\_rewrite'
 \end{lstlisting}
 
-Weiter muss das \emph{document-root} angepasst werden
+Weiter muss das \emph{document-root} angepasst werden,
 \begin{lstlisting}
 server.document-root        = "/var/www/wire"
 \end{lstlisting}
