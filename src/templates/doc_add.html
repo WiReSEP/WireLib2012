@@ -143,11 +143,12 @@ function addKeyword(div_id, elem) {
 	    <input type="submit" name="submit" value="Dokument speichern" />
 	  </form>
 	</div>
-	<br /> 
+	<br />
 	<hr />
 	<br />
-	<form method="post" action="">
-  	<input type="file" name="file" id="file_input" />
-	  <input type=submit name="submit" value="Start" />
+	<form method="post" action="" enctype="multipart/form-data">
+  	  {{ form.as_p }}
+  	  <p><input type="submit" value="Start" /></p>
   </form>
+  {{ message }}
 {% endblock content %}
