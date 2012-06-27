@@ -77,10 +77,10 @@ haben.
 
 Da nun der zukünftige Benutzer auf der Datenbank existiert, muss nur noch die
 Datenbank "`wirelib"' erzeugt werden. Die Datenbank heißt "`wirelib"' und
-bekommt den Zeichensatz "`utf8\_unicode\_ci"'.
+wird auf \lstinline{utf8_unicode_ci} als Zeichensatz eingestellt.
 
-Nach Abschluss dieser Vorbereitungen kann die adminer.php gelöscht und php in
-lighttpd deaktiviert werden.
+Nach Abschluss dieser Vorbereitungen kann die \emph{adminer.php} gelöscht und
+\Gls{glos:php} in \Gls{glos:lighttpd} deaktiviert werden.
 
 \section{Django einrichten}
 
@@ -249,10 +249,11 @@ url.rewrite-once = (
 \end{lstlisting}
 
  \subsection{Django FCGI-Skript}
-Das folgende Skript kann als Grundlage für ein automatisches FCGI-Start-Skript
-verwendet werden. Wichtig ist dafür allein, dass dem Benutzer Webserver
-Benutzer der Ordner
-\lstinline{$PROJECTDIR} gehört:
+Das folgende Skript kann als Grundlage für ein \Gls{cgi}-Start-Skript verwendet
+werden. \emph{Wichtig} ist für das Skript allein, dass der Ordner
+\lstinline{$PROJECTDIR} dem Benutzer des Webserver (meist \lstinline{www-data})
+gehört:
+
 \begin{lstlisting}
 chown www-data:www-data /var/www/wire
 \end{lstlisting}
