@@ -45,9 +45,9 @@
      inkscape:window-height="702"
      id="namedview1192"
      showgrid="false"
-     inkscape:zoom="0.08"
-     inkscape:cx="-1655.5455"
-     inkscape:cy="-5163.6831"
+     inkscape:zoom="0.014142136"
+     inkscape:cx="-3820.2915"
+     inkscape:cy="-10990.921"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -2484,13 +2484,6 @@
        y="-740.59998"
        x="1290.4098">VARCHAR(200)</text>
   </g>
-  <rect
-     style="fill:#ffffff;fill-opacity:1;stroke-width:9.77924633;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
-     id="rect3636"
-     width="907.20001"
-     height="688.79999"
-     x="-103.2"
-     y="-83.559998" />
   <g
      class="node"
      id="node23"
