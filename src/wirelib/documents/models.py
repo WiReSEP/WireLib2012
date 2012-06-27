@@ -229,7 +229,6 @@ class user_profile(models.Model):
     city = models.CharField(max_length=58)
     class Meta:
         permissions = (("cs_admin", "Can see the adminpanel"),
-                       ("c_update", "Can update non-user"),
                        ("c_import", "Can import"),
                        ("c_export", "Can export"),)
 
@@ -302,4 +301,4 @@ class emails(models.Model):
     subject = models.CharField(max_length=30)
     text = models.TextField()
     class Meta:
-        permissions = (("can_send", "Can send Emails"),)
+        permissions = (("can_send_mails", "Can send Emails"),)
