@@ -289,7 +289,7 @@ class doc_status(models.Model):
         #ausleihender non_User
     class Meta:
         permissions = (("c_lend_miss", "Can (un)lend and miss documents"),
-                       ("c_lost_order", "Can order and miss documents"),
+                       ("c_lost_order", "Can order and lost documents"),
                        ("cs_history", "Can see documenthistory"),
                        ("c_transfer", "Can transfer to other (non-) users"),)
 

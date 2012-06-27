@@ -20,6 +20,6 @@ class EmailValidationForm(forms.Form):
         if not (User.objects.filter(email=email) or EmailValidation.objects.filter(email=email)):
             return email
 
-        raise forms.ValidationError(_("That e-mail is already used."))
+        raise forms.ValidationError(_("Die Email existiert schon."))
 
 
