@@ -13,16 +13,16 @@ und ist für ein solches Setup nur als Hilfsreferenz verwendbar.
 Das im folgenden beschriebene Setup weicht in Bezug auf das Datenbanksystem von
 dem Pflichtenheft ab, in dem die Verwendung einer \Gls{glos:sqlite}-Datenbank
 angesetzt wurde. Dieser Punkt des Pflichtenheftes kann ohne Probleme bei Bedarf
-verwendet werden, ist aber \emph{nicht} zu empfehlen für ein Produktivsystem aufgrund
-von Einschränkungen durch \Gls{glos:sqlite}\footnote{Eine SQLite Datenbank wird
-bei Schreibzugriffen vollständig gesperrt und arbeitet durch ihre persistenz
+verwendet werden, ist aber aufgrund von Einschränkungen von \Gls{glos:sqlite}
+für ein Produktivsystem nicht zu empfehlen\footnote{Eine SQLite Datenbank wird
+bei Schreibzugriffen vollständig gesperrt und arbeitet durch ihre Persistenz
 langsamer als eine MySQL-Datenbank}.
 
 \section{Installation notwendiger Programme}
-Um das System über einen Webserver verfügbar machen zu können muss ersteinmal
+Um das System über einen Webserver verfügbar machen zu können muss erst einmal
 die nötige Software installiert werden. In dieser Beschreibung wird auf den
-schlanken und flexiblen Webserver \Gls{glos:lighttpd}, als Datenbanksystem wird
-ein \Gls{glos:mysql} Datenbanksystem verwendet.
+schlanken und flexiblen Webserver \Gls{glos:lighttpd} gesetzt, als
+Datenbanksystem wird ein \Gls{glos:mysql} Datenbanksystem verwendet.
 
 Zu installierende Pakete:
 \begin{itemize}
@@ -220,8 +220,8 @@ python manage.py syncdb
 In der Datei \emph{/etc/lighttpd/lighttpd.conf} müssen zuerst die nötigen
 Module aktiviert werden. Das sind die folgenden:
 \begin{lstlisting}
- 'mod\_fastcgi'
- 'mod\_rewrite'
+ 'mod_fastcgi'
+ 'mod_rewrite'
 \end{lstlisting}
 
 Weiter muss das \emph{document-root} angepasst werden,
