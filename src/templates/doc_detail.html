@@ -55,9 +55,11 @@
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
 			<!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
-			{% if documents.keywords_set.all %}
+			{{ key_len }}
+			{% if key_len > 0 %}
 			{% for k in documents.keywords_set.all %}
-			{{ k.keyword }},
+			{{ k.keyword }}{% if not forloop.last %},
+			{% endif %}
 			{% endfor %}
 			{% else %}
 			-
@@ -81,9 +83,16 @@
 		<!-- TODO doc_extra funktionsfähig machen -->
 		{% for de in doc_extra %}    
 		<tr>
-		  <td><b>{{ de.bib_field }}</b></td>
+		  <td> {% if de.bib_field == "volume" %}
+		  <b>Umfang:</b>
+		  {% else %}
+		  <b>
+		  {{ de.bib_field }}</b>
+		  {% endif %}
+		  </td>
 		  <td>{{ de.content }}</td>
 		</tr>
+		{% endfor %}
 		<tr>
 		  <td><b>ID in der Bibliothek:</b></td>
 		  <td>{{ documents.bib_no }}</td>
@@ -124,8 +133,7 @@
 			{% endif %}
 		  </td>
 		</tr>
-		{% endfor %}
-	  </table>
+		</table>
 	  
 	</td>
 	<td>
@@ -185,15 +193,8 @@
     
     
     <table> 
-    {% for i in 0123456789|make_list %}
-    <tr>
-    <td>{{ for s in document.doc_status.all }}
-        {{ s.date }}</td>
-    <td>{{ s.status }}</td>
-    <td>{{ s.recent_user }}
-        {% endfor %}</td>
-    </tr>
-    {% endfor %}
+    
+    
     </table>
     
     
