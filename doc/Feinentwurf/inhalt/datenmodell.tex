@@ -4,10 +4,11 @@
 %-------------------------------------------------------------------------------
 \chapter{Datenmodell}
 \label{kap4}
-Falls in der Anwendung bestimmte Daten dauerhaft gespeichert werden, so sind
-die entsprechenden Entities und Beziehungen hier darzustellen und zu erläutern.
-Dies ist insbesondere relevant, falls der Einsatz einer (relationalen)
-Datenbank geplant ist.
+Im folgenden Kapitel wird auf die verwendete Strunktur der Datenbank
+eingegangen. Die Datenbank muss Nutzer und deren Rechte speichern, sowie
+Dokumente mit allen dazugehörenden Informationen. Das Modell zur Darstellung
+der Struktur wurde für bessere Übersichtlichkeit auf zwei Pakete verteilt, die
+im Folgenden näher erläutert werden.
 
 \section{Diagramm}
 
@@ -18,9 +19,10 @@ Datenbank geplant ist.
 \label{fig:DBDiagramm}
 \end{figure}
 
-Das Diagramm gibt eine grobe Übersicht über die Struktur der zugrundeliegenden
-relationalen Datenbank. Im Folgenden werden die beiden Teilstrukturen der
-Datenbank für bessere Übersicht dargestellt.
+Das Diagramm veranschaulicht die Paketisierung des Modells und die
+Abhängigkeiten der Pakete. Auf die Relationen zwischen den Tabellen wird bei
+der Beschreibung der Modelle nicht eingegangen. Relationen sind in 
+\ref{db_erläuterung} beschrieben.
 
 \begin{figure}[H]
 \includegraphics[width=1.0\linewidth]{bilder/database-wirelib_cluster-doc.pdf}
@@ -38,8 +40,9 @@ seltenen Gebrauchs nicht lohnen, in document direkt aufgenommen zu werden. In
 der Tabelle emails werden die E-Mail-Templates gespeichert, die verschickt
 werden, wenn die Ausleihfrist eines Dokumentes abläuft oder in ähnlichen
 Fällen. Die Tabellen \lstinline{auth_user} und \lstinline{non_user} sind in der Teilstruktur Benutzer
-und hier nur als Referenz gedacht zur besseren Übersicht. Die verbleibenden
-Tabellen speichern trivialerweise den beschriebenen Inhalt.
+und hier nur als Referenz gedacht zur besseren Übersicht. \lstinline{authors}
+und \lstinline{document_authors} speichern ab, welcher Autor an welchem Buch
+beteiligt ist. Die verbleibenden Tabellen speichern trivialerweise den beschriebenen Inhalt.
 
 
 \begin{figure}[H]
@@ -65,6 +68,15 @@ speichern zu können.
 
 % Eigenes Klassendiagramm einsetzen
 \section{Erläuterung}
+\label{db_erläuterung}
+Im Folgenden sind alle Relationen von einer Tabelle zu einer anderen 
+in der Datenbank angezeigt. Dabei ist jeweils oben die ausgehende Tabelle und 
+unter \glqq Relation zu\grqq\ alle zu denen eine Verbindung existiert. Unter 
+\glqq Kardinalität\grqq\ steht dann, mit wie vielen Datensätzen der 
+Relationstabelle ein Datensatz der Ausgangstabelle verbunden ist. Angegeben wird 
+dabei zuerst die Mindestanzahl von Verbindungen und nach dem Komma die 
+Maximalanzahl. Bei \glqq 1,n\grqq\ hat Datensatz $A$ also mindestens eine und 
+maximal unendlich viele Verbindungen zur Relationstabelle.
 
 \begin{longtable}{@{}ccc@{}}
   \toprule
