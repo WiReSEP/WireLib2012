@@ -26,12 +26,18 @@
 %bitte dabei, welche Entwurfsmuster und Bibliotheken Sie verwenden. Die
 %Implementierung wird dabei durch Klassendiagramme dokumentiert.
 
+Der Client musste nicht im eigentlichen Sinne implementiert sondern eher
+integrert werden. Dazu wurden verschiedene Browser getestet und der
+Programmcode bei auftretenden Fehlern angepasst. Die Integration dieser
+Komponente ist wichtig, da das Systen später nicht nur von wenigen Browsern aus
+funktionieren soll.
 Der Client dient als Schnittstelle des Benutzers mit dem eigentlichen Programm
 auf dem Server. Mittels eines Browsers der von uns nicht festgelegt wird, werden
 die Webseitencodes, die der Server an den Clienten auf dessen Anfragen sendet,
 in die für den Benutzer verständliche Form einer Webseite gebracht.
 
 \subsection{Paketdiagramm}
+Hier die Abbildung \ref{fig:PDclient} : Das Paketdiagramm der Komponente Client.
 \begin{figure}[!htb]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_client.pdf}
 \caption{Paketdiagramm Client}
@@ -70,6 +76,7 @@ verarbeitet werden. Sie sind die Schnittstelle zwischen den Templates und dem
 Rest des Programms.
 
 \subsection{Paketdiagramm}
+Hier die Abbildung \ref{fig:PDviews} : Das Paketdiagramm der Komponente Views.
 \begin{figure}[!htb]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_views.pdf}
 \caption{Paketdiagramm Views}
@@ -99,6 +106,7 @@ um. Jede Klasse dieser Komponente ist das Muster für eine Tabelle in der
 Datenbank.
 
 \subsection{Paketdiagramm}
+Hier die Abbildung \ref{fig:PDmodels} : Das Paketdiagramm der Komponente Models.
 \begin{figure}[!htb]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_models.pdf}
 \caption{Paketdiagramm Models}
@@ -126,6 +134,7 @@ Die Komponente Admin stellt die Funktionen zur Veränderung von Daten Verfügung
 normalen Benutzern durchgeführt werden sollen.
 
 \subsection{Paketdiagramm}
+Hier die Abbildung \ref{fig:PDadmin} : Das Paketdiagramm der Komponente Admin.
 \begin{figure}[!htb]
 \includegraphics[width=0.8\linewidth]{bilder/Paketdiagramm_admin.pdf}
 \caption{Paketdiagramm Admin}
