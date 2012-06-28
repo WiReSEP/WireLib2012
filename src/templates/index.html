@@ -1,14 +1,11 @@
-
-	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang='de' lang='de'>
 <head>
     <meta name="generator" 
-        content="Infopark CMS Fiona; 6.8.0; 
-            53616c7465645f5fb14a315e7e8b33048d3c428086aedb09" />
+        content="WiReLib" />
 	<title>Institut für Wissenschaftliches Rechnen</title>
 	
        <!-- Die Meta-Daten für die Seite -->
-
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="keywords" content="TU, Technische Universität, BS, Braunschweig, Carolo-Wilhelmina, th, uni, hochschule, " lang="de" />
 	<meta name="description" content="Studierende @ TU Braunschweig" />	
@@ -55,114 +52,43 @@ function spoilIt(elem, idname) {
 
 </head>
 
-<!-- Beginn des Inhaltsbereichs -->
+{# Beginn des Inhaltsbereichs #}
 <body id="pagetop">
 
-<!-- Wrapper um den kompletten Inhalt, damit dieser zentriert werden kann -->
+  {# Wrapper um den kompletten Inhalt, damit dieser zentriert werden kann #}
 <div id="wrapper_content">
           
-   <!-- Der Header-Bereich mit Symbolfoto TU-Siegel, Institutslogo und horizontaler Navigation -->
+  {# Der Header-Bereich mit Symbolfoto TU-Siegel, Institutslogo und horizontaler Navigation #}
 
 		<div id="tu_siegel" class="logo">
 		<a href="http://www.tu-braunschweig.de" title="TU Start">
-		  <img src="{{STATIC_PREFIX}}icons/tubsdesign/siegel_rot.jpg" alt="TU BRAUNSCHWEIG" />
+		  <img src="{{ STATIC_PREFIX }}icons/tubsdesign/siegel_rot.jpg" alt="TU BRAUNSCHWEIG" />
 		</a>
 		</div>
         <div id="logo" class="logo">
         <a href="/../../.." title="WiReLib Home">
-		  <img src="{{STATIC_PREFIX}}icons/tubsdesign/sclogo3D_t.gif" alt="WiReLib" />
+		  <img src="{{ STATIC_PREFIX }}icons/tubsdesign/sclogo3D_t.gif" alt="WiReLib" />
 		</a>
 		</div>
 		<div id="symbolpic">
-		  <img src="{{STATIC_PREFIX}}Medien-DB/symbolfotos/buecher-02.jpg" 
+		  <img src="{{ STATIC_PREFIX }}Medien-DB/symbolfotos/buecher-02.jpg" 
 		alt="" width="960" height="170" title="" />
 		</div>
 
-<!-- Die horizontale Navigation --> 
-
-		<div id="tu_navcontainer">
-			<ul id="tu_navlist">
-			{% if user.is_authenticated %}
-            
-		    <li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
-			onmouseout="cleandelay()" style="z-index:999;">
-			<a href="/logout">LogOut</a>                                        
-		    </li>
-			 
-			<li id="tu_profil"><a href="/user/profile">Profil</a></li>
-		    {% else %}
-            <li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
-			onmouseout="cleandelay()" style="z-index:999;">
-			<a href="/login">LogIn</a>                                   
-            {% endif %}
-			</ul>
-		</div>
-
-<!-- Die vertikale Navigation auf der linken Seite -->
-	
-		<div class="linke_spalte">
-			<div class="navi1"> 
-			<a href="/doc_list" style="display:block;">
-			Literaturverzeichnis
-		    </a>
-			</div>
-	
-			<div class="navi2">
-			<a href="/search" style="display:block;">
-			Suche
-			</a>
-			</div>
-			
-			<div class="navi2">
-			<a href="/search/pro" style="display:block;">
-			Erweiterte Suche
-			</a>
-			</div>
-		
-			{% if perm %}
-			<div class="navi1">
-			  <a href ="/export" style"display:block;">Export</a>
-			</div>
-
-			<div class="navi2">
-			<a href="/export/bibtex" style="display:block;">
-			BibTeX-Export
-			</a>
-
-			</div>
-			<div class="navi2">
-			<a href="/export/allegro" style="display:block;">
-			Allegro-Export
-			</a>
-			</div>
-		
-			<div class="navi1">
-			<a href="/doc/add" style="display:block;">
-			Import
-			</a>
-			</div>
-		
-			<div class="navi1">
-			<a href="/admin" style="display:block;">
-			Administration
-			</a>
-			</div>
-			{% endif %}
-
-
-			<div id="linke_spalte_schatten">
-			</div>
-		</div>
-
+		{% include 'navigation.html' %}	
 		<div class="mittlere_spalte">
     
 		<div class = "inhalt">
-		 {% block content %} {% endblock content %}
+		  {% block content %}
+		  {% include 'home.html' %}
+		  {% endblock content %}
 		</div>	
 		
 		<span style="visibility:collapse;">
 		</span>
-
+		{% block snippet %}
+		{# ein Item besteht aus <div class="snippet"><h1>Headline</h1><p>text</p></div> #}
+	   	{% endblock snippet %}
 		<div class="fusszeile">
 			<hr noshade="noshade" />
 			aktualisiert

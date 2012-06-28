@@ -145,7 +145,7 @@ def doc_detail(request, bib_no_id):
 def index(request): 
     v_user = request.user
     perms =  v_user.has_perm('cs_admin')
-    return render_to_response("home.html",context_instance=Context({"user" :
+    return render_to_response("index.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
 @login_required
 def profile(request): 
