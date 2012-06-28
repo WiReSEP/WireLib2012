@@ -184,13 +184,18 @@ class UglyBibtex(object):
                 self.__log_error()
 
     def __insert_field(self, key_val):
-        if key_val[0] == u'author' or key_val[0] == u'keywords':
+        if key_val[0] == u'author':
             key_val[1] = key_val[1].split(',')
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
             self.entry[key_val[0]] = key_val[1]
 
+        elif key_val[0] == u'keywords':
+            key_val[1] = re.split('[ ,;/]', key_val[1])
+            key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
+            self.entry[key_val[0]] = key_val[1]
+
         elif key_val[0] == u'price':
-            pass
+            pass    # TODO: Price interpretieren und schreiben
 
         elif key_val[0] == u'dateofpurchase':
             if len(key_val) > 2:
