@@ -230,7 +230,10 @@ def insert_doc(dict_insert, user):
             document_db.save()
         keywords_db = []
         for key in keywords_f:
-            key_db, dummy = keywords.objects.get_or_create(document=document_db,
+            if key == '' or key == None:
+                continue
+            key_db, dummy = keywords.objects.get_or_create(
+                    document=document_db,
                     keyword=key)
             keywords_db.append(key_db)
         extras_db = []
