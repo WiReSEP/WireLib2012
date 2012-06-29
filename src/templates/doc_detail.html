@@ -166,6 +166,11 @@
 	      </form><br />
 	      {# <!-- Ausleihe an externen --> #}
 	    {% endif %}
+	    {% if c_lm %}
+	      <form action="" method="post">
+		    <input type="submit" name="missing" value="Vermisst melden" /> <br />
+	      </form><br />
+	    {% endif %}
 	  {% else %}
 	    {% if documents.status == 1 %}    
 	      {% if lending %}

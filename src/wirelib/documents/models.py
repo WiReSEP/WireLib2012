@@ -79,6 +79,14 @@ class document(models.Model):
                        ("cs_dop", "Can see date of purchase"),
                        ("cs_export", "Can see dates of export"),)
         ordering = ['title']
+    class Admin:
+        list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
+                        'category' 'publisher', 'bibtex_id')
+        list_filter = ('bib_no', 'title', 'category', 'publisher')
+        ordering = ('bib_no') 
+        search_fields = ('bib_no', 'title', 'publisher', 
+                         'isbn', 'inv_no', 'bibtex_id')
+        
 
     AVAILABLE= 0  #vorhanden
     LEND = 1       #ausgeliehen
@@ -128,18 +136,41 @@ class document(models.Model):
             non_user - non_user_lend
         """
         try: # Wenn es was zum updaten gibt:
-            self.doc_status_set.latest('date').update(return_lend=True)
+            old = self.doc_status_set.latest('date')
+            # bei F5-Benutzung eines Buttons wurden zwei Einträge eingefügt und 
+            # beide waren so gekennzeichnet, dass es keinen Nachfolgeeintrag gäbe
+            if (old.status == stat \
+                and old.recent_user == editor \
+                and old.user_lend == user \
+                and old.non_user_lend == non_user):
+                pass
+            else:
+                print "zumindest in else"
+                old.return_lend=True
+                old.save()
+                print "update geschafft"
+                l = doc_status(
+                        recent_user = editor,
+                        doc_id = self,
+                        status = stat,
+                        date_term_lend = terminate,
+                        user_lend = user,
+                        non_user_lend = non_user
+                    )
+                print "l fail"
+                l.save()
+                print "save fail"
         except:
-            pass
-        l = doc_status(
-            recent_user = editor,
-            doc_id = self,
-            status = stat,
-            date_term_lend = terminate,
-            user_lend = user,
-            non_user_lend = non_user
-        )
-        l.save()
+            print "keinen old-eintrag gefunden"
+            l = doc_status(
+                        recent_user = editor,
+                        doc_id = self,
+                        status = stat,
+                        date_term_lend = terminate,
+                        user_lend = user,
+                        non_user_lend = non_user
+                    )
+            l.save()
 
     def lend(self, user, editor=None, non_user=None, terminate=None):
         """ 
@@ -156,8 +187,7 @@ class document(models.Model):
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
                 raise LendingError()
         # zum Ausleihen oder Wiederfinden
-        elif self.status != document.AVAILABLE \
-              and self.status != document.MISSING:
+        elif self.status == document.ORDERED:
             raise LendingError()
         if editor == None:
             editor = user
