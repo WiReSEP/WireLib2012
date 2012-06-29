@@ -53,24 +53,24 @@ class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
     bibtex_id = models.CharField(max_length=120, unique=True)
-    lib_of_con_nr = models.CharField(max_length=20, null=True) 
+    lib_of_con_nr = models.CharField(max_length=20, blank=True, null=True) 
         #LibraryOfCongressN
     title = models.CharField(max_length=200)
-    isbn = models.CharField(max_length=17, null=True)
+    isbn = models.CharField(max_length=17, blank=True, null=True)
     category = models.ForeignKey(category)
     last_updated = models.DateField(auto_now=True)
     last_edit_by = models.ForeignKey(User)
-    publisher = models.ForeignKey(publisher, null=True)
-    year = models.IntegerField(null=True)
-    address = models.CharField(max_length=100, null=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
-    currency = models.CharField(max_length=3, null=True)
+    publisher = models.ForeignKey(publisher, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    currency = models.CharField(max_length=3, blank=True, null=True)
     date_of_purchase = models.DateField(auto_now_add=True)
-    ub_date = models.DateField(null=True) 
+    ub_date = models.DateField(blank=True, null=True) 
         #Datum des Allegro-Exports
-    bib_date = models.DateField(null=True) 
+    bib_date = models.DateField(blank=True, null=True) 
         #Datum des BibTeX-Exports
-    comment = models.TextField(null=True)
+    comment = models.TextField(blank=True, null=True)
     authors = models.ManyToManyField(author)
     class Meta:
         permissions = (("cs_price", "Can see price"),
@@ -79,6 +79,14 @@ class document(models.Model):
                        ("cs_dop", "Can see date of purchase"),
                        ("cs_export", "Can see dates of export"),)
         ordering = ['title']
+    class Admin:
+        list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
+                        'category' 'publisher', 'bibtex_id')
+        list_filter = ('bib_no', 'title', 'category', 'publisher')
+        ordering = ('bib_no') 
+        search_fields = ('bib_no', 'title', 'publisher', 
+                         'isbn', 'inv_no', 'bibtex_id')
+        
 
     AVAILABLE= 0  #vorhanden
     LEND = 1       #ausgeliehen
@@ -128,18 +136,41 @@ class document(models.Model):
             non_user - non_user_lend
         """
         try: # Wenn es was zum updaten gibt:
-            self.doc_status_set.latest('date').update(return_lend=True)
+            old = self.doc_status_set.latest('date')
+            # bei F5-Benutzung eines Buttons wurden zwei Einträge eingefügt und 
+            # beide waren so gekennzeichnet, dass es keinen Nachfolgeeintrag gäbe
+            if (old.status == stat \
+                and old.recent_user == editor \
+                and old.user_lend == user \
+                and old.non_user_lend == non_user):
+                pass
+            else:
+                print "zumindest in else"
+                old.return_lend=True
+                old.save()
+                print "update geschafft"
+                l = doc_status(
+                        recent_user = editor,
+                        doc_id = self,
+                        status = stat,
+                        date_term_lend = terminate,
+                        user_lend = user,
+                        non_user_lend = non_user
+                    )
+                print "l fail"
+                l.save()
+                print "save fail"
         except:
-            pass
-        l = doc_status(
-            recent_user = editor,
-            doc_id = self,
-            status = stat,
-            date_term_lend = terminate,
-            user_lend = user,
-            non_user_lend = non_user
-        )
-        l.save()
+            print "keinen old-eintrag gefunden"
+            l = doc_status(
+                        recent_user = editor,
+                        doc_id = self,
+                        status = stat,
+                        date_term_lend = terminate,
+                        user_lend = user,
+                        non_user_lend = non_user
+                    )
+            l.save()
 
     def lend(self, user, editor=None, non_user=None, terminate=None):
         """ 
@@ -156,8 +187,7 @@ class document(models.Model):
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
                 raise LendingError()
         # zum Ausleihen oder Wiederfinden
-        elif self.status != document.AVAILABLE \
-              and self.status != document.MISSING:
+        elif self.status == document.ORDERED:
             raise LendingError()
         if editor == None:
             editor = user
@@ -282,11 +312,11 @@ class doc_status(models.Model):
         #Datum an dem es geschah
     return_lend = models.BooleanField(default=False)
         #Datum der Rückgabe
-    date_term_lend = models.DateTimeField(null=True) 
+    date_term_lend = models.DateTimeField(blank=True, null=True) 
         #Ende der Rückgabefrist
-    user_lend = models.ForeignKey(User, null=True, related_name='user_lend') 
+    user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender User
-    non_user_lend = models.ForeignKey(non_user, null=True) 
+    non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
         permissions = (("c_lend_miss", "Can (un)lend and miss documents"),

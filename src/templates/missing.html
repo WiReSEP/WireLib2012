@@ -1,0 +1,18 @@
+{# <!-- TODO Einbinden in navigation-html --> #}  
+  {% for m in miss %}
+    {{ m.title }}
+    <br />
+    {{ m.bib_no }}
+    <br />
+    {% for s in m.doc_status_set.all %}
+      {% if s.status == 3 %}
+        {% if not s.return_lend %}
+          {{ s.date }}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    <br />
+    ------------------------------------
+    <br />
+  {% endfor %}
+

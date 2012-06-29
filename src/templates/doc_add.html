@@ -150,5 +150,9 @@ function addKeyword(div_id, elem) {
   	  {{ form.as_p }}
   	  <p><input type="submit" value="Start" /></p>
   </form>
-  {{ message }}
+  {% if success == 1 %}
+    <font color="#FF0000"> {{ message|linebreaksbr }}</font>
+  {% else %}
+    <font color="#00FF00"> {{ message|linebreaksbr }} </font>
+  {% endif %}  
 {% endblock content %}
