@@ -185,6 +185,7 @@ def doc_add(request):
         * Import durch Upload einer BibTeX-Datei
     """
     #TODO Rechtekontrolle
+    success = 0
     v_user = request.user
     if len(request.FILES) > 0:
         form = UploadFileForm(request.POST, request.FILES)
@@ -202,9 +203,10 @@ def doc_add(request):
                 message = 'Datei erfolgreich übernommen'
             else:
                 errfile = open(filename + '.err', 'r')
-                message = 'Datei konnte nicht vollständig übernommen werden <br /> /n <br /> /n'
+                message = 'Datei konnte nicht vollständig übernommen werden \n\n '
+                success = 1
                 for line in errfile:
-                    message += line + '<br /> /n'
+                    message += line
                 errfile.close()
             os.remove(filename + '.err')
     elif 'title' in request.POST:
@@ -262,7 +264,8 @@ def doc_add(request):
                                    "perm" : perms, 
                                    "category" : cat,
                                    "form" : form,
-                                   "message" : message}))
+                                   "message" : message,
+                                   "success" : success}))
 
 @login_required
 def doc_rent(request):
