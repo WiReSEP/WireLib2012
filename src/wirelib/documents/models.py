@@ -180,6 +180,12 @@ class document(models.Model):
         Methode für Vermisstmeldungen
         """
         self.__set_status(user, document.MISSING)
+        
+    def arrived(self, user):
+        """
+        Methode um bestellte Bücher zur Verleihe freizugeben
+        """
+        self.__set_status(user, document.AVAILABLE)
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
