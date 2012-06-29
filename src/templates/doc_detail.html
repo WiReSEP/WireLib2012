@@ -4,7 +4,10 @@
 <h1>{{ documents.title }}</h1> 
 <table width="100%" >
 <tr>
-		  <td><b>Status:   </td>   </b>
+  <td>
+    <table>
+      <tr>
+		  <td><b>Status:  </b></td> 
 		  <td>
 {% if documents.status == 0 %}
          Vorhanden
@@ -113,7 +116,7 @@
 			{% endif %}
 		  </td>
 		</tr>
-        {% if cs_price %}
+    {% if cs_price %}
 		<tr>
 		<td><b>Preis:</b></td>
 		  <td>
@@ -124,12 +127,12 @@
 			{% endif %}
 		  </td>
 		</tr>
-		{% endif %}  
+		{% endif %}
+	  {% if cs_locn %}  
 		<tr>
 		  <td><b>BibTeX-ID:</b></td>
 		  <td>{{ documents.bibtex_id }}</td>
 		</tr>
-		{% if cs_locn %}
 		<tr>
 		  <td><b>LibraryOfCongressN:</b></td>
 		  <td>
@@ -155,6 +158,7 @@
 	  
 	</td>
 	<td>
+	{% if user.is_authenticated %}
 	  {% if documents.status == 0 %}
 	    {% if c_lm %}
 	      <form action="" method="post">
@@ -227,6 +231,7 @@
 	      {% endif %}
 	    {% endif %}
 	  {% endif %}
+	{% endif %}
 	</td>
   </tr>
 </table>

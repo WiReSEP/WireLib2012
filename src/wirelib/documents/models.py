@@ -53,24 +53,24 @@ class document(models.Model):
     bib_no = models.CharField(max_length=15, primary_key=True)
     inv_no = models.CharField(max_length=15, unique=True)
     bibtex_id = models.CharField(max_length=120, unique=True)
-    lib_of_con_nr = models.CharField(max_length=20, null=True) 
+    lib_of_con_nr = models.CharField(max_length=20, blank=True, null=True) 
         #LibraryOfCongressN
     title = models.CharField(max_length=200)
-    isbn = models.CharField(max_length=17, null=True)
+    isbn = models.CharField(max_length=17, blank=True, null=True)
     category = models.ForeignKey(category)
     last_updated = models.DateField(auto_now=True)
     last_edit_by = models.ForeignKey(User)
-    publisher = models.ForeignKey(publisher, null=True)
-    year = models.IntegerField(null=True)
-    address = models.CharField(max_length=100, null=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
-    currency = models.CharField(max_length=3, null=True)
+    publisher = models.ForeignKey(publisher, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    currency = models.CharField(max_length=3, blank=True, null=True)
     date_of_purchase = models.DateField(auto_now_add=True)
-    ub_date = models.DateField(null=True) 
+    ub_date = models.DateField(blank=True, null=True) 
         #Datum des Allegro-Exports
-    bib_date = models.DateField(null=True) 
+    bib_date = models.DateField(blank=True, null=True) 
         #Datum des BibTeX-Exports
-    comment = models.TextField(null=True)
+    comment = models.TextField(blank=True, null=True)
     authors = models.ManyToManyField(author)
     class Meta:
         permissions = (("cs_price", "Can see price"),
@@ -282,11 +282,11 @@ class doc_status(models.Model):
         #Datum an dem es geschah
     return_lend = models.BooleanField(default=False)
         #Datum der Rückgabe
-    date_term_lend = models.DateTimeField(null=True) 
+    date_term_lend = models.DateTimeField(blank=True, null=True) 
         #Ende der Rückgabefrist
-    user_lend = models.ForeignKey(User, null=True, related_name='user_lend') 
+    user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender User
-    non_user_lend = models.ForeignKey(non_user, null=True) 
+    non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
         permissions = (("c_lend_miss", "Can (un)lend and miss documents"),
