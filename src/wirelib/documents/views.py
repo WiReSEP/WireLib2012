@@ -93,10 +93,6 @@ def doc_detail(request, bib_no_id):
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
-    try:
-        lending_query = document_query.doc_status_set.latest("date")
-    except doc_status.DoesNotExist:
-        lending_query = None
     #selbst ausleihen, wenn Status vorhanden
     if 'lend' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
@@ -116,6 +112,10 @@ def doc_detail(request, bib_no_id):
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
+    try:
+        lending_query = document_query.doc_status_set.latest('date')
+    except doc_status.DoesNotExist:
+        lending_query = None
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
