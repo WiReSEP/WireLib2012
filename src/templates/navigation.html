@@ -1,0 +1,74 @@
+{# Horizontale Navigation #}
+<div id="tu_navcontainer">
+  <ul id="tu_navlist">
+	{% if user.is_authenticated %}
+
+	<li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
+	onmouseout="cleandelay()" style="z-index:999;">
+	<a href="/logout">LogOut</a>                                        
+	</li>
+
+	<li id="tu_profil"><a href="/user/profile">Profil</a></li>
+	{% else %}
+	<li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
+	onmouseout="cleandelay()" style="z-index:999;">
+	<a href="/login">LogIn</a>                                   
+	{% endif %}
+  </ul>
+</div>
+
+{# Linke Navigation #}
+<div class="linke_spalte">
+  <div class="navi1"> 
+	<a href="/doc_list" style="display:block;">
+	  Literaturverzeichnis
+	</a>
+  </div>
+
+  <div class="navi2">
+	<a href="/search" style="display:block;">
+	  Suche
+	</a>
+  </div>
+
+  <div class="navi2">
+	<a href="/search/pro" style="display:block;">
+	  Erweiterte Suche
+	</a>
+  </div>
+
+  {% if perm %}
+  <div class="navi1">
+	<a href ="/export" style"display:block;">Export</a>
+  </div>
+
+  <div class="navi2">
+	<a href="/export/bibtex" style="display:block;">
+	  BibTeX-Export
+	</a>
+
+  </div>
+  <div class="navi2">
+	<a href="/export/allegro" style="display:block;">
+	  Allegro-Export
+	</a>
+  </div>
+
+  <div class="navi1">
+	<a href="/doc/add" style="display:block;">
+	  Import
+	</a>
+  </div>
+
+  <div class="navi1">
+	<a href="/admin" style="display:block;">
+	  Administration
+	</a>
+  </div>
+  {% endif %}
+
+
+  <div id="linke_spalte_schatten">
+  </div>
+</div>
+
