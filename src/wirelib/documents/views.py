@@ -104,6 +104,9 @@ def doc_detail(request, bib_no_id):
     if 'restitution' in request.POST and request.user.is_authenticated():
         document_query.unlend(v_user)
     #vermisst melden
+    if 'missing' in request.POST and request.user.is_authenticated():
+        document_query.missing(v_user)
+    #verloren melden
     if 'lost' in request.POST and request.user.is_authenticated():
         document_query.lost(v_user)
     #wiedergefunden melden

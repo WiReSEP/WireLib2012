@@ -177,6 +177,7 @@
 	              <input type="button" name="lend" value="&Uuml;bertragen" /> <br />
 	            </form><br />
 	            {# <!-- TODO Ausleihe an externen --> #}
+	            
 	          {% endif %}
 	        {% endif %}
 	        {% if lending.user_lend.username == user.username %}
@@ -184,6 +185,7 @@
 	            <input type="submit" name="restitution" value="R&uuml;ckgabe" /> <br />
 	          </form><br />
 	          {# <!-- TODO übertragen vom ausleihenden aus --> #}
+	          
 	        {% endif %}
 	        {% if c_lm %}
 	          <form action="" method="post">
@@ -196,7 +198,7 @@
 	        Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br />
 	        {% if c_lo %}
 	          <form action="" method="post">
-	            <input type="submit" name="arrived" value="Ist angekommen" /> <br />
+	            <input type="submit" name="restitution" value="Ist angekommen" /> <br />
 	          </form><br />
 	        {% endif %}
 	      {% else %}
