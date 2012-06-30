@@ -166,6 +166,11 @@
 	      </form><br />
 	      {# <!-- Ausleihe an externen --> #}
 	    {% endif %}
+	    {% if c_lm %}
+	      <form action="" method="post">
+		    <input type="submit" name="missing" value="Vermisst melden" /> <br />
+	      </form><br />
+	    {% endif %}
 	  {% else %}
 	    {% if documents.status == 1 %}    
 	      {% if lending %}
@@ -176,7 +181,7 @@
 	          Das Dokument ist von {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }} ausgeliehen. <br />
 	        {% endif %}
 	        {% if c_transfer %}
-	          {% if lending.user_lend_username != user.name %}
+	          {% if lending.user_lend.username != user.name %}
   	          <form action="" method="post">
 	              <input type="button" name="lend" value="&Uuml;bertragen" /> <br />
 	            </form><br />
@@ -184,7 +189,7 @@
 	            
 	          {% endif %}
 	        {% endif %}
-	        {% if lending.user_lend.username == user.username %}
+	        {% if lending.user_lend == user %}
 	          <form action="" method="post">
 	            <input type="submit" name="restitution" value="R&uuml;ckgabe" /> <br />
 	          </form><br />

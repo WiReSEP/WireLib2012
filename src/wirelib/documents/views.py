@@ -93,10 +93,6 @@ def doc_detail(request, bib_no_id):
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
-    try:
-        lending_query = document_query.doc_status_set.latest("date")
-    except doc_status.DoesNotExist:
-        lending_query = None
     #selbst ausleihen, wenn Status vorhanden
     if 'lend' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
@@ -112,6 +108,14 @@ def doc_detail(request, bib_no_id):
     #wiedergefunden melden
     if 'found' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
+    try:
+        document_query = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
+    try:
+        lending_query = document_query.doc_status_set.latest('date')
+    except doc_status.DoesNotExist:
+        lending_query = None
     doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
@@ -150,6 +154,14 @@ def index(request):
     perms =  v_user.has_perm('cs_admin')
     return render_to_response("index.html",context_instance=Context({"user" :
                               v_user, "perm" : perms}))
+
+def last_missing(request):
+    miss_query = document.objects.filter(doc_status__status = 3,        
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("missing.html", 
+                              context_instance=Context({"miss" : miss_query}))
+                              
 @login_required
 def profile(request): 
     v_user = request.user
