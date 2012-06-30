@@ -181,6 +181,11 @@ class document(models.Model):
         """
         self.__set_status(user, document.MISSING)
 
+class document_authors(models.Model):
+    document = models.ForeignKey(document)
+    author = models.ForeignKey(author)
+    editor = models.BooleanField(default=False)
+
 class keywords(models.Model):
     document = models.ForeignKey(document)
     keyword = models.CharField(max_length=50)
