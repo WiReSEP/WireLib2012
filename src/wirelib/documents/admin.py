@@ -9,6 +9,7 @@ from django.contrib.auth.admin import UserAdmin
 from documents.models import publisher
 from documents.models import author
 from documents.models import keywords
+from documents.models import document_authors
 
 class keywords_admin(admin.ModelAdmin):
     fields = ['keyword','document']
@@ -27,10 +28,14 @@ class publisher_admin(admin.ModelAdmin):
 class author_admin(admin.ModelAdmin):
     fields = ['first_name', 'last_name']
 
+class document_authors_inline(admin.StackedInline):
+    model = document_authors
+
 class document_admin(admin.ModelAdmin):
-    fields = ['bib_no', 'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',
-              'isbn', 'category', 'publisher',
-              'address','year', 'price', 'currency', 'authors', 'comment']
+#    fields = ['bib_no', 'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',
+#              'isbn', 'category', 'publisher',
+#              'address','year', 'price', 'currency', 'authors', 'comment']
+    inlines = (document_authors_inline,)
 
 class user_profile_inline(admin.StackedInline):
     model = user_profile

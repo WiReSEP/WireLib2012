@@ -71,7 +71,7 @@ class document(models.Model):
     bib_date = models.DateField(blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField(blank=True, null=True)
-    authors = models.ManyToManyField(author)
+    authors = models.ManyToManyField(author, through='document_authors')
     class Meta:
         permissions = (("cs_price", "Can see price"),
                        ("cs_locn", "Can see library of congress number"),
@@ -210,6 +210,20 @@ class document(models.Model):
         Methode für Vermisstmeldungen
         """
         self.__set_status(user, document.MISSING)
+
+    def get_editors(self):
+        """
+        Methode um alle Editoren anzuzeigen
+        """
+        auths = self.authors.filter(document_authors__editor=True)
+        return auths
+
+    def get_authors(self):
+        """
+        Methode um alle Autoren anzuzeigen
+        """
+        auths = self.authors.filter(document_authors__editor=False)
+        return auths
 
 class document_authors(models.Model):
     document = models.ForeignKey(document)
