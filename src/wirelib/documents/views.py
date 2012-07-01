@@ -31,10 +31,14 @@ def search(request):
     finden.
     """
     context = Context()
+    #Wenn bereits eine Suche gestartet wurde
     if "query" in request.GET:
+        #Eingabe des Users aus dem request auslesen
         suchtext = request.GET.get('query','')
+        #Nach Suchtext filtern und Ergebnis an Listenfunktion geben
         documents = document.objects.filter(title__icontains=suchtext)
         return __list(request, documents)
+    #Falls noch keine Suche gestartet wurde
     else:
         v_user = request.user
         i_perm = v_user.has_perm('documents.c_import')
@@ -79,8 +83,8 @@ def search_pro(request):
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
         return __list(request, s_documents)
+    #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
-        #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
         v_user = request.user
         perms =  v_user.has_perm('documents.cs_admin')
         i_perm = v_user.has_perm('documents.c_import')
@@ -323,6 +327,9 @@ def doc_rent(request):
 
 @login_required
 def export(request):
+    """Oberseite der Exporte. Die View lädt einfach das entsprechende Template
+    unter Abfrage der für Navileiste benötigten Rechte
+    """
     v_user = request.user
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
@@ -333,6 +340,9 @@ def export(request):
 
 @login_required
 def allegro_export(request):
+    """Seite um den Allegro-Export zu initiieren und für den Zugriff auf bisher
+    erstellte Allegro Exporte.
+    """
     v_user = request.user
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
