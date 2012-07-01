@@ -37,8 +37,13 @@ def search(request):
         return __list(request, documents)
     else:
         v_user = request.user
-        perms =  v_user.has_perm('cs_admin')
-        context = Context({"user" : v_user, "perm" : perms})
+        i_perm = v_user.has_perm('documents.c_import')
+        e_perm = v_user.has_perm('documents.c_export')
+        perms =  v_user.has_perm('documents.cs_admin')
+        context = Context({"user" : v_user, 
+                           "perm" : perms,
+                           "i_perm" : i_perm,
+                           "e_perm" : e_perm})
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
@@ -77,9 +82,12 @@ def search_pro(request):
     else:
         #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
         v_user = request.user
-        perms =  v_user.has_perm('cs_admin')
+        perms =  v_user.has_perm('documents.cs_admin')
+        i_perm = v_user.has_perm('documents.c_import')
+        e_perm = v_user.has_perm('documents.c_export')
         return render_to_response("search_pro.html",context_instance=Context({"user" :
-                       v_user, "perm" : perms}))
+                                  v_user, "perm" : perms, "i_perm" : i_perm,
+                                  "e_perm" : e_perm}))
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -120,16 +128,18 @@ def doc_detail(request, bib_no_id):
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
     #auslesen der für die doc_detail.html benötigten Rechte
-    perms =  v_user.has_perm('cs_admin')
-    c_lm = v_user.has_perm('c_lend_miss')
-    c_lo = v_user.has_perm('c_lost_order')
-    cs_history = v_user.has_perm('cs_history')
-    c_transfer = v_user.has_perm('c_transfer')
-    cs_price = v_user.has_perm('cs_price')
-    cs_locn = v_user.has_perm('cs_locn')
-    cs_lui = v_user.has_perm('cs_last_update_info')
-    cs_dop = v_user.has_perm('cs_dop')
-    cs_export = v_user.has_perm('cs_export')
+    perms =  v_user.has_perm('documents.cs_admin')
+    c_lm = v_user.has_perm('documents.c_lend_miss')
+    c_lo = v_user.has_perm('documents.c_lost_order')
+    cs_history = v_user.has_perm('documents.cs_history')
+    c_transfer = v_user.has_perm('documents.c_transfer')
+    cs_price = v_user.has_perm('documents.cs_price')
+    cs_locn = v_user.has_perm('documents.cs_locn')
+    cs_lui = v_user.has_perm('documents.cs_last_update_info')
+    cs_dop = v_user.has_perm('documents.cs_dop')
+    cs_export = v_user.has_perm('documents.cs_export')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
 
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
@@ -145,15 +155,20 @@ def doc_detail(request, bib_no_id):
                       "cs_lui" : cs_lui,
                       "cs_dop" : cs_dop,
                       "cs_export" : cs_export,
-                      "c_lm" : c_lm})
+                      "c_lm" : c_lm,
+                      "e_perm" : e_perm,
+                      "i_perm" : i_perm})
     response = HttpResponse(template.render(context))
     return response
 
 def index(request): 
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    perms =  v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
     return render_to_response("index.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms}))
+                              v_user, "perm" : perms, "i_perm" : i_perm,
+                              "e_perm" : e_perm}))
 
 def last_missing(request):
     miss_query = document.objects.filter(doc_status__status = 3,        
@@ -165,15 +180,21 @@ def last_missing(request):
 @login_required
 def profile(request): 
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    perms =  v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
     return render_to_response("profile.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms}))
+                              v_user, "perm" : perms, "i_perm" : i_perm,
+                              "e_perm" : e_perm}))
 @login_required
 def profile_settings(request): 
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    perms =  v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
     return render_to_response("profile_settings.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms}))
+                              v_user, "perm" : perms, "i_perm" : i_perm,
+                              "e_perm" : e_perm}))
                               
 def email_validation(request): 
     
@@ -271,12 +292,16 @@ def doc_add(request):
     else:
         message = ''
     form = UploadFileForm()
-    perms = v_user.has_perm('cs_admin')
+    perms = v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
     cat = category.objects.filter()
     return render_to_response("doc_add.html",
                               context_instance=Context(
                                   {"user" : v_user, 
-                                   "perm" : perms, 
+                                   "perm" : perms,
+                                   "i_perm" : i_perm,
+                                   "e_perm" : e_perm,
                                    "category" : cat,
                                    "form" : form,
                                    "message" : message,
@@ -289,23 +314,32 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.cs_admin')
     return render_to_response("doc_rent.html",context_instance=Context({"user"
-                              : v_user, "perm" : perms}))
+                              : v_user, "perm" : perms, i_perm : "i_perm",
+                              "e_perm" : e_perm}))
 
 @login_required
 def export(request):
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    perms =  v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
     return render_to_response("export.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms}))
+                              v_user, "perm" : perms, "i_perm" : i_perm,
+                              "e_perm" : e_perm}))
 
 @login_required
 def allegro_export(request):
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.cs_admin')
     return render_to_response("allegro_export.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms}))
+                              v_user, "perm" : perms, "i_perm" : i_perm,
+                              "e_perm" : e_perm}))
 
 @login_required
 def bibtex_export(request):
@@ -322,9 +356,12 @@ def bibtex_export(request):
         thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
 
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.cs_admin')
     return render_to_response("bibtex_export.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms}))
+                              v_user, "perm" : perms, "i_perm" : i_perm,
+                              "e_perm" : e_perm}))
 
 @login_required
 def user(request):
@@ -347,7 +384,9 @@ def __list(request, documents, form=0):
             documents = documents.reverse()
             headers[sort] = "asc"
     v_user = request.user
-    perms =  v_user.has_perm('cs_admin')
+    perms =  v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     return render_to_response("doc_list.html", 
@@ -355,6 +394,8 @@ def __list(request, documents, form=0):
                 user = v_user, 
                 settings = settings, 
                 perm = perms,
+                i_perm = i_perm,
+                e_perm = e_perm,
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form),

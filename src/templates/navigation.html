@@ -37,7 +37,7 @@
 	</a>
   </div>
 
-  {% if perm %}
+  {% if e_perm %}
   <div class="navi1">
 	<a href ="/export" style"display:block;">Export</a>
   </div>
@@ -53,13 +53,15 @@
 	  Allegro-Export
 	</a>
   </div>
-
+  {% endif %}
+  {% if i_perm %}
   <div class="navi1">
 	<a href="/doc/add" style="display:block;">
 	  Import
 	</a>
   </div>
-
+  {% endif %}
+  {% if perm %}
   <div class="navi1">
 	<a href="/admin" style="display:block;">
 	  Administration
