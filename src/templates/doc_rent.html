@@ -1,6 +1,10 @@
 {% extends "index.html" %}
 {% block content %}
 	<h1>Ihre ausgeliehenen Dokumente</h1>
+	{% include "doc_list.html" %}
 
 	<h1>Ihre Bürgschaften</h1>
+	{% with documents=documents_non_user %}
+	  {% include "doc_list.html" %}
+	{% endwith %}
 {% endblock %}

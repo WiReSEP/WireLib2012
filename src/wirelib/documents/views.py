@@ -345,12 +345,15 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
-    perms =  v_user.has_perm('documents.cs_admin')
-    return render_to_response("doc_rent.html",context_instance=Context({"user"
-                              : v_user, "perm" : perms, i_perm : "i_perm",
-                              "e_perm" : e_perm}))
+    documents = document.objects.filter(
+            doc_status__user_lend=v_user).filter(
+            doc_status__non_user_lend__isnull=True).filter(
+            doc_status__return_lend=False)
+    documents_non_user = document.objects.filter(
+            doc_status__user_lend=v_user).filter(
+            doc_status__non_user_lend__isnull=False).filter(
+            doc_status__return_lend=False)
+    return __list(request, documents, documents_non_user, 1)
 
 @login_required
 def export(request):
@@ -408,11 +411,12 @@ def user(request):
             doc_status__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents, form=0):
+def __list(request, documents, documents_non_user=None, form=0):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
     """
+    v_user = request.user
     documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
     if sort is not None:
@@ -420,13 +424,25 @@ def __list(request, documents, form=0):
         if headers[sort] == "des":
             documents = documents.reverse()
             headers[sort] = "asc"
-    v_user = request.user
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
-    return render_to_response("doc_list.html", 
+    if form == 1:
+        return render_to_response("doc_rent.html", 
+                dict(documents = documents,
+                    documents_non_user = documents_non_user,
+                    user = v_user, 
+                    settings = settings, 
+                    perm = perms,
+                    i_perm = i_perm,
+                    e_perm = e_perm,
+                    path_sort = params_sort, 
+                    path_starts = params_starts,
+                    form = form),
+                context_instance=RequestContext(request))
+    return render_to_response("doc_list_wrapper.html", 
             dict(documents = documents,
                 user = v_user, 
                 settings = settings, 
