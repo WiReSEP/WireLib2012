@@ -3,7 +3,8 @@ from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
-from documents.models import document, doc_status, doc_extra, category, EmailValidation
+from documents.models import document, doc_status, doc_extra, category,\
+    EmailValidation, category_need
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
 from documents.forms import EmailValidationForm, UploadFileForm
@@ -327,6 +328,12 @@ def doc_add(request):
         #documents.extras_doc_funcs.insert_doc(insert,v_user) 
     else:
         message = ''
+    category_needs = category_need.objects.all()
+    needs = dict()
+    for c in category_needs:
+        if (u""+c.category.name) not in needs:
+            needs[u"" + c.category.name] = []
+        needs[u"" + c.category.name].append(c.need)
     form = UploadFileForm()
     perms = v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
@@ -341,7 +348,8 @@ def doc_add(request):
                                    "category" : cat,
                                    "form" : form,
                                    "message" : message,
-                                   "success" : success}))
+                                   "success" : success,
+                                   "category_needs" : needs}))
 
 @login_required
 def doc_rent(request):
