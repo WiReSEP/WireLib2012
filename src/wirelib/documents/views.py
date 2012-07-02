@@ -36,8 +36,17 @@ def search(request):
         #Eingabe des Users aus dem request auslesen
         suchtext = request.GET.get('query','')
         #Nach Suchtext filtern und Ergebnis an Listenfunktion geben
-        documents = document.objects.filter(title__icontains=suchtext)
-        return __list(request, documents)
+        document_set = (
+                Q(title__icontains = suchtext) |
+                Q(authors__last_name__icontains = suchtext) |
+                Q(isbn__icontains = suchtext) |
+                Q(bib_no__icontains = suchtext) |
+                Q(publisher__name__icontains = suchtext) |
+                Q(keywords__keyword__icontains = suchtext)
+
+        )
+        document_query = document.objects.filter(document_set).distinct()
+        return __list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
         v_user = request.user
