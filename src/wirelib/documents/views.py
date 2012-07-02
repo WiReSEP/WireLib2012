@@ -75,18 +75,24 @@ def search_pro(request):
     #Abfrage ob bereits eine Suche gestartet wurde
     if "title" in request.GET:
         #Auslesen der benötigten Variablen aus dem Request
-        s_author = request.GET.get('author','')
+        s_fn_author = request.GET.get('fn_author','')
+        s_ln_author = request.GET.get('ln_author','')
         s_title = request.GET.get('title','')
         s_year = request.GET.get('year','')
         s_publisher = request.GET.get('publisher','')
         s_bib_no = request.GET.get('bib_no','Test')
         s_isbn = request.GET.get('isbn','')
         s_keywords = request.GET.get('keywords','')
+        s_doc_status = request.GET.get('doc_status','')
+        print s_doc_status
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         s_documents = document.objects.filter(title__icontains = s_title)
-        if s_author != "":
+        if s_fn_author != "":
+            s_documents = s_documents.filter(authors__first_name__icontains =
+                                             s_fn_author)
+        if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
-                                             s_author)
+                                             s_ln_author)
         if s_year != "":
             s_documents = s_documents.filter(year__icontains = s_year)
         if s_publisher != "":
@@ -108,9 +114,16 @@ def search_pro(request):
         perms =  v_user.has_perm('documents.cs_admin')
         i_perm = v_user.has_perm('documents.c_import')
         e_perm = v_user.has_perm('documents.c_export')
-        return render_to_response("search_pro.html",context_instance=Context({"user" :
-                                  v_user, "perm" : perms, "i_perm" : i_perm,
-                                  "e_perm" : e_perm}))
+        return render_to_response("search_pro.html",context_instance=Context({
+            "user" : v_user, 
+            "perm" : perms, 
+            "i_perm" : i_perm,
+            "e_perm" : e_perm,
+            "AVAILABLE" : document.AVAILABLE,
+            "LEND" : document.LEND,
+            "MISSING" : document.MISSING,
+            "ORDERED" : document.ORDERED,
+            "LOST" : document.LOST}))
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
