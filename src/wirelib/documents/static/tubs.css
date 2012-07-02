@@ -1508,11 +1508,31 @@ div.navic{
         padding-bottom:5px;
  }
 
+.snippet h1 a {
+        color:white;
+}
+
+.snippet h1 a:hover {
+        color:#CCCCCC;
+        background-color:transparent;
+}
+
+.snippet h1 a:active {
+        color:#CCCCCC;
+        background-color:transparent;
+}
+
 /* kleine Schriften fuer Absaetze */
 .snippet p {
         padding-left:3px;
 	font-size: 11px;
 
+}
+.snippet ul{
+	padding-left: 5px;
+}
+.snippet ul li{
+	list-style-type: none;
 }
 
 .snippet a {

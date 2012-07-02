@@ -89,11 +89,13 @@ function spoilIt(elem, idname) {
 		{% block snippet %}
 		{# ein Item besteht aus <div class="snippet"><h1>Headline</h1><p>text</p></div> #}
 		<div class="snippet">
-		  <h1> <a href="/miss">Vermisst:</a> </h1>
+		  <h1><a href="/miss">Vermisst:</a></h1>
 		  <p>
+		  <ul>
 		  {% for m in miss %}
 		    <li> <a href="../doc/{{ d.bib_no}}">{{ m }}</a></li>
 		  {% endfor %}
+		  </ul>
 		  </p>
 		</div>
 		  
