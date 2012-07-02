@@ -1,12 +1,12 @@
 {% extends "index.html" %}
 {% block header %}
-function addAuthor(div_id, elem) {
-	var auths = document.getElementsByName('author_last_name');
+function addAuthor(div_id, elem, edau) {
+	var auths = document.getElementsByName(edau+'_last_name');
 	var last_auth = auths[auths.length-2];
 	if(last_auth.value == '')
 	  return;
 	var new_div = document.createElement('tr');
-    new_div.innerHTML = '<td><input type=text name="author_first_name" maxlength=30 /></td> <td><input onFocus="addAuthor(\'' + div_id + '\', this)" type=text name="author_last_name" maxlength=30 /></td>';
+    new_div.innerHTML = '<td><input type=text name='+edau+'"_first_name" maxlength=30 /></td> <td><input onFocus="addAuthor(\'' + div_id + '\', this, '+edau+')" type=text name='+edau+'"_last_name" maxlength=30 /></td>';
     elem.removeAttribute('onFocus');
     document.getElementById(div_id).appendChild(new_div);
 }
@@ -58,9 +58,8 @@ function changeCategory(elem) {
 {% block content %}
 
     <h1>Import</h1>
-	
-	<input type="button" name="HandImport" value="Import per Eingabe" onclick="spoiler(this,'spoiler','Import per Direkteingabe','Eingabe verbergen')"> <br />
-	<div id="spoiler" name="spoiler" style="display: none;">
+
+	<div id="spoiler" name="spoiler">
 	  <form method="post" action="">
 	    <table>
 	        <tr>
@@ -170,7 +169,26 @@ function changeCategory(elem) {
 	        </tr>
 			<tr>
 				<td><input type="text" name="author_first_name"  maxlength=30 /></td>
-				<td><input type="text" onFocus="addAuthor('au', this)" name="author_last_name" maxlength=30 /></td>
+				<td><input type="text" onFocus="addAuthor('au', this, author)" name="author_last_name" maxlength=30 /></td>
+			</tr>
+            </tbody>
+	    </table>
+	    
+	    <b><u>Editoren</u></b> <br />
+	    <table>
+	        <tbody id=ed>
+	        <tr>
+	            <label id="editor_l"></label>
+	                <th>Vorname</th>
+	                <th>Nachname</th>
+	        </tr>
+	        <tr>
+                <td><input type="text" name="editor_first_name"  maxlength=30 /></td>
+	            <td><input type="text" name="editor_last_name" maxlength=30 /></td>
+	        </tr>
+			<tr>
+				<td><input type="text" name="editor_first_name"  maxlength=30 /></td>
+				<td><input type="text" onFocus="addAuthor('au', this, editor)" name="editor_last_name" maxlength=30 /></td>
 			</tr>
             </tbody>
 	    </table>
