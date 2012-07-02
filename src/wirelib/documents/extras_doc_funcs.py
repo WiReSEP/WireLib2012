@@ -24,8 +24,7 @@ def is_valid(dict_data): #TODO
             return False, u"Inventar-Nummer hat falsches Format"
         if dict_data[u"category"] == u"book": #checking book
             auths = dict_data.get(u"author", [])
-            extras = dict_data.get(u"extras", {})
-            editors = extras.get(u"editor", [])
+            editors = dict_data.get(u"editor", [])
             if __lst_is_empty(auths + editors):
                 return False, u"Autor und Editor"
             if dict_data[u"title"] == u"":
@@ -57,8 +56,7 @@ def is_valid(dict_data): #TODO
                 return False, u"Year"
         elif dict_data[u"category"] == u"inbook": #checking inbook
             auths = dict_data.get(u"author", [])
-            extras = dict_data.get(u"extras", {})
-            editors = extras.get(u"editor", [])
+            editors = dict_data.get(u"editor", [])
             if __lst_is_empty(auths + editors):
                 return False, u"Autor und Editor"
             if dict_data[u"title"] == u"":
@@ -176,6 +174,7 @@ def insert_doc(dict_insert, user):
         ub_date_f = None
         comment_f = dict_insert.get(u"comment", None)
         author_f = dict_insert[u"author"]
+        editor_f = dict_insert.get(u"editor",[])
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
         last_updated_f = datetime.date.today()
@@ -226,7 +225,29 @@ def insert_doc(dict_insert, user):
                         first_name=first_name_f)
                 # auth_db.documents.add(document_db)
             auth_db.save(last_edit_by_f)
-            document_db.authors.add(auth_db)
+#            document_db.authors.add(auth_db)
+            document_db.add_author(auth_db)
+            document_db.save()
+        for auth in editor_f:
+            au = auth.split(", ", 2)
+            if len(au) > 1:
+                last_name_f = au[0]
+                first_name_f = au[1]
+            else:
+                name_f = au[0].split(" ")
+                last_name_f = name_f[-1]
+                first_name_f = " ".join(name_f[:-1])
+            try:
+                auth_db = author.objects.get(last_name=last_name_f, 
+                        first_name=first_name_f)
+                # auth_db.documents.add(document_db)
+            except author.DoesNotExist:
+                auth_db = author(last_name=last_name_f,
+                        first_name=first_name_f)
+                # auth_db.documents.add(document_db)
+            auth_db.save(last_edit_by_f)
+#            document_db.authors.add(auth_db)
+            document_db.add_editor(auth_db)
             document_db.save()
         keywords_db = []
         for key in keywords_f:

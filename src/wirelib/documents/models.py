@@ -224,6 +224,19 @@ class document(models.Model):
         """
         auths = self.authors.filter(document_authors__editor=False)
         return auths
+    def add_author(self, author):
+        """
+        Methode um dem Dokument einen Autoren zuzuweisen
+        """
+        d = document_authors(document=self, author=author, editor=False)
+        d.save()
+
+    def add_editor(self, editor):
+        """
+        Methode um dem Dokument einen Autoren als Editor zuzuweisen
+        """
+        d = document_authors(document=self, author=editor, editor=True)
+        d.save()
 
 class document_authors(models.Model):
     document = models.ForeignKey(document)
