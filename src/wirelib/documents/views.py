@@ -36,9 +36,24 @@ def search(request):
     if "query" in request.GET:
         #Eingabe des Users aus dem request auslesen
         suchtext = request.GET.get('query','')
-        #Nach Suchtext filtern und Ergebnis an Listenfunktion geben
-        documents = document.objects.filter(title__icontains=suchtext)
-        return __list(request, documents)
+        #Erstellen eines Sets aus allen Suchbegriffen.
+        search_set = (
+                Q(title__icontains = suchtext) |
+                Q(authors__last_name__icontains = suchtext) |
+                Q(isbn__icontains = suchtext) |
+                Q(bib_no__icontains = suchtext) |
+                Q(publisher__name__icontains = suchtext) |
+                Q(keywords__keyword__icontains = suchtext)
+
+        )
+        #Filtern nach den Suchbegriffen des search_set
+        document_query = document.objects.filter(search_set).distinct()
+        #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
+        if document_query.count()==1:
+            return doc_detail(request, document_query[0].bib_no)
+        else:
+            return __list(request, document_query)
+        return __list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
         v_user = request.user
@@ -83,7 +98,11 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
-        return __list(request, s_documents)
+        #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
+        if s_documents.count()==1:
+            return doc_detail(request, s_documents[0].bib_no)
+        else:
+            return __list(request, s_documents)
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
         v_user = request.user
