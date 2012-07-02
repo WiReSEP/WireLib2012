@@ -401,7 +401,6 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-<<<<<<< HEAD
     documents = document.objects.filter(
             doc_status__user_lend=v_user).filter(
             doc_status__non_user_lend__isnull=True).filter(
@@ -411,21 +410,6 @@ def doc_rent(request):
             doc_status__non_user_lend__isnull=False).filter(
             doc_status__return_lend=False)
     return __list(request, documents, documents_non_user, 1)
-=======
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
-    perms =  v_user.has_perm('documents.cs_admin')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("doc_rent.html",
-                              context_instance=Context(
-                                       {"user" : v_user, 
-                                        "perm" : perms, 
-                                        "i_perm" : i_perm,
-                                        "e_perm" : e_perm, 
-                                        "miss" : miss_query[0:10]}))
->>>>>>> master
 
 @login_required
 def export(request):
