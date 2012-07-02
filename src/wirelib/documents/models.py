@@ -31,6 +31,13 @@ class category(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class category_need(models.Model):
+    category = models.ForeignKey(category)
+    need = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.category + u":" + self.need
     
 class publisher(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
