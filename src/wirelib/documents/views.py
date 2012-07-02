@@ -118,7 +118,6 @@ def search_pro(request):
         perms =  v_user.has_perm('documents.cs_admin')
         i_perm = v_user.has_perm('documents.c_import')
         e_perm = v_user.has_perm('documents.c_export')
-<<<<<<< HEAD
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                              doc_status__return_lend = False)
         miss_query = miss_query.order_by('-doc_status__date')
@@ -128,19 +127,12 @@ def search_pro(request):
                                                 "perm" : perms, 
                                                 "i_perm" : i_perm,
                                                 "e_perm" : e_perm, 
-                                                "miss" : miss_query[0:10]}))
-=======
-        return render_to_response("search_pro.html",context_instance=Context({
-            "user" : v_user, 
-            "perm" : perms, 
-            "i_perm" : i_perm,
-            "e_perm" : e_perm,
-            "AVAILABLE" : document.AVAILABLE,
-            "LEND" : document.LEND,
-            "MISSING" : document.MISSING,
-            "ORDERED" : document.ORDERED,
-            "LOST" : document.LOST}))
->>>>>>> f9909486a5c0d657c12b773b49e979f86f9a5cd9
+                                                "miss" : miss_query[0:10],
+                                                "AVAILABLE" : document.AVAILABLE,
+                                                "LEND" : document.LEND,
+                                                "MISSING" : document.MISSING,
+                                                "ORDERED" : document.ORDERED,
+                                                "LOST" : document.LOST}))
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente

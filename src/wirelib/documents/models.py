@@ -127,7 +127,7 @@ class document(models.Model):
     def __unicode__(self):
         return self.title
     
-    def __set_status(self, 
+    def set_status(self, 
                      editor, 
                      stat, 
                      terminate=None, 
@@ -193,25 +193,25 @@ class document(models.Model):
             raise LendingError()
         if editor == None:
             editor = user
-        self.__set_status(editor, document.LEND, terminate, user, non_user)
+        self.set_status(editor, document.LEND, terminate, user, non_user)
 
     def unlend(self, user):
         """ 
         Methode zum zurückgeben 
         """
-        self.__set_status(user, document.AVAILABLE)
+        self.set_status(user, document.AVAILABLE)
 
     def lost(self, user):
         """ 
         Methode zum "Verloren" setzen
         """
-        self.__set_status(user, document.LOST)
+        self.set_status(user, document.LOST)
         
     def missing(self, user):
         """ 
         Methode für Vermisstmeldungen
         """
-        self.__set_status(user, document.MISSING)
+        self.set_status(user, document.MISSING)
 
     def get_editors(self):
         """
