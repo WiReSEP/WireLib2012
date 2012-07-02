@@ -152,10 +152,8 @@ class document(models.Model):
                 and old.non_user_lend == non_user):
                 pass
             else:
-                print "zumindest in else"
                 old.return_lend=True
                 old.save()
-                print "update geschafft"
                 l = doc_status(
                         recent_user = editor,
                         doc_id = self,
@@ -164,11 +162,8 @@ class document(models.Model):
                         user_lend = user,
                         non_user_lend = non_user
                     )
-                print "l fail"
                 l.save()
-                print "save fail"
         except:
-            print "keinen old-eintrag gefunden"
             l = doc_status(
                         recent_user = editor,
                         doc_id = self,

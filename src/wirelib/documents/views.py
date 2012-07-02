@@ -76,18 +76,24 @@ def search_pro(request):
     #Abfrage ob bereits eine Suche gestartet wurde
     if "title" in request.GET:
         #Auslesen der benötigten Variablen aus dem Request
-        s_author = request.GET.get('author','')
+        s_fn_author = request.GET.get('fn_author','')
+        s_ln_author = request.GET.get('ln_author','')
         s_title = request.GET.get('title','')
         s_year = request.GET.get('year','')
         s_publisher = request.GET.get('publisher','')
         s_bib_no = request.GET.get('bib_no','Test')
         s_isbn = request.GET.get('isbn','')
         s_keywords = request.GET.get('keywords','')
+        s_doc_status = request.GET.get('doc_status','')
+        print s_doc_status
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         s_documents = document.objects.filter(title__icontains = s_title)
-        if s_author != "":
+        if s_fn_author != "":
+            s_documents = s_documents.filter(authors__first_name__icontains =
+                                             s_fn_author)
+        if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
-                                             s_author)
+                                             s_ln_author)
         if s_year != "":
             s_documents = s_documents.filter(year__icontains = s_year)
         if s_publisher != "":
@@ -98,6 +104,9 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
+        if s_doc_status !="":
+            s_documents = s_documents.filter(doc_status__status =
+                    s_doc_status,doc_status__return_lend = False) 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if s_documents.count()==1:
             return doc_detail(request, s_documents[0].bib_no)
@@ -109,9 +118,29 @@ def search_pro(request):
         perms =  v_user.has_perm('documents.cs_admin')
         i_perm = v_user.has_perm('documents.c_import')
         e_perm = v_user.has_perm('documents.c_export')
-        return render_to_response("search_pro.html",context_instance=Context({"user" :
-                                  v_user, "perm" : perms, "i_perm" : i_perm,
-                                  "e_perm" : e_perm}))
+<<<<<<< HEAD
+        miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                             doc_status__return_lend = False)
+        miss_query = miss_query.order_by('-doc_status__date')
+        return render_to_response("search_pro.html",
+                                  context_instance=Context(
+                                               {"user" : v_user, 
+                                                "perm" : perms, 
+                                                "i_perm" : i_perm,
+                                                "e_perm" : e_perm, 
+                                                "miss" : miss_query[0:10]}))
+=======
+        return render_to_response("search_pro.html",context_instance=Context({
+            "user" : v_user, 
+            "perm" : perms, 
+            "i_perm" : i_perm,
+            "e_perm" : e_perm,
+            "AVAILABLE" : document.AVAILABLE,
+            "LEND" : document.LEND,
+            "MISSING" : document.MISSING,
+            "ORDERED" : document.ORDERED,
+            "LOST" : document.LOST}))
+>>>>>>> f9909486a5c0d657c12b773b49e979f86f9a5cd9
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -164,6 +193,10 @@ def doc_detail(request, bib_no_id):
     cs_export = v_user.has_perm('documents.cs_export')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
+    
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
 
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
@@ -181,7 +214,8 @@ def doc_detail(request, bib_no_id):
                       "cs_export" : cs_export,
                       "c_lm" : c_lm,
                       "e_perm" : e_perm,
-                      "i_perm" : i_perm})
+                      "i_perm" : i_perm,
+                      "miss" : miss_query[0:10]})
     response = HttpResponse(template.render(context))
     return response
 
@@ -190,16 +224,32 @@ def index(request):
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
-    return render_to_response("index.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "i_perm" : i_perm,
-                              "e_perm" : e_perm}))
-
-def last_missing(request):
-    miss_query = document.objects.filter(doc_status__status = 3,        
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("index.html",
+                              context_instance=Context(
+                                               {"user" : v_user, 
+                                                "perm" : perms, 
+                                                "i_perm" : i_perm,
+                                                "e_perm" : e_perm,
+                                                "miss" : miss_query[0:10]}))
+
+def docs_miss(request):
+    v_user = request.user
+    perms =  v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,        
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    
     return render_to_response("missing.html", 
-                              context_instance=Context({"miss" : miss_query}))
+                              context_instance=Context({"user" : v_user, 
+                                                        "perm" : perms, 
+                                                        "i_perm" : i_perm,
+                                                        "e_perm" : e_perm,
+                                                        "miss" : miss_query}))
                               
 @login_required
 def profile(request): 
@@ -207,18 +257,28 @@ def profile(request):
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
     return render_to_response("profile.html",context_instance=Context({"user" :
                               v_user, "perm" : perms, "i_perm" : i_perm,
-                              "e_perm" : e_perm}))
+                              "e_perm" : e_perm, "miss" : miss_query[0:10]}))
 @login_required
 def profile_settings(request): 
     v_user = request.user
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
-    return render_to_response("profile_settings.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "i_perm" : i_perm,
-                              "e_perm" : e_perm}))
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("profile_settings.html",
+                              context_instance=Context(
+                                               {"user" : v_user, 
+                                                "perm" : perms, 
+                                                "i_perm" : i_perm,
+                                                "e_perm" : e_perm, 
+                                                "miss" : miss_query[0:10]}))
                               
 def email_validation(request): 
     
@@ -325,6 +385,9 @@ def doc_add(request):
     perms = v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
     cat = category.objects.filter()
     return render_to_response("doc_add.html",
                               context_instance=Context(
@@ -336,6 +399,7 @@ def doc_add(request):
                                    "form" : form,
                                    "message" : message,
                                    "success" : success,
+                                   "miss" : miss_query[0:10],
                                    "category_needs" : needs}))
 
 @login_required
@@ -345,6 +409,7 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
+<<<<<<< HEAD
     documents = document.objects.filter(
             doc_status__user_lend=v_user).filter(
             doc_status__non_user_lend__isnull=True).filter(
@@ -354,6 +419,21 @@ def doc_rent(request):
             doc_status__non_user_lend__isnull=False).filter(
             doc_status__return_lend=False)
     return __list(request, documents, documents_non_user, 1)
+=======
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.cs_admin')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("doc_rent.html",
+                              context_instance=Context(
+                                       {"user" : v_user, 
+                                        "perm" : perms, 
+                                        "i_perm" : i_perm,
+                                        "e_perm" : e_perm, 
+                                        "miss" : miss_query[0:10]}))
+>>>>>>> master
 
 @login_required
 def export(request):
@@ -364,9 +444,16 @@ def export(request):
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
-    return render_to_response("export.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "i_perm" : i_perm,
-                              "e_perm" : e_perm}))
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("export.html",
+                              context_instance=Context(
+                                        {"user" : v_user, 
+                                         "perm" : perms, 
+                                         "i_perm" : i_perm,
+                                         "e_perm" : e_perm, 
+                                         "miss" : miss_query[0:10]}))
 
 @login_required
 def allegro_export(request):
@@ -377,9 +464,16 @@ def allegro_export(request):
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
     perms =  v_user.has_perm('documents.cs_admin')
-    return render_to_response("allegro_export.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "i_perm" : i_perm,
-                              "e_perm" : e_perm}))
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("allegro_export.html",
+                              context_instance=Context(
+                                        {"user" : v_user,   
+                                         "perm" : perms, 
+                                         "i_perm" : i_perm,
+                                         "e_perm" : e_perm, 
+                                         "miss" : miss_query[0:10]}))
 
 @login_required
 def bibtex_export(request):
@@ -399,9 +493,16 @@ def bibtex_export(request):
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
     perms =  v_user.has_perm('documents.cs_admin')
-    return render_to_response("bibtex_export.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "i_perm" : i_perm,
-                              "e_perm" : e_perm}))
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("bibtex_export.html",
+                              context_instance=Context(
+                                    {"user" : v_user, 
+                                     "perm" : perms, 
+                                     "i_perm" : i_perm,
+                                     "e_perm" : e_perm, 
+                                     "miss" : miss_query[0:10]}))
 
 @login_required
 def user(request):
@@ -427,6 +528,9 @@ def __list(request, documents, documents_non_user=None, form=0):
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     if form == 1:
@@ -451,7 +555,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                 e_perm = e_perm,
                 path_sort = params_sort, 
                 path_starts = params_starts,
-                form = form),
+                form = form,
+                miss = miss_query[0:10]),
             context_instance=RequestContext(request))
 
 def __truncate_get(request, *var):
