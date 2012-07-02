@@ -1,18 +1,43 @@
-{# <!-- TODO Einbinden in navigation-html --> #}  
-  {% for m in miss %}
-    {{ m.title }}
-    <br />
-    {{ m.bib_no }}
-    <br />
-    {% for s in m.doc_status_set.all %}
-      {% if s.status == 3 %}
-        {% if not s.return_lend %}
-          {{ s.date }}
+{% extends "index.html" %}
+{% block content %}
+	<ul id="list_body">
+	{% for m in miss %}
+	  <li id="status_{% spaceless %}
+		  {% if form == 0 %}
+			{{ d.status }} 
+		  {% else %}{% if form == 1 %}
+			<!-- TODO: non-user null? Grafik-->
+		  {% endif %}{% endif %}
+		  {% endspaceless %}">
+	  <div id="title"> <a href="../doc/{{ d.bib_no}}">{{ m }}</a></div>
+	  <div id="bib_no"> {{ m.bib_no }} </div>
+	  <div id="authors">{% spaceless %}
+		{% for au in m.authors.all %} 
+		{{ au.first_name }} 
+		{{ au.last_name }}{% if not forloop.last %}, {% endif %}
+		{% endfor %}
+	  {% endspaceless %}</div>
+      {% for s in m.doc_status_set.all %}
+        {% if s.status == 3 %}
+            {% if not s.return_lend %}
+              Gemeldet von: 
+              {% if s.recent_user.first_name %}
+                {% if s.recent_user.last_name %}
+                  {{ s.recent_user.first_name }} {{ s.recent_user.last_name }} <br />
+                {% else %}
+                  {{ s.recent_user.username }} <br \>
+                {% endif %}
+              {% else %}
+                {{ s.recent_user.username }} <br />
+              {% endif %}
+              Vermisst seit: {{ s.date }}
+            {% endif %}
         {% endif %}
-      {% endif %}
     {% endfor %}
-    <br />
-    ------------------------------------
-    <br />
-  {% endfor %}
+	</li>
+	{% endfor %}
+	</ul>
+{% endblock content %}
 
+{% block snippet %}
+{% endblock snippet %}
