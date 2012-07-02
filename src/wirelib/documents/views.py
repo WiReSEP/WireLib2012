@@ -3,7 +3,8 @@ from django.http import HttpResponse, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
-from documents.models import document, doc_status, doc_extra, category, EmailValidation
+from documents.models import document, doc_status, doc_extra, category,\
+    EmailValidation, category_need
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
 from documents.forms import EmailValidationForm, UploadFileForm
@@ -35,9 +36,24 @@ def search(request):
     if "query" in request.GET:
         #Eingabe des Users aus dem request auslesen
         suchtext = request.GET.get('query','')
-        #Nach Suchtext filtern und Ergebnis an Listenfunktion geben
-        documents = document.objects.filter(title__icontains=suchtext)
-        return __list(request, documents)
+        #Erstellen eines Sets aus allen Suchbegriffen.
+        search_set = (
+                Q(title__icontains = suchtext) |
+                Q(authors__last_name__icontains = suchtext) |
+                Q(isbn__icontains = suchtext) |
+                Q(bib_no__icontains = suchtext) |
+                Q(publisher__name__icontains = suchtext) |
+                Q(keywords__keyword__icontains = suchtext)
+
+        )
+        #Filtern nach den Suchbegriffen des search_set
+        document_query = document.objects.filter(search_set).distinct()
+        #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
+        if document_query.count()==1:
+            return doc_detail(request, document_query[0].bib_no)
+        else:
+            return __list(request, document_query)
+        return __list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
         v_user = request.user
@@ -60,18 +76,24 @@ def search_pro(request):
     #Abfrage ob bereits eine Suche gestartet wurde
     if "title" in request.GET:
         #Auslesen der benötigten Variablen aus dem Request
-        s_author = request.GET.get('author','')
+        s_fn_author = request.GET.get('fn_author','')
+        s_ln_author = request.GET.get('ln_author','')
         s_title = request.GET.get('title','')
         s_year = request.GET.get('year','')
         s_publisher = request.GET.get('publisher','')
         s_bib_no = request.GET.get('bib_no','Test')
         s_isbn = request.GET.get('isbn','')
         s_keywords = request.GET.get('keywords','')
+        s_doc_status = request.GET.get('doc_status','')
+        print s_doc_status
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         s_documents = document.objects.filter(title__icontains = s_title)
-        if s_author != "":
+        if s_fn_author != "":
+            s_documents = s_documents.filter(authors__first_name__icontains =
+                                             s_fn_author)
+        if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
-                                             s_author)
+                                             s_ln_author)
         if s_year != "":
             s_documents = s_documents.filter(year__icontains = s_year)
         if s_publisher != "":
@@ -82,13 +104,18 @@ def search_pro(request):
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
             s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
-        return __list(request, s_documents)
+        #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
+        if s_documents.count()==1:
+            return doc_detail(request, s_documents[0].bib_no)
+        else:
+            return __list(request, s_documents)
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
         v_user = request.user
         perms =  v_user.has_perm('documents.cs_admin')
         i_perm = v_user.has_perm('documents.c_import')
         e_perm = v_user.has_perm('documents.c_export')
+<<<<<<< HEAD
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                              doc_status__return_lend = False)
         miss_query = miss_query.order_by('-doc_status__date')
@@ -99,6 +126,18 @@ def search_pro(request):
                                                 "i_perm" : i_perm,
                                                 "e_perm" : e_perm, 
                                                 "miss" : miss_query[0:10]}))
+=======
+        return render_to_response("search_pro.html",context_instance=Context({
+            "user" : v_user, 
+            "perm" : perms, 
+            "i_perm" : i_perm,
+            "e_perm" : e_perm,
+            "AVAILABLE" : document.AVAILABLE,
+            "LEND" : document.LEND,
+            "MISSING" : document.MISSING,
+            "ORDERED" : document.ORDERED,
+            "LOST" : document.LOST}))
+>>>>>>> f9909486a5c0d657c12b773b49e979f86f9a5cd9
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -333,6 +372,12 @@ def doc_add(request):
         #documents.extras_doc_funcs.insert_doc(insert,v_user) 
     else:
         message = ''
+    category_needs = category_need.objects.all()
+    needs = dict()
+    for c in category_needs:
+        if (u""+c.category.name) not in needs:
+            needs[u"" + c.category.name] = []
+        needs[u"" + c.category.name].append(c.need)
     form = UploadFileForm()
     perms = v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
@@ -351,7 +396,8 @@ def doc_add(request):
                                    "form" : form,
                                    "message" : message,
                                    "success" : success,
-                                   "miss" : miss_query[0:10]}))
+                                   "miss" : miss_query[0:10],
+                                   "category_needs" : needs}))
 
 @login_required
 def doc_rent(request):
