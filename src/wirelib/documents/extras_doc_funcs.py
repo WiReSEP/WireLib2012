@@ -206,7 +206,7 @@ def insert_doc(dict_insert, user):
                 last_updated= last_updated_f,
                 last_edit_by = last_edit_by_f,
                 )
-        document_db.save()
+        document_db.save(user)
         document_db.set_status(user, document.AVAILABLE)
         for auth in author_f:
             au = auth.split(", ", 2)
@@ -228,7 +228,7 @@ def insert_doc(dict_insert, user):
             auth_db.save(last_edit_by_f)
 #            document_db.authors.add(auth_db)
             document_db.add_author(auth_db)
-            document_db.save()
+            document_db.save(user)
         for auth in editor_f:
             au = auth.split(", ", 2)
             if len(au) > 1:
@@ -249,7 +249,7 @@ def insert_doc(dict_insert, user):
             auth_db.save(last_edit_by_f)
 #            document_db.authors.add(auth_db)
             document_db.add_editor(auth_db)
-            document_db.save()
+            document_db.save(user)
         keywords_db = []
         for key in keywords_f:
             if key == '' or key == None:
