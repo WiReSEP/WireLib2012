@@ -246,10 +246,20 @@
 	rows="15" readonly="true">{{ bi }}</textarea></div>
 	
 {% if cs_history %}
-  <h3>History dieses Dokuments</h3>
-  <table> 
-  {# <!-- TODO History einbinden --> #}
-  </table>
+<h3>History dieses Dokuments</h3>
+
+
+{{ document.doc_status.date }}
+
+{% for r in new_history %}
+    {{r.date}}
+{% endfor %}
+
+
+
+
+
+
 {% endif %}
     
     

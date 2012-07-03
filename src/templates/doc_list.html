@@ -31,13 +31,12 @@
 	<ul id="list_body">
 	{% for d in documents %}
 	
-	  <li id="status_{% spaceless %}
+	  <li id="status"{% spaceless %}
 		  {% if form == 0 %}
 			{{ d.status }} 
 		  {% else %}{% if form == 1 %}
-			<!-- TODO: non-user null? Grafik-->
-		  {% endif %}{% endif %}
-		  {% endspaceless %}">
+					  {% endif %}{% endif %}
+		  {% endspaceless %}>
 	  <div id="title">
 		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a>
 		  {% if form == 1 %}
