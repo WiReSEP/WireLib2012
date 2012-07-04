@@ -7,7 +7,7 @@ from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, category_need
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
-from documents.forms import EmailValidationForm, UploadFileForm
+from documents.forms import EmailValidationForm, UploadFileForm, SelectUser
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.db.models import Q
@@ -210,6 +210,25 @@ def doc_detail(request, bib_no_id):
                       "e_perm" : e_perm,
                       "i_perm" : i_perm,
                       "miss" : miss_query[0:10]})
+    response = HttpResponse(template.render(context))
+    return response
+
+def doc_assign(request, bib_no_id):
+    v_user = request.user
+    userform = SelectUser()
+    try:
+        document_query = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
+    try:
+        lending_query = document_query.doc_status_set.latest('date')
+    except doc_status.DoesNotExist:
+        lending_query = None
+    template = loader.get_template("doc_assign.html")
+    context = Context({"documents" : document_query, 
+                       "user" : v_user,
+                       "lending" : lending_query, 
+                       "userform": userform})
     response = HttpResponse(template.render(context))
     return response
 
