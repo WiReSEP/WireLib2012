@@ -10,7 +10,14 @@ from documents.models import publisher
 from documents.models import author
 from documents.models import keywords
 from documents.models import document_authors
-
+"""
+Definition der Adminseiten der Models.
+Jede Klasse steht für ein Model, dass angezeigt werden soll
+Alle 'inline' Klassen repräsentieren Models, die in anderen Seiten angezeigt
+werden sollen.
+'model' definiert von welchem Model alle Felder angzeigt werden. 'fields' zeigt
+nur eine Auswahl an Attributen des Models an.
+"""
 class keywords_admin(admin.ModelAdmin):
     fields = ['keyword','document']
 
