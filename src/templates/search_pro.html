@@ -7,8 +7,9 @@
 	  <td>
 		<input value="--Basisinformationen--" id="bashide" 
 		onclick="spoiler(this,'title_row','--Basisinformationen--',
-		'--Basisinformationen--');spoiler(this,'author_row',
+		'--Basisinformationen--');spoiler(this,'fn_author_row',
 		'--Basisinformationen--','--Basisinformationen--');
+		spoiler(this,'ln_author_row','--Basisinformationen','--Basisinformationen');
 		spoiler(this,'keyword_row','--Basisinformation--','--Basisinformation--')" 
 		type="button" 
 		style="border-style:none;background-color:inherit;">
@@ -19,9 +20,14 @@
 	  <td><input type="text" name="title" value="{{ searched_title }}" />
 	  </td>
 	</tr>
-	<tr id="author_row">
-	  <td>Autor:</td>
-	  <td><input type="text" name="author" value="{{ searched_author }}" />
+	<tr id="fn_author_row">
+	  <td>Vorname Autor:</td>
+	  <td><input type="text" name="fn_author" value="{{ searched_author }}" />
+	  </td>
+	</tr>
+	<tr id="ln_author_row">
+	  <td>Nachname Autor:</td>
+	  <td><input type="text" name="ln_author" value="{{ searched_author }}" />
 	  </td>
 	</tr>
 	<tr id="keyword_row">
@@ -71,10 +77,15 @@
 			elem = document.getElementById('bashide');
 			spoiler(elem,'title_row','--Basisinformationen--',
 			'--Basisinformationen--');
-			spoiler(elem,'author_row', '--Basisinformationen--',
+			spoiler(elem,'fn_author_row', '--Basisinformationen--',
+			'--Basisinformationen--');
+			spoiler(elem,'ln_author_row', '--Basisinformationen--',
 			'--Basisinformationen--');
 			spoiler(elem,'keyword_row','--Basisinformation--',
 			'--Basisinformation--') 
+			elem = document.getElementById('stathide');
+			spoiler(elem,'status_row','--Statusinformationen--',
+			'--Statusinformationen--');
 		  }
 		</script>
 	  </td>
@@ -91,8 +102,33 @@
 		</td>
 	  </tr>
 	</div>
+	<tr>
+	  <td>
+		<input value="--Statusinformationen--" id="stathide" 
+		onclick="spoiler(this,'status_row','--Statusinformationen--',
+		'--Statusinformationen--')" 
+		type="button" 
+		style="border-style:none;background-color:inherit;">
+	  </td>
+	</tr>
+	<tr id="status_row">
+	  <td>Buchstatus:</td>
+	  <td>
+		<select name="doc_status" size=6>
+		  <option value="">Alle</option>
+		  <option value="{{AVAILABLE}}">Vorhanden</option>
+		  <option value="{{LEND}}">Ausgeliehen</option>
+		  <option value="{{ORDERED}}">Bestellt</option>
+		  <option value="{{MISSING}}">Vermisst</option>
+		  <option value="{{LOST}}">Verloren</option>
+		</select>
+
+	  </td>
+	</tr>
+	<tr>
 	<td><input type="submit" value="Suchanfrage starten" /> </td>
   </tr>
+
 </table>
 	</form>
 

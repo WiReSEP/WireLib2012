@@ -13,7 +13,8 @@ urlpatterns = patterns('documents.views',
         url(r'^account/rent$', 'doc_rent'), # Ausleihliste
         url(r'^user$', 'user'),
         url(r'^user/profile$', 'profile'), 
-        url(r'^user/profile/settings$', 'profile_settings'),       
+        url(r'^user/profile/settings$', 'profile_settings'),
+        url(r'^miss$', 'docs_miss'),
 )
 
 

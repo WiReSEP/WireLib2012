@@ -74,7 +74,7 @@ div#logo {
      top: 6px; 
      z-index:3;
      width: 350px;
-     height: 74px;
+ 	 height: 74px;
      }
 
 /* Die Abstaende um das TU-Logo */
@@ -631,25 +631,25 @@ div.metas {
 /* ausgeliehen */
 .inhalt ul#list_body li#status_1:before{
   content: "✗";
-  color: #888800;
+  color: #880000;
 }
 
 /* bestellt */
 .inhalt ul#list_body li#status_2:before{
-  content: "✉";
-  color: #888800;
+  content: "✗";
+  color: #880000;
 }
 
 /* vermisst */
 .inhalt ul#list_body li#status_3:before{
-  content: "✘";
-  color: #cc0000;
+  content: "✗";
+  color: #880000;
 }
 
-/* verlohren */
+/* verloren */
 .inhalt ul#list_body li#status_4:before{
   content: "✗";
-  color: #888800;
+  color: #880000;
 }
 
 .inhalt ul#list_body li div{
@@ -1508,11 +1508,31 @@ div.navic{
         padding-bottom:5px;
  }
 
+.snippet h1 a {
+        color:white;
+}
+
+.snippet h1 a:hover {
+        color:#CCCCCC;
+        background-color:transparent;
+}
+
+.snippet h1 a:active {
+        color:#CCCCCC;
+        background-color:transparent;
+}
+
 /* kleine Schriften fuer Absaetze */
 .snippet p {
         padding-left:3px;
 	font-size: 11px;
 
+}
+.snippet ul{
+	padding-left: 5px;
+}
+.snippet ul li{
+	list-style-type: none;
 }
 
 .snippet a {

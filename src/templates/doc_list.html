@@ -1,7 +1,4 @@
-{% extends "index.html" %}
 {% load pagination_tags %}
-{% block content %}
-
 <h1>{{ page_title }}</h1>
 <p>{{ page_text }}</p>
 <p>
@@ -24,19 +21,21 @@
 	  <a href="?{{ path_sort }}&sort=authors">Authoren</a>
 	  <a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
 	 <!--- <a href="?{{ path_sort }}&sort=status">Status</a>-->
-	  <a href="?{{ path_sort }}&sort=isbn">Isbn</a>
+	  <!---<a href="?{{ path_sort }}&sort=isbn">Isbn</a>-->
 	</div>
 	{% autopaginate documents 10 %}
 
 	<ul id="list_body">
 	{% for d in documents %}
 	
-	  <li id="status"{% spaceless %}
+
+	  <li id="{% spaceless %}
 		  {% if form == 0 %}
-			{{ d.status }} 
-		  {% else %}{% if form == 1 %}
-					  {% endif %}{% endif %}
-		  {% endspaceless %}>
+			status_{{ d.status }} 
+			{% else %}{% if form == 1 %}
+			{% endif %}{% endif %}
+		  {% endspaceless %}">
+
 	  <div id="title">
 		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a>
 		  {% if form == 1 %}
@@ -77,4 +76,3 @@
 	</ul>
 </p>
 	{% paginate %}
-{% endblock %}

@@ -249,12 +249,37 @@
 <h3>History dieses Dokuments</h3>
 
 
-{{ document.doc_status.date }}
 
-{% for r in new_history %}
-    {{r.date}}
-{% endfor %}
 
+
+    
+    
+    
+    <table width = "80%", rules="rows">
+    {% for r in history %}
+    <tr><td>{{ r.date }} </td>   
+    
+    <td>{% if r.status == 0 %}
+         Zurück gegeben
+{% endif %}
+     
+{% if r.status == 1 %}
+    Ausgeliehen
+{% endif %} 
+{% if r.status == 2 %}
+    Bestellt
+{% endif %} 
+{% if r.status == 3 %}
+    Vermisst
+{% endif %} 
+{% if r.status == 4 %}
+    Verloren
+{% endif %}  </td>  
+    <td>{{ r.recent_user }} </td> 
+    </tr>
+    
+    {% endfor %}
+    </table>
 
 
 

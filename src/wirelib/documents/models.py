@@ -31,6 +31,13 @@ class category(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class category_need(models.Model):
+    category = models.ForeignKey(category)
+    need = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.category + u":" + self.need
     
 class publisher(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
@@ -40,8 +47,8 @@ class publisher(models.Model):
 
 
 class author(models.Model):
-    first_name = models.CharField(max_length=30, null=True)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField("vorname",max_length=30, null=True)
+    last_name = models.CharField("nachname",max_length=30)
     class Meta:
         unique_together = ('first_name', 'last_name')
     #primary ('name', 'surname')
@@ -55,23 +62,23 @@ class document(models.Model):
     bibtex_id = models.CharField(max_length=120, unique=True)
     lib_of_con_nr = models.CharField(max_length=20, blank=True, null=True) 
         #LibraryOfCongressN
-    title = models.CharField(max_length=200)
-    isbn = models.CharField(max_length=17, blank=True, null=True)
-    category = models.ForeignKey(category)
-    last_updated = models.DateField(auto_now=True)
-    last_edit_by = models.ForeignKey(User)
+    title = models.CharField("titel",max_length=200)
+    isbn = models.CharField("iSBN",max_length=17, blank=True, null=True)
+    category = models.ForeignKey(category,verbose_name="kategorie")
+    last_updated = models.DateField("zuletzt geupdated",auto_now=True)
+    last_edit_by = models.ForeignKey(User,verbose_name="zuletzt geändert")
     publisher = models.ForeignKey(publisher, blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    address = models.CharField(max_length=100, blank=True, null=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    currency = models.CharField(max_length=3, blank=True, null=True)
-    date_of_purchase = models.DateField(auto_now_add=True)
+    year = models.IntegerField("jahr",blank=True, null=True)
+    address = models.CharField("adresse",max_length=100, blank=True, null=True)
+    price = models.DecimalField("preis",max_digits=6, decimal_places=2, blank=True, null=True)
+    currency = models.CharField("währung",max_length=3, blank=True, null=True)
+    date_of_purchase = models.DateField("kaufsdatum",auto_now_add=True)
     ub_date = models.DateField(blank=True, null=True) 
         #Datum des Allegro-Exports
     bib_date = models.DateField(blank=True, null=True) 
         #Datum des BibTeX-Exports
-    comment = models.TextField(blank=True, null=True)
-    authors = models.ManyToManyField(author, through='document_authors')
+    comment = models.TextField("kommentar",blank=True, null=True)
+    authors = models.ManyToManyField(author, through='document_authors',verbose_name="autoren")
     class Meta:
         permissions = (("cs_price", "Can see price"),
                        ("cs_locn", "Can see library of congress number"),
@@ -120,7 +127,7 @@ class document(models.Model):
     def __unicode__(self):
         return self.title
     
-    def __set_status(self, 
+    def set_status(self, 
                      editor, 
                      stat, 
                      terminate=None, 
@@ -145,10 +152,8 @@ class document(models.Model):
                 and old.non_user_lend == non_user):
                 pass
             else:
-                print "zumindest in else"
                 old.return_lend=True
                 old.save()
-                print "update geschafft"
                 l = doc_status(
                         recent_user = editor,
                         doc_id = self,
@@ -157,11 +162,8 @@ class document(models.Model):
                         user_lend = user,
                         non_user_lend = non_user
                     )
-                print "l fail"
                 l.save()
-                print "save fail"
         except:
-            print "keinen old-eintrag gefunden"
             l = doc_status(
                         recent_user = editor,
                         doc_id = self,
@@ -191,25 +193,25 @@ class document(models.Model):
             raise LendingError()
         if editor == None:
             editor = user
-        self.__set_status(editor, document.LEND, terminate, user, non_user)
+        self.set_status(editor, document.LEND, terminate, user, non_user)
 
     def unlend(self, user):
         """ 
         Methode zum zurückgeben 
         """
-        self.__set_status(user, document.AVAILABLE)
+        self.set_status(user, document.AVAILABLE)
 
     def lost(self, user):
         """ 
         Methode zum "Verloren" setzen
         """
-        self.__set_status(user, document.LOST)
+        self.set_status(user, document.LOST)
         
     def missing(self, user):
         """ 
         Methode für Vermisstmeldungen
         """
-        self.__set_status(user, document.MISSING)
+        self.set_status(user, document.MISSING)
 
     def get_editors(self):
         """
@@ -240,7 +242,7 @@ class document(models.Model):
 
 class document_authors(models.Model):
     document = models.ForeignKey(document)
-    author = models.ForeignKey(author)
+    author = models.ForeignKey(author,verbose_name="autor")
     editor = models.BooleanField(default=False)
 
 class keywords(models.Model):
@@ -287,10 +289,10 @@ class doc_extra(models.Model):
 
 class user_profile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
-    street = models.CharField(max_length=30)
-    number = models.CharField(max_length=5)
-    zipcode = models.CharField(max_length=5)
-    city = models.CharField(max_length=58)
+    street = models.CharField("Straße",max_length=30)
+    number = models.CharField("Nummer",max_length=5)
+    zipcode = models.CharField("Postleitzahl",max_length=5)
+    city = models.CharField("Stadt",max_length=58)
     class Meta:
         permissions = (("cs_admin", "Can see the adminpanel"),
                        ("c_import", "Can import"),
@@ -343,7 +345,7 @@ class doc_status(models.Model):
     date = models.DateTimeField(auto_now_add=True) 
         #Datum an dem es geschah
     return_lend = models.BooleanField(default=False)
-        #Datum der Rückgabe
+        # Aktueller Eintrag vorhanden
     date_term_lend = models.DateTimeField(blank=True, null=True) 
         #Ende der Rückgabefrist
     user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
