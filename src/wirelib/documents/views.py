@@ -144,7 +144,11 @@ def doc_list(request):
     return __list(request, documents)
 
 def doc_detail(request, bib_no_id):
+    """
+    Gibt alle Informationen für die Dateilansicht eines Dokumentes zurück
+    """
     v_user = request.user
+    #ist das Dokument wirklich vorhanden, wenn ja wird es geladen
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -164,10 +168,12 @@ def doc_detail(request, bib_no_id):
     #wiedergefunden melden
     if 'found' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
+    #aktualisieren des Datensatzes
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
+    #lädt den aktuellsten Statussatz - wenn keiner vorhanden: None
     try:
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
@@ -194,6 +200,7 @@ def doc_detail(request, bib_no_id):
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
+    
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
@@ -254,6 +261,9 @@ def index(request):
                                                 "miss" : miss_query[0:10]}))
 
 def docs_miss(request):
+    """
+    Vermisste Dokumente anzeigen
+    """
     miss_query = document.objects.filter(doc_status__status = document.MISSING,        
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')  
@@ -363,6 +373,7 @@ def doc_add(request):
     #TODO Rechtekontrolle
     success = 0
     v_user = request.user
+    #Datei-Import
     if len(request.FILES) > 0:
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -385,6 +396,7 @@ def doc_add(request):
                     message += line
                 errfile.close()
             os.remove(filename + '.err')
+    #Web-Interface-Import
     elif 'title' in request.POST:
         insert = {}
         insert[u"title"] = request.POST.get('title','')
@@ -562,10 +574,13 @@ def __list(request, documents, documents_non_user=None, form=0):
     documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
     if sort is not None:
-        documents = documents.order_by(sort)
-        if headers[sort] == "des":
-            documents = documents.reverse()
-            headers[sort] = "asc"
+        if sort == "date":
+            documents = documents.order_by("-doc_status__date")
+        else:
+            documents = documents.order_by(sort)
+            if headers[sort] == "des":
+                documents = documents.reverse()
+                headers[sort] = "asc"
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
