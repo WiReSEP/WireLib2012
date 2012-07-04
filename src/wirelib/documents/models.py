@@ -353,10 +353,12 @@ class doc_status(models.Model):
     non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
-        permissions = (("c_lend_miss", "Can (un)lend and miss documents"),
-                       ("c_lost_order", "Can order and lost documents"),
-                       ("cs_history", "Can see documenthistory"),
-                       ("c_transfer", "Can transfer to other (non-) users"),)
+        permissions = (("c_lend", "Can lend documents"),
+                       ("c_unlend", "Can unlend documents"),
+                       ("c_miss", "Can miss documents"),
+                       ("c_order", "Can order documents"),
+                       ("c_lost", "Can lost documents"),
+                       ("cs_history", "Can see documenthistory"),)
 
 class EmailValidationManager(models.Manager):
     """
