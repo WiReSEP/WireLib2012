@@ -7,7 +7,8 @@ from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, category_need
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
-from documents.forms import EmailValidationForm, UploadFileForm
+from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
+    AuthorAddForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.db.models import Q
@@ -302,6 +303,8 @@ def doc_add(request):
     success = 0
     v_user = request.user
     if len(request.FILES) > 0:
+        form_doc = DocForm()
+        form_author = AuthorAddForm()
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
@@ -324,6 +327,7 @@ def doc_add(request):
                 errfile.close()
             os.remove(filename + '.err')
     elif 'title' in request.POST:
+        """
         insert = {}
         insert[u"title"] = request.POST.get('title','')
         insert[u"bib_no"] = request.POST.get('bib_no','').upper()
@@ -367,15 +371,29 @@ def doc_add(request):
         insert_doc(insert, v_user)
         message = 'Daten erfolgreich übernommen'
         #documents.extras_doc_funcs.insert_doc(insert,v_user) 
+        """
+        form = UploadFileForm()
+        form_doc = DocForm(request.POST)
+        form_author = AuthorAddForm(request.POST)
+        message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
+        if form_author.is_valid():
+            form_author.save()
+            message = 'Autor erfolgreich hinzugefügt'
+            form_author = AuthorAddForm()
+        elif form_doc.is_valid():
+            form_doc.save()
+            message = 'Daten erfolgreich übernommen'
     else:
         message = ''
+        form_doc = DocForm()
+        form_author = AuthorAddForm()
+        form = UploadFileForm()
     category_needs = category_need.objects.all()
     needs = dict()
     for c in category_needs:
         if (u""+c.category.name) not in needs:
             needs[u"" + c.category.name] = []
         needs[u"" + c.category.name].append(c.need)
-    form = UploadFileForm()
     perms = v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
@@ -391,6 +409,8 @@ def doc_add(request):
                                    "e_perm" : e_perm,
                                    "category" : cat,
                                    "form" : form,
+                                   "form_doc" : form_doc,
+                                   "form_author" : form_author,
                                    "message" : message,
                                    "success" : success,
                                    "miss" : miss_query[0:10],
