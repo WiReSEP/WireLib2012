@@ -8,7 +8,7 @@ from documents.models import document, doc_status, doc_extra, category,\
 from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
-from documents.forms import EmailValidationForm, UploadFileForm, SelectUser
+from documents.forms import EmailValidationForm, UploadFileForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.db.models import Q
@@ -270,13 +270,9 @@ def docs_miss(request):
     return __list(request, miss_query, form=2)
                               
 @login_required
-<<<<<<< HEAD
-def profile(request): 
-    """View der Hauptprofilseite
-    """
-=======
+
 def profile(request, user_id):
->>>>>>> e3fada60ca1eab033289b849f0cbc9d9290b38fa
+
     v_user = request.user
     try:
         p_user = User.objects.get(id = user_id)
