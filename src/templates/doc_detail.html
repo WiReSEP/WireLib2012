@@ -37,10 +37,12 @@
 			{% endfor %}
 		  </td>
 		</tr>
+		
 		<tr>
 		  <td><b>Kategorie:</b></td>
 		  <td>{{ documents.category }}</td>
 		</tr>
+		
 		<tr>
 		  <td><b>Publisher:</b></td>
 		  <td>
@@ -50,10 +52,13 @@
 			-
 			{% endif %}
 		  </td>
+		</tr>
+		
 		<tr>
 		  <td><b>Erscheinungsjahr:</b></td>
 		  <td>{{ documents.year }}</td>
 		</tr>
+		
 		<tr>
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
@@ -69,6 +74,7 @@
 			{% endif %}
 		  </td>
 		</tr>
+		
 		{% if cs_dop %}	    
 		<tr>
 		  <td><b>In der Bibliothek seit:</b></td>
@@ -85,7 +91,7 @@
 			{% endif %}
 		  </td>
 		</tr>
-		<!-- TODO doc_extra funktionsfähig machen -->
+		
 		{% for de in doc_extra %}    
 		<tr>
 		  <td> {% if de.bib_field == "volume" %}
@@ -98,14 +104,17 @@
 		  <td>{{ de.content }}</td>
 		</tr>
 		{% endfor %}
+		
 		<tr>
 		  <td><b>ID in der Bibliothek:</b></td>
 		  <td>{{ documents.bib_no }}</td>
 		</tr>
+		
 		<tr>
 		  <td><b>Inventarnummer:</b></td>
 		  <td>{{ documents.inv_no }}</td>
 		</tr>
+		
 		<tr>
 		  <td><b>ISBN:</b></td>
 		  <td>
@@ -116,6 +125,7 @@
 			{% endif %}
 		  </td>
 		</tr>
+		
     {% if cs_price %}
 		<tr>
 		<td><b>Preis:</b></td>
@@ -128,10 +138,12 @@
 		  </td>
 		</tr>
 		{% endif %}  
+		
 		<tr>
 		  <td><b>BibTeX-ID:</b></td>
 		  <td>{{ documents.bibtex_id }}</td>
 		</tr>
+		
 		{% if cs_locn %}
 		<tr>
 		  <td><b>LibraryOfCongressN:</b></td>
@@ -144,6 +156,7 @@
 		  </td>
 		</tr>
 		{% endif %}
+		
 		{% if cs_lui %}
 		<tr>
 		    <td><b>Zuletzt bearbeitet am: </b></td>
@@ -154,9 +167,10 @@
 		    <td> {{ documents.last_edit_by }} </td>
 		</tr>
 		{% endif %}
+		
 		</table>
-	  
 	</td>
+	
 	<td>
 	{% if user.is_authenticated %}
 	  {% if documents.status == 0 %}
@@ -171,6 +185,7 @@
 		    <input type="submit" name="missing" value="Vermisst melden" /> <br />
 	      </form><br />
 	    {% endif %}
+	    
 	  {% else %}
 	    {% if documents.status == 1 %}    
 	      {% if lending %}
@@ -220,6 +235,7 @@
 	          </form><br />
 	        {% endif %}
 	      {% endif %}
+	      
 	    {% else %}
 	      {% if documents.status == 2 %}
 	        Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br />
@@ -228,6 +244,7 @@
 	            <input type="submit" name="restitution" value="Ist angekommen" /> <br />
 	          </form><br />
 	        {% endif %}
+	        
 	      {% else %}
 	        {% if documents.status == 3 %}
 	          Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br />
@@ -242,6 +259,7 @@
 	              <input type="submit" name="lost" value="als verloren markieren" /> <br />
 	            </form><br />
 	          {% endif %}
+	          
 	        {% else %}
 	          Dieses Dokument gilt als verloren. <br />
 	          {# <!-- TODO wer genau kann verlorene als wiedergefunden melden (derzeit nur solche mit dem Recht des auch Verloren-setzens --> #}
