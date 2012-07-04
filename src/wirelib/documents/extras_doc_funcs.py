@@ -22,6 +22,7 @@ def is_valid(dict_data): #TODO
         inv_no_r = r"\d{4}/\d+"
         if not re.match(inv_no_r, dict_data[u"inv_no"]):
             return False, u"Inventar-Nummer hat falsches Format"
+        # Überprüfung auf Vollständigkeit für entsprechende Kategorien
         if dict_data[u"category"] == u"book": #checking book
             auths = dict_data.get(u"author", [])
             editors = dict_data.get(u"editor", [])
@@ -156,6 +157,7 @@ def insert_doc(dict_insert, user):
         else :
             message = u"Das Feld " + message + u" ist leer"
         raise ValueError(message)
+    # .get wird verwendet für erlaubt fehlende Einträge
     try:
         bib_no_f = dict_insert[u"bib_no"]
         inv_no_f = dict_insert[u"inv_no"]
@@ -182,6 +184,8 @@ def insert_doc(dict_insert, user):
     except KeyError:
         raise ValueError(u"Daten haben nicht die benötigten Felder")
     try:
+        # Erstellung des Dokumentes in der Datenbank, ebenso zugehörende
+        # Elemente: author, publisher, editor, keywords...
         publisher_db, dummy = publisher.objects.get_or_create(name=publisher_f)
         try:
             category_db = category.objects.get(name=category_f)
@@ -220,13 +224,10 @@ def insert_doc(dict_insert, user):
             try:
                 auth_db = author.objects.get(last_name=last_name_f, 
                         first_name=first_name_f)
-                # auth_db.documents.add(document_db)
             except author.DoesNotExist:
                 auth_db = author(last_name=last_name_f,
                         first_name=first_name_f)
-                # auth_db.documents.add(document_db)
             auth_db.save(last_edit_by_f)
-#            document_db.authors.add(auth_db)
             document_db.add_author(auth_db)
             document_db.save(user)
         for auth in editor_f:
@@ -241,13 +242,10 @@ def insert_doc(dict_insert, user):
             try:
                 auth_db = author.objects.get(last_name=last_name_f, 
                         first_name=first_name_f)
-                # auth_db.documents.add(document_db)
             except author.DoesNotExist:
                 auth_db = author(last_name=last_name_f,
                         first_name=first_name_f)
-                # auth_db.documents.add(document_db)
             auth_db.save(last_edit_by_f)
-#            document_db.authors.add(auth_db)
             document_db.add_editor(auth_db)
             document_db.save(user)
         keywords_db = []
@@ -269,6 +267,10 @@ def insert_doc(dict_insert, user):
         raise DuplicateKeyError(e.message) #TODO regex basteln für Feld
 
 def __lst_is_empty(list_data):
+    """
+    Überprüfung einer Liste ob sie entweder keine ELemente enthält oder alle
+    Elemente dem leeren String entsprechen.
+    """
     if len(list_data) == 0:
         return True
     for i in list_data:
