@@ -179,6 +179,7 @@
 		      <input type="submit" name="lend" value="Ausleihen" /> 
 	      </form><br />
 	      {# <!-- Ausleihe an externen --> #}
+	      
 	    {% endif %}
 	    {% if c_mi %}
 	      <form action="" method="post">
@@ -214,9 +215,13 @@
 	        {% endif %}
 	        {% if c_le %}
 	          {% if lending.user_lend.username != user.name %}
-			  <form action="{{documents.bib_no}}/assign" method="post" >
+	            <form action="" method="post" >
+	              <input type="submit" name="lend" value="&Uuml;bertragen" /> <br />
+	            </form>  
+	          {& else %}
+			        <form action="{{documents.bib_no}}/assign" method="post" >
 	              <input type="submit" name="assign" value="&Uuml;bertragen" /> <br />
-	            </form><br />
+	            </form>
 	            {# <!-- TODO Ausleihe an externen --> #}
 	            
 	          {% endif %}
@@ -224,14 +229,14 @@
 	        {% if c_ule %}
 	          {% if lending.user_lend == user %}
 	            <form action="" method="post">
-	              <input type="submit" name="restitution" value="R&uuml;ckgabe" /> <br />
+	              <input type="submit" name="restitution" value="R&uuml;ckgabe" />
 	            </form><br />
 	            {# <!-- TODO übertragen vom ausleihenden aus --> #}
 	          {% endif %}
 	        {% endif %}
 	        {% if c_mi %}
 	          <form action="" method="post">
-		          <input type="submit" name="missing" value="Vermisst melden" /> <br />
+		          <input type="submit" name="missing" value="Vermisst melden" />
 	          </form><br />
 	        {% endif %}
 	      {% endif %}
@@ -241,7 +246,7 @@
 	        Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br />
 	        {% if c_order %}
 	          <form action="" method="post">
-	            <input type="submit" name="restitution" value="Ist angekommen" /> <br />
+	            <input type="submit" name="restitution" value="Ist angekommen" />
 	          </form><br />
 	        {% endif %}
 	        
@@ -251,12 +256,12 @@
 	          <!-- TODO Mail an den Bibliothekar wenn gefunden -->
 	          {% if c_mi %}
 	            <form action="" method="post">
-		            <input type="submit" name="found" value="Gefunden melden" /> <br />
+		            <input type="submit" name="found" value="Gefunden melden" />
 	            </form><br />
 	          {% endif %}
 	          {% if c_lo %}
 	            <form action="" method="post">
-	              <input type="submit" name="lost" value="als verloren markieren" /> <br />
+	              <input type="submit" name="lost" value="als verloren markieren" />
 	            </form><br />
 	          {% endif %}
 	          
@@ -265,7 +270,7 @@
 	          {# <!-- TODO wer genau kann verlorene als wiedergefunden melden (derzeit nur solche mit dem Recht des auch Verloren-setzens --> #}
 	          {% if c_lo %}
 	            <form action="" method="post">
-	              <input type="submit" name="found" value="Gefunden melden" /> <br />
+	              <input type="submit" name="found" value="Gefunden melden" />
 	            </form><br />
 	          {% endif %}
 	        {% endif %}  
