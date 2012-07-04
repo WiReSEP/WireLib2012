@@ -246,17 +246,32 @@ def docs_miss(request):
                                                         "miss" : miss_query}))
                               
 @login_required
-def profile(request): 
+def profile(request, user_id):
     v_user = request.user
+    try:
+        p_user = user.objects.GET(id = user_id)
+    except user.DoesNotExist:
+        raise Http404
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("profile.html",context_instance=Context({"user" :
+    if p_user.id == v_user.id :
+        return render_to_response("profile.html",context_instance=Context({"user" :
                               v_user, "perm" : perms, "i_perm" : i_perm,
                               "e_perm" : e_perm, "miss" : miss_query[0:10]}))
+    else:
+        return render_to_response("stranger_profile.html",
+                                  context_instance=Context({"user" :v_user, 
+                                                            "p_user" : p_user,
+                                                            "perm" : perms, 
+                                                            "i_perm" : i_perm,
+                                                            "e_perm" : e_perm, 
+                                                            "miss" : miss_query[0:10],
+                                                            "p_user" : user_id}))
+
 @login_required
 def profile_settings(request): 
     v_user = request.user
@@ -273,7 +288,7 @@ def profile_settings(request):
                                                 "i_perm" : i_perm,
                                                 "e_perm" : e_perm, 
                                                 "miss" : miss_query[0:10]}))
-                              
+
 def email_validation(request): 
     
     if request.method == 'POST': 
