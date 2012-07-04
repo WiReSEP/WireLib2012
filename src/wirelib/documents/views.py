@@ -1,5 +1,5 @@
 # vim: set fileencoding=utf-8
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
@@ -247,6 +247,8 @@ def docs_miss(request):
                               
 @login_required
 def profile(request): 
+    """View der Hauptprofilseite
+    """
     v_user = request.user
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
@@ -258,7 +260,9 @@ def profile(request):
                               v_user, "perm" : perms, "i_perm" : i_perm,
                               "e_perm" : e_perm, "miss" : miss_query[0:10]}))
 @login_required
-def profile_settings(request): 
+def profile_settings(request):
+    """View der Accounteinstellung
+    """ 
     v_user = request.user
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
@@ -273,9 +277,24 @@ def profile_settings(request):
                                                 "i_perm" : i_perm,
                                                 "e_perm" : e_perm, 
                                                 "miss" : miss_query[0:10]}))
-                              
-def email_validation(request): 
+def email_validation_process(request, key):
+
+    if EmailValidation.objects.verify(key=key): 
+        successful = True
+    else: 
+        successful = False
     
+    template = "account/email_validation_done.html"
+    data = { 'successful': successful, }
+    return render_to_response(template, data, context_instance=RequestContext(request))
+     
+               
+
+
+def email_validation(request): 
+    """
+    Die Form für E-Mailaendern 
+    """
     if request.method == 'POST': 
         form = EmailValidationForm(request.POST)
         if form.is_valid(): 
@@ -287,7 +306,17 @@ def email_validation(request):
     template = "account/email_validation.html"
     data = { 'form': form, }
     return render_to_response(template, data, context_instance=RequestContext(request))
-                  
+
+@login_required
+def email_validation_reset(request): 
+    
+    try:
+        resend = EmailValidation.objects.get(user=request.user).resend()
+        response = "done"
+    except EmailValidation.DoesNotExist: 
+        response = "failed" 
+    
+    return HttpResponseRedirect(reverse("email_validation_reset_response", args=[response]))                   
 
 
 @login_required

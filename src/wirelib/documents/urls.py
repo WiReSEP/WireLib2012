@@ -1,4 +1,6 @@
 from django.conf.urls.defaults import patterns, url
+from django.views.generic.simple import direct_to_template
+from documents.views import *
 
 urlpatterns = patterns('documents.views',
         url(r'^$', 'index'), 
@@ -18,7 +20,9 @@ urlpatterns = patterns('documents.views',
 )
 
 
+# Links zu Accountfunktionen
 
+# Links zum Passwortaendern
 urlpatterns += patterns('', 
         url(r'^accounts/password_reset$', 'django.contrib.auth.views.password_reset',
             {'template_name': 'account/password_reset.html', 
@@ -28,6 +32,18 @@ urlpatterns += patterns('',
         url(r'^accounts/password/change/done$', 'django.contrib.auth.views.password_change_done',
             {'template_name': 'account/password_change_done.html'}),  
 ) 
+
+#Links zum Emailaendern 
+urlpatterns += patterns('', 
+        url(r'^email/validation/$', email_validation), 
+        url(r'^email/validation/processed/$', direct_to_template,  
+            {'template': 'account/email_validation_processed.html'}),
+        url(r'^email/validation/(?P<key>.{70})/$', email_validation_process, name='email_validation_process'),
+        url(r'^email/validation/reset/$', email_validation_reset),
+) 
+        
+
+
 
 urlpatterns += patterns('django.contrib.auth.views',
         url(r'^login$', 'login'),
