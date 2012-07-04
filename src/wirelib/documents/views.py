@@ -176,10 +176,12 @@ def doc_detail(request, bib_no_id):
     template = loader.get_template("doc_detail.html")
     #auslesen der für die doc_detail.html benötigten Rechte
     perms =  v_user.has_perm('documents.cs_admin')
-    c_lm = v_user.has_perm('documents.c_lend_miss')
-    c_lo = v_user.has_perm('documents.c_lost_order')
+    c_le = v_user.has_perm('documents.c_lend')
+    c_ule = v_user.has_perm('documents.c_unlend')
+    c_mi = v_user.has_perm('documents.c_miss')
+    c_lo = v_user.has_perm('documents.c_lost')
+    c_or = v_user.has_perm('documents.c_order')
     cs_history = v_user.has_perm('documents.cs_history')
-    c_transfer = v_user.has_perm('documents.c_transfer')
     cs_price = v_user.has_perm('documents.cs_price')
     cs_locn = v_user.has_perm('documents.cs_locn')
     cs_lui = v_user.has_perm('documents.cs_last_update_info')
@@ -198,15 +200,17 @@ def doc_detail(request, bib_no_id):
                       "bi" : bibtex_string,
                       "user" : v_user,
                       "perm" : perms,
+                      "c_le" : c_le,
+                      "c_ule" : c_ule,
+                      "c_mi" : c_mi,
                       "c_lo" : c_lo,
+                      "c_or" : c_or,
                       "cs_history" : cs_history,
-                      "c_transfer" : c_transfer,
                       "cs_price" : cs_price,
                       "cs_locn" : cs_locn,
                       "cs_lui" : cs_lui,
                       "cs_dop" : cs_dop,
                       "cs_export" : cs_export,
-                      "c_lm" : c_lm,
                       "e_perm" : e_perm,
                       "i_perm" : i_perm,
                       "miss" : miss_query[0:10]})
