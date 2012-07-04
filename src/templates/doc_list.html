@@ -67,7 +67,28 @@
     	    {{ d.doc_status.date }}
     	</div>
     	{% endif %}
-		  
+    	
+		{% if form == 2 %}
+		  <div id="bib_no"> {{ d.bib_no }} </div>
+		  {% for s in d.doc_status_set.all %}
+        {% if s.status == 3 %}
+            {% if not s.return_lend %}
+              <div id="recent_user">Gemeldet von: 
+              {% if s.recent_user.first_name %}
+                {% if s.recent_user.last_name %}
+                  <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.first_name }} {{ s.recent_user.last_name }}</a> <br />
+                {% else %}
+                  <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.username }}</a> <br \>
+                {% endif %}
+              {% else %}
+                <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.username }}</a> <br />
+              {% endif %}
+              </div>
+              <div id="since">Vermisst seit: {{ s.date }}</div>
+            {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
 	  </div>
 	</li>
 	{% endfor %}

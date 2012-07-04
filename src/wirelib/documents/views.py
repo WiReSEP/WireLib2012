@@ -234,20 +234,10 @@ def index(request):
                                                 "miss" : miss_query[0:10]}))
 
 def docs_miss(request):
-    v_user = request.user
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,        
                                          doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    
-    return render_to_response("missing.html", 
-                              context_instance=Context({"user" : v_user, 
-                                                        "perm" : perms, 
-                                                        "i_perm" : i_perm,
-                                                        "e_perm" : e_perm,
-                                                        "miss" : miss_query}))
+    miss_query = miss_query.order_by('-doc_status__date')  
+    return __list(request, miss_query, form=2)
                               
 @login_required
 def profile(request, user_id):
@@ -513,6 +503,7 @@ def __list(request, documents, documents_non_user=None, form=0):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
+        2 = Vermisst
     """
     v_user = request.user
     documents = __filter_names(documents, request)
@@ -525,9 +516,11 @@ def __list(request, documents, documents_non_user=None, form=0):
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
+    miss_query = None
+    if form != 2:
+        miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                             doc_status__return_lend = False)
+        miss_query = miss_query.order_by('-doc_status__date')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     if form == 1:
@@ -541,8 +534,21 @@ def __list(request, documents, documents_non_user=None, form=0):
                     e_perm = e_perm,
                     path_sort = params_sort, 
                     path_starts = params_starts,
-                    form = form),
+                    form = form,
+                    miss = miss_query[0:10]),
                 context_instance=RequestContext(request))
+    if form == 2:
+        return render_to_response("missing.html",
+                dict(documents = documents,
+                     user = v_user,
+                     settings = settings,
+                     perm = perms,
+                     i_perm = i_perm,
+                     e_perm = e_perm,
+                     path_sort = params_sort,
+                     path_starts = params_starts,
+                     form = form),
+                 context_instance=RequestContext(request))
     return render_to_response("doc_list_wrapper.html", 
             dict(documents = documents,
                 user = v_user, 
