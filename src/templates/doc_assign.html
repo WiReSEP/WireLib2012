@@ -1,0 +1,34 @@
+{% extends "index.html" %}
+{% block content %}
+	<h1>Übertragen</h1>
+	  <table>
+		<tbody id = origin>
+		  <tr>
+			<label id="lending_user"></label>
+				<td>Nutzer der das Dokument entliehen hat:</td>
+				<td> <input type='text' name='origin' maxlength=15 /></td>
+	        </tr>
+            <tr>
+	            <td>Nutzer auf den übertragen werden soll:</td>
+	            <td> <input type='text' name='destination' maxlength=15 /></td>
+	        </tr>  
+            <tr>
+	            <td>Name des Externen Nutzers:</td>
+	            <td> <input type='text' name='non_user' maxlength=100 /></td>
+	        </tr>  
+	        <tr>
+	            <td>E-Mailaddresse:</td>
+	            <td> <input type='text' name='mail' maxlength=50 /></td>
+	        </tr> 
+	        <tr>
+	            <td>Adresse:</td>
+	            <td> <input type='text' name='adress' maxlength=35/></td>
+			</tr>
+			</tbody>
+		  </table>
+		  <form action="" method="post">
+			 <input type="submit" name="assign" value="Übertragen" />
+		  </form>
+
+		
+{% endblock content %}

@@ -31,12 +31,13 @@ def search(request):
     Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
     finden.
     """
-    context = Context()
+    #context = Context()
     #Wenn bereits eine Suche gestartet wurde
     if "query" in request.GET:
         #Eingabe des Users aus dem request auslesen
         suchtext = request.GET.get('query','')
         #Erstellen eines Sets aus allen Suchbegriffen.
+        #Aufgrund des Verfahrens eine ODER-Suche
         search_set = (
                 Q(title__icontains = suchtext) |
                 Q(authors__last_name__icontains = suchtext) |
@@ -87,6 +88,7 @@ def search_pro(request):
         s_doc_status = request.GET.get('doc_status','')
         print s_doc_status
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
+        #Aufgrund des Verfahrens eine UND-Suche
         s_documents = document.objects.filter(title__icontains = s_title)
         if s_fn_author != "":
             s_documents = s_documents.filter(authors__first_name__icontains =
