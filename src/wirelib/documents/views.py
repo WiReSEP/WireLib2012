@@ -190,11 +190,10 @@ def doc_detail(request, bib_no_id):
     cs_export = v_user.has_perm('documents.cs_export')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
-    
+    history =__filter_history(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
-
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
@@ -214,7 +213,8 @@ def doc_detail(request, bib_no_id):
                       "cs_export" : cs_export,
                       "e_perm" : e_perm,
                       "i_perm" : i_perm,
-                      "miss" : miss_query[0:10]})
+                      "miss" : miss_query[0:10],
+                      "history" : history })
     response = HttpResponse(template.render(context))
     return response
 
@@ -629,7 +629,7 @@ def __filter_names(documents, request):
                          Q(title__istartswith='t') | 
                          Q(title__istartswith='u') |
                          Q(title__istartswith='ü') | 
-                         Q(title__istartswith='v'))
+                         Q(titlre__istartswith='v'))
     elif sw == "w-z":
         documents = documents.filter(
                          Q(title__istartswith='w') | 
@@ -639,5 +639,9 @@ def __filter_names(documents, request):
     elif sw == "all":
         documents = documents.all()                     
     return documents
-
+    
+def __filter_history(doc):
+    new_history = doc.doc_status_set.order_by('-date')[0:10]
+    return new_history
+   
 

@@ -264,10 +264,45 @@
 	rows="15" readonly="true">{{ bi }}</textarea></div>
 	
 {% if cs_history %}
-  <h3>History dieses Dokuments</h3>
-  <table> 
-  {# <!-- TODO History einbinden --> #}
-  </table>
+<h3>History dieses Dokuments</h3>
+
+
+
+
+
+    
+    
+    
+    <table width = "80%", rules="rows">
+    {% for r in history %}
+    <tr><td>{{ r.date }} </td>   
+    
+    <td>{% if r.status == 0 %}
+         Zurück gegeben
+{% endif %}
+     
+{% if r.status == 1 %}
+    Ausgeliehen
+{% endif %} 
+{% if r.status == 2 %}
+    Bestellt
+{% endif %} 
+{% if r.status == 3 %}
+    Vermisst
+{% endif %} 
+{% if r.status == 4 %}
+    Verloren
+{% endif %}  </td>  
+    <td>{{ r.recent_user }} </td> 
+    </tr>
+    
+    {% endfor %}
+    </table>
+
+
+
+
+
 {% endif %}
     
     
