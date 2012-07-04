@@ -1,10 +1,11 @@
 # vim: set fileencoding=utf-8
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext 
 from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, category_need
+from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
@@ -144,7 +145,11 @@ def doc_list(request):
     return __list(request, documents)
 
 def doc_detail(request, bib_no_id):
+    """
+    Gibt alle Informationen für die Dateilansicht eines Dokumentes zurück
+    """
     v_user = request.user
+    #ist das Dokument wirklich vorhanden, wenn ja wird es geladen
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -164,10 +169,12 @@ def doc_detail(request, bib_no_id):
     #wiedergefunden melden
     if 'found' in request.POST and request.user.is_authenticated():
         document_query.lend(v_user)
+    #aktualisieren des Datensatzes
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
+    #lädt den aktuellsten Statussatz - wenn keiner vorhanden: None
     try:
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
@@ -177,10 +184,12 @@ def doc_detail(request, bib_no_id):
     template = loader.get_template("doc_detail.html")
     #auslesen der für die doc_detail.html benötigten Rechte
     perms =  v_user.has_perm('documents.cs_admin')
-    c_lm = v_user.has_perm('documents.c_lend_miss')
-    c_lo = v_user.has_perm('documents.c_lost_order')
+    c_le = v_user.has_perm('documents.c_lend')
+    c_ule = v_user.has_perm('documents.c_unlend')
+    c_mi = v_user.has_perm('documents.c_miss')
+    c_lo = v_user.has_perm('documents.c_lost')
+    c_or = v_user.has_perm('documents.c_order')
     cs_history = v_user.has_perm('documents.cs_history')
-    c_transfer = v_user.has_perm('documents.c_transfer')
     cs_price = v_user.has_perm('documents.cs_price')
     cs_locn = v_user.has_perm('documents.cs_locn')
     cs_lui = v_user.has_perm('documents.cs_last_update_info')
@@ -188,29 +197,51 @@ def doc_detail(request, bib_no_id):
     cs_export = v_user.has_perm('documents.cs_export')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
-    
+    history =__filter_history(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
-
+    
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
                       "bi" : bibtex_string,
                       "user" : v_user,
                       "perm" : perms,
+                      "c_le" : c_le,
+                      "c_ule" : c_ule,
+                      "c_mi" : c_mi,
                       "c_lo" : c_lo,
+                      "c_or" : c_or,
                       "cs_history" : cs_history,
-                      "c_transfer" : c_transfer,
                       "cs_price" : cs_price,
                       "cs_locn" : cs_locn,
                       "cs_lui" : cs_lui,
                       "cs_dop" : cs_dop,
                       "cs_export" : cs_export,
-                      "c_lm" : c_lm,
                       "e_perm" : e_perm,
                       "i_perm" : i_perm,
-                      "miss" : miss_query[0:10]})
+                      "miss" : miss_query[0:10],
+                      "history" : history })
+    response = HttpResponse(template.render(context))
+    return response
+
+def doc_assign(request, bib_no_id):
+    v_user = request.user
+    userform = SelectUser()
+    try:
+        document_query = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
+    try:
+        lending_query = document_query.doc_status_set.latest('date')
+    except doc_status.DoesNotExist:
+        lending_query = None
+    template = loader.get_template("doc_assign.html")
+    context = Context({"documents" : document_query, 
+                       "user" : v_user,
+                       "lending" : lending_query, 
+                       "userform": userform})
     response = HttpResponse(template.render(context))
     return response
 
@@ -231,35 +262,46 @@ def index(request):
                                                 "miss" : miss_query[0:10]}))
 
 def docs_miss(request):
-    v_user = request.user
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    """
+    Vermisste Dokumente anzeigen
+    """
     miss_query = document.objects.filter(doc_status__status = document.MISSING,        
                                          doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    
-    return render_to_response("missing.html", 
-                              context_instance=Context({"user" : v_user, 
-                                                        "perm" : perms, 
-                                                        "i_perm" : i_perm,
-                                                        "e_perm" : e_perm,
-                                                        "miss" : miss_query}))
+    miss_query = miss_query.order_by('-doc_status__date')  
+    return __list(request, miss_query, form=2)
                               
 @login_required
-def profile(request): 
+
+def profile(request, user_id):
+
     v_user = request.user
+    try:
+        p_user = User.objects.get(id = user_id)
+    except "User existiert nicht":
+        raise Http404
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("profile.html",context_instance=Context({"user" :
+    if p_user.id == v_user.id :
+        return render_to_response("profile.html",context_instance=Context({"user" :
                               v_user, "perm" : perms, "i_perm" : i_perm,
                               "e_perm" : e_perm, "miss" : miss_query[0:10]}))
+    else:
+        return render_to_response("stranger_profile.html",
+                                  context_instance=Context({"user" :v_user, 
+                                                            "p_user" : p_user,
+                                                            "perm" : perms, 
+                                                            "i_perm" : i_perm,
+                                                            "e_perm" : e_perm, 
+                                                            "miss" : miss_query[0:10]}))
+
 @login_required
-def profile_settings(request): 
+def profile_settings(request):
+    """View der Accounteinstellung
+    """ 
     v_user = request.user
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
@@ -274,9 +316,25 @@ def profile_settings(request):
                                                 "i_perm" : i_perm,
                                                 "e_perm" : e_perm, 
                                                 "miss" : miss_query[0:10]}))
-                              
-def email_validation(request): 
+
+def email_validation_process(request, key):
+
+    if EmailValidation.objects.verify(key=key): 
+        successful = True
+    else: 
+        successful = False
     
+    template = "account/email_validation_done.html"
+    data = { 'successful': successful, }
+    return render_to_response(template, data, context_instance=RequestContext(request))
+     
+               
+
+
+def email_validation(request): 
+    """
+    Die Form für E-Mailaendern 
+    """
     if request.method == 'POST': 
         form = EmailValidationForm(request.POST)
         if form.is_valid(): 
@@ -288,7 +346,17 @@ def email_validation(request):
     template = "account/email_validation.html"
     data = { 'form': form, }
     return render_to_response(template, data, context_instance=RequestContext(request))
-                  
+
+@login_required
+def email_validation_reset(request): 
+    
+    try:
+        resend = EmailValidation.objects.get(user=request.user).resend()
+        response = "done"
+    except EmailValidation.DoesNotExist: 
+        response = "failed" 
+    
+    return HttpResponseRedirect(reverse("email_validation_reset_response", args=[response]))                   
 
 
 @login_required
@@ -302,6 +370,7 @@ def doc_add(request):
     #TODO Rechtekontrolle
     success = 0
     v_user = request.user
+    #Datei-Import
     if len(request.FILES) > 0:
         form_doc = DocForm()
         form_author = AuthorAddForm()
@@ -326,6 +395,7 @@ def doc_add(request):
                     message += line
                 errfile.close()
             os.remove(filename + '.err')
+    #Web-Interface-Import
     elif 'title' in request.POST:
         """
         insert = {}
@@ -514,21 +584,27 @@ def __list(request, documents, documents_non_user=None, form=0):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
+        2 = Vermisst
     """
     v_user = request.user
     documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
     if sort is not None:
-        documents = documents.order_by(sort)
-        if headers[sort] == "des":
-            documents = documents.reverse()
-            headers[sort] = "asc"
+        if sort == "date":
+            documents = documents.order_by("-doc_status__date")
+        else:
+            documents = documents.order_by(sort)
+            if headers[sort] == "des":
+                documents = documents.reverse()
+                headers[sort] = "asc"
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
+    miss_query = None
+    if form != 2:
+        miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                             doc_status__return_lend = False)
+        miss_query = miss_query.order_by('-doc_status__date')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     if form == 1:
@@ -542,8 +618,21 @@ def __list(request, documents, documents_non_user=None, form=0):
                     e_perm = e_perm,
                     path_sort = params_sort, 
                     path_starts = params_starts,
-                    form = form),
+                    form = form,
+                    miss = miss_query[0:10]),
                 context_instance=RequestContext(request))
+    if form == 2:
+        return render_to_response("missing.html",
+                dict(documents = documents,
+                     user = v_user,
+                     settings = settings,
+                     perm = perms,
+                     i_perm = i_perm,
+                     e_perm = e_perm,
+                     path_sort = params_sort,
+                     path_starts = params_starts,
+                     form = form),
+                 context_instance=RequestContext(request))
     return render_to_response("doc_list_wrapper.html", 
             dict(documents = documents,
                 user = v_user, 
@@ -630,7 +719,7 @@ def __filter_names(documents, request):
                          Q(title__istartswith='t') | 
                          Q(title__istartswith='u') |
                          Q(title__istartswith='ü') | 
-                         Q(title__istartswith='v'))
+                         Q(titlre__istartswith='v'))
     elif sw == "w-z":
         documents = documents.filter(
                          Q(title__istartswith='w') | 
@@ -640,5 +729,9 @@ def __filter_names(documents, request):
     elif sw == "all":
         documents = documents.all()                     
     return documents
-
+    
+def __filter_history(doc):
+    new_history = doc.doc_status_set.order_by('-date')[0:10]
+    return new_history
+   
 

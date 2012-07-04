@@ -1,6 +1,8 @@
 # vim: set fileencoding=utf-8
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from exceptions import LendingError
 from django.template import loader, Context 
@@ -354,10 +356,12 @@ class doc_status(models.Model):
     non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
-        permissions = (("c_lend_miss", "Can (un)lend and miss documents"),
-                       ("c_lost_order", "Can order and lost documents"),
-                       ("cs_history", "Can see documenthistory"),
-                       ("c_transfer", "Can transfer to other (non-) users"),)
+        permissions = (("c_lend", "Can lend documents"),
+                       ("c_unlend", "Can unlend documents"),
+                       ("c_miss", "Can miss documents"),
+                       ("c_order", "Can order documents"),
+                       ("c_lost", "Can lost documents"),
+                       ("cs_history", "Can see documenthistory"),)
 
 class EmailValidationManager(models.Manager):
     """
@@ -395,8 +399,8 @@ class EmailValidationManager(models.Manager):
                 self.key = key
                 break
 
-        template_body = "userprofile/email/validation.txt"
-        template_subject = "userprofile/email/validation_subject.txt"
+        template_body = "email/validation.txt"
+        template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         body = loader.get_template(template_body).render(Context(locals()))
         subject = loader.get_template(template_subject).render(Context(locals())).strip()
@@ -424,8 +428,8 @@ class EmailValidation(models.Model):
         """
         Resend validation email
         """
-        template_body = "account/email/validation.txt"
-        template_subject = "account/email/validation_subject.txt"
+        template_body = "email/validation.txt"
+        template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         key = self.key
         body = loader.get_template(template_body).render(Context(locals()))
