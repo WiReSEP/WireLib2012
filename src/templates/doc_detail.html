@@ -214,8 +214,8 @@
 	        {% endif %}
 	        {% if c_le %}
 	          {% if lending.user_lend.username != user.name %}
-  	          <form action="" method="post">
-	              <input type="button" name="lend" value="&Uuml;bertragen" /> <br />
+			  <form action="{{documents.bib_no}}/assign" method="post" >
+	              <input type="submit" name="assign" value="&Uuml;bertragen" /> <br />
 	            </form><br />
 	            {# <!-- TODO Ausleihe an externen --> #}
 	            
