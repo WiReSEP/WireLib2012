@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext 
 from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, category_need
+from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
 from documents.forms import EmailValidationForm, UploadFileForm
@@ -253,8 +254,8 @@ def docs_miss(request):
 def profile(request, user_id):
     v_user = request.user
     try:
-        p_user = user.objects.GET(id = user_id)
-    except user.DoesNotExist:
+        p_user = User.objects.get(id = user_id)
+    except "User existiert nicht":
         raise Http404
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
@@ -273,8 +274,7 @@ def profile(request, user_id):
                                                             "perm" : perms, 
                                                             "i_perm" : i_perm,
                                                             "e_perm" : e_perm, 
-                                                            "miss" : miss_query[0:10],
-                                                            "p_user" : user_id}))
+                                                            "miss" : miss_query[0:10]}))
 
 @login_required
 def profile_settings(request): 
