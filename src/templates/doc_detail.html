@@ -180,22 +180,20 @@
 	          {% if user.id == lending.user_lend.id %}
 	            Als Bürge sind Sie eingetragen.
 	          {% else %}
-	            Als Bürge fungiert <a href="/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a>. <br />
+	            Als Bürge fungiert <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a>. <br />
 	          {% endif %}
 	        {% else %}
 	          {% if user.id == lending.user_lend.id %}
 	            Das Dokument wurde bereits von Ihnen ausgeliehen. <br />
 	          {% else %}
-	            {% if lending.user_lend.firstname %}
-	              {% if lending.user_lend.lastname %}
-	                Das Dokument ist vom User <a href="/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
+	            {% if lending.user_lend.first_name %}
+	              {% if lending.user_lend.last_name %}
+	                Das Dokument ist von <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a> ausgeliehen. <br />
+	              {% else %}
+	                Das Dokument ist vom User <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
                 {% endif %}
               {% else %}
-                {% if lending.user_lend.lastname %}
-                  Das Dokument ist vom User <a href="/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
-                {% else %}
-	                Das Dokument ist von <a href="/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a> ausgeliehen. <br />
-	              {% endif %}
+                  Das Dokument ist vom User <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
 	            {% endif %}
 	          {% endif %}
 	        {% endif %}
