@@ -15,6 +15,7 @@ urlpatterns = patterns('documents.views',
         url(r'^user$', 'user'),
         url(r'^user/profile$', 'profile'), 
         url(r'^user/profile/settings$', 'profile_settings'),
+        url(r'^user/(?P<user_id>\d+)$', 'profile'),
         url(r'^miss$', 'docs_miss'),
 )
 

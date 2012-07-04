@@ -21,19 +21,21 @@
 	  <a href="?{{ path_sort }}&sort=authors">Authoren</a>
 	  <a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
 	 <!--- <a href="?{{ path_sort }}&sort=status">Status</a>-->
-	  <a href="?{{ path_sort }}&sort=isbn">Isbn</a>
+	  <!---<a href="?{{ path_sort }}&sort=isbn">Isbn</a>-->
 	</div>
 	{% autopaginate documents 10 %}
 
 	<ul id="list_body">
 	{% for d in documents %}
 	
+
 	  <li id="{% spaceless %}
 		  {% if form == 0 %}
 			status_{{ d.status }} 
 			{% else %}{% if form == 1 %}
 			{% endif %}{% endif %}
 		  {% endspaceless %}">
+
 	  <div id="title">
 		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a>
 		  {% if form == 1 %}
@@ -63,11 +65,32 @@
 	
     	{% if form == 1 %}	
         <div id="date_lend"> 
-    	  Ausgeliehen seit:
+    	  Ausgeliehen am:
     	    {{ d.doc_status.date }}
     	</div>
     	{% endif %}
-		  
+    	
+		{% if form == 2 %}
+		  <div id="bib_no"> {{ d.bib_no }} </div>
+		  {% for s in d.doc_status_set.all %}
+        {% if s.status == 3 %}
+            {% if not s.return_lend %}
+              <div id="recent_user">Gemeldet von: 
+              {% if s.recent_user.first_name %}
+                {% if s.recent_user.last_name %}
+                  <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.first_name }} {{ s.recent_user.last_name }}</a> <br />
+                {% else %}
+                  <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.username }}</a> <br \>
+                {% endif %}
+              {% else %}
+                <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.username }}</a> <br />
+              {% endif %}
+              </div>
+              <div id="since">Vermisst seit: {{ s.date }}</div>
+            {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
 	  </div>
 	</li>
 	{% endfor %}

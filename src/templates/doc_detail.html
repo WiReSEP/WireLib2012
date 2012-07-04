@@ -127,12 +127,12 @@
 			{% endif %}
 		  </td>
 		</tr>
-		{% endif %}
-	  {% if cs_locn %}  
+		{% endif %}  
 		<tr>
 		  <td><b>BibTeX-ID:</b></td>
 		  <td>{{ documents.bibtex_id }}</td>
 		</tr>
+		{% if cs_locn %}
 		<tr>
 		  <td><b>LibraryOfCongressN:</b></td>
 		  <td>
@@ -160,13 +160,13 @@
 	<td>
 	{% if user.is_authenticated %}
 	  {% if documents.status == 0 %}
-	    {% if c_lm %}
+	    {% if c_le %}
 	      <form action="" method="post">
 		      <input type="submit" name="lend" value="Ausleihen" /> 
 	      </form><br />
 	      {# <!-- Ausleihe an externen --> #}
 	    {% endif %}
-	    {% if c_lm %}
+	    {% if c_mi %}
 	      <form action="" method="post">
 		    <input type="submit" name="missing" value="Vermisst melden" /> <br />
 	      </form><br />
@@ -175,12 +175,29 @@
 	    {% if documents.status == 1 %}    
 	      {% if lending %}
 	        {% if lending.non_user_lend %}
+	          {# <!-- TODO Profillinks einfügen --> #}
 	          Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br />
-	          Als Bürge fungiert {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}. <br />
+	          {% if user.id == lending.user_lend.id %}
+	            Als Bürge sind Sie eingetragen.
+	          {% else %}
+	            Als Bürge fungiert <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a>. <br />
+	          {% endif %}
 	        {% else %}
-	          Das Dokument ist von {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }} ausgeliehen. <br />
+	          {% if user.id == lending.user_lend.id %}
+	            Das Dokument wurde bereits von Ihnen ausgeliehen. <br />
+	          {% else %}
+	            {% if lending.user_lend.first_name %}
+	              {% if lending.user_lend.last_name %}
+	                Das Dokument ist von <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a> ausgeliehen. <br />
+	              {% else %}
+	                Das Dokument ist vom User <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
+                {% endif %}
+              {% else %}
+                  Das Dokument ist vom User <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
+	            {% endif %}
+	          {% endif %}
 	        {% endif %}
-	        {% if c_transfer %}
+	        {% if c_le %}
 	          {% if lending.user_lend.username != user.name %}
 			  <form action="{{documents.bib_no}}/assign" method="post" >
 	              <input type="submit" name="assign" value="&Uuml;bertragen" /> <br />
@@ -189,14 +206,15 @@
 	            
 	          {% endif %}
 	        {% endif %}
-	        {% if lending.user_lend == user %}
-	          <form action="" method="post">
-	            <input type="submit" name="restitution" value="R&uuml;ckgabe" /> <br />
-	          </form><br />
-	          {# <!-- TODO übertragen vom ausleihenden aus --> #}
-	          
+	        {% if c_ule %}
+	          {% if lending.user_lend == user %}
+	            <form action="" method="post">
+	              <input type="submit" name="restitution" value="R&uuml;ckgabe" /> <br />
+	            </form><br />
+	            {# <!-- TODO übertragen vom ausleihenden aus --> #}
+	          {% endif %}
 	        {% endif %}
-	        {% if c_lm %}
+	        {% if c_mi %}
 	          <form action="" method="post">
 		          <input type="submit" name="missing" value="Vermisst melden" /> <br />
 	          </form><br />
@@ -205,7 +223,7 @@
 	    {% else %}
 	      {% if documents.status == 2 %}
 	        Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br />
-	        {% if c_lo %}
+	        {% if c_order %}
 	          <form action="" method="post">
 	            <input type="submit" name="restitution" value="Ist angekommen" /> <br />
 	          </form><br />
@@ -214,7 +232,7 @@
 	        {% if documents.status == 3 %}
 	          Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br />
 	          <!-- TODO Mail an den Bibliothekar wenn gefunden -->
-	          {% if c_lm %}
+	          {% if c_mi %}
 	            <form action="" method="post">
 		            <input type="submit" name="found" value="Gefunden melden" /> <br />
 	            </form><br />
@@ -246,10 +264,45 @@
 	rows="15" readonly="true">{{ bi }}</textarea></div>
 	
 {% if cs_history %}
-  <h3>History dieses Dokuments</h3>
-  <table> 
-  {# <!-- TODO History einbinden --> #}
-  </table>
+<h3>History dieses Dokuments</h3>
+
+
+
+
+
+    
+    
+    
+    <table width = "80%", rules="rows">
+    {% for r in history %}
+    <tr><td>{{ r.date }} </td>   
+    
+    <td>{% if r.status == 0 %}
+         Zurück gegeben
+{% endif %}
+     
+{% if r.status == 1 %}
+    Ausgeliehen
+{% endif %} 
+{% if r.status == 2 %}
+    Bestellt
+{% endif %} 
+{% if r.status == 3 %}
+    Vermisst
+{% endif %} 
+{% if r.status == 4 %}
+    Verloren
+{% endif %}  </td>  
+    <td>{{ r.recent_user }} </td> 
+    </tr>
+    
+    {% endfor %}
+    </table>
+
+
+
+
+
 {% endif %}
     
     
