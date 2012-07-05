@@ -61,6 +61,7 @@ function changeCategory(elem) {
 
 	<div id="spoiler" name="spoiler">
 	  <form method="post" action="">
+		<!--{#
 	    <table>
 	        <tr>
 	            <td><b><u>Titel:</u></b></td>
@@ -221,7 +222,18 @@ function changeCategory(elem) {
 	            <td><input type="text" onFocus="addExtra('ex', this)" name="doc_extra_content" maxlength=30 /></td>
 	        </tr>
             </tbody> 
-	    </table>
+		  </table>
+		  #} -->
+		  <table>
+			{{ form_doc.as_table }}
+			<tr><td>Autoren</td></tr>
+			{{ form_author.as_table }}
+			<tr>
+			  <td>
+				<input type="submit" name="sub_author" value="Autor	hinzufügen" />
+			  </td>
+			</tr>
+		  </table>
 	    <input type="submit" name="submit" value="Dokument speichern" />
 	  </form>
 	</div>

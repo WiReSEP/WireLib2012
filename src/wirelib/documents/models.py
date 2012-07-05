@@ -1,6 +1,8 @@
 # vim: set fileencoding=utf-8
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from exceptions import LendingError
 from django.template import loader, Context 
@@ -57,28 +59,29 @@ class author(models.Model):
         return (self.last_name + ', ' + self.first_name)
 
 class document(models.Model):
-    bib_no = models.CharField(max_length=15, primary_key=True)
-    inv_no = models.CharField(max_length=15, unique=True)
-    bibtex_id = models.CharField(max_length=120, unique=True)
-    lib_of_con_nr = models.CharField(max_length=20, blank=True, null=True) 
+    bib_no = models.CharField("Bibliotheksnummer", max_length=15, primary_key=True)
+    inv_no = models.CharField("Inventar-Nummer", max_length=15, unique=True)
+    bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
+    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=20, blank=True, null=True) 
         #LibraryOfCongressN
-    title = models.CharField("titel",max_length=200)
-    isbn = models.CharField("iSBN",max_length=17, blank=True, null=True)
-    category = models.ForeignKey(category,verbose_name="kategorie")
-    last_updated = models.DateField("zuletzt geupdated",auto_now=True)
-    last_edit_by = models.ForeignKey(User,verbose_name="zuletzt geändert")
+    title = models.CharField("Titel",max_length=200)
+    isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
+    category = models.ForeignKey(category,verbose_name="Kategorie")
+    last_updated = models.DateField("Letztes Update",auto_now=True)
+    last_edit_by = models.ForeignKey(User,verbose_name="Zuletzt geändert von")
     publisher = models.ForeignKey(publisher, blank=True, null=True)
-    year = models.IntegerField("jahr",blank=True, null=True)
-    address = models.CharField("adresse",max_length=100, blank=True, null=True)
-    price = models.DecimalField("preis",max_digits=6, decimal_places=2, blank=True, null=True)
-    currency = models.CharField("währung",max_length=3, blank=True, null=True)
-    date_of_purchase = models.DateField("kaufsdatum",auto_now_add=True)
+    year = models.IntegerField("Jahr",blank=True, null=True)
+    address = models.CharField("Adresse",max_length=100, blank=True, null=True)
+    price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
+    currency = models.CharField("Währung",max_length=3, blank=True, null=True)
+    date_of_purchase = models.DateField("Kaufdatum",auto_now_add=True)
     ub_date = models.DateField(blank=True, null=True) 
         #Datum des Allegro-Exports
     bib_date = models.DateField(blank=True, null=True) 
         #Datum des BibTeX-Exports
-    comment = models.TextField("kommentar",blank=True, null=True)
-    authors = models.ManyToManyField(author, through='document_authors',verbose_name="autoren")
+    comment = models.TextField("Kommentar",blank=True, null=True)
+    authors = models.ManyToManyField(author,
+            through='document_authors',verbose_name="Autoren")
     class Meta:
         permissions = (("cs_price", "Can see price"),
                        ("cs_locn", "Can see library of congress number"),
@@ -396,8 +399,8 @@ class EmailValidationManager(models.Manager):
                 self.key = key
                 break
 
-        template_body = "userprofile/email/validation.txt"
-        template_subject = "userprofile/email/validation_subject.txt"
+        template_body = "email/validation.txt"
+        template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         body = loader.get_template(template_body).render(Context(locals()))
         subject = loader.get_template(template_subject).render(Context(locals())).strip()
@@ -425,8 +428,8 @@ class EmailValidation(models.Model):
         """
         Resend validation email
         """
-        template_body = "account/email/validation.txt"
-        template_subject = "account/email/validation_subject.txt"
+        template_body = "email/validation.txt"
+        template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         key = self.key
         body = loader.get_template(template_body).render(Context(locals()))
