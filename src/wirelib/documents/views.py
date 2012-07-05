@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex, UglyBibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm
+    AuthorAddForm, SelectUser
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.db.models import Q
