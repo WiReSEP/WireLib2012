@@ -41,3 +41,6 @@ class AuthorAddForm(ModelForm):
     class Meta:
         model = author
 
+class SelectUser(forms.Form):
+    users = forms.ModelChoiceField(queryset=User.objects.all(), label="Nutzer \
+    auf den uebertragen werden soll", empty_label="")
