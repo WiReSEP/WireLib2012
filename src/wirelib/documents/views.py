@@ -32,7 +32,6 @@ def search(request):
     Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
     finden.
     """
-    #context = Context()
     #Wenn bereits eine Suche gestartet wurde
     if "query" in request.GET:
         #Eingabe des Users aus dem request auslesen
@@ -87,18 +86,20 @@ def search_pro(request):
         s_isbn = request.GET.get('isbn','')
         s_keywords = request.GET.get('keywords','')
         s_doc_status = request.GET.get('doc_status','')
-        print s_doc_status
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
-        s_documents = document.objects.filter(title__icontains = s_title)
+        s_documents = document.objects.filter(year__icontains = s_year)
+        if s_title != "":
+            title_query = s_title.split(" ")
+            for i in title_query:
+                s_documents = s_documents.filter(title__icontains = i)
+        #TODO : String parsen und aufsplitten bei title und keywords
         if s_fn_author != "":
             s_documents = s_documents.filter(authors__first_name__icontains =
                                              s_fn_author)
         if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
                                              s_ln_author)
-        if s_year != "":
-            s_documents = s_documents.filter(year__icontains = s_year)
         if s_publisher != "":
             s_documents = s_documents.filter(publisher__name__icontains = s_publisher)
         if s_bib_no != "":
@@ -106,7 +107,10 @@ def search_pro(request):
         if s_isbn != "":
             s_documents = s_documents.filter(isbn__icontains = s_isbn)
         if s_keywords != "":
-            s_documents = s_documents.filter(keywords__keyword__icontains = s_keywords) 
+            keyword_query = s_keywords.split(" ")
+            for i in keyword_query:
+                s_documents = s_documents.filter(keywords__keyword__icontains =
+                                                i) 
         if s_doc_status !="":
             s_documents = s_documents.filter(doc_status__status =
                     s_doc_status,doc_status__return_lend = False) 
