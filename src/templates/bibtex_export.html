@@ -1,11 +1,15 @@
 {% extends "index.html" %}
 {% block content %}
   <h1>BibTeX-Export</h1>
-  <br />
-  Dieser Export ist zur Datensicherungen gedacht.<br /><br />
+  <p>Dieser Export ist zur Datensicherungen gedacht.</p>
   <form action="" method="post">
 	<input type="submit" name="bibtex_export" value="BibTeX-Export starten" />
   </form>
   <hr />
   Historie der bisherigen BibTeX-Exporte:
+  <ul>
+  {% for file,link in files.items %}
+	<li><a href="{{ link }}">{{ file }}</a></li>
+  {% endfor %}
+  </ul>
 {% endblock %}
