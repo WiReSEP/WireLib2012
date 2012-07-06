@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Dies ist das Profil von {{ p_user.first_name }} {{ p_user.last_name }}</h1>
+<hr>
+<table>
+  <tr>
+	<td>E-Mail Adresse:</td><td> {{ p_user.email }}</td>
+  </tr>
+  <tr>
+	<td>
+	  Telefonnummer:
+	</td>
+	{% for i in p_user.tel_user_set.all %}
+	  <td></td><td> {{i.tel_nr}}</td>
+	{% endfor %}
+  </tr>
+</table>
+{% endblock %}

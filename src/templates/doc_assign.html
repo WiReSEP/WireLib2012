@@ -4,26 +4,35 @@
 	  <table>
 		<tbody id = origin>
 		  <tr>
-			<label id="lending_user"></label>
-				<td>Nutzer der das Dokument entliehen hat:</td>
-				<td> <input type='text' name='origin' maxlength=15 /></td>
-	        </tr>
-            <tr>
-	            <td>Nutzer auf den übertragen werden soll:</td>
-	            <td> <input type='text' name='destination' maxlength=15 /></td>
-	        </tr>  
-            <tr>
-	            <td>Name des Externen Nutzers:</td>
+			<tr>
+			  <td><b>Dokument welches übertragen werden soll ist:</b></td>
+			  <td><label>{{documents.title}}</label></td>
+			</tr>
+			{% if lending.user_lend.username != user.username %}
+			<tr>
+			  <td><b>Nutzer auf den übertragen werden soll:</b></td>
+				<td> <input type='text' name='destination' maxlength=15 value=
+				  {{user.username}} /></td>	
+		    </tr>
+			{% else %}
+			<tr>
+				<td><b>Nutzer auf den übertragen werden soll:</b></td>
+				<td>{{userform.as_p}}</td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td><b>Name des Externen Nutzers:</b></td>
 	            <td> <input type='text' name='non_user' maxlength=100 /></td>
 	        </tr>  
 	        <tr>
-	            <td>E-Mailaddresse:</td>
+				<td><b>E-Mailaddresse:</b></td>
 	            <td> <input type='text' name='mail' maxlength=50 /></td>
 	        </tr> 
 	        <tr>
-	            <td>Adresse:</td>
+				<td><b>Adresse:</b></td>
 	            <td> <input type='text' name='adress' maxlength=35/></td>
 			</tr>
+			{% endif %}
 			</tbody>
 		  </table>
 		  <form action="" method="post">

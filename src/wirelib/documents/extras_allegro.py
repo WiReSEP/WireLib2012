@@ -13,28 +13,7 @@ def export_allegro():
             category__name__iexact='book')
     date = datetime.today()
     date = date.date()
-    filepath = getattr(settings, 'EXPORT_PATH', "documents/exports/")
-    filename = u"WiReLib_" + date.strftime("%d-%m-%Y") + u".ADT"
-    tmp_file = open(filepath + filename, "w")
-    print len(list(allegro_query))
-    for doc in list(allegro_query):
-        if doc.status <= 1:
-            print >> tmp_file, u"#00"
-            print >> tmp_file, __doc_to_string(doc).encode("iso-8859-1", "strict")
-    tmp_file.close()
-    allegro_query.update(ub_date=date)
-    for doc in allegro_query:
-        doc.save()
-    return tmp_file
-
-def __doc_to_string(document):
-    """
-    Diese Methode übernimmt die Erstellung des richtigen Export-Formates der
-    einzelnen Dokumente
-    """
-    extra_fields = document.doc_extra_set.all()
-    keywords_db = document.keywords_set.all()
-    authors = list(document.authors.all())
+    # einlesen der Hashmap für Speicherung von Einträgen im ADT-Format
     file_allegro_dict = open(u"documents/dict_allegro.txt", "r")
     allegro_dict = {}
     for line in file_allegro_dict:
@@ -42,7 +21,30 @@ def __doc_to_string(document):
         tmp_list = line.split(u" ")
         allegro_dict[tmp_list[0]] = tmp_list[1]
     file_allegro_dict.close()
+    filepath = getattr(settings, 'EXPORT_PATH', "documents/exports/")
+    filename = u"WiReLib_" + date.strftime("%d-%m-%Y") + u".ADT"
+    # ab hier wird in die Datei geschrieben, iso-8859-1 für Kompatiblität
+    tmp_file = open(filepath + filename, "w")
+    for doc in list(allegro_query):
+        if doc.status <= 1:
+            print >> tmp_file, u"#00"
+            print >> tmp_file, __doc_to_string(doc, allegro_dict).encode("iso-8859-1", "strict")
+    tmp_file.close()
+    allegro_query.update(ub_date=date)
+    for doc in allegro_query:
+        doc.save()
+    return tmp_file
+
+def __doc_to_string(document, allegro_dict):
+    """
+    Diese Methode übernimmt die Erstellung des richtigen Export-Formates der
+    einzelnen Dokumente
+    """
+    extra_fields = document.doc_extra_set.all()
+    keywords_db = document.keywords_set.all()
+    authors = list(document.authors.all())
     line_end = u"\n"
+    #speichern aller benötigten Feldinhalte in den Rückgabestring
     doc_str = u"" + allegro_dict[u"isbn"] + u" " + document.isbn + line_end
     doc_str += allegro_dict[u"publisher"] + u" "
     doc_str += document.publisher.name + line_end
@@ -51,7 +53,6 @@ def __doc_to_string(document):
         vol = vol.content
     except doc_extra.DoesNotExist:
         vol = u""
-    print "vol:", allegro_dict[u"volume"]
     doc_str += u"" + allegro_dict[u"volume"] + u" " + vol + line_end
     try:
         series = extra_fields.get(bib_field__iexact="series")
@@ -76,9 +77,7 @@ def __doc_to_string(document):
     doc_str += allegro_dict[u"bookid"] + u" " + document.bibtex_id + line_end
     doc_str += allegro_dict[u"title"] + u" " + document.title + line_end
     doc_str += allegro_dict[u"address"] + u" " + document.address + line_end
-    """
-    hier werden die keywords in das richtige String-Format gebracht
-    """
+    # hier werden die keywords in das richtige String-Format gebracht
     keywords_list = []
     for k in keywords_db:
         keywords_list.append(k.keyword)

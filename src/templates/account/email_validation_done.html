@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+{% load i18n %}
+
+{% block title %}{% if successful %}{% trans 'E-Mail Validierung erfolgreich' %}{% else %}{% trans 'E-mail change unsuccessful' %}{% endif %}{% endblock %}
+
+{% block content %}
+	<div class="{% if successful %}success{% else %}error{% endif %}">
+	{% if successful %}
+  <p>{% trans "E-Mailadresse erfolgreich bestätigt" %}.</p>
+	{% else %}
+	<p>{% trans "Der Schlüssel von ihrer Mail ist nicht mehr valid. Versuchen Sie die Email Validierung erneut" %}.</p>
+	{% endif %}
+	</div>
+{% endblock %}
+
+{% block content-related %}
+  <div class="box">
+    <h3>{% trans "E-mailvalidierung prozess" %}</h3>
+    <p>{% trans "You can manage the e-mail validation process from the" %} <a href="{% url profile_overview %}">{% trans "overview page" %}.</p>
+  </div>
+{% endblock %}

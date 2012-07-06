@@ -8,7 +8,7 @@
 	<a href="/logout">LogOut</a>                                        
 	</li>
 
-	<li id="tu_profil"><a href="/user/profile">Profil</a></li>
+	<li id="tu_profil"><a href="/user/{{ user.id }}">Profil</a></li>
 	{% else %}
 	<li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 	onmouseout="cleandelay()" style="z-index:999;">
@@ -37,7 +37,7 @@
 	</a>
   </div>
 
-  {% if e_perm %}
+  {% if export_perm %}
   <div class="navi1">
 	<a href ="/export" style="display:block;">Export</a>
   </div>
@@ -54,7 +54,7 @@
 	</a>
   </div>
   {% endif %}
-  {% if i_perm %}
+  {% if import_perm %}
   <div class="navi1">
 	<a href="/doc/add" style="display:block;">
 	  Import

@@ -2,14 +2,11 @@
 {% block content %}
 	<h1> Hallo, {{ user.username }}!</h1>
 	<h2> Hier kannst du deine persönlichen Einstellungen verändern </h2>
-
-	Anschrift
-	<hr noshade="noshade" /> 
-
-	E-mailadresse ändern 
-	<hr noshade="noshade" /> 
-	
-	<a href="/accounts/password/change">Passwort ändern</a>  
-	<hr noshade="noshade" />
-	
+<hr noshade="noshade" /> 
+    <ul> 
+    <li><b>Passwort</b><a href="/accounts/password/change">ändern</a></b></li>
+    <li><b>Anschrift</li></b>	
+	<li><b>E-Mail Adresse:</b>{{ c_user.email }}<a href="/email/validation/">(ändern)</a> </li>
+    <li><b>Telefonnummer:</b><a href="">(ändern)</a></li>    
+	</ul>
 {% endblock %}
