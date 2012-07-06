@@ -585,8 +585,13 @@ def bibtex_export(request):
                 bib_date__isnull=True,
                 )
         thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
+    files = {}
+    for file in os.listdir(settings.DOCUMENTS_BIBTEX_FILES):
+        files[file] = __gen_sec_link("/"+file)
 
+#    Rechte für Template
     v_user = request.user
+#    Snippet Code
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
     perms =  v_user.has_perm('documents.can_see_admin')
@@ -599,7 +604,9 @@ def bibtex_export(request):
                                      "perm" : perms, 
                                      "import_perm" : import_perm,
                                      "export_perm" : export_perm, 
-                                     "miss" : miss_query[0:10]}))
+                                     "miss" : miss_query[0:10],
+                                     "files" :files,
+                                     }))
 
 @login_required
 def user(request):
@@ -758,9 +765,15 @@ def __filter_names(documents, request):
     elif sw == "all":
         documents = documents.all()                     
     return documents
+
+def __gen_sec_link(path):
+    import time, hashlib
+    secret = settings.SECRET_KEY
+    uri_prefix = '/dl/'
+    hextime = "%08x" % time.time()
+    token = hashlib.md5(secret + path + hextime).hexdigest()
+    return '%s%s/%s%s' % (uri_prefix, token, hextime, path)
     
 def __filter_history(doc):
     new_history = doc.doc_status_set.order_by('-date')[0:10]
     return new_history
-   
-

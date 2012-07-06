@@ -30,6 +30,9 @@ class category(models.Model):
         #proceedings
         #techreport
         #unpublished
+    class Meta:
+        verbose_name = "Kategorie"
+        verbose_name_plural = "Kategorien"
 
     def __unicode__(self):
         return self.name
@@ -54,6 +57,8 @@ class author(models.Model):
     class Meta:
         unique_together = ('first_name', 'last_name')
     #primary ('name', 'surname')
+        verbose_name = "Autor"
+        verbose_name_plural = "Autoren"
     
     def __unicode__(self):
         return (self.last_name + ', ' + self.first_name)
@@ -89,6 +94,8 @@ class document(models.Model):
                        ("can_see_dop", "Can see date of purchase"),
                        ("can_see_export", "Can see dates of export"),)
         ordering = ['title']
+        verbose_name = "Dokument"
+        verbose_name_plural = "Dokumente"
     class Admin:
         list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
                         'category' 'publisher', 'bibtex_id')
@@ -247,13 +254,19 @@ class document_authors(models.Model):
     document = models.ForeignKey(document)
     author = models.ForeignKey(author,verbose_name="autor")
     editor = models.BooleanField(default=False)
+    class Meta:
+        verbose_name = "Dokument Autoren"
+        verbose_name_plural = "Dokument Autoren"
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
-    keyword = models.CharField(max_length=50)
+    keyword = models.CharField("Schlüsselwort",max_length=50)
     class Meta:
         unique_together = ('document', 'keyword')
     #primary_key(document, keyword)
+        verbose_name = "Schlüsselwort"
+        verbose_name_plural = "Schlüsselwörter"
+        
     
     def __unicode__(self):
         return self.keyword
@@ -300,6 +313,8 @@ class user_profile(models.Model):
         permissions = (("can_see_admin", "Can see the adminpanel"),
                        ("can_import", "Can import"),
                        ("can_export", "Can export"),)
+        verbose_name = "Benutzer Profil"
+        verbose_name_plural = "Benutzer Profile"
 
     def __unicode__(self):
         return unicode(self.user)
@@ -320,26 +335,34 @@ class tel_user(models.Model):
     # TODO eigene Telefonnummerklasse
     class Meta:
         unique_together = ('user', 'tel_nr')
+        verbose_name = "Benutzer Tel. Nr."
+        verbose_name_plural = "Benutzer Tel. Nr."
 
 class non_user(models.Model):
-    last_name = models.CharField(max_length=30)
-    first_name = models.CharField(max_length=30)
-    email = models.EmailField(unique=True)
-    street = models.CharField(max_length=30)
-    number = models.CharField(max_length=5)
-    zipcode = models.CharField(max_length=5)
-    city = models.CharField(max_length=58)
+    first_name = models.CharField('vorname',max_length=30)
+    last_name = models.CharField('nachname',max_length=30)
+    email = models.EmailField('e-mail',unique=True)
+    street = models.CharField('straße',max_length=30)
+    number = models.CharField('nummer',max_length=5)
+    zipcode = models.CharField('postleitzahl',max_length=5)
+    city = models.CharField('stadt',max_length=58)
 
+    class Meta:
+        verbose_name = "Externer"
+        verbose_name_plural = "Externe"
     def __unicode__(self):
         return (self.last_name + ', ' + self.first_name)
 
 class tel_non_user(models.Model):
-    non_user = models.ForeignKey(non_user)
+
+    non_user = models.ForeignKey(non_user, verbose_name="externer")
+    tel_nr = models.CharField("tel Nr.",max_length=20)
     tel_type = models.CharField(max_length=20)
-    tel_nr = models.CharField(max_length=20)
     # TODO eigene Telefonnummerklasser
     class Meta:
         unique_together = ('non_user', 'tel_nr')
+        verbose_name = "Externer Tel. Nr."
+        verbose_name_plural = "Externer Tel. Nr."
 
 class doc_status(models.Model):
     recent_user = models.ForeignKey(User, related_name='recent_user') 
@@ -441,7 +464,7 @@ class EmailValidation(models.Model):
         key = self.key
         body = loader.get_template(template_body).render(Context(locals()))
         subject = loader.get_template(template_subject).render(Context(locals())).strip()
-        send_mail(subject=subject, message=body, from_email=None, recipient_list=[self.email])
+        send_mail(subject=subject, message=body, fromcategories_email=None, recipient_list=[self.email])
         self.created = datetime.datetime.now()
         self.save()
         return True
@@ -449,7 +472,9 @@ class EmailValidation(models.Model):
 
 class emails(models.Model):
     name = models.CharField(max_length=20)
-    subject = models.CharField(max_length=30)
+    subject = models.CharField("Betreff", max_length=30)
     text = models.TextField()
     class Meta:
         permissions = (("can_send_mails", "Can send Emails"),)
+        verbose_name = "E-Mail"
+        verbose_name_plural = "E-Mails"
