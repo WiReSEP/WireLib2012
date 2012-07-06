@@ -190,7 +190,7 @@ class UglyBibtex(object):
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'keywords':
-            key_val[1] = re.split('[ ,;/]', key_val[1])
+            key_val[1] = re.split('[,;/]', key_val[1])
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
             self.entry[key_val[0]] = key_val[1]
 
@@ -222,6 +222,12 @@ class UglyBibtex(object):
 
 
 class Bibtex(object):
+
+    @staticmethod
+    def do_import(file):
+        """Diese Methode importiert die Dokumente einer Bibtex-Datei.
+        """
+        UglyBibtex(file).do_import()
 
     @staticmethod
     def export_doc(document):
@@ -297,7 +303,7 @@ class Bibtex(object):
     active = False
 
     @staticmethod
-    def export_docs(documents):
+    def export_docs(documents, export_path):
         """ Viele Dokumente werden in eine Datei exportiert.
         """
         lock = thread.allocate_lock()
@@ -306,14 +312,10 @@ class Bibtex(object):
             return
         lock.release()
 
-        if not os.path.isdir("bibtex"):
-            os.mkdir("bibtex")
-
         for doc in documents:
             doc_year = doc.date_of_purchase.year
-#            TODO: Bibtex-Pfad über settings exportieren.
 #            TODO: einen "schönen" Namen für die Dateien setzen.
-            bib_filename = "bibtex/lib_%i_%s.bib" % (
+            bib_filename = export_path + "/lib_%i_%s.bib" % (
                     doc_year,
                     datetime.date.today()
                     )

@@ -7,7 +7,7 @@ from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, category_need
 from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
-from documents.extras_bibtex import Bibtex, UglyBibtex
+from documents.extras_bibtex import Bibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser
 from django.contrib.auth.decorators import login_required
@@ -444,7 +444,7 @@ def doc_add(request):
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)
             destination.close()
-            UglyBibtex(filename).do_import()
+            Bibtex.do_import(filename)
             os.remove(filename)
             filesize = os.path.getsize(filename + '.err')
             if filesize == 0:
@@ -617,10 +617,15 @@ def bibtex_export(request):
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
                 )
-        thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
+        thread.start_new_thread(
+                Bibtex.export_docs,
+                ( export_documents, 
+                    settings.DOCUMENTS_BIBTEX_FILES)
+                )
     files = {}
     for file in os.listdir(settings.DOCUMENTS_BIBTEX_FILES):
-        files[file] = __gen_sec_link("/"+file)
+        if ".bib" in file:
+            files[file] = __gen_sec_link("/"+file)
 
 #    Rechte für Template
     v_user = request.user
