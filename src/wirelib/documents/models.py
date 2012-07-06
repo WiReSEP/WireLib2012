@@ -330,7 +330,8 @@ post_save.connect(create_user_profile, sender=User)
 
 class tel_user(models.Model):
     user = models.ForeignKey(User)
-    tel_nr = models.CharField('tel. Nr.', max_length=20)
+    tel_type = models.CharField("Typ", max_length=20)
+    tel_nr = models.CharField("Telefonnummer", max_length=20)
     # TODO eigene Telefonnummerklasse
     class Meta:
         unique_together = ('user', 'tel_nr')
@@ -353,8 +354,10 @@ class non_user(models.Model):
         return (self.last_name + ', ' + self.first_name)
 
 class tel_non_user(models.Model):
+
     non_user = models.ForeignKey(non_user, verbose_name='externer')
     tel_nr = models.CharField('tel Nr.',max_length=20)
+    tel_type = models.CharField(max_length=20)
     # TODO eigene Telefonnummerklasser
     class Meta:
         unique_together = ('non_user', 'tel_nr')

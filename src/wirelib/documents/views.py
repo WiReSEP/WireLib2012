@@ -201,6 +201,7 @@ def doc_detail(request, bib_no_id):
     can_see_export = v_user.has_perm('documents.can_see_export')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
+    change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
@@ -225,10 +226,19 @@ def doc_detail(request, bib_no_id):
                       "can_see_export" : can_see_export,
                       "export_perm" : export_perm,
                       "import_perm" : import_perm,
+                      "change_document" : change_document,
                       "miss" : miss_query[0:10],
                       "history" : history })
     response = HttpResponse(template.render(context))
     return response
+    
+def doc_edit(request, bib_no_id):
+    v_user = request.user
+    try:
+        document_query = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
+    #TODO
 
 def doc_assign(request, bib_no_id):
     v_user = request.user
@@ -287,6 +297,8 @@ def docs_miss(request):
 @login_required
 
 def profile(request, user_id):
+    """View der Profilübersicht
+    """
 
     v_user = request.user
     try:
@@ -313,10 +325,12 @@ def profile(request, user_id):
                                                             "miss" : miss_query[0:10]}))
 
 @login_required
-def profile_settings(request):
+def profile_settings(request, user_id):
     """View der Accounteinstellung
     """ 
+
     v_user = request.user
+    c_user= User.objects.get(id = user_id)
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -325,7 +339,8 @@ def profile_settings(request):
     miss_query = miss_query.order_by('-doc_status__date')
     return render_to_response("profile_settings.html",
                               context_instance=Context(
-                                               {"user" : v_user, 
+                                               {"user" : v_user,
+                                                "c_user" : c_user,  
                                                 "perm" : perms, 
                                                 "import_perm" : import_perm,
                                                 "export_perm" : export_perm, 
