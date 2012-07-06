@@ -69,7 +69,6 @@ class emails_admin(admin.ModelAdmin):
     pass
 
 #Registrierung aller anzuzeigenden Tabellen.
-admin.site.unregister(Site)
 #admin.site.register(publisher, publisher_admin)
 admin.site.register(author, author_admin)
 admin.site.register(category, category_admin)

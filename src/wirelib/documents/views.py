@@ -584,10 +584,15 @@ def bibtex_export(request):
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
                 )
-        thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
+        thread.start_new_thread(
+                Bibtex.export_docs,
+                ( export_documents, 
+                    settings.DOCUMENTS_BIBTEX_FILES)
+                )
     files = {}
     for file in os.listdir(settings.DOCUMENTS_BIBTEX_FILES):
-        files[file] = __gen_sec_link("/"+file)
+        if ".bib" in file:
+            files[file] = __gen_sec_link("/"+file)
 
 #    Rechte für Template
     v_user = request.user

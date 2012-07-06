@@ -297,7 +297,7 @@ class Bibtex(object):
     active = False
 
     @staticmethod
-    def export_docs(documents):
+    def export_docs(documents, export_path):
         """ Viele Dokumente werden in eine Datei exportiert.
         """
         lock = thread.allocate_lock()
@@ -306,14 +306,10 @@ class Bibtex(object):
             return
         lock.release()
 
-        if not os.path.isdir("bibtex"):
-            os.mkdir("bibtex")
-
         for doc in documents:
             doc_year = doc.date_of_purchase.year
-#            TODO: Bibtex-Pfad über settings exportieren.
 #            TODO: einen "schönen" Namen für die Dateien setzen.
-            bib_filename = "bibtex/lib_%i_%s.bib" % (
+            bib_filename = export_path + "/lib_%i_%s.bib" % (
                     doc_year,
                     datetime.date.today()
                     )
