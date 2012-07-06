@@ -224,6 +224,12 @@ class UglyBibtex(object):
 class Bibtex(object):
 
     @staticmethod
+    def do_import(file):
+        """Diese Methode importiert die Dokumente einer Bibtex-Datei.
+        """
+        UglyBibtex(file).do_import()
+
+    @staticmethod
     def export_doc(document):
         """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
         String um.
