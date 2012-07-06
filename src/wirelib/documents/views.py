@@ -201,6 +201,7 @@ def doc_detail(request, bib_no_id):
     cs_export = v_user.has_perm('documents.cs_export')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
+    change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
@@ -225,10 +226,19 @@ def doc_detail(request, bib_no_id):
                       "cs_export" : cs_export,
                       "e_perm" : e_perm,
                       "i_perm" : i_perm,
+                      "change_document" : change_document,
                       "miss" : miss_query[0:10],
                       "history" : history })
     response = HttpResponse(template.render(context))
     return response
+    
+def doc_edit(request, bib_no_id):
+    v_user = request.user
+    try:
+        document_query = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
+    #TODO
 
 def doc_assign(request, bib_no_id):
     v_user = request.user

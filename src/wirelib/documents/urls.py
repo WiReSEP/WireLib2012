@@ -13,6 +13,7 @@ urlpatterns = patterns('documents.views',
         url(r'^doc/(?P<bib_no_id>\w\d+)$', 'doc_detail'),
         url(r'^doc/add$', 'doc_add'),
         url(r'^doc/(?P<bib_no_id>\w\d+)/assign$', 'doc_assign'),
+        url(r'^doc/(?P<bib_no_id>\w\d+)/edit$', 'doc_edit'),
         url(r'^account/rent$', 'doc_rent'), # Ausleihliste
         url(r'^user$', 'user'),
         url(r'^user/profile$', 'profile'), 

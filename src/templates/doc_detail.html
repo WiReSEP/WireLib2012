@@ -6,6 +6,16 @@
 <tr>
   <td>
     <table>
+    
+      {% if change_document %}
+        <tr>
+          <td>
+            <form action="" method="post">
+		          <input type="submit" name="edit" value="Editieren" />
+	          </form>
+	        </td>
+	      </tr>
+	    {% endif %}
       <tr>
 		  <td><b>Status:  </b></td> 
 		  <td>
