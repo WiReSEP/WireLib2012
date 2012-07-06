@@ -190,7 +190,7 @@ class UglyBibtex(object):
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'keywords':
-            key_val[1] = re.split('[ ,;/]', key_val[1])
+            key_val[1] = re.split('[,;/]', key_val[1])
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
             self.entry[key_val[0]] = key_val[1]
 
