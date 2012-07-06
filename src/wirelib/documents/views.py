@@ -59,13 +59,13 @@ def search(request):
     #Falls noch keine Suche gestartet wurde
     else:
         v_user = request.user
-        i_perm = v_user.has_perm('documents.c_import')
-        e_perm = v_user.has_perm('documents.c_export')
-        perms =  v_user.has_perm('documents.cs_admin')
+        import_perm = v_user.has_perm('documents.can_import')
+        export_perm = v_user.has_perm('documents.can_export')
+        perms =  v_user.has_perm('documents.can_see_admin')
         context = Context({"user" : v_user, 
                            "perm" : perms,
-                           "i_perm" : i_perm,
-                           "e_perm" : e_perm})
+                           "import_perm" : import_perm,
+                           "export_perm" : export_perm})
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
@@ -123,9 +123,9 @@ def search_pro(request):
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
         v_user = request.user
-        perms =  v_user.has_perm('documents.cs_admin')
-        i_perm = v_user.has_perm('documents.c_import')
-        e_perm = v_user.has_perm('documents.c_export')
+        perms =  v_user.has_perm('documents.can_see_admin')
+        import_perm = v_user.has_perm('documents.can_import')
+        export_perm = v_user.has_perm('documents.can_export')
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                              doc_status__return_lend = False)
         miss_query = miss_query.order_by('-doc_status__date')
@@ -133,8 +133,8 @@ def search_pro(request):
                                   context_instance=Context(
                                                {"user" : v_user, 
                                                 "perm" : perms, 
-                                                "i_perm" : i_perm,
-                                                "e_perm" : e_perm, 
+                                                "import_perm" : import_perm,
+                                                "export_perm" : export_perm, 
                                                 "miss" : miss_query[0:10],
                                                 "AVAILABLE" : document.AVAILABLE,
                                                 "LEND" : document.LEND,
@@ -187,20 +187,21 @@ def doc_detail(request, bib_no_id):
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
     #auslesen der für die doc_detail.html benötigten Rechte
-    perms =  v_user.has_perm('documents.cs_admin')
-    c_le = v_user.has_perm('documents.c_lend')
-    c_ule = v_user.has_perm('documents.c_unlend')
-    c_mi = v_user.has_perm('documents.c_miss')
-    c_lo = v_user.has_perm('documents.c_lost')
-    c_or = v_user.has_perm('documents.c_order')
-    cs_history = v_user.has_perm('documents.cs_history')
-    cs_price = v_user.has_perm('documents.cs_price')
-    cs_locn = v_user.has_perm('documents.cs_locn')
-    cs_lui = v_user.has_perm('documents.cs_last_update_info')
-    cs_dop = v_user.has_perm('documents.cs_dop')
-    cs_export = v_user.has_perm('documents.cs_export')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    can_lend = v_user.has_perm('documents.can_lend')
+    can_unlend = v_user.has_perm('documents.can_unlend')
+    can_miss = v_user.has_perm('documents.can_miss')
+    can_lost = v_user.has_perm('documents.can_lost')
+    can_order = v_user.has_perm('documents.can_order')
+    can_see_history = v_user.has_perm('documents.can_see_history')
+    can_see_price = v_user.has_perm('documents.can_see_price')
+    can_see_locn = v_user.has_perm('documents.can_see_locn')
+    can_see_last_update = v_user.has_perm('documents.can_see_last_update_info')
+    can_see_date_of_purchase = v_user.has_perm('documents.can_see_date_of_purchase')
+    can_see_export = v_user.has_perm('documents.can_see_export')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
+    change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
@@ -209,26 +210,35 @@ def doc_detail(request, bib_no_id):
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
                       "doc_extra" : doc_extra_query,
-                      "bi" : bibtex_string,
+                      "bibtex_string" : bibtex_string,
                       "user" : v_user,
                       "perm" : perms,
-                      "c_le" : c_le,
-                      "c_ule" : c_ule,
-                      "c_mi" : c_mi,
-                      "c_lo" : c_lo,
-                      "c_or" : c_or,
-                      "cs_history" : cs_history,
-                      "cs_price" : cs_price,
-                      "cs_locn" : cs_locn,
-                      "cs_lui" : cs_lui,
-                      "cs_dop" : cs_dop,
-                      "cs_export" : cs_export,
-                      "e_perm" : e_perm,
-                      "i_perm" : i_perm,
+                      "can_lend" : can_lend,
+                      "can_unlend" : can_unlend,
+                      "can_miss" : can_miss,
+                      "can_lost" : can_lost,
+                      "can_order" : can_order,
+                      "can_see_history" : can_see_history,
+                      "can_see_price" : can_see_price,
+                      "can_see_locn" : can_see_locn,
+                      "can_see_last_update" : can_see_last_update,
+                      "can_see_date_of_purchase" : can_see_date_of_purchase,
+                      "can_see_export" : can_see_export,
+                      "export_perm" : export_perm,
+                      "import_perm" : import_perm,
+                      "change_document" : change_document,
                       "miss" : miss_query[0:10],
                       "history" : history })
     response = HttpResponse(template.render(context))
     return response
+    
+def doc_edit(request, bib_no_id):
+    v_user = request.user
+    try:
+        document_query = document.objects.get(bib_no=bib_no_id)
+    except document.DoesNotExist:
+        raise Http404
+    #TODO
 
 def doc_assign(request, bib_no_id):
     v_user = request.user
@@ -261,9 +271,9 @@ def doc_assign(request, bib_no_id):
 
 def index(request): 
     v_user = request.user
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -271,8 +281,8 @@ def index(request):
                               context_instance=Context(
                                                {"user" : v_user, 
                                                 "perm" : perms, 
-                                                "i_perm" : i_perm,
-                                                "e_perm" : e_perm,
+                                                "import_perm" : import_perm,
+                                                "export_perm" : export_perm,
                                                 "miss" : miss_query[0:10]}))
 
 def docs_miss(request):
@@ -295,34 +305,35 @@ def profile(request, user_id):
         p_user = User.objects.get(id = user_id)
     except "User existiert nicht":
         raise Http404
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
     if p_user.id == v_user.id :
         return render_to_response("profile.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "i_perm" : i_perm,
-                              "e_perm" : e_perm, "miss" : miss_query[0:10]}))
+                              v_user, "perm" : perms, "import_perm" : import_perm,
+                              "export_perm" : export_perm, "miss" : miss_query[0:10]}))
     else:
         return render_to_response("stranger_profile.html",
                                   context_instance=Context({"user" :v_user, 
                                                             "p_user" : p_user,
                                                             "perm" : perms, 
-                                                            "i_perm" : i_perm,
-                                                            "e_perm" : e_perm, 
+                                                            "import_perm" : import_perm,
+                                                            "export_perm" : export_perm, 
                                                             "miss" : miss_query[0:10]}))
 
 @login_required
 def profile_settings(request, user_id):
     """View der Accounteinstellung
     """ 
-    v_user = request.user 
-    c_user = User.objects.get(id = user_id) 
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+
+    v_user = request.user
+    c_user= User.objects.get(id = user_id)
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -331,8 +342,8 @@ def profile_settings(request, user_id):
                                                {"user" : v_user,
                                                 "c_user" : c_user,  
                                                 "perm" : perms, 
-                                                "i_perm" : i_perm,
-                                                "e_perm" : e_perm, 
+                                                "import_perm" : import_perm,
+                                                "export_perm" : export_perm, 
                                                 "miss" : miss_query[0:10]}))
 
 def email_validation_process(request, key):
@@ -482,9 +493,9 @@ def doc_add(request):
         if (u""+c.category.name) not in needs:
             needs[u"" + c.category.name] = []
         needs[u"" + c.category.name].append(c.need)
-    perms = v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms = v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -493,8 +504,8 @@ def doc_add(request):
                               context_instance=Context(
                                   {"user" : v_user, 
                                    "perm" : perms,
-                                   "i_perm" : i_perm,
-                                   "e_perm" : e_perm,
+                                   "import_perm" : import_perm,
+                                   "export_perm" : export_perm,
                                    "category" : cat,
                                    "form" : form,
                                    "form_doc" : form_doc,
@@ -527,9 +538,9 @@ def export(request):
     unter Abfrage der für Navileiste benötigten Rechte
     """
     v_user = request.user
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -537,8 +548,8 @@ def export(request):
                               context_instance=Context(
                                         {"user" : v_user, 
                                          "perm" : perms, 
-                                         "i_perm" : i_perm,
-                                         "e_perm" : e_perm, 
+                                         "import_perm" : import_perm,
+                                         "export_perm" : export_perm, 
                                          "miss" : miss_query[0:10]}))
 
 @login_required
@@ -547,9 +558,9 @@ def allegro_export(request):
     erstellte Allegro Exporte.
     """
     v_user = request.user
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
-    perms =  v_user.has_perm('documents.cs_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -557,8 +568,8 @@ def allegro_export(request):
                               context_instance=Context(
                                         {"user" : v_user,   
                                          "perm" : perms, 
-                                         "i_perm" : i_perm,
-                                         "e_perm" : e_perm, 
+                                         "import_perm" : import_perm,
+                                         "export_perm" : export_perm, 
                                          "miss" : miss_query[0:10]}))
 
 @login_required
@@ -576,9 +587,9 @@ def bibtex_export(request):
         thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
 
     v_user = request.user
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
-    perms =  v_user.has_perm('documents.cs_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -586,8 +597,8 @@ def bibtex_export(request):
                               context_instance=Context(
                                     {"user" : v_user, 
                                      "perm" : perms, 
-                                     "i_perm" : i_perm,
-                                     "e_perm" : e_perm, 
+                                     "import_perm" : import_perm,
+                                     "export_perm" : export_perm, 
                                      "miss" : miss_query[0:10]}))
 
 @login_required
@@ -615,9 +626,9 @@ def __list(request, documents, documents_non_user=None, form=0):
             if headers[sort] == "des":
                 documents = documents.reverse()
                 headers[sort] = "asc"
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = None
     if form != 2:
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
@@ -632,8 +643,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                     user = v_user, 
                     settings = settings, 
                     perm = perms,
-                    i_perm = i_perm,
-                    e_perm = e_perm,
+                    import_perm = import_perm,
+                    export_perm = export_perm,
                     path_sort = params_sort, 
                     path_starts = params_starts,
                     form = form,
@@ -645,8 +656,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                      user = v_user,
                      settings = settings,
                      perm = perms,
-                     i_perm = i_perm,
-                     e_perm = e_perm,
+                     import_perm = import_perm,
+                     export_perm = export_perm,
                      path_sort = params_sort,
                      path_starts = params_starts,
                      form = form),
@@ -656,8 +667,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                 user = v_user, 
                 settings = settings, 
                 perm = perms,
-                i_perm = i_perm,
-                e_perm = e_perm,
+                import_perm = import_perm,
+                export_perm = export_perm,
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form,

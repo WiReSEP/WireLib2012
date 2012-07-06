@@ -6,6 +6,16 @@
 <tr>
   <td>
     <table>
+    
+      {% if change_document %}
+        <tr>
+          <td>
+            <form action="" method="post">
+		          <input type="submit" name="edit" value="Editieren" />
+	          </form>
+	        </td>
+	      </tr>
+	    {% endif %}
       <tr>
 		  <td><b>Status:  </b></td> 
 		  <td>
@@ -75,7 +85,7 @@
 		  </td>
 		</tr>
 		
-		{% if cs_dop %}	    
+		{% if can_see_date_of_purchase %}	    
 		<tr>
 		  <td><b>In der Bibliothek seit:</b></td>
 		  <td>{{ documents.date_of_purchase }}</td>
@@ -126,7 +136,7 @@
 		  </td>
 		</tr>
 		
-    {% if cs_price %}
+    {% if can_see_price %}
 		<tr>
 		<td><b>Preis:</b></td>
 		  <td>
@@ -144,7 +154,7 @@
 		  <td>{{ documents.bibtex_id }}</td>
 		</tr>
 		
-		{% if cs_locn %}
+		{% if can_see_locn %}
 		<tr>
 		  <td><b>LibraryOfCongressN:</b></td>
 		  <td>
@@ -157,7 +167,7 @@
 		</tr>
 		{% endif %}
 		
-		{% if cs_lui %}
+		{% if can_see_last_update %}
 		<tr>
 		    <td><b>Zuletzt bearbeitet am: </b></td>
 		    <td> {{ documents.last_updated }} </td>
@@ -174,14 +184,14 @@
 	<td>
 	{% if user.is_authenticated %}
 	  {% if documents.status == 0 %}
-	    {% if c_le %}
+	    {% if can_lend %}
 	      <form action="" method="post">
 		      <input type="submit" name="lend" value="Ausleihen" /> 
 	      </form><br />
 	      {# <!-- Ausleihe an externen --> #}
 	      
 	    {% endif %}
-	    {% if c_mi %}
+	    {% if can_miss %}
 	      <form action="" method="post">
 		    <input type="submit" name="missing" value="Vermisst melden" /> <br />
 	      </form><br />
@@ -213,7 +223,7 @@
 	            {% endif %}
 	          {% endif %}
 	        {% endif %}
-	        {% if c_le %}
+	        {% if can_lend %}
 	          {% if lending.user_lend.id != user.id %}
 	            <form action="" method="post" >
 	              <input type="submit" name="lend" value="&Uuml;bertragen" /> <br />
@@ -226,7 +236,7 @@
 	            
 	          {% endif %}
 	        {% endif %}
-	        {% if c_ule %}
+	        {% if can_unlend %}
 	          {% if lending.user_lend == user %}
 	            <form action="" method="post">
 	              <input type="submit" name="restitution" value="R&uuml;ckgabe" />
@@ -234,7 +244,7 @@
 	            {# <!-- TODO übertragen vom ausleihenden aus --> #}
 	          {% endif %}
 	        {% endif %}
-	        {% if c_mi %}
+	        {% if can_miss %}
 	          <form action="" method="post">
 		          <input type="submit" name="missing" value="Vermisst melden" />
 	          </form><br />
@@ -244,7 +254,7 @@
 	    {% else %}
 	      {% if documents.status == 2 %}
 	        Das gewünschte Dokument ist derzeit erst bestellt und steht noch nicht zur Ausleihe bereit. <br />
-	        {% if c_order %}
+	        {% if can_order %}
 	          <form action="" method="post">
 	            <input type="submit" name="restitution" value="Ist angekommen" />
 	          </form><br />
@@ -254,12 +264,12 @@
 	        {% if documents.status == 3 %}
 	          Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br />
 	          <!-- TODO Mail an den Bibliothekar wenn gefunden -->
-	          {% if c_mi %}
+	          {% if can_miss %}
 	            <form action="" method="post">
 		            <input type="submit" name="found" value="Gefunden melden" />
 	            </form><br />
 	          {% endif %}
-	          {% if c_lo %}
+	          {% if can_lost %}
 	            <form action="" method="post">
 	              <input type="submit" name="lost" value="als verloren markieren" />
 	            </form><br />
@@ -268,7 +278,7 @@
 	        {% else %}
 	          Dieses Dokument gilt als verloren. <br />
 	          {# <!-- TODO wer genau kann verlorene als wiedergefunden melden (derzeit nur solche mit dem Recht des auch Verloren-setzens --> #}
-	          {% if c_lo %}
+	          {% if can_lost %}
 	            <form action="" method="post">
 	              <input type="submit" name="found" value="Gefunden melden" />
 	            </form><br />
@@ -284,9 +294,9 @@
 
 <input type="button" name="bibtex" value="BibTeX" onclick="spoiler(this,'spoiler','BibTeX','BibTeX verbergen')"> <br />
 <div id="spoiler" name="spoiler" style="display: none;"><textarea cols="63"
-	rows="15" readonly="true">{{ bi }}</textarea></div>
+	rows="15" readonly="true">{{ bibtex_string }}</textarea></div>
 	
-{% if cs_history %}
+{% if can_see_history %}
 <h3>History dieses Dokuments</h3>
 
 
