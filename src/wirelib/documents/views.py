@@ -287,6 +287,8 @@ def docs_miss(request):
 @login_required
 
 def profile(request, user_id):
+    """View der Profilübersicht
+    """
 
     v_user = request.user
     try:
@@ -313,10 +315,11 @@ def profile(request, user_id):
                                                             "miss" : miss_query[0:10]}))
 
 @login_required
-def profile_settings(request):
+def profile_settings(request, user_id):
     """View der Accounteinstellung
     """ 
-    v_user = request.user
+    v_user = request.user 
+    c_user = User.objects.get(id = user_id) 
     perms =  v_user.has_perm('documents.cs_admin')
     i_perm = v_user.has_perm('documents.c_import')
     e_perm = v_user.has_perm('documents.c_export')
@@ -325,7 +328,8 @@ def profile_settings(request):
     miss_query = miss_query.order_by('-doc_status__date')
     return render_to_response("profile_settings.html",
                               context_instance=Context(
-                                               {"user" : v_user, 
+                                               {"user" : v_user,
+                                                "c_user" : c_user,  
                                                 "perm" : perms, 
                                                 "i_perm" : i_perm,
                                                 "e_perm" : e_perm, 
