@@ -13,6 +13,7 @@ from documents.models import keywords
 from documents.models import document_authors
 from documents.models import non_user
 from documents.models import tel_non_user
+from documents.models import emails
 """
 Definition der Adminseiten der Models.
 Jede Klasse steht für ein Model, dass angezeigt werden soll
@@ -63,6 +64,9 @@ class user_profile_inline(admin.StackedInline):
 
 class CustomUserAdmin(UserAdmin):
     inlines = [user_profile_inline, tel_user_inline]
+    
+class emails_admin(admin.ModelAdmin):
+    pass
 
 #Registrierung aller anzuzeigenden Tabellen.
 admin.site.unregister(Site)
@@ -73,5 +77,6 @@ admin.site.register(document, document_admin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(non_user, non_user_admin)
+admin.site.register(emails, emails_admin)
 #admin.site.register(keywords, keywords_admin)
 # TODO: evtl. wieder ein Statusfeld in document_admin einfügen
