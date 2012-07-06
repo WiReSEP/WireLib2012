@@ -88,6 +88,7 @@ function spoilIt(elem, idname) {
 		</span>
 		{% block snippet %}
 		{# ein Item besteht aus <div class="snippet"><h1>Headline</h1><p>text</p></div> #}
+		{% if miss %}
 		<div class="snippet">
 		  <h1><a href="/miss">Vermisst:</a></h1>
 		  <p>
@@ -98,6 +99,7 @@ function spoilIt(elem, idname) {
 		  </ul>
 		  </p>
 		</div>
+		{% endif %}
 		  
 	  {% endblock snippet %}
 		<div class="fusszeile">
