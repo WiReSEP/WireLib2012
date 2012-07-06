@@ -241,11 +241,21 @@ def doc_assign(request, bib_no_id):
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
         lending_query = None
+    perms =  v_user.has_perm('documents.cs_admin')
+    i_perm = v_user.has_perm('documents.c_import')
+    e_perm = v_user.has_perm('documents.c_export')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
     template = loader.get_template("doc_assign.html")
     context = Context({"documents" : document_query, 
                        "user" : v_user,
                        "lending" : lending_query, 
-                       "userform": userform})
+                       "userform": userform,
+                       "perm" : perms, 
+                       "i_perm" : i_perm,
+                       "e_perm" : e_perm,
+                       "miss" : miss_query[0:10]})
     response = HttpResponse(template.render(context))
     return response
 

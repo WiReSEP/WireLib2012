@@ -10,7 +10,7 @@
 	<td>
 	  Telefonnummer:
 	</td>
-	{% for i in p_user.tel_user %}
+	{% for i in p_user.tel_user_set.all %}
 	  <td></td><td> {{i.tel_nr}}</td>
 	{% endfor %}
   </tr>
