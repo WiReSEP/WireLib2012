@@ -10,7 +10,7 @@
       {% if change_document %}
         <tr>
           <td>
-            <form action="" method="post">
+            <form action="/doc/{{documents.bib_no}}/edit" method="post">
 		          <input type="submit" name="edit" value="Editieren" />
 	          </form>
 	        </td>
@@ -229,7 +229,7 @@
 	              <input type="submit" name="lend" value="&Uuml;bertragen" /> <br />
 	            </form>  
 	          {% else %}
-			        <form action="{{documents.bib_no}}/assign" method="post" >
+			        <form action="/doc/{{documents.bib_no}}/assign" method="post" >
 	              <input type="submit" name="assign" value="&Uuml;bertragen" /> <br />
 	            </form>
 	            {# <!-- TODO Ausleihe an externen --> #}

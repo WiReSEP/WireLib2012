@@ -235,10 +235,43 @@ def doc_detail(request, bib_no_id):
 def doc_edit(request, bib_no_id):
     v_user = request.user
     try:
-        document_query = document.objects.get(bib_no=bib_no_id)
+        doc = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
-    #TODO
+    form_doc = DocForm(instance=doc)
+    print form_doc
+    form_author = AuthorAddForm()
+    message = ''
+    if 'submit' in request.POST:
+        form_doc = DocForm(request.POST)
+        form_author = AuthorAddForm(request.POST)
+        if form_author.is_valid():
+            form_author.save()
+            form_author = AuthorAddForm()
+            message = 'Autor erfolgreich hinzugefügt'
+        else:
+            # TODO update funzt nicht
+            document.object.filter(bib_no=bib_no_id).update(bib_no = form_doc.bib_no)
+            doc.last_edit_by = v_user
+            doc.last_updated = datetime.datetime.today()
+            message = 'Dokument erfolgreich aktualisiert'
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("doc_edit.html",
+                              context_instance=Context(
+                                               {"documents" : doc,
+                                                "user" : v_user,
+                                                "form_doc" : form_doc,
+                                                "form_author" : form_author,
+                                                "message" : message,
+                                                "perm" : perms, 
+                                                "import_perm" : import_perm,
+                                                "export_perm" : export_perm,
+                                                "miss" : miss_query[0:10]}))
 
 def doc_assign(request, bib_no_id):
     v_user = request.user
@@ -251,9 +284,9 @@ def doc_assign(request, bib_no_id):
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
         lending_query = None
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -263,8 +296,8 @@ def doc_assign(request, bib_no_id):
                        "lending" : lending_query, 
                        "userform": userform,
                        "perm" : perms, 
-                       "i_perm" : i_perm,
-                       "e_perm" : e_perm,
+                       "import_perm" : import_perm,
+                       "export_perm" : export_perm,
                        "miss" : miss_query[0:10]})
     response = HttpResponse(template.render(context))
     return response
