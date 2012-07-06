@@ -367,9 +367,10 @@ class doc_status(models.Model):
 
 class EmailValidationManager(models.Manager):
     """
-    Email validation manager
+    Email Validation Manager
     """
     def verify(self, key):
+    
         try:
             verify = self.get(key=key)
             if not verify.is_expired():
@@ -384,6 +385,7 @@ class EmailValidationManager(models.Manager):
             return False
 
     def getuser(self, key):
+    #Methode zum Anzeigen der user
         try:
             return self.get(key=key).user
         except:
@@ -391,9 +393,10 @@ class EmailValidationManager(models.Manager):
 
     def add(self, user, email):
         """
-        Add a new validation process entry
+        Methode zum Einfügen neuer Validerungsprozesse
         """
         while True:
+            #Generierung eines zufälligen Passwortschlüssels
             key = User.objects.make_random_password(70)
             try:
                 EmailValidation.objects.get(key=key)
@@ -401,7 +404,9 @@ class EmailValidationManager(models.Manager):
                 self.key = key
                 break
 
+        #Einbindung des Mailformulares für die E-Mail Verifizierung
         template_body = "email/validation.txt"
+        #Einbindung des Betreffs 
         template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         body = loader.get_template(template_body).render(Context(locals()))
@@ -428,9 +433,9 @@ class EmailValidation(models.Model):
 
     def resend(self):
         """
-        Resend validation email
+        Senden der Verifierungsmail
         """
-        template_body = "email/validation.txt"
+        template_body = "email/validation.txt"  
         template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         key = self.key
@@ -441,7 +446,6 @@ class EmailValidation(models.Model):
         self.save()
         return True
         
-
 
 class emails(models.Model):
     name = models.CharField(max_length=20)
