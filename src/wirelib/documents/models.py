@@ -83,11 +83,11 @@ class document(models.Model):
     authors = models.ManyToManyField(author,
             through='document_authors',verbose_name="Autoren")
     class Meta:
-        permissions = (("cs_price", "Can see price"),
-                       ("cs_locn", "Can see library of congress number"),
-                       ("cs_last_update_info", "Can see last update info"),
-                       ("cs_dop", "Can see date of purchase"),
-                       ("cs_export", "Can see dates of export"),)
+        permissions = (("can_see_price", "Can see price"),
+                       ("can_see_locn", "Can see library of congress number"),
+                       ("can_see_last_update_info", "Can see last update info"),
+                       ("can_see_dop", "Can see date of purchase"),
+                       ("can_see_export", "Can see dates of export"),)
         ordering = ['title']
     class Admin:
         list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
@@ -297,9 +297,9 @@ class user_profile(models.Model):
     zipcode = models.CharField("Postleitzahl",max_length=5)
     city = models.CharField("Stadt",max_length=58)
     class Meta:
-        permissions = (("cs_admin", "Can see the adminpanel"),
-                       ("c_import", "Can import"),
-                       ("c_export", "Can export"),)
+        permissions = (("can_see_admin", "Can see the adminpanel"),
+                       ("can_import", "Can import"),
+                       ("can_export", "Can export"),)
 
     def __unicode__(self):
         return unicode(self.user)
@@ -358,12 +358,12 @@ class doc_status(models.Model):
     non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
-        permissions = (("c_lend", "Can lend documents"),
-                       ("c_unlend", "Can unlend documents"),
-                       ("c_miss", "Can miss documents"),
-                       ("c_order", "Can order documents"),
-                       ("c_lost", "Can lost documents"),
-                       ("cs_history", "Can see documenthistory"),)
+        permissions = (("c_nlend", "Can lend documents"),
+                       ("can_unlend", "Can unlend documents"),
+                       ("can_miss", "Can miss documents"),
+                       ("can_order", "Can order documents"),
+                       ("can_lost", "Can lost documents"),
+                       ("can_see_history", "Can see documenthistory"),)
 
 class EmailValidationManager(models.Manager):
     """
