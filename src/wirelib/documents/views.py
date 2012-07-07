@@ -513,7 +513,13 @@ def doc_add(request):
             message = 'Autor erfolgreich hinzugefügt'
             form_author = AuthorAddForm()
         elif form_doc.is_valid():
-            form_doc.save()
+            doc = form_doc.save(commit=False)
+            doc.save()
+            for editor in form_doc.cleaned_data['editors']:
+                doc.add_editor(editor)
+            for author in form_doc.cleaned_data['authors']:
+                doc.add_author(author)
+            doc.save()
             message = 'Daten erfolgreich übernommen'
     else:
         message = ''
