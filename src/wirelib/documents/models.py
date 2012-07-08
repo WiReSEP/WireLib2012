@@ -299,7 +299,8 @@ class user_profile(models.Model):
     class Meta:
         permissions = (("can_see_admin", "Can see the adminpanel"),
                        ("can_import", "Can import"),
-                       ("can_export", "Can export"),)
+                       ("can_export", "Can export"),
+                       ("can_see_others_groups", "Can see groupmembership of all users"),)
 
     def __unicode__(self):
         return unicode(self.user)

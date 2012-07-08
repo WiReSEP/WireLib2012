@@ -1,18 +1,40 @@
 {% extends "index.html" %}
 {% block content %}
 <h1>Dies ist das Profil von {{ p_user.first_name }} {{ p_user.last_name }}</h1>
-<hr>
 <table>
   <tr>
-	<td>E-Mail Adresse:</td><td> {{ p_user.email }}</td>
+	<td><b>E-Mail Adresse:</b></td><td> {{ p_user.email }}</td>
   </tr>
   <tr>
 	<td>
-	  Telefonnummer:
+	  <b>Telefonnummern:</b>
 	</td>
-	{% for i in p_user.tel_user_set.all %}
-	  <td></td><td> {{i.tel_nr}}</td>
-	{% endfor %}
   </tr>
+  {% for i in p_user.tel_user_set.all %}
+    <tr>
+	  <td>{{ i.tel_type }}</td><td> {{ i.tel_nr }}</td>
+	</tr>
+  {% endfor %}
+  <tr>
+	<td><b>Adresse:</b></td>
+  </tr>
+  <tr>
+	<td>Straße:</td>
+	<td>{{ p_user.user_profile.street }} {{ p_user.user_profile.number }}</td>
+  </tr>
+  <tr>
+	<td>Postleitzahl:</td>
+	<td>{{ p_user.user_profile.zipcode }} {{ p_user.user_profile.city }} </td>
+  </tr>
+  {% if see_groups %}
+	<tr>
+	  <td><b>Gruppen:</b></td>
+	  <td>
+		{% for i in p_user.groups_set.all %}
+		  {{ i.name }}
+		{% endfor %} 
+	  </td>
+	</tr>
+  {% endif %}
 </table>
 {% endblock %}

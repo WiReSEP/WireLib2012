@@ -301,11 +301,14 @@ def profile(request, user_id):
     v_user = request.user
     try:
         p_user = User.objects.get(id = user_id)
+        #TODO :Richtige Exception einbauen. User.DoesNotExist funktioniert
+        #nicht.
     except "User existiert nicht":
         raise Http404
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
+    see_groups = v_user.has_perm('documents.can_see_others_groups')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -320,6 +323,7 @@ def profile(request, user_id):
                                                             "perm" : perms, 
                                                             "import_perm" : import_perm,
                                                             "export_perm" : export_perm, 
+                                                            "see_groups" : see_groups,
                                                             "miss" : miss_query[0:10]}))
 
 @login_required
