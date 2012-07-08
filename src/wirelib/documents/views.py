@@ -7,7 +7,7 @@ from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, category_need
 from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
-from documents.extras_bibtex import Bibtex, UglyBibtex
+from documents.extras_bibtex import Bibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser
 from django.contrib.auth.decorators import login_required
@@ -235,10 +235,43 @@ def doc_detail(request, bib_no_id):
 def doc_edit(request, bib_no_id):
     v_user = request.user
     try:
-        document_query = document.objects.get(bib_no=bib_no_id)
+        doc = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
-    #TODO
+    form_doc = DocForm(instance=doc)
+    print form_doc
+    form_author = AuthorAddForm()
+    message = ''
+    if 'submit' in request.POST:
+        form_doc = DocForm(request.POST)
+        form_author = AuthorAddForm(request.POST)
+        if form_author.is_valid():
+            form_author.save()
+            form_author = AuthorAddForm()
+            message = 'Autor erfolgreich hinzugefügt'
+        else:
+            # TODO update funzt nicht
+            document.object.filter(bib_no=bib_no_id).update(bib_no = form_doc.bib_no)
+            doc.last_edit_by = v_user
+            doc.last_updated = datetime.datetime.today()
+            message = 'Dokument erfolgreich aktualisiert'
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                         doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return render_to_response("doc_edit.html",
+                              context_instance=Context(
+                                               {"documents" : doc,
+                                                "user" : v_user,
+                                                "form_doc" : form_doc,
+                                                "form_author" : form_author,
+                                                "message" : message,
+                                                "perm" : perms, 
+                                                "import_perm" : import_perm,
+                                                "export_perm" : export_perm,
+                                                "miss" : miss_query[0:10]}))
 
 def doc_assign(request, bib_no_id):
     v_user = request.user
@@ -251,9 +284,9 @@ def doc_assign(request, bib_no_id):
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
         lending_query = None
-    perms =  v_user.has_perm('documents.cs_admin')
-    i_perm = v_user.has_perm('documents.c_import')
-    e_perm = v_user.has_perm('documents.c_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -263,8 +296,8 @@ def doc_assign(request, bib_no_id):
                        "lending" : lending_query, 
                        "userform": userform,
                        "perm" : perms, 
-                       "i_perm" : i_perm,
-                       "e_perm" : e_perm,
+                       "import_perm" : import_perm,
+                       "export_perm" : export_perm,
                        "miss" : miss_query[0:10]})
     response = HttpResponse(template.render(context))
     return response
@@ -297,6 +330,8 @@ def docs_miss(request):
 @login_required
 
 def profile(request, user_id):
+    """View der Profilübersicht
+    """
 
     v_user = request.user
     try:
@@ -327,10 +362,12 @@ def profile(request, user_id):
                                                             "miss" : miss_query[0:10]}))
 
 @login_required
-def profile_settings(request):
+def profile_settings(request, user_id):
     """View der Accounteinstellung
     """ 
+
     v_user = request.user
+    c_user= User.objects.get(id = user_id)
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -339,7 +376,8 @@ def profile_settings(request):
     miss_query = miss_query.order_by('-doc_status__date')
     return render_to_response("profile_settings.html",
                               context_instance=Context(
-                                               {"user" : v_user, 
+                                               {"user" : v_user,
+                                                "c_user" : c_user,  
                                                 "perm" : perms, 
                                                 "import_perm" : import_perm,
                                                 "export_perm" : export_perm, 
@@ -410,7 +448,7 @@ def doc_add(request):
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)
             destination.close()
-            UglyBibtex(filename).do_import()
+            Bibtex.do_import(filename)
             os.remove(filename)
             filesize = os.path.getsize(filename + '.err')
             if filesize == 0:
@@ -479,7 +517,13 @@ def doc_add(request):
             message = 'Autor erfolgreich hinzugefügt'
             form_author = AuthorAddForm()
         elif form_doc.is_valid():
-            form_doc.save()
+            doc = form_doc.save(commit=False)
+            doc.save()
+            for editor in form_doc.cleaned_data['editors']:
+                doc.add_editor(editor)
+            for author in form_doc.cleaned_data['authors']:
+                doc.add_author(author)
+            doc.save()
             message = 'Daten erfolgreich übernommen'
     else:
         message = ''
@@ -583,9 +627,19 @@ def bibtex_export(request):
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
                 )
-        thread.start_new_thread(Bibtex.export_docs,( export_documents, ) )
+        thread.start_new_thread(
+                Bibtex.export_docs,
+                ( export_documents, 
+                    settings.DOCUMENTS_BIBTEX_FILES)
+                )
+    files = {}
+    for file in os.listdir(settings.DOCUMENTS_BIBTEX_FILES):
+        if ".bib" in file:
+            files[file] = __gen_sec_link("/"+file)
 
+#    Rechte für Template
     v_user = request.user
+#    Snippet Code
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
     perms =  v_user.has_perm('documents.can_see_admin')
@@ -598,7 +652,9 @@ def bibtex_export(request):
                                      "perm" : perms, 
                                      "import_perm" : import_perm,
                                      "export_perm" : export_perm, 
-                                     "miss" : miss_query[0:10]}))
+                                     "miss" : miss_query[0:10],
+                                     "files" :files,
+                                     }))
 
 @login_required
 def user(request):
@@ -757,9 +813,15 @@ def __filter_names(documents, request):
     elif sw == "all":
         documents = documents.all()                     
     return documents
+
+def __gen_sec_link(path):
+    import time, hashlib
+    secret = settings.SECRET_KEY
+    uri_prefix = '/dl/'
+    hextime = "%08x" % time.time()
+    token = hashlib.md5(secret + path + hextime).hexdigest()
+    return '%s%s/%s%s' % (uri_prefix, token, hextime, path)
     
 def __filter_history(doc):
     new_history = doc.doc_status_set.order_by('-date')[0:10]
     return new_history
-   
-
