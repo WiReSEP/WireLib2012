@@ -12,6 +12,7 @@
 	  <a href="?{{ path_starts }}&starts=p-s">P-S</a>
 	  <a href="?{{ path_starts }}&starts=t-v">T-V</a>
 	  <a href="?{{ path_starts }}&starts=w-z">W-Z</a>
+	  <a href="?{{ path_starts }}&starts=Sonderzeichen">Sonderzeichen</a>
 	  <a href="?{{ path_starts }}&starts=all">alle</a>
 	</div>
 
@@ -69,7 +70,9 @@
     	{% if form == 1 %}	
         <div id="date_lend"> 
     	  Ausgeliehen am:
-    	    {{ d.doc_status.date }}
+    	   {% for l in lend_date %}
+    	        {{ l.date }}
+    	   {% endfor %}
     	</div>
     	{% endif %}
     	
