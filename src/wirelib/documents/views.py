@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser
+    AuthorAddForm, SelectUser, NonUserForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.db.models import Q
@@ -275,7 +275,9 @@ def doc_edit(request, bib_no_id):
 
 def doc_assign(request, bib_no_id):
     v_user = request.user
-    userform = SelectUser()
+    userform = SelectUser(v_user)
+    nonuserform = NonUserForm()
+    user_lend = ""
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -284,6 +286,15 @@ def doc_assign(request, bib_no_id):
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
         lending_query = None
+    if 'assign' in request.POST and v_user.is_authenticated(): 
+        userform = SelectUser(v_user, request.POST)
+        if userform.is_valid():
+            user_lend = userform.cleaned_data['users']
+            if user_lend and not user_lend == "":
+                document_query.lend(user=user_lend, editor=v_user)
+            #print userform.fields['users']
+                return HttpResponseRedirect("/doc/"+document_query.bib_no+"")
+
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -295,6 +306,7 @@ def doc_assign(request, bib_no_id):
                        "user" : v_user,
                        "lending" : lending_query, 
                        "userform": userform,
+                       "nonuserform" : nonuserform,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
