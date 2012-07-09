@@ -61,169 +61,6 @@ function changeCategory(elem) {
 
 	<div id="spoiler" name="spoiler">
 	  <form method="post" action="">
-		<!--{#
-	    <table>
-	        <tr>
-	            <td><b><u>Titel:</u></b></td>
-				<td>
-				  <label for="title" id="title_l"> </label> 
-				  <input type="text" name="title" id="title" maxlength=200 />
-				</td>
-	        </tr>
-	        <tr>
-	            <td><b><u>bib_no:</u></b></td>
-				<td>
-				  <label for="bib_no" id="bib_no_l"></label> 
-				  <input type="text" name="bib_no" id="title" maxlength=15 />
-				</td>
-	        </tr>
-            <tr>
-	            <td><b><u>inv_no:</u></b></td>
-				<td>
-				  <label for="inv_no" id="inv_no_l"></label>
-				  <input type="text" name="inv_no" id="inv_no" maxlength=15 />
-				</td>
-	        </tr>  
-            <tr>
-	            <td><b><u>Kategorie:</u></b></td>
-				<td> 
-				  <label for="category" id="category_l"></label>
-				  <select name="category" 
-					id="category"
-					size="1"
-					onchange="changeCategory(this);" >
-	                    {% for c in category %}
-	                        <option value="{{ c }}">{{ c }}</option>
-	                    {% endfor %}
-	                </select>
-	            </td>
-	        </tr>  
-	        <tr>
-	            <td><b><u>ISBN:</u></b></td>
-				<td> 
-				  <label for="isbn" id="isbn_l"></label>
-				  <input type="text" name="isbn" id="isbn" maxlength=35/>
-				</td>
-	        </tr>
-	        <tr>
-	            <td><b><u>Publisher:</u></b></td>
-				<td>
-				  <label for="publisher" id="publisher_l"></label> 
-				  <input type="text" name="publisher" id="publisher" maxlength=35/>
-				</td>
-	        </tr>
-	        <tr>
-	            <td><b><u>Erscheinungsjahr:</u></b></td>
-				<td>
-				  <label for="year" id="year_l"></label> 
-				  <input type="text" name="year" id="year" maxlength=4 />
-				</td>
-	        </tr> 
-	        <tr>
-	            <td><b><u>Adresse:</u></b></td>
-				<td> 
-				  <label for="address" id="address_l"></label>
-				  <input type="text" name="address" id="address" maxlength=100 />
-				</td>
-	        </tr>
-	        <tr>
-	            <td><b><u>Notizen:</u></b></td>
-				<td> 
-				  <label for="comment" id="comment_l"></label>
-				  <input type="textfield" name="comment" id="comment"/>
-				</td>
-	        </tr>
-	        <tr>
-	            <td><b><u>Preis:</u></b></td>
-				<td> 
-				  <label for="price" id="price_l"></label>
-				  <input type="text" name="price" id="price" maxlength=7 />
-				</td>
-	        </tr>
-	        <tr>
-	            <td><b><u>Währung (K&uuml;rzel)</u></b></td>
-				<td> 
-				  <label for="currency" id="currency_l"></label>
-				  <input type="text" name="currency" id="currency" maxlength=3 />
-				</td>
-	        </tr>
-	        <tr>
-	            <td><b><u>Libary of Congress Number:</u></b></td>
-				<td> 
-				  <label for="lib_of_con_nr" id="lib_of_con_nr_l"></label>
-				  <input type="text" name="lib_of_con_nr" id="lib_of_con_nr" maxlength=20 />
-				</td>
-	        </tr>
-	    </table>
-	
-	    <b><u>Autoren</u></b> <br />
-	    <table>
-	        <tbody id=au>
-	        <tr>
-			  <label id="author_l"></label>
-	            <th>Vorname</th>
-	            <th>Nachname</th>
-	        </tr>
-	        <tr>
-	            <td><input type="text" name="author_first_name"  maxlength=30 /></td>
-	            <td><input type="text" name="author_last_name" maxlength=30 /></td>
-	        </tr>
-			<tr>
-				<td><input type="text" name="author_first_name"  maxlength=30 /></td>
-				<td><input type="text" onFocus="addAuthor('au', this, author)" name="author_last_name" maxlength=30 /></td>
-			</tr>
-            </tbody>
-	    </table>
-	    
-	    <b><u>Editoren</u></b> <br />
-	    <table>
-	        <tbody id=ed>
-	        <tr>
-	            <label id="editor_l"></label>
-	                <th>Vorname</th>
-	                <th>Nachname</th>
-	        </tr>
-	        <tr>
-                <td><input type="text" name="editor_first_name"  maxlength=30 /></td>
-	            <td><input type="text" name="editor_last_name" maxlength=30 /></td>
-	        </tr>
-			<tr>
-				<td><input type="text" name="editor_first_name"  maxlength=30 /></td>
-				<td><input type="text" onFocus="addAuthor('au', this, editor)" name="editor_last_name" maxlength=30 /></td>
-			</tr>
-            </tbody>
-	    </table>
-	
-	    <b><u>Schl&uuml;sselw&ouml;rter:</u></b><br />
-	    <table>
-	        <tbody id=kw>
-	        <tr>
-			  <td>
-				<label id="keyword_l"></label>
-				<input type="text" name="keyword" maxlength=30 />
-			  </td>
-	        </tr>
-			<tr>
-				<td><input type="text" onFocus="addKeyword('kw', this)" name="keyword" maxlength=30 /></td>
-			</tr>
-            </tbody> 
-	    </table>
-	
-	    <b><u>Extrafelder:</u></b><br />
-	    <table>
-	        <tbody id=ex>
-			  <tr>
-				<label id="extras"></label>
-	            <th>Feldname</th>
-	            <th>Feldinhalt</th>
-	        </tr>
-	        <tr>
-	            <td><input type="text" name="doc_extra_name" maxlength=30 /></td>
-	            <td><input type="text" onFocus="addExtra('ex', this)" name="doc_extra_content" maxlength=30 /></td>
-	        </tr>
-            </tbody> 
-		  </table>
-		  #} -->
 		  <table>
 			{{ form_doc.as_table }}
 			<tr><td>Autoren</td></tr>
@@ -240,10 +77,12 @@ function changeCategory(elem) {
 	<br />
 	<hr />
 	<br />
+	{% if form %}
 	<form method="post" action="" enctype="multipart/form-data">
   	  {{ form.as_p }}
   	  <p><input type="submit" value="Start" /></p>
-  </form>
+	</form>
+	{% endif %}
   {% if success == 1 %}
     <font color="#FF0000"> {{ message|linebreaksbr }}</font>
   {% else %}
