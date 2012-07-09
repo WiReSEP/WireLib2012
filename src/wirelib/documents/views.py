@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser
+    AuthorAddForm, SelectUser, NonUserForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -250,51 +250,12 @@ def doc_detail(request, bib_no_id):
                       "history" : history })
     response = HttpResponse(template.render(context))
     return response
-    
-def doc_edit(request, bib_no_id):
-    v_user = request.user
-    try:
-        doc = document.objects.get(bib_no=bib_no_id)
-    except document.DoesNotExist:
-        raise Http404
-    form_doc = DocForm(instance=doc)
-    print form_doc
-    form_author = AuthorAddForm()
-    message = ''
-    if 'submit' in request.POST:
-        form_doc = DocForm(request.POST)
-        form_author = AuthorAddForm(request.POST)
-        if form_author.is_valid():
-            form_author.save()
-            form_author = AuthorAddForm()
-            message = 'Autor erfolgreich hinzugefügt'
-        else:
-            # TODO update funzt nicht
-            document.object.filter(bib_no=bib_no_id).update(bib_no = form_doc.bib_no)
-            doc.last_edit_by = v_user
-            doc.last_updated = datetime.datetime.today()
-            message = 'Dokument erfolgreich aktualisiert'
-    perms =  v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("doc_edit.html",
-                              context_instance=Context(
-                                               {"documents" : doc,
-                                                "user" : v_user,
-                                                "form_doc" : form_doc,
-                                                "form_author" : form_author,
-                                                "message" : message,
-                                                "perm" : perms, 
-                                                "import_perm" : import_perm,
-                                                "export_perm" : export_perm,
-                                                "miss" : miss_query[0:10]}))
 
 def doc_assign(request, bib_no_id):
     v_user = request.user
-    userform = SelectUser()
+    userform = SelectUser(v_user)
+    nonuserform = NonUserForm()
+    user_lend = ""
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -303,6 +264,15 @@ def doc_assign(request, bib_no_id):
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
         lending_query = None
+    if 'assign' in request.POST and v_user.is_authenticated(): 
+        userform = SelectUser(v_user, request.POST)
+        if userform.is_valid():
+            user_lend = userform.cleaned_data['users']
+            if user_lend and not user_lend == "":
+                document_query.lend(user=user_lend, editor=v_user)
+            #print userform.fields['users']
+                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -314,6 +284,7 @@ def doc_assign(request, bib_no_id):
                        "user" : v_user,
                        "lending" : lending_query, 
                        "userform": userform,
+                       "nonuserform" : nonuserform,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
@@ -453,7 +424,7 @@ def doc_add(request, bib_no_id=None):
         * Import durch Upload einer BibTeX-Datei
     """
     #TODO Rechtekontrolle
-    success = 0
+    success = True
     v_user = request.user
     #Datei-Import
     if len(request.FILES) > 0:
@@ -475,7 +446,7 @@ def doc_add(request, bib_no_id=None):
             else:
                 errfile = open(filename + '.err', 'r')
                 message = 'Datei konnte nicht vollständig übernommen werden \n\n '
-                success = 1
+                success = False
                 for line in errfile:
                     message += line
                 errfile.close()
@@ -494,12 +465,14 @@ def doc_add(request, bib_no_id=None):
             form = None
             form_doc = DocForm(request.POST, instance=doc)
             form_author = AuthorAddForm(request.POST)
+        success = False
         message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
-        if form_author.is_valid():
+        if request.POST['submit'] == 'Autor hinzufügen' and form_author.is_valid():
             form_author.save()
             message = 'Autor erfolgreich hinzugefügt'
+            success = True
             form_author = AuthorAddForm()
-        elif form_doc.is_valid():
+        elif request.POST['submit'] == 'Dokument speichern' and form_doc.is_valid():
             doc = form_doc.save(commit=False)
             doc.save()
             for editor in form_doc.cleaned_data['editors']:
@@ -507,7 +480,10 @@ def doc_add(request, bib_no_id=None):
             for author in form_doc.cleaned_data['authors']:
                 doc.add_author(author)
             doc.save()
+            form_author.errors['first_name'] = ''
+            form_author.errors['last_name'] = ''
             message = 'Daten erfolgreich übernommen'
+            success = True
     elif bib_no_id is None:
         message = ''
         form_doc = DocForm()
@@ -695,7 +671,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                     path_sort = params_sort, 
                     path_starts = params_starts,
                     form = form,
-                    miss = miss_query[0:10]),
+                    miss = miss_query[0:10],
+                    lend_date = lend_date),
                 context_instance=RequestContext(request))
     if form == 2:
         return render_to_response("missing.html",
@@ -745,7 +722,11 @@ def __filter_names(documents, request):
     Reiseweg!
     """
     sw = request.GET.get('starts', '')
-    if sw == "0-9":
+    
+    if sw == "Sonderzeichen":
+        documents = documents.exclude(
+                         Q(title__iregex='[A-Za-z]'))
+    elif sw == "0-9":
         documents = documents.filter(
                          Q(title__istartswith='0') | 
                          Q(title__istartswith='1') | 
@@ -801,7 +782,9 @@ def __filter_names(documents, request):
                          Q(title__istartswith='w') | 
                          Q(title__istartswith='x') | 
                          Q(title__istartswith='y') |
-                         Q(title__istartswith='z'))
+                         Q(title__istartswith='z'))   
+      
+                         
     elif sw == "all":
         documents = documents.all()                     
     return documents
@@ -817,3 +800,4 @@ def __gen_sec_link(path):
 def __filter_history(doc):
     new_history = doc.doc_status_set.order_by('-date')[0:10]
     return new_history
+

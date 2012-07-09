@@ -57,5 +57,20 @@
                           % verlinken
   ]{hyperref}
 
+\usepackage{translator}
+\usepackage[				   %
+acronym,		% ein Abkürzungsverzeichnis erzeugen
+toc,			% Taucht im Inhaltsverzeichnis auf
+]				   
+{glossaries}
+\makeglossaries
 
+\usepackage{xcolor}
+\definecolor{lightergray}{rgb}{0.9,0.9,0.9}
 
+\usepackage{listings}
+\lstset{numbers=left, numberstyle=\tiny, numbersep=5pt,
+breaklines=true, backgroundcolor=\color{lightergray},
+basicstyle=\ttfamily,
+}
+\usepackage{booktabs}

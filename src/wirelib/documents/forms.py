@@ -1,12 +1,13 @@
 from django import forms
 from django.forms import ModelForm
+from django.forms.formsets import formset_factory
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.auth.models import User
-from documents.models import EmailValidation, document, author
+from documents.models import EmailValidation, document, author, non_user
 import mimetypes, urllib
 
 
@@ -42,6 +43,19 @@ class AuthorAddForm(ModelForm):
     class Meta:
         model = author
 
+class UserModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_full_name() + u' (' + obj.username + u')'
+
 class SelectUser(forms.Form):
-    users = forms.ModelChoiceField(queryset=User.objects.all(), label="Nutzer \
-    auf den uebertragen werden soll", empty_label="")
+    def __init__(self, user, *args, **kwargs):
+        super(SelectUser, self).__init__(*args, **kwargs)
+        self.fields['users'].queryset = User.objects.all().exclude(id=user.id)
+        
+    users = UserModelChoiceField(queryset=User.objects.all(), label="", empty_label="") #label="Nutzer \
+    #auf den uebertragen werden soll", empty_label="")
+   
+
+class NonUserForm(ModelForm):
+    class Meta:
+        model = non_user
