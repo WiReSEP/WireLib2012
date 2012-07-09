@@ -137,11 +137,11 @@ def search_pro(request):
                                                 "ORDERED" : document.ORDERED,
                                                 "LOST" : document.LOST}))
 
-def doc_list(request):
+def doc_list(request, documents):
     """ Übersicht über alle enthaltenen Dokumente
     """
     documents = document.objects.all()
-    return __list(request, documents)
+    return __list(request)
 
 def doc_detail(request, bib_no_id):
     v_user = request.user
@@ -523,6 +523,7 @@ def __list(request, documents, documents_non_user=None, form=0):
         miss_query = miss_query.order_by('-doc_status__date')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
+    lend_date=__lending_date(document_query)
     if form == 1:
         return render_to_response("doc_rent.html", 
                 dict(documents = documents,
@@ -535,7 +536,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                     path_sort = params_sort, 
                     path_starts = params_starts,
                     form = form,
-                    miss = miss_query[0:10]),
+                    miss = miss_query[0:10],
+                    lend_date = lend_date),
                 context_instance=RequestContext(request))
     if form == 2:
         return render_to_response("missing.html",
@@ -649,5 +651,9 @@ def __filter_names(documents, request):
 def __filter_history(doc):
     new_history = doc.doc_status_set.order_by('-date')[0:10]
     return new_history
+
+def __lending_date(documents):
+    lend_date = documents.doc_status.order_by('-date')[0]
+    return lend_date
    
 
