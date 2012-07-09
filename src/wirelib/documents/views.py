@@ -142,11 +142,11 @@ def search_pro(request):
                                                 "ORDERED" : document.ORDERED,
                                                 "LOST" : document.LOST}))
 
-def doc_list(request, documents):
+def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
     """
     documents = document.objects.all()
-    return __list(request)
+    return __list(request, documents)
 
 def doc_detail(request, bib_no_id):
     """
@@ -664,7 +664,6 @@ def __list(request, documents, documents_non_user=None, form=0):
         miss_query = miss_query.order_by('-doc_status__date')
     params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
-    lend_date=__lending_date(document_query)
     if form == 1:
         return render_to_response("doc_rent.html", 
                 dict(documents = documents,
@@ -728,7 +727,11 @@ def __filter_names(documents, request):
     Reiseweg!
     """
     sw = request.GET.get('starts', '')
-    if sw == "0-9":
+    
+    if sw == "Sonderzeichen":
+        documents = documents.exclude(
+                         Q(title__iregex='[A-Za-z]'))
+    elif sw == "0-9":
         documents = documents.filter(
                          Q(title__istartswith='0') | 
                          Q(title__istartswith='1') | 
@@ -778,13 +781,15 @@ def __filter_names(documents, request):
                          Q(title__istartswith='t') | 
                          Q(title__istartswith='u') |
                          Q(title__istartswith='ü') | 
-                         Q(titlre__istartswith='v'))
+                         Q(title__istartswith='v'))
     elif sw == "w-z":
         documents = documents.filter(
                          Q(title__istartswith='w') | 
                          Q(title__istartswith='x') | 
                          Q(title__istartswith='y') |
-                         Q(title__istartswith='z'))
+                         Q(title__istartswith='z'))   
+      
+                         
     elif sw == "all":
         documents = documents.all()                     
     return documents
