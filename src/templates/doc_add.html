@@ -57,10 +57,19 @@ function changeCategory(elem) {
 {% endblock header %}
 {% block content %}
 
+	{% if form %}
     <h1>Import</h1>
-
+	{% else %}
+	<a href=".."><input type="button" value="zurück" /></a>
+	<h1>Bearbeiten</h1>
+	{% endif %}
 	<div id="spoiler" name="spoiler">
 	  <form method="post" action="">
+  {% if not success %}
+    <font color="#FF0000"> {{ message|linebreaksbr }}</font>
+  {% else %}
+    <font color="#00FF00"> {{ message|linebreaksbr }} </font>
+  {% endif %}  
 		  <table>
 			{{ form_doc.as_table }}
 			<tr><td>Autoren</td></tr>
@@ -74,18 +83,13 @@ function changeCategory(elem) {
 	    <input type="submit" name="submit" value="Dokument speichern" />
 	  </form>
 	</div>
+	{% if form %}
 	<br />
 	<hr />
 	<br />
-	{% if form %}
 	<form method="post" action="" enctype="multipart/form-data">
   	  {{ form.as_p }}
   	  <p><input type="submit" value="Start" /></p>
 	</form>
 	{% endif %}
-  {% if success == 1 %}
-    <font color="#FF0000"> {{ message|linebreaksbr }}</font>
-  {% else %}
-    <font color="#00FF00"> {{ message|linebreaksbr }} </font>
-  {% endif %}  
 {% endblock content %}
