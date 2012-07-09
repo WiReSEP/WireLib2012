@@ -2,16 +2,18 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
-from django.template import RequestContext 
+from django.template import RequestContext, Template 
 from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, category_need
+    EmailValidation, category_need, emails
 from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser
+    AuthorAddForm, SelectUser, NonUserForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
+from django.core import mail
+from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 import datetime
 import os
@@ -158,6 +160,23 @@ def doc_detail(request, bib_no_id):
     #vermisst melden
     if 'missing' in request.POST and request.user.is_authenticated():
         document_query.missing(v_user)
+  
+        email = emails.objects.get(name = "Vermisst Gemeldet")
+        plaintext = Template(email.text)
+        staffmember = auth_user.email.objects.all()
+        #staffmember = ('zapdoshameyer@web.de', 'tim3out@arcor.de')
+        c = Context({"document_name" : document_query.title,
+                     "user_name" : v_user.first_name,
+                     "user_email" : "" })
+        subject, from_email, to, bcc = ('[WiReLib] Vermisstmeldung', 
+                                    'j.hameyer@tu-bs.de',
+                                    'j.hameyer@tu-bs.de', 
+                                    staffmember
+                                    )
+        text_content = plaintext.render(c)
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
+        msg.send()
+        
     #verloren melden
     if 'lost' in request.POST and request.user.is_authenticated():
         document_query.lost(v_user)
@@ -225,7 +244,9 @@ def doc_detail(request, bib_no_id):
 
 def doc_assign(request, bib_no_id):
     v_user = request.user
-    userform = SelectUser()
+    userform = SelectUser(v_user)
+    nonuserform = NonUserForm()
+    user_lend = ""
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -234,6 +255,15 @@ def doc_assign(request, bib_no_id):
         lending_query = document_query.doc_status_set.latest('date')
     except doc_status.DoesNotExist:
         lending_query = None
+    if 'assign' in request.POST and v_user.is_authenticated(): 
+        userform = SelectUser(v_user, request.POST)
+        if userform.is_valid():
+            user_lend = userform.cleaned_data['users']
+            if user_lend and not user_lend == "":
+                document_query.lend(user=user_lend, editor=v_user)
+            #print userform.fields['users']
+                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -245,6 +275,7 @@ def doc_assign(request, bib_no_id):
                        "user" : v_user,
                        "lending" : lending_query, 
                        "userform": userform,
+                       "nonuserform" : nonuserform,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
