@@ -169,22 +169,11 @@ def doc_detail(request, bib_no_id):
     #vermisst melden
     if 'missing' in request.POST and request.user.is_authenticated():
         document_query.missing(v_user)
-  
-        email = emails.objects.get(name = "Vermisst Gemeldet")
-        plaintext = Template(email.text)
-        staffmember = auth_user.email.objects.all()
-        #staffmember = ('zapdoshameyer@web.de', 'tim3out@arcor.de')
-        c = Context({"document_name" : document_query.title,
-                     "user_name" : v_user.first_name,
-                     "user_email" : "" })
-        subject, from_email, to, bcc = ('[WiReLib] Vermisstmeldung', 
-                                    'j.hameyer@tu-bs.de',
-                                    'j.hameyer@tu-bs.de', 
-                                    staffmember
-                                    )
-        text_content = plaintext.render(c)
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
-        msg.send()
+        thread.start_new_thread(
+            __document_missing_email,
+            (document_query, v_user)
+            )
+        
         
     #verloren melden
     if 'lost' in request.POST and request.user.is_authenticated():
@@ -800,4 +789,21 @@ def __gen_sec_link(path):
 def __filter_history(doc):
     new_history = doc.doc_status_set.order_by('-date')[0:10]
     return new_history
-
+    
+def __document_missing_email(document, user):
+    email = emails.objects.get(name = "Vermisst Gemeldet")
+    plaintext = Template(email.text)
+    staffmember = User.objects.values_list('email', flat=True)
+    #staffmember = ('zapdoshameyer@web.de', 'tim3out@arcor.de')
+    c = Context({"document_name" : document.title,
+                     "user_name" : user.first_name,
+                     "user_email" : "" })
+    subject, from_email, to, bcc = ('[WiReLib] Vermisstmeldung', 
+                                    'j.hameyer@tu-bs.de',
+                                    'j.hameyer@tu-bs.de', 
+                                    staffmember
+                                    )
+    text_content = plaintext.render(c)
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
+    msg.send()
+    
