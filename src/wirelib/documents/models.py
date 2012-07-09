@@ -96,13 +96,7 @@ class document(models.Model):
         ordering = ['title']
         verbose_name = "Dokument"
         verbose_name_plural = "Dokumente"
-    class Admin:
-        list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
-                        'category' 'publisher', 'bibtex_id')
-        list_filter = ('bib_no', 'title', 'category', 'publisher')
-        ordering = ('bib_no') 
-        search_fields = ('bib_no', 'title', 'publisher', 
-                         'isbn', 'inv_no', 'bibtex_id')
+    
         
 
     AVAILABLE= 0  #vorhanden
@@ -340,13 +334,13 @@ class tel_user(models.Model):
         verbose_name_plural = "Benutzer Tel. Nr."
 
 class non_user(models.Model):
-    first_name = models.CharField('vorname',max_length=30)
-    last_name = models.CharField('nachname',max_length=30)
-    email = models.EmailField('e-mail',unique=True)
-    street = models.CharField('straße',max_length=30)
-    number = models.CharField('nummer',max_length=5)
-    zipcode = models.CharField('postleitzahl',max_length=5)
-    city = models.CharField('stadt',max_length=58)
+    first_name = models.CharField("vorname",max_length=30)
+    last_name = models.CharField("nachname",max_length=30)
+    email = models.EmailField("e-mail",unique=True)
+    street = models.CharField("straße",max_length=30)
+    number = models.CharField("nummer",max_length=5)
+    zipcode = models.CharField("postleitzahl",max_length=5)
+    city = models.CharField("stadt",max_length=58)
 
     class Meta:
         verbose_name = "Externer"
@@ -358,7 +352,7 @@ class tel_non_user(models.Model):
 
     non_user = models.ForeignKey(non_user, verbose_name="externer")
     tel_nr = models.CharField("tel Nr.",max_length=20)
-    tel_type = models.CharField(max_length=20)
+    tel_type = models.CharField("tel Typ ( Privat,Büro,Mobil ... )",max_length=20)
     # TODO eigene Telefonnummerklasser
     class Meta:
         unique_together = ('non_user', 'tel_nr')

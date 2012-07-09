@@ -45,13 +45,10 @@ class document_authors_inline(admin.StackedInline):
     model = document_authors
 
 class document_admin(admin.ModelAdmin):
-#    fields = ['bib_no', 'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',
-#              'isbn', 'category', 'publisher',
-#              'address','year', 'price', 'currency', 'authors', 'comment']
      list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
                      'category', 'publisher', 'bibtex_id')
      list_filter = ('bib_no', 'title', 'category', 'publisher')
-   #  ordering = ('bib_no') 
+     ordering = ['bib_no'] 
      search_fields = ('bib_no', 'title', 'publisher', 
                          'isbn', 'inv_no', 'bibtex_id')
      inlines = [document_authors_inline, keywords_inline]
@@ -60,6 +57,7 @@ class tel_non_user_inline(admin.TabularInline):
     model = tel_non_user
     
 class non_user_admin(admin.ModelAdmin):
+    list_display = ('last_name', 'first_name', 'email')
     inlines = [tel_non_user_inline,]
 
 class user_profile_inline(admin.StackedInline):
