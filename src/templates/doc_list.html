@@ -17,15 +17,18 @@
 	</div>
 
 	<div id="list_sort">
-	  <a href="?{{ path_sort }}&sort=title">Dokumententitel</a>
-	<!---  <a href="?{{ path_sort }}&sort=category">Kategorie</a>--->
-	  <a href="?{{ path_sort }}&sort=authors">Autoren</a>
-	  <a href="?{{ path_sort }}&sort=year">Veröffentlichung</a>
-	  {% if form == 2 %}
-	  <a href="?{{ path_sort }}&sort=date">Datum</a>
-	  {% endif %}
-	 <!--- <a href="?{{ path_sort }}&sort=status">Status</a>-->
-	  <!---<a href="?{{ path_sort }}&sort=isbn">Isbn</a>-->
+	  {% for key, value in path_sort.items %}
+	  <a href="?{{ value }}">{{ key }}</a>
+	  {% endfor %}
+	  <!--a href="?{{ path_sort }}&sort=title">Dokumententitel</a-->
+      <!--a href="?{{ path_sort }}&sort=category">Kategorie</a-->
+	  <!--a href="?{{ path_sort }}&sort=authors">Autoren</a-->
+	  <!--a href="?{{ path_sort }}&sort=year">Veröffentlichung</a-->
+	  <!--{# {% if form == 2 %}-->
+	  <!--a href="?{{ path_sort }}&sort=date">Datum</a-->
+	  <!--{% endif %} #}-->
+	  <!--a href="?{{ path_sort }}&sort=status">Status</a-->
+	  <!--a href="?{{ path_sort }}&sort=isbn">Isbn</a-->
 	</div>
 	{% autopaginate documents 10 %}
 
