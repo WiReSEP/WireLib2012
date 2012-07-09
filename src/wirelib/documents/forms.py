@@ -32,7 +32,8 @@ class DocForm(ModelForm):
             label='Autoren')
     editors = forms.ModelMultipleChoiceField(
             queryset=author.objects.all().order_by('last_name'), 
-            label='Editoren')
+            label='Editoren',
+            required=False)
     class Meta:
         model = document
         exclude = ('date_of_purchase', 'ub_date', 'bib_date', 'last_edit_by')

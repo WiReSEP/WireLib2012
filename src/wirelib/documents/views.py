@@ -426,7 +426,7 @@ def email_validation_reset(request):
 
 
 @login_required
-def doc_add(request):
+def doc_add(request, bib_no_id=None):
     """ Ein Dokument hinzufügen
     Hier kann der Benutzer mit den entsprechenden Rechten ein Dokument der
     Datenbank hinzufügen. Dies kann auf folgende Arten geschehen:
@@ -463,54 +463,18 @@ def doc_add(request):
             os.remove(filename + '.err')
     #Web-Interface-Import
     elif 'title' in request.POST:
-        """
-        insert = {}
-        insert[u"title"] = request.POST.get('title','')
-        insert[u"bib_no"] = request.POST.get('bib_no','').upper()
-        insert[u"inv_no"] = request.POST.get('inv_no','')
-        insert[u"category"] = request.POST.get('category','')
-        insert[u"publisher"] = request.POST.get('publisher','')
-        insert[u"year"] = request.POST.get('year','')
-        insert[u"address"] = request.POST.get('address','')
-        insert[u"comment"] = request.POST.get('comment','')
-        insert[u"currency"] = request.POST.get('currency','')
-        insert[u"lib_of_con_nr"] = request.POST.get('lib_of_con_nr','')
-        insert[u"isbn"] = request.POST.get('isbn','')
-        
-        firstnames = request.POST.getlist('author_first_name')
-        lastnames = request.POST.getlist('author_last_name')
-        authors = []
-        bibtex = u""
-        for a in range(0,len(firstnames)-1):
-            if not lastnames[a] == '':
-                authors.append(lastnames[a] + u", " + firstnames[a])
-                bibtex += lastnames[a]
-        bibtex += insert[u"inv_no"]
-        insert[u"bibtex_id"] = bibtex
-        insert[u"author"] = authors
-        
-        key = []
-        keyword = request.POST.getlist('keyword')
-        for k in range(0,len(keyword)-1):
-            if not keyword[k] == '':
-                key.append(keyword[k])
-        insert[u"keywords"] = key
-        
-        extras = {}
-        names = request.POST.getlist('doc_extra_name')
-        content = request.POST.getlist('doc_extra_content')
-        for i in range(0, len(names)-1):
-            if not names == '':
-                extras[names[i]] = content[i]
-        insert[u"extras"] = extras
-        
-        insert_doc(insert, v_user)
-        message = 'Daten erfolgreich übernommen'
-        #documents.extras_doc_funcs.insert_doc(insert,v_user) 
-        """
-        form = UploadFileForm()
-        form_doc = DocForm(request.POST)
-        form_author = AuthorAddForm(request.POST)
+        if bib_no_id is None:
+            form = UploadFileForm()
+            form_doc = DocForm(request.POST)
+            form_author = AuthorAddForm(request.POST)
+        else:
+            try:
+                doc = document.objects.get(bib_no=bib_no_id)
+            except document.DoesNotExist:
+                raise Http404
+            form = None
+            form_doc = DocForm(request.POST, instance=doc)
+            form_author = AuthorAddForm(request.POST)
         message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
         if form_author.is_valid():
             form_author.save()
@@ -525,11 +489,20 @@ def doc_add(request):
                 doc.add_author(author)
             doc.save()
             message = 'Daten erfolgreich übernommen'
-    else:
+    elif bib_no_id is None:
         message = ''
         form_doc = DocForm()
         form_author = AuthorAddForm()
         form = UploadFileForm()
+    else:
+        message = ''
+        try:
+            doc = document.objects.get(bib_no=bib_no_id)
+        except document.DoesNotExist:
+            raise Http404
+        form_doc = DocForm(instance=doc)
+        form_author = AuthorAddForm()
+        form = None
     category_needs = category_need.objects.all()
     needs = dict()
     for c in category_needs:
