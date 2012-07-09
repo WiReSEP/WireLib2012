@@ -6,7 +6,6 @@ from documents.models import category
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.sites.models import Site
 from documents.models import publisher
 from documents.models import author
 from documents.models import keywords
@@ -49,7 +48,13 @@ class document_admin(admin.ModelAdmin):
 #    fields = ['bib_no', 'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',
 #              'isbn', 'category', 'publisher',
 #              'address','year', 'price', 'currency', 'authors', 'comment']
-    inlines = [document_authors_inline, keywords_inline]
+     list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
+                     'category', 'publisher', 'bibtex_id')
+     list_filter = ('bib_no', 'title', 'category', 'publisher')
+   #  ordering = ('bib_no') 
+     search_fields = ('bib_no', 'title', 'publisher', 
+                         'isbn', 'inv_no', 'bibtex_id')
+     inlines = [document_authors_inline, keywords_inline]
     
 class tel_non_user_inline(admin.TabularInline):
     model = tel_non_user
@@ -67,6 +72,7 @@ class CustomUserAdmin(UserAdmin):
     
 class emails_admin(admin.ModelAdmin):
     pass
+    list_display = ('name', 'subject') 
 
 #Registrierung aller anzuzeigenden Tabellen.
 #admin.site.register(publisher, publisher_admin)
