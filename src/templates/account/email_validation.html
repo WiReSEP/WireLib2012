@@ -4,14 +4,6 @@
 {% block title %}{% if user.email %}{% trans "E-mail Ändern" %}{% else %}{% trans "Add e-mail" %}{% endif %}{% endblock %}
 
 
-{% block extrajs %}
-<script type="text/javascript">
-	$(function() {
-		$("input#id_email").focus();
-		$("input[type='text'], input[type='text']").addClass("text");
-	});
-</script>
-{% endblock %}
 
 {% block content %}
 	<form action="" method="post" accept-charset="utf-8">

@@ -394,6 +394,7 @@ class EmailValidationManager(models.Manager):
     Email Validation Manager
     """
     def verify(self, key):
+    #Methode zum Abgleichen der Keys 
     
         try:
             verify = self.get(key=key)
@@ -435,6 +436,7 @@ class EmailValidationManager(models.Manager):
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         body = loader.get_template(template_body).render(Context(locals()))
         subject = loader.get_template(template_subject).render(Context(locals())).strip()
+        #Eigentliches Versenden der Mail
         send_mail(subject=subject, message=body, from_email=None, recipient_list=[email])
         user = User.objects.get(username=str(user))
         self.filter(user=user).delete()
