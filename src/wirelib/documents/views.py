@@ -252,7 +252,7 @@ def doc_assign(request, bib_no_id):
             if user_lend and not user_lend == "":
                 document_query.lend(user=user_lend, editor=v_user)
             #print userform.fields['users']
-                return HttpResponseRedirect("/doc/"+document_query.bib_no+"")
+                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
 
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
