@@ -19,15 +19,6 @@ import settings
 import thread
 
 
-headers = {'title':'asc', 
-            'category':'asc',
-            'authors':'asc',
-            'year':'asc',
-            'status':'asc',
-            'isbn':'asc'
-            
-            }
-            
 def search(request):
     """ Suche nach Dokumenten.
     Hier kann der Benutzer Dokumente suchen, finden und Überraschungseier
@@ -610,14 +601,37 @@ def __list(request, documents, documents_non_user=None, form=0):
     v_user = request.user
     documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
+    path_sort = __truncate_get(request, 'sort') + u'&sort='
+    params_sort = {}
+    if form == 2:
+        params_sort[u'Datum'] = path_sort
+        if sort == u'date':
+            params_sort[u'Datum'] += u'-'
+        params_sort[u'Datum'] += u'date'
+
+    params_sort[u'Dokumententitel'] = path_sort
+    if sort == u'title':
+        params_sort[u'Dokumententitel'] += u'-'
+    params_sort[u'Dokumententitel'] += u'title'
+
+    params_sort[u'Autoren'] = path_sort
+    if u'authors' == sort:
+        params_sort[u'Autoren'] += u'-'
+    params_sort[u'Autoren'] += u'authors'
+
+    params_sort[u'Veröffentlichung'] = path_sort
+    if sort == u'year':
+        params_sort[u'Veröffentlichung'] += u'-'
+    params_sort[u'Veröffentlichung'] += u'year'
+
+
     if sort is not None:
         if sort == "date":
             documents = documents.order_by("-doc_status__date")
+        elif sort == "-date":
+            documents = documents.order_by("doc_status__date")
         else:
             documents = documents.order_by(sort)
-            if headers[sort] == "des":
-                documents = documents.reverse()
-                headers[sort] = "asc"
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -626,7 +640,6 @@ def __list(request, documents, documents_non_user=None, form=0):
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                              doc_status__return_lend = False)
         miss_query = miss_query.order_by('-doc_status__date')
-    params_sort = __truncate_get(request, 'sort')
     params_starts = __truncate_get(request, 'starts', 'page')
     if form == 1:
         return render_to_response("doc_rent.html", 
