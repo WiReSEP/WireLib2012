@@ -12,6 +12,10 @@
 \input{einstellungen/layout.tex}          % Diese Datei enthält alle
                                           % Layouteinstellungen
 
+\input{inhalt/glossar.tex}
+
+\newcommand{\BibTeX}{\gls{glos:BibTeX}\xspace}
+\newcommand{\zB}{\mbox{z.\,B.}\xspace}
 %------Beginn des Gesamtdokumentes----------------------------------------------
 \begin{document}
 
@@ -28,6 +32,13 @@
 \include{inhalt/testplan}                 % Kapitel 2
 \include{inhalt/testdurchfuehrung}        % Kapitel 3
 \include{inhalt/zusammenfassung}          % Kapitel 4
+
+%---Hier werden das Glossar und das Abkürzungsverzeichnis gedruckt--------------
+\providetranslation{Glossary}{Glossar}
+\printglossary[style=altlist,title=Glossar]
+
+\providetranslation{Acronyms}{Akronyme}
+\printglossary[type=\acronymtype,style=long]
 
 %------Ende des Dokumentes------------------------------------------------------
 \end{document}
