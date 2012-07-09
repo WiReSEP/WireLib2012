@@ -1,0 +1,135 @@
+% Kapitel 2 mit den entsprechenden Unterkapiteln
+% Die Unterkapitel k\"onnen auch in separaten Dateien stehen,
+% die dann mit dem \include-Befehl eingebunden werden.
+%----------------------------------------------------------------------------
+
+\chapter{Testplan}
+%Der Testplan ist das zentrale Dokument der Qualit\"atssicherung und wird daher
+%fr\"uhzeitig erstellt. Hier wird Umfang und Vorgehensweise der Qualit\"atssicherung
+%beschrieben. Außerdem werden Testgegenst\"ande und deren zu testenden
+%Eigenschaften bzw. Funktionen identifiziert. Ferner werden die
+%durchzuf\"uhrenden Maßnahmen und die daf\"ur verantwortlichen Personen definiert.
+%Falls erforderlich sollte hier auch auf allgemeine Risiken eingegangen werden.
+
+\section{Zu testende Komponenten}
+
+%Hier sind s\"amtliche zu testenden Objekte einschließlich der Versionsnummer aufzuf\"uhren.
+%Ebenso ist anzugeben, auf welchem Medium die Software vorliegt, ob dies einen Einfluss auf Hardwareanforderungen hat
+%und ob die Software vor Testbeginn in irgendeiner Weise transformiert werden muss. Außerdem wird auf zum
+%Objekt geh\"orende Dokumentation der Komponente (Lasten-, Pflichtenheft, Grob-
+%bzw. Feinentwurf) referenziert.
+
+Es müssen die Komponenten Views, Templates und Models getestet werden.
+Dabei werden die Komponenten Templates und Models durch die Funktionen der
+Komponenten Views und Admin gestestet. Da es sich um eine Webanwendung handelt
+ist zu beachten, dass unterschiedliche Clienten (Browser) benutzt werden.
+
+Die Software kann online in der Repository, lokal auf der Festplatte oder einem
+anderem Speichermedium vorliegen. Es ist allerdings sicherzustellen, dass die
+Software korrekt auf dem Server konfiguriert wird (s. Feinentwurf Kapitel 5)
+sowie eine funktionierende (Internet-) Verbindung zwischen Server und Client
+besteht.
+
+\section{Zu testende Funktionen}
+%Dieser Punkt beinhaltet alle Eigenschaften bzw. Funktionen und deren
+%Kombinationen, die zu testen sind.
+
+%S\"amtliche Funktionalit\"aten, die getestet werden sollen, werden hier aufgef\"uhrt.
+%Dabei sind auf die vorangegangenen Dokumentationen zu referenzieren
+%(Pflichtenheft, Grob- und Fein-entwurf) und die dortigen Funktions-IDs zu
+%verwenden!\\ Beispiel: /F100/ : Benutzer Login
+
+/F102/: Anbindung an die Universiätsbibliothek
+/F103/: Mailtexte ändern
+/F200/: \BibTex - Import %Theo
+/F201/: Webinterface - Import
+/F202/: Editieren von Dokumenten
+/F212/: Erweiterte Suche %Markus
+/F213/: Suche mit regulären Ausdrücken %Markus
+/F214/: Sortierung der Suche
+/F221/: Ausleihe an Externe
+/F222/: Ausleihe übertragen
+/F223/: Ausleihe zurückgeben
+/F224/: Ausleihe vermisst melden
+/F225/: Ausleihe verloren melden
+/F226/: Ausleihfrist abgelaufen
+/F227/: Ausleihhistory
+/F228/: Derzeitiger Leihender %Markus
+/F229/: Entleihliste
+/F230/: \BibTex - Export %Theo
+/F231/: Universitätsbibliotheks - Export
+
+
+\section{Nicht zu testende Funktionen}
+
+%(optional; auszuf\"ullen, falls es Funktionen gibt, die nicht getestet werden
+%sollen)\\
+
+%Hier werden alle Eigenschaften bzw. Funktionen und Funktionskombinationen
+%aufgelistet, die nicht getestet werden.
+%\textbf{ Es sollte begr\"undet werden, warum diese nicht getestet werden.} Es
+%versteht sich von selber, dass alle Muss-Funktionalit\"aten des Pflichtenheftes
+%(Abschnitt 1.1) getestet werden m\"ussen.
+
+Die folgenden Funktionen werden nicht getestet, da sie aus
+Django-Built-In-Funktionen bestehen. Diese Funktionen wurden bereits bei der
+Entwicklung von Django ausführlich und professionell getestet.
+
+/F100/: Anmeldung
+/F203/: Löschen von Dokumenten
+/F210/: Generelle Suche
+/F211/: Suche mit erweiterten Ausdrücken
+/F220/: Ausleihe
+/F300/: Benutzerverwaltung
+/F301/: Rechtezuweisung für Rollen
+/F302/: Benutzer Rolle(n) zuweisen
+
+\section{Vorgehen}
+%Die allgemeinen Vorgehensweisen f\"ur die einzelnen zu testenden Funktionen und
+%Funktionskombinationen werden hier beschrieben. Die Beschreibung sollte
+%detailliert genug sein, um die Hauptaktivit\"aten und deren Zeitbedarf absch\"atzen
+%zu k\"onnen.
+
+%Es ist zu beachten, dass f\"ur alle wichtigen Funktionalit\"aten das Verfahren
+%angegeben wird. Dies gew\"ahrleistet, dass diese Funktionalit\"aten ad\"aquat
+%getestet werden.
+
+%Es ist zu dokumentieren, welche Aktivit\"aten, Techniken und Werkzeuge ben\"otigt
+%werden, damit die Funktionalit\"aten getestet werden k\"onnen.
+
+%Beispiel f\"ur Vorgehen (unvollst\"andige Liste):\\
+%a) Komponenten- und Integrationstests\\
+%Klassen werden mit JUnit-Testf\"allen gepr\"uft. Vor Beginn der Implementierung
+%werden bereits Blackbox-Testf\"alle erstellt, die dann begleitend zur
+%Implementierung genutzt werden ("`Test first"'). Nach Abschluss der
+%Implementierung einer Komponente wird diese dann durch Whitebox-Tests
+%gepr\"uft.\\
+%Der Integrationstest der Klassen und Komponenten erfolgt nach dem
+%Bottom-Up-Prinzip. Anfangs muss die Integration der Datenbankanbindung und den
+%entsprechenden Data-Access-Objects (DAO) gepr\"uft werden, da das Mapping der
+%Datenbank auf Objekte die unterste Schicht des Projektes bildet. Dieser
+%Testabschnitt wird durch die Schnittstellentests abgedeckt.
+%Die Komponenten werden damit unter Ber\"ucksichtigung ihrer Abh\"angigkeiten
+%konkret in folgender Reihenfolge integriert: \ldots\\
+%(Hier kommt das konkrete Vorgehen bei der Integration: Welche Klassen werden
+%zusammen getestet, welche kommen dann dazu etc. Das kann man z.B. auch sch\"on in
+%Form eines Baumes aufzeigen.)
+%b) Funktionstests\\
+%Die Anwendungsf\"alle aus der Anforderungsspezifikation werden \"uber das
+%Web-Interface gepr\"uft. Mindestanforderung hierf\"ur ist es, jeden Fall einmal auf
+%seine korrekte Funktionalit\"at zu testen.\\
+%c) \ldots
+
+Aufgrund der Struktur des Projektes werden sämtliche Tests als Funktionstests
+über das Webinterface getestet. Dabei werden Firefox, Opera, Chrome, IE 9 als
+Browser benutzt um zu gewährleisten, dass das Webinterface auf möglichst vielen
+Clientsystemen funktioniert. Als weiteres Werkzeug verwenden wir das Django
+testing Environment
+
+\section{Testumgebung}
+%Die genutzte Testumgebung(en) bitte hier angeben und kurz beschreiben.\\
+%Beispiel: JUnit Testsuite, lokal installierter Web Application Server, \ldots
+
+Als Testumgebung auf dem Server wird der lokal von Django bereitgestellte Testserver
+verwendet. Als Clienten werden verschiedene Windows- und Linuxsysteme
+verwendet.

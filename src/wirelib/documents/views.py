@@ -640,7 +640,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                     path_sort = params_sort, 
                     path_starts = params_starts,
                     form = form,
-                    miss = miss_query[0:10]),
+                    miss = miss_query[0:10],
+                    lend_date = lend_date),
                 context_instance=RequestContext(request))
     if form == 2:
         return render_to_response("missing.html",
@@ -690,7 +691,11 @@ def __filter_names(documents, request):
     Reiseweg!
     """
     sw = request.GET.get('starts', '')
-    if sw == "0-9":
+    
+    if sw == "Sonderzeichen":
+        documents = documents.exclude(
+                         Q(title__iregex='[A-Za-z]'))
+    elif sw == "0-9":
         documents = documents.filter(
                          Q(title__istartswith='0') | 
                          Q(title__istartswith='1') | 
@@ -740,13 +745,15 @@ def __filter_names(documents, request):
                          Q(title__istartswith='t') | 
                          Q(title__istartswith='u') |
                          Q(title__istartswith='ü') | 
-                         Q(titlre__istartswith='v'))
+                         Q(title__istartswith='v'))
     elif sw == "w-z":
         documents = documents.filter(
                          Q(title__istartswith='w') | 
                          Q(title__istartswith='x') | 
                          Q(title__istartswith='y') |
-                         Q(title__istartswith='z'))
+                         Q(title__istartswith='z'))   
+      
+                         
     elif sw == "all":
         documents = documents.all()                     
     return documents
@@ -762,3 +769,4 @@ def __gen_sec_link(path):
 def __filter_history(doc):
     new_history = doc.doc_status_set.order_by('-date')[0:10]
     return new_history
+
