@@ -1,22 +1,22 @@
-\subsection{Testfall -- T221 Ausleihe an Externe}
+\subsection{Testfall -- /T221/ Ausleihe an Externe}
 Die folgende Tabelle beschreibt den Testfall: T221 Ausleihe an Externe. \\
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} &  \textit{/T221/ Ausleihe an Externe} \\
+\textbf{Testfall -- ID und Bezeichnung} &  \textnormal{/T221/ Ausleihe an Externe} \\
 \hline
 \textbf{Zu testende Objekte und Methoden} & \textnormal{
 \begin{itemize}
-  \item In Komponente \emph{Models} die Datei \lstinline{doc\_assign.html}
-  \item In Komponente \emph{Models} die Datei \lstinline{views.py}
+  \item In Komponente \textit{Models} die Datei \lstinline{doc\_assign.html}
+  \item In Komponente \textit{Models} die Datei \lstinline{views.py}
 \end{itemize}
 } \\
 \hline
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
-\textit{Der Test ist erfolgreich, wenn ein neuer Eintrag im Table non\_user
+\textnormal{Der Test ist erfolgreich, wenn ein neuer Eintrag im Table non\_user
 erstellt wird und das Dokument diesem zugewiesen wird, oder einem bereits
 existierendem dieses zugewiesen wird.} \\
 \hline
-\textbf{Einzelschritte} &  \textit{
+\textbf{Einzelschritte} &  \textnormal{
 Über das Userinterface wird auf den Testserver zugegriffen.
 Es muss ein Dokument auf den derzeit angemeldeten User ausgeliehen sein.
 Über die Ausgeliehenen Dokumente des Users kann man die Dokumentinformationen
@@ -24,7 +24,7 @@ einsehen wo der Button \uline{Übertragen} zu der benötigten Form führt.
 Dort kann ein Externer ausgewählt werden, oder durch Eingabe der benötigten
 Informationen neu hinzugefügt werden.} \\
 \hline
-\textbf{Beobachtungen / Log} &  \textit{
+\textbf{Beobachtungen / Log} &  \textnormal{
 Über den Browser wird die Veränderung der Website beobachtet.
 Über das Terminal werden Ladezeiten sowie Schreib-/Lesevorgänge verfolgt.
 }\\
@@ -36,36 +36,36 @@ Externe beschrieben.
 
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{/T221/ Ausleihe an Externe} \\
+\textbf{Testfall -- ID und Bezeichnung} & \textnormal{/T221/ Ausleihe an Externe} \\
 \hline
-\textbf{Testlauf Nr.} & \textit{1} \\
+\textbf{Testlauf Nr.} & \textnormal{1} \\
 \hline
-\textbf{Eingaben} & \textit{
+\textbf{Eingaben} & \textnormal{
 Es wird ein Externer User ausgewählt oder Daten über die Textfelder eingegeben
 um einen neuen Externen Nutzer zu erstellen.
 } \\
 \hline
-\textbf{Soll - Reaktion} & \textit{
+\textbf{Soll - Reaktion} & \textnormal{
 Der User wird auf die Seite mit den Dokumentinformationen zurückgeleitet,
 welches nun an den Externen entliehen ist.
 Im Table non\_user wurde der Externe erstellt und/oder ihm das Dokument
 zugewiesen.
 } \\
 \hline
-\textbf{Ist -- Reaktion} & \textit{
+\textbf{Ist -- Reaktion} & \textnormal{
 Seite wird nur neu geladen und nicht auf die Dokumentinformationen geleitet.
 Es wurden keine neuen Einträge erstellt oder aktualisiert.
 } \\
 \hline
-\textbf{Ergebnis} & \textit{
+\textbf{Ergebnis} & \textnormal{
 Test war nicht erfolgreich aufgrund fehlender Einträge und fehlender
 weiterleitung.
 } \\
 \hline
 \textbf{Unvorhergesehene Ereignisse w\"ahrend des Test-laufs } &
-\textit{Kein Zurückleiten auf die Dokumentseite} \\
+\textnormal{Kein Zurückleiten auf die Dokumentseite} \\
 \hline
-\textbf{Nacharbeiten } & \textit{Ändern des Links wenn auf den Button \uline{An
+\textbf{Nacharbeiten } & \textnormal{Ändern des Links wenn auf den Button \uline{An
 Externen übertragen} geklickt wurde} \\
 \hline
  \end{longtable}
