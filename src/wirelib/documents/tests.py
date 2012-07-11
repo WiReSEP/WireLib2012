@@ -10,7 +10,7 @@ from django.utils import unittest
 class SimpleTest(unittest.TestCase):
     def test_doc_details(self):
         c = Client()
-        response = c.get('/doc_list/')
+        response = c.get('/doc_listg/')
         self.assertEqual(response.status_code, 200)
 
 #response = c.post('/login/', {'username': #'admin', 'password': 'sep2012'})
