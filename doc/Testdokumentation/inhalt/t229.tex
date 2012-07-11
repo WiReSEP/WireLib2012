@@ -7,6 +7,7 @@ In der folgenden Tabelle wird der Test der Entleihliste beschrieben.
 \textbf{Zu testende Objekte und Methoden} &  
 \textit{ 
 \begin{itemize}
+\item Webseite \emph{doc_rent.html}
 \item In Komponente \emph{views.py} die Funktion \lstinline {doc_rent()}
 \item In Komponente \emph{models.py} die Funktion \lstinline {doc_status()}
 \end{itemize} }\\
@@ -14,18 +15,18 @@ In der folgenden Tabelle wird der Test der Entleihliste beschrieben.
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
 \textit{Es liegt ein erfolgreicher Test vor, wenn eine Auflistung der tatsächlich
 ausgeliehenen Dokumente, im richtigen Format und in genauer Anzahl angezeigt wird.
-Es wird vorraussgesetzt, dass der angemeldete Benutzer über die Rechte besitzt, 
+Es wird vorrausgesetzt, dass der angemeldete Benutzer über die Rechte besitzt, 
 um Bücher auszuleihen.
-Der Test ist fehlgeschlagen, wenn diese nicht auftriten. } \\
+Der Test ist fehlgeschlagen, wenn diese nicht auftreten. } \\
 \hline
 \textbf{Einzelschritte} &  
 \textit{Die Webseite wird im Browser aufgerufen. 
 Nach dem Anmelden (Seitenbutton \uline{Anmelden}) auf einem Testaccount mit den 
 dazu benötigten Rechten, soll der User einige Dokumente aus dem 
-Literaturverzeichnis ausleihen. Durch Navigiierung der Seite 
+Literaturverzeichnis ausleihen. Durch das Navigieren der Seite 
 (\uline{Profil} -> \uline{Ausleihliste}) soll der User eine Liste seiner aktuell ausgeliehenen 
 Dokumente vorfinden.
-Sollten unvorhergesehenen  Ereignisse auftreten, kann man den laufenden Testprozess
+Sollten unvorhergesehene Ereignisse auftreten, kann man den laufenden Testprozess
 durch Interaktion mit der Konsole mit dem Django-internen Befehl Ctrl-D terminieren
 und gegebenenfalls den Server für einen erneuten Test neustarten.      
 } \\
