@@ -1,0 +1,86 @@
+\subsection{Testfall -- ID und Bezeichnung}
+%Jeder Testfall erh\"alt eine eindeutige Identifikation mit Kurzbezeichnung.\\
+%Beispiel: /T100/ Lager anlegen\\
+%Die folgende Tabelle beschreibt den Testfall. \\
+In der folgenden Tabelle wird der Test zur Funktion E-Mail Änderung protokolliert.
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} &  \textit{/F103/ Mailtexte ändern} \\
+\hline
+\textbf{Zu testende Objekte und Methoden} &  \textit{
+\begin{itemize}
+\item Dateien & Pfade: \emph{admin.py}
+\item Buttons + Links : \uline{/admin/documents/emails/ID}, ID steht für die jeweilige
+ID der E-Mail 
+end{itemize} }
+\\
+\hline
+\textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
+\textit{Erfolgreich: E-Mail Inhalt steht, wie gewünscht, in der Datenbank ;
+        Fehlgeschlagen: E-Mail Inhalt steht nicht, oder nicht wie gewünscht in der DB   } \\
+\hline
+\textbf{Einzelschritte} &  \textit{Zunächst wird über das Django-Testing-Framework getestet,
+ob der Benutzer angemeldet ist (angemeldet wirft einen Http-Status-Code 200 zurück, sonst 
+einen Http-Status-Code 400). Falls dieser angemeldete Benutzer genügend Rechte besitzt,
+wiederum zu testen über eine spezielle Django-Testing-Authentification Methode, wird der interne View
+für das E-Mail ändern angesteuert (Http-Code=200 erfolgreich, Http-Code=404 gescheitert.).
+Falls dies alles erfolgreich sein sollte, kann man nun E-Mail Texte verändern.
+} \\
+\hline
+\textbf{Beobachtungen / Log} &  \textit{Ergebnisse werden haptsächlich über 
+die Kommandozeile per \textbf{stdout}(gibt Text der E-Mail aus) und \textbf{Django-Testing-
+Framework} kontrolliert  } \\
+\hline
+
+
+ \end{longtable}
+
+%Die folgenden Tabellen beschreiben, wie der Testfall ausgef\"uhrt wurde und
+%welches Ergebnis er geliefert hat. Da es bei Korrektur von Softwarefehlern oder
+%anderen Gegebenheiten notwendig ist, einen Test mehrfach durchzuf\"uhren
+%(Testl\"aufe), ist jede Testdurchf\"uhrung zu dokumentieren. Daher ist diese
+%Tabelle f\"ur \textbf{jeden Testlauf }  zu erstellen und \textbf{ fortlaufend zu
+%nummerieren}. \\
+
+Folgend werden die benötigten Testdurchläufe näher beschrieben
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{/F103/ Mailtexte ändern} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{1} \\
+\hline
+\textbf{Eingaben} & \textit{Ein eingeloggter Nutzer mit entsprechenden Rechten, E-Mail 
+Einträge in der Datenbank, Klick auf E-Mail ändern in dem Admin Backend } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Ausgabe sollte eingegebenen E-Mail
+Text enthalten: "`Sehr geehrte Damen und Herren, "').
+} \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{stdout lieferte: "`Sehr geehrte Damen und Herren, "´} \\
+\hline
+\textbf{Ergebnis} & \textit{Testlauf Nr.1 gab den erwarteten E-Mail Text zurück, somit erfolgreich.} \\
+\hline
+ \end{longtable}
+ 
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{/F103/ Mailtexte ändern} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{2} \\
+\hline
+\textbf{Eingaben} & \textit{Ein eingeloggter Nutzer mit entsprechenden Rechten, E-Mail 
+Einträge in der Datenbank, Klick auf E-Mail ändern in dem Admin Backend } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Ausgabe sollte eingegebenen E-Mail
+Text enthalten: "`Sehr geehrte Damen und Herren,///!123 \\
+                    ..--__??==))88&/& "´).
+} \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{stdout lieferte: "`Sehr geehrte Damen und Herren,///!123 \\
+                    ..--__??==))88&/& "´} \\
+\hline
+\textbf{Ergebnis} & \textit{Testlauf Nr.2 gab den erwarteten E-Mail Text zurück, somit erfolgreich.} \\
+\hline
+ \end{longtable} 
+ 
+
