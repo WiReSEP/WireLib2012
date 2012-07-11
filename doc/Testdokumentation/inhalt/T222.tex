@@ -1,0 +1,92 @@
+\subsection{Testfall -- T222 Ausleihe übertragen}
+Die folgende Tabelle beschreibt den Testfall: T222 Ausleihe übertragen. \\
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} &  \textit{/T222/ Ausleihe übertragen} \\
+\hline
+\textbf{Zu testende Objekte und Methoden} & \textnormal{
+\begin{itemize}
+  \item In der Komponente \emph{Models} die Datei \lstinline{doc\_assign.html}
+  \item In der Komponente \emph{Models} die Datei \lstinline{views.py}
+\end{itemize}
+} \\
+\hline
+\textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
+\textit{Der Test ist erfolgreich, wenn das Dokument dem User zugeordent wurde
+und nicht mehr in der Liste ausgeliehener Dokumente des aktuellen Users
+auftaucht.
+Der Test schlägt fehl, wenn das Dokument immernoch dem ursprünglichem User
+zugewiesen ist.} \\
+\hline
+\textbf{Einzelschritte} &  \textit{
+Über das Userinterface wird auf den Testserver zugegriffen.
+Es muss ein Dokument auf einen beliebigen User ausgeliehen sein.
+Über die Dokumentinformationen gelangt man über den Button
+\uline{Übertragen} zu der benötigten Form.
+Dort kann ein User ausgewählt werden, oder das Dokument auf den angemeldeten
+Nutzer übertragen werden.} \\
+\hline
+\textbf{Beobachtungen / Log} &  \textit{
+Über den Browser wird eine Veränderung der Website beobachtet.
+Über das Terminal werden Ladezeiten sowie Schreib-/Lesevorgänge verfolgt.
+} \\
+\hline
+\end{longtable}
+
+In der folgenden Tabelle werden die Testergebnisse zum Testfall: T222
+Ausleihe übertragen beschrieben.
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{/T222/ Ausleihe übertragen} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{1} \\
+\hline
+\textbf{Eingaben} & \textit{
+Der angemeldete User ist nicht der User, welcher das Dokument
+entliehen hat. Eingabe: Angemeldeter User.} \\
+\hline
+\textbf{Soll - Reaktion} & \textit{
+Der User wird auf die Seite mit den Dokumentinformationen
+zurückgeleitet, welches nun an den bestimmten User entliehen ist.
+Das Dokument ist jetzt in der Ausleihliste des Users.
+} \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{
+Der User befindet sich auf der Seite mit den Dokumentinformationen.
+Das Dokument kann von ihm mittels des Buttons \uline{Rückgabe}
+zurückgegeben werden. Somit ist es in seiner Ausleihliste.} \\
+\hline
+\textbf{Ergebnis} & \textit{
+Test war erfolgreich.} \\
+\hline
+\end{longtable}
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{/T222/ Ausleihe
+übertragen} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{2} \\
+\hline
+\textbf{Eingaben} & \textit{
+Der angemeldete User ist der User, welcher das Dokument entliehen hat. Der
+User wählt einen anderen aus einer Liste existierender User aus.} \\
+\hline
+\textbf{Soll - Reaktion} & \textit{
+Der User wird auf die Seite mit den Dokumentinformationen
+zurückgeleitet, welches nun an den bestimmten User entliehen ist.
+Das Dokument ist jetzt nicht mehr in der Ausleihliste des Users.
+} \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{
+Der User befindet sich auf der Seite mit den Dokumentinformationen.
+Das Dokument kann nicht mehr von ihm mittels des Buttons \uline{Rückgabe}
+zurückgegeben werden. Er kann es aber wieder mittels des Buttons
+\uline{Übertragen} auf sich übertragen.} \\
+\hline
+\textbf{Ergebnis} & \textit{
+Test war erfolgreich.} \\
+\hline
+\end{longtable}
+
