@@ -22,7 +22,6 @@ urlpatterns = patterns('documents.views',
         url(r'^miss/$', 'docs_miss'),
 )
 
-
 # Links zu Accountfunktionen
 
 # Links zum Passwortaendern
@@ -45,11 +44,7 @@ urlpatterns += patterns('',
         url(r'^email/validation/reset/$', email_validation_reset),
 ) 
         
-
-
-
 urlpatterns += patterns('django.contrib.auth.views',
         url(r'^login/$', 'login'),
         url(r'^logout/$', 'logout'),
-        
 )   
