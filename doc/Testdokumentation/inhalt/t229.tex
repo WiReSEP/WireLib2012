@@ -1,0 +1,66 @@
+\subsection{Testfall -- T229 Entleihliste}
+In der folgenden Tabelle wird der Test der Entleihliste beschrieben. 
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- T229} &  \textit{ /T229/ Entleihliste} \\
+\hline
+\textbf{Zu testende Objekte und Methoden} &  
+\textit{ 
+\begin{itemize}
+\item In Komponente \emph{views.py} die Funktion \lstinline {doc_rent()}
+\item In Komponente \emph{models.py} die Funktion \lstinline {doc_status()}
+\end{itemize} }\\
+\hline
+\textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
+\textit{Es liegt ein erfolgreicher Test vor, wenn eine Auflistung der tatsächlich
+ausgeliehenen Dokumente, im richtigen Format und in genauer Anzahl angezeigt wird.
+Es wird vorraussgesetzt, dass der angemeldete Benutzer über die Rechte besitzt, 
+um Bücher auszuleihen.
+Der Test ist fehlgeschlagen, wenn diese nicht auftriten. } \\
+\hline
+\textbf{Einzelschritte} &  
+\textit{Die Webseite wird im Browser aufgerufen. 
+Nach dem Anmelden (Seitenbutton \uline{Anmelden}) auf einem Testaccount mit den 
+dazu benötigten Rechten, soll der User einige Dokumente aus dem 
+Literaturverzeichnis ausleihen. Durch Navigiierung der Seite 
+(\uline{Profil} -> \uline{Ausleihliste}) soll der User eine Liste seiner aktuell ausgeliehenen 
+Dokumente vorfinden.
+Sollten unvorhergesehenen  Ereignisse auftreten, kann man den laufenden Testprozess
+durch Interaktion mit der Konsole mit dem Django-internen Befehl Ctrl-D terminieren
+und gegebenenfalls den Server für einen erneuten Test neustarten.      
+} \\
+\hline
+\textbf{Beobachtungen / Log} &  \textit{Ergebnisse und Fehler des Testlaufs 
+werden innerhalb vom Django-Projekt im Browser und im Termimal angezeigt.}\\ 
+\hline
+\end{longtable}
+
+Die folgende Tabelle dokumentiert den erfolgreichen Testlauf der Entleihliste
+
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{T229} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{1} \\
+\hline
+\textbf{Eingaben} & \textit{Für das Anzeigen der Ausleihliste sind folgende 
+Eingaben von Nöten: Einträge (Dokumente, User, etc) in der Datenbank, 
+Erfolgreiches Anmelden eines registrierten Benutzers, Bestätigen des Links 
+\uline{Literaturverzeichnis}, Auswählen eines oder mehreren Dokumentes 
+(Klick auf den Titel des Dokumentes), Bestätigen des Buttons \uline{Ausleihen},   
+Aufrufen des \uline{Profil}-Links und der \uline{Ausleihliste}.   
+   } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Die Ausleihliste soll die gewünschten
+Dokumente anzeigen und im korrekten Format darstellen (Anordnung von Titel, 
+Autor, Jahr, etc). } \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Dokumente werden in Ausleihliste angezeigt.} \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test ist erfolgreich abgelaufen} \\
+\hline
+\textbf{Nacharbeiten } & \textit{Kein Bugfix notwendig.} \\
+\hline
+\end{longtable}
+
