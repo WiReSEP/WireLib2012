@@ -1,0 +1,86 @@
+\subsection{Testfall -- /T231/ Universitätsbibliotheks - Export}
+In der folgenden Tabelle wird der Test des Exports in das
+Universitätsbibliotheks-Format ADT beschrieben.
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} &  \textit{/T102/ Universitätsbibliotheks - Export} \\
+\hline
+\textbf{Zu testende Objekte und Funktionen} & 
+\textit{
+\begin{itemize}
+  \item In Komponente \emph{Server (App: Documents)} die Funktion
+	\lstinline{extras_allegro.export_allegro()}
+\end{itemize} } \\
+\hline
+\textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
+\textit{Der Test ist erfolgreich, wenn eine Datei im ADT-Format ausgegeben
+wird, ausser es existieren keine Dokumente in der Datenbank, die exportiert
+werden müssten. Weiterhin müssen alle Einträge in der Datei auf Korrektheit
+überprüft werden. Vorbedingung ist, dass der eingeloggte Benutzer über
+ausreichend Rechte verfügt, um den Export durchzuführen. Falls zu exportierende
+Dokumente in der Datenbank vorhanden sind, aber keine neue .ADT-Datei angelegt
+wurde, oder der eingeloggte Benutzer verfügt nicht über ausreichend Rechte, so
+ist der Test fehlgeschlagen. } \\
+\hline
+\textbf{Einzelschritte} & 
+\textit{Zuerst wird die Webseite in einem Browser aufgerufen. Falls der
+eingeloggte Benutzer nicht ausreichend Rechte besitzt, so wird der Export
+abgebrochen. Durch den Klick auf \uline{Allegro-Export starten} wird die Datei angelegt und
+zum Download angeboten. Es wird eine Meldung ausgegeben, falls es aktuell keine
+Dokumente zu exportieren gibt. Anschließend wird auf Serverseite die Datei auf
+Korrektheit überprüft. } \\
+\hline
+\textbf{Beobachtungen / Log} &  \textit{Alle Fehler beziehungsweise Logs werden
+über die Konsole des Servers ausgegeben. } \\
+\hline
+
+ \end{longtable}
+
+Im Folgenden werden die beiden möglichen erfolgreichen Testläufe für den
+Universitätsbibliotheks - Export beschrieben. Angenommen wird dabei, dass
+Django, der Server, sowie alle benötigten Komponenten korrekt konfiguriert
+sind, da somit Fehler durch die Umgebung ausgeschlossen sind.
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} &
+\textit{/T231/ Universitätsbibliotheks - Export} \\
+\hline 
+\textbf{Testlauf Nr.} & \textit{1} \\
+\hline
+\textbf{Eingaben} & \textit{Erforderliche Eingaben für den Export sind Einträge in der
+Datenbank, ein eingeloggter Benutzer und ein Klick auf \uline{Allegro-Export
+starten}. Weitere Eingaben sind nicht notwendig. } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Die neu erstellte .ADT-Datei wird erstellt
+und über den Browser zum Download angeboten, oder es wird die Meldung gegeben,
+dass keine Dokumente exportiert werden müssen. } \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Die .ADT-Datei wird erstellt und zum
+Download angeboten. } \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test ist erfolgreich abgelaufen. } \\
+\hline
+\end{longtable}
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} &
+\textit{/T231/ Universitätsbibliotheks - Export} \\
+\hline 
+\textbf{Testlauf Nr.} & \textit{2} \\
+\hline
+\textbf{Eingaben} & \textit{Erforderliche Eingaben für den Export sind Einträge in der
+Datenbank, ein eingeloggter Benutzer und ein Klick auf \uline{Allegro-Export
+starten}. Weitere Eingaben sind nicht notwendig. } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Die neu erstellte .ADT-Datei wird erstellt
+und über den Browser zum Download angeboten, oder es wird die Meldung gegeben,
+dass keine Dokumente exportiert werden müssen. } \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Es wird die Meldung gegeben, dass keine
+Dokumente exportiert werden müssen. } \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test ist erfolgreich abgelaufen. } \\
+\hline
+\end{longtable}

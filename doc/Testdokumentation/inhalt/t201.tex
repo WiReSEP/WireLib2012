@@ -1,0 +1,98 @@
+\subsection{Testfall -- /T201/ Webinterface - Import}
+In der folgenden Tabelle wird der Test des Imports über das Webinterface
+beschrieben.
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} &  \textit{/T201/ Webinterface - Import} \\
+\hline
+\textbf{Zu testende Objekte und Methoden} &  
+\textit{
+\begin{itemize}
+  \item In Komponente \emph{views} die Funktion \lstinline{doc_add}
+  \item In Komponente \emph{Template} die Datei \emph{doc\_add.html}
+\end{itemize}}
+\\
+\hline
+\textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
+\textit{Wenn die eingegebenen Daten korrekt sind, so wird das Dokument in die
+Datenbank übernommen. Bei unvollständigen Daten wird die Webseite mit einer
+entprechenden Meldung erneut aufgerufen. } \\
+\hline
+\textbf{Einzelschritte} &  \textit{Zuerst wird die Webseite in einem Browser
+aufgerufen. Falls der eingeloggte Benutzer nicht über ausreichend Rechte
+verfügt, so wird das Laden der Webseite abgebrochen. Andernfalls wird die
+Eingabeform für ein Dokument angezeigt und beim Absenden in die Datenabnk
+übernommen. } \\
+\hline
+\textbf{Beobachtungen / Log} &  \textit{Der Server loggt in der Konsole, dass
+doc\_add angefordert wurde. Informationen über das Hinzufügen des Dokumentes
+werden nicht ausgegeben. } \\
+\hline
+\textbf{Abh\"angigkeiten} &  \textit{Dieser Test ist von dem \BibTeX - Import
+abhängig, da es auch anstelle von Texteingabemasken auch ein \BibTeX - Uploader
+zur Verfügung steht. } \\
+\hline
+
+ \end{longtable}
+
+Im Folgenden werden drei mögliche Testfälle für den Webinterface - Import
+beschrieben. \\
+
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{/T201/ Webinterface - Import} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{1} \\
+\hline
+\textbf{Eingaben} & \textit{Eingaben sind Einträge in der Datenbank, sowie alle
+Eingaben in der Eingabemaske. In der Eingabemaske sind alle benötigten Felder
+bedient und der \BibTeX - Upload ist leer. } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Die eingegebenen Daten werden als Dokument
+in die Datenbank übernommen. } \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Wie Soll - Reaktion.} \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test verlief erfolgreich. } \\
+\hline
+ \end{longtable}
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{/T201/ Webinterface - Import} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{2} \\
+\hline
+\textbf{Eingaben} & \textit{Eingaben sind Einträge in der Datenbank, sowie alle
+Eingaben in der Eingabemaske. In der Eingabemaske sind nicht alle benötigten Felder
+bedient und der \BibTeX - Upload ist leer. } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Die eingegebenen Daten werden nicht als Dokument
+in die Datenbank übernommen und die Webseite wird erneut angezeigt. } \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Wie Soll - Reaktion.} \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test verlief erfolgreich. } \\
+\hline
+ \end{longtable}
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{/T201/ Webinterface - Import} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{3} \\
+\hline
+\textbf{Eingaben} & \textit{Eingaben sind Einträge in der Datenbank, sowie alle
+Eingaben in der Eingabemaske. In der Eingabemaske sind nicht alle benötigten Felder
+bedient und der \BibTeX - Upload ist befüllt. } \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Für die hochgeladene Datei wird der \BibTeX
+- Importer aufgerufen. Alle Fehler werden dem Nutzer dabei auf der Webseite
+angezeigt.  } \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Wie Soll - Reaktion.} \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test verlief erfolgreich. } \\
+\hline
+ \end{longtable}
