@@ -513,14 +513,21 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-    documents = document.objects.filter(
-            doc_status__user_lend=v_user).filter(
-            doc_status__non_user_lend__isnull=True).filter(
-            doc_status__return_lend=False)
+    documents = document.objects.filter(doc_status__user_lend=v_user,
+                                        doc_status__non_user_lend__isnull=True,
+                                        doc_status__return_lend=False)
+    #documents = document.objects.filter(
+    #        doc_status__user_lend=v_user).filter(
+    #        doc_status__non_user_lend__isnull=True).filter(
+    #        doc_status__return_lend=False)
     documents_non_user = document.objects.filter(
-            doc_status__user_lend=v_user).filter(
-            doc_status__non_user_lend__isnull=False).filter(
-            doc_status__return_lend=False)
+                                        doc_status__user_lend=v_user,
+                                        doc_status__non_user_lend__isnull=False,
+                                        doc_status__return_lend=False)
+    #documents_non_user = document.objects.filter(
+    #        doc_status__user_lend=v_user).filter(
+    #        doc_status__non_user_lend__isnull=False).filter(
+    #        doc_status__return_lend=False)
     return __list(request, documents, documents_non_user, 1)
 
 @login_required
@@ -673,8 +680,7 @@ def __list(request, documents, documents_non_user=None, form=0):
                     path_sort = params_sort, 
                     path_starts = params_starts,
                     form = form,
-                    miss = miss_query[0:10],
-                    lend_date = lend_date),
+                    miss = miss_query[0:10]),
                 context_instance=RequestContext(request))
     if form == 2:
         return render_to_response("missing.html",

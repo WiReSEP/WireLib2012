@@ -44,7 +44,7 @@
 		  {% endspaceless %}">
 
 	  <div id="title">
-		  <a href="../doc/{{ d.bib_no}}">{{ d }}</a>
+		  <a href="/doc/{{ d.bib_no}}">{{ d }}</a>
 		  {% if form == 1 %}
 		        {% if d.lending.non_user_lend == True %}		        
 		              {{ d.doc_status.date_term_lend }}		    
@@ -73,8 +73,10 @@
     	{% if form == 1 %}	
         <div id="date_lend"> 
     	  Ausgeliehen am:
-    	   {% for l in lend_date %}
+    	   {% for l in  d.doc_status_set.all %}
+    	     {% if not l.return_lend %}
     	        {{ l.date }}
+    	     {% endif %}
     	   {% endfor %}
     	</div>
     	{% endif %}
