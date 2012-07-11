@@ -20,3 +20,9 @@ class LendingError(Exception):
     Versuch des Ausleihens bei Status 'bestellt'
     """
     pass
+
+class ExportError(Exception):
+    """
+    Fehler beim Export zu BibTeX oder Allegro
+    """
+    pass

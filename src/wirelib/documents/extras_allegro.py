@@ -1,6 +1,7 @@
 # vim: set fileencoding=utf-8
 from documents.models import document
 from documents.models import doc_extra
+from documents.exceptions import ExportError
 from datetime import datetime
 from django.conf import settings
 def export_allegro():
@@ -11,6 +12,8 @@ def export_allegro():
     allegro_query = document.objects.select_related().filter(
             ub_date__isnull=True, 
             category__name__iexact='book')
+    if 0 == allegro_query.count():
+        raise ExportError("Keine Dokumente zum Exportieren")
     date = datetime.today()
     date = date.date()
     # einlesen der Hashmap für Speicherung von Einträgen im ADT-Format
