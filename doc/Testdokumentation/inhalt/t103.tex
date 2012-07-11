@@ -9,10 +9,8 @@ In der folgenden Tabelle wird der Test zur Funktion E-Mail Änderung protokollie
 \hline
 \textbf{Zu testende Objekte und Methoden} &  \textit{
 \begin{itemize}
-\item Dateien & Pfade: \emph{admin.py}
-\item Buttons + Links : \uline{/admin/documents/emails/ID}, ID steht für die jeweilige
-ID der E-Mail 
-end{itemize} }
+\item In Komponente \emph{Admin} der Bereich E-Mail 
+\end{itemize} }
 \\
 \hline
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
@@ -56,7 +54,7 @@ Einträge in der Datenbank, Klick auf E-Mail ändern in dem Admin Backend } \\
 Text enthalten: "`Sehr geehrte Damen und Herren, "').
 } \\
 \hline
-\textbf{Ist -- Reaktion} & \textit{stdout lieferte: "`Sehr geehrte Damen und Herren, "´} \\
+\textbf{Ist -- Reaktion} & \textit{stdout lieferte: "`Sehr geehrte Damen und Herren, "'} \\
 \hline
 \textbf{Ergebnis} & \textit{Testlauf Nr.1 gab den erwarteten E-Mail Text zurück, somit erfolgreich.} \\
 \hline
@@ -72,12 +70,12 @@ Text enthalten: "`Sehr geehrte Damen und Herren, "').
 Einträge in der Datenbank, Klick auf E-Mail ändern in dem Admin Backend } \\
 \hline
 \textbf{Soll - Reaktion} & \textit{Ausgabe sollte eingegebenen E-Mail
-Text enthalten: "`Sehr geehrte Damen und Herren,///!123 \\
-                    ..--__??==))88&/& "´).
+Text enthalten: "`Sehr geehrte Damen und Herren,///!123 
+                    ..--\_\_??==))88\&/\& "').
 } \\
 \hline
-\textbf{Ist -- Reaktion} & \textit{stdout lieferte: "`Sehr geehrte Damen und Herren,///!123 \\
-                    ..--__??==))88&/& "´} \\
+\textbf{Ist -- Reaktion} & \textit{stdout lieferte: "`Sehr geehrte Damen und Herren,///!123 
+                    ..--\_\_??==))88\&/\& "'} \\
 \hline
 \textbf{Ergebnis} & \textit{Testlauf Nr.2 gab den erwarteten E-Mail Text zurück, somit erfolgreich.} \\
 \hline

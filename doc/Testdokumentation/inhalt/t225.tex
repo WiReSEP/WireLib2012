@@ -1,36 +1,39 @@
-\subsection{Testfall -- /T223/ Ausleihe zurückgeben}
+\subsection{Testfall -- /T225/: Ausleihe verloren melden}
 
-In der folgenden Tabelle wird der Test der Ausleihe zurückgeben beschrieben.
+Die folgende Tabelle beschreibt den Test der Ausleihe verloren melden. \\
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} &  \textit{/T223/ Ausleihe zurückgeben} \\
+\textbf{Testfall -- ID und Bezeichnung} &  
+\textit{/F225/: Ausleihe verloren melden} 
+\\
 \hline
-\textbf{Zu testende Objekte und Funktionen} &  
-\textnormal{\begin{itemize}
+\textbf{Zu testende Objekte und Methoden} &  
+\textit{\begin{itemize}
     \item die Webseite \uline{doc\_detail.html},
-    \item in Komponente \emph{Models} die Funktion \lstinline{document.unlend()}, 
+    \item in Komponente \emph{Models} die Funktion \lstinline{document.lend()}, 
     \item in Komponente \emph{Models} die Funktion \lstinline{document.set_status()},
-    \item in Komponente \emph{Views} die Funktion \lstinline{doc_detail()}
-\end{itemize}}
+    \item in Komponente \emph{Views} die Funktion \lstinline{doc_detail()},
+    \end{itemize}}
 \\
 \hline
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
-\textit{Zum Einen muss der letzte Eintrag in der Tabelle \glqq doc\_status\grqq\ 
+\textit{Zum Einen muss der letzte Eintrag in der Tabelle \glqq doc\_status \grqq\
         von diesem Dokument aktualisiert werden.
         Außerdem sollte ein neuer Eintrag in dieser Tabelle existieren.
-        Auch sollte sich die Webseite aktualisieren.}  
+        Auch sollte sich die Webseite aktualisieren.}
 \\
 \hline
 \textbf{Einzelschritte} &  
 \textit{Zuerst sollte gewährleistet sein, dass man angemeldet ist. Danach muss 
         man die \uline{doc\_detail.html} von einem Dokument öffnen, welches man 
         ausgeliehen hat. Schlussendlich wird nur noch auf den Button 
-        \uline{Rückgabe} geklickt.} 
+        \uline{Verloren melden} geklickt, der nur angezeigt wird, wenn man das 
+        entsprechende Recht besitzt.}
 \\
 \hline
 \textbf{Beobachtungen / Log} &  
 \textit{Alle Fehler beziehungsweise Logs werden über die Konsole des Servers 
-        ausgegeben. }
+        ausgegeben.} 
 \\
 \hline
 \textbf{Besonderheiten } &  
@@ -39,28 +42,30 @@ In der folgenden Tabelle wird der Test der Ausleihe zurückgeben beschrieben.
         werden. Die Funktionen sollten also komplett ignoriert werden.} 
 \\
 \hline
+
  \end{longtable}
 
-Die folgende Tabelle zeigt den Testfall, wenn man ein ausgeliehenes Buch 
-zurückgeben möchte.
+Die folgende Tabelle zeigt den Testfall, wenn man ein Buch verloren meldet.
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{/T223/ Ausleihe zurückgeben} \\
+\textbf{Testfall -- ID und Bezeichnung} & 
+\textit{/T225/: Ausleihe verloren melden} 
+\\
 \hline
 \textbf{Testlauf Nr.} & \textit{1} \\
 \hline
 \textbf{Eingaben} & 
-\textit{Erforderliche Eingaben für das Zurückgeben eines Dokumentes ist der
-        Datensatz eines Buches, welches an den eingeloggten User ausgeliehen 
-        ist, und ein Klick auf den Button \uline{Rückgabe}.}
+\textit{Erforderliche Eingaben für das Verlorenmelden eines Dokumentes ist der
+        Datensatz eines Buches, das Recht des Verlorenmeldens beim angemeldeten 
+        User und ein Klick auf den Button \uline{Verloren melden}.}
 \\
 \hline
 \textbf{Soll - Reaktion} & 
 \textit{Der \glq return\_lend \grq -Wert des letzten Eintrages in \glqq 
         doc\_status \grqq zu diesem Dokument wird auf TRUE gesetzt, ein neuer 
         Eintrag mit dem neuen Status sollte in selbiger Tabelle erstellt werden 
-        und der Button \uline{Ausleihen} müsste anstelle von \uline{Rückgabe} 
-        und \uline{Übertragen} auf der Webseite dargestellt sein.} 
+        und es sollte nur noch ein Button \uline{Gefunden melden} erscheinen für 
+        User mit dem entsprechenden Recht.}
 \\
 \hline
 \textbf{Ist -- Reaktion} & 
@@ -72,18 +77,20 @@ zurückgeben möchte.
 \hline
  \end{longtable}
  
-Die folgende Tabelle zeigt den Testfall, wenn man ein Buch zurückgeben möchte,
-obwohl man dieses bereits hat (z.B. durch Seitenaktualisierung). 
+Die folgende Tabelle zeigt den Testfall, wenn man ein Buch verloren melden
+möchte, obwohl man dieses bereits hat (z.B. durch Seitenaktualisierung). 
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{/T223/ Ausleihe zurückgeben} \\
+\textbf{Testfall -- ID und Bezeichnung} & 
+\textit{/T225/: Ausleihe verloren melden} 
+\\
 \hline
-\textbf{Testlauf Nr.} & \textit{1} \\
+\textbf{Testlauf Nr.} & \textit{2} \\
 \hline
 \textbf{Eingaben} & 
-\textit{Erforderliche Eingaben für das Zurückgeben eines Dokumentes ist der
-        Datensatz eines Buches, welches an den eingeloggten User ausgeliehen 
-        ist, und ein Klick auf den Button \uline{Rückgabe}.}
+\textit{Erforderliche Eingaben für das Verlorenmelden eines Dokumentes ist der
+        Datensatz eines Buches, das Recht des Verlorenmeldens beim angemeldeten 
+        User und ein Klick auf den Button \uline{Verloren melden}.}
 \\
 \hline
 \textbf{Soll - Reaktion} & 
@@ -100,4 +107,5 @@ obwohl man dieses bereits hat (z.B. durch Seitenaktualisierung).
 \textit{Der Test ist erfolgreich abgelaufen.} \\
 \hline
  \end{longtable}
+
 
