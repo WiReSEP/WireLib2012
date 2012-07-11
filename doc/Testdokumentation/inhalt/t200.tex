@@ -1,105 +1,106 @@
-\section{T200 -- Bib\TeX -Import}
+\subsection{Testfall -- /T200/ Bib\TeX -Import}
+\label{t200}
 Im Pflichtenheft wurde bestimmt, dass der hier beschriebene Vorgang dem
 Benutzer ermöglicht über eine Seite eine \BibTeX -Datei hochzuladen. Diese wird
 dann an das System weiter gegeben und durch einen \BibTeX -Parser zerlegt und
 in die Datenbank übertragen.
 
 \begin{longtable}{|p{5cm}|p{10cm}|}
-\hline
-\textbf{Testfall -- ID und Bezeichnung} &  \textit{T200 -- Bib\TeX -Import} \\
-\hline
-\textbf{Zu testende Objekte und Methoden} &  \textit{
-\begin{itemize}
-  \item In Komponente \emph{views} die Funktion
-	\lstinline{import_bibtex()}
-  \item In Komponente \emph{Server (App: Documents)} die Funktion
-	\lstinline{Bibtex.do_import()}, \lstinline{insert_doc()} und
-	\lstinline{is_valid()}
-\end{itemize}
-}
-\\
-\hline
-\textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
-\textit{Alle in der Datei enthaltenen validen Dokumente sind nach Abschluss
-des Testes in der Datenbank vorhanden bzw.\ im Fehlerfall nicht vorhanden.} \\
-\hline
-\textbf{Einzelschritte} &  \textit{Über das Testing Framework wird zuerst
-getestet, dass bei einer fehlenden Anmeldung ein \textbf{HTTP Status Code 404}
-zurück gegeben wird und ein angemeldeter Benutzer mit entsprechneden Rechten
-bekommt einen \textbf{HTTP Status Code 200} zurück. Danach wird die Datei über
-die Seite hochgeladen und damit getestet ob die weiteren Funktionen durch
-diesen Upload ausgelöst werden, ob diese Erfolgreich laufen und am Ende die
-gewünschten Daten in der Datenbank sind. Der Test kommt vollständig ohne
-Benutzerinteraktion aus, muss aber für den Fall von Dead-Locks vom Benutzer
-überwacht und ggf.\ abgebrochen werden.} \\
-\hline
-\textbf{Beobachtungen / Log} &  \textit{Es sind alle speziellen Methoden oder
-Formate zu beschreiben, mit denen die Ergebnisse der Testl\"aufe, die
-Zwischenf\"alle und sonstige wichtige Ereignisse aufgenommen werden sollen.
-Beispiel: Logdatei eines Servers, Messung der Antwortzeit eines Remote
-Terminals mittels Netzwerk Simulator, \ldots} \\
-\hline
-\textbf{Besonderheiten } &  \textit{optional; auszuf\"ullen, falls es
-Besonderheiten in diesem Testfall gibt.
-Testfallspezifische Besonderheiten, z.B. Ausf\"uhrungsvorschriften oder
-Abweichungen von der Testumgebung (siehe 2.5)  werden hier aufgelistet.} \\
-\hline
-\textbf{Abh\"angigkeiten} &  \textit{optional; auszuf\"ullen, falls es
-Abh\"angigkeiten in diesem Testfall gibt
-Ist dieser Testfall von der Ausf\"uhrung anderer Testf\"alle abh\"angig, so werden
-diese Testf\"alle hier aufgelistet und kurz beschrieben, worin die Abh\"angigkeit
-besteht.} \\
-\hline
+  \hline
+  \textbf{Testfall -- ID und Bezeichnung} &  T200 -- Bib\TeX -Import \\
+  \hline
+  \textbf{Zu testende Objekte und Methoden} & 
+  \textnormal{
+  \begin{itemize}
+	\item In Komponente \textit{views} die Funktion
+	  \lstinline{import_bibtex()}
+	\item In Komponente \textit{Server (App: Documents)} die Funktion
+	  \lstinline{Bibtex.do_import()}, \lstinline{insert_doc()} und
+	  \lstinline{is_valid()} 
+  \end{itemize} }
+  \\
+  \hline
+  \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
+  Alle in der Datei enthaltenen validen Dokumente sind nach Abschluss
+  des Testes in der Datenbank vorhanden bzw.\ im Fehlerfall nicht vorhanden.\\
+  \hline
+  \textbf{Einzelschritte} &  Über das Testing Framework wird zuerst
+  getestet, dass bei einer fehlenden Anmeldung ein \textbf{HTTP Status Code 404}
+  zurück gegeben wird und ein angemeldeter Benutzer mit entsprechneden Rechten
+  bekommt einen \textbf{HTTP Status Code 200} zurück. Danach wird die Datei über
+  die Seite hochgeladen und damit getestet ob die weiteren Funktionen durch
+  diesen Upload ausgelöst werden, ob diese Erfolgreich laufen und am Ende die
+  gewünschten Daten in der Datenbank sind. Der Test kommt vollständig ohne
+  Benutzerinteraktion aus, muss aber für den Fall von Dead-Locks vom Benutzer
+  überwacht und ggf.\ abgebrochen werden.\\
+  \hline
+  \textbf{Beobachtungen / Log} & 
+  Fehler die im Test passieren sorgen dafür, dass der Test abbricht und die
+  entsprechnde Bedingung ausgegeben wird. Bei Fehlern in der Verarbeitung der
+  \BibTeX -Datei werden diese in eine entsprechende Fehler-Datei geschrieben.
+  Sonst läuft der Test still ab.
+  \\
+  \hline
+  \textbf{Besonderheiten } &  Für diesen Test wird als Eingabe Satz die
+  \textit{bib2000.bib} mit entsprechenden Daten verwendet und dafür nur eine
+  Grundlage Datenbank mit Benutzern, Rechten und E-Mails aber ohne eingetragene
+  Dokumente. Weiter wird dieser Test auf den zwei Datenbanksystemen
+  \Gls{glos:mysql} und \Gls{glos:sqlite} gefahren\\
+  \hline
+\end{longtable}
 
- \end{longtable}
-
-Die folgenden Tabellen beschreiben, wie der Testfall ausgef\"uhrt wurde und
-welches Ergebnis er geliefert hat. Da es bei Korrektur von Softwarefehlern oder
-anderen Gegebenheiten notwendig ist, einen Test mehrfach durchzuf\"uhren
-(Testl\"aufe), ist jede Testdurchf\"uhrung zu dokumentieren. Daher ist diese
-Tabelle f\"ur \textbf{jeden Testlauf }  zu erstellen und \textbf{ fortlaufend zu
-nummerieren}. \\
-
+Im folgenden wird das Testszenario mit der \textit{bib2000.bib}-Datei
+beschrieben. Das Szenario ist erfolgreich, wenn auch alle Daten aus der Datei
+in die Datenbank übernommen wurden. Einmal wird das Szenario mit einer
+\Gls{glos:mysql} und einmal mit einer \Gls{glos:sqlite} durchgeführt.
 
 \begin{longtable}{|p{5cm}|p{10cm}|}
-\hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{Beispiel: /T100/ Lager
-anlegen} \\
-\hline
-\textbf{Testlauf Nr.} & \textit{Beispiel: 1} \\
-\hline
-\textbf{Eingaben} & \textit{Es sind alle Eingabedaten bzw. andere Aktionen
-aufzuf\"uh-ren, die f\"ur die Ausf\"uhrung des Testfalls notwendig sind.
-Diese k\"onnen sowohl als Wert angegeben werden (ggf. mit Toleranzen) als auch
-als Name, falls es sich um konstante Tabellen oder um Dateien handelt. Außerdem
-sind alle betroffenen Datenbanken, Dateien, Terminal Meldungen, etc. anzugeben.
-Hinweis: Es sind nicht noch mal die Einzelschritte aus 3.1.3 zu wiederholen.
-W\"ahrend jene allgemeiner sind (z.B. "`Ein-loggen \"uber das Login-Formular"')
-sind hier die konkreten eingegebenen Testdaten aufzuf\"uhren (z.B. "`Loginname:
-test; Passwort: xxxtest"'`). } \\
-\hline
-\textbf{Soll - Reaktion} & \textit{Hier ist anzugeben, welches Ergebnis bzw.
-Ausgabe der Test haben soll.
-Hinweis: Es sind nicht noch mal die Erfolgskriterien aus 3.1.2 zu wiederholen.
-W\"ahrend jene allgemeiner sind (z.B. "`Testnachricht wird \"uber Netzwerkkanal
-empfangen"') sind hier die konkreten erhaltenen Testdaten aufzuf\"uhren (z.B.
-Konsole zeigt Meldung: "`Testnachricht 123 erhalten"').
-} \\
-\hline
-\textbf{Ist -- Reaktion} & \textit{Hier ist anzugeben, welches Ergebnisdaten
-bzw. Ausgaben dieser Testlauf geliefert hat.} \\
-\hline
-\textbf{Ergebnis} & \textit{F\"ur jeden Testlauf ist zu vermerken, ob der Test
-erfolgreich durchgef\"uhrt werden konnte oder nicht. Einen missgl\"uckten Test
-bitte begr\"unden, sofern der Grund des Fehlschlags bekannt oder offensichtlich
-ist.} \\
-\hline
-\textbf{Unvorhergesehene Ereignisse w\"ahrend des Test-laufs } &
-\textit{optional; nur anzugeben, falls es unvorhergesehene Ereig-nisse gab} \\
-\hline
-\textbf{Nacharbeiten } & \textit{Ist ein Testlauf nicht erfolgreich
-durchgef\"uhrt worden, so werden hier die erforderlichen Nacharbeiten aufgef\"uhrt
-(z.B. Bugfixes).} \\
-\hline
- \end{longtable}
+  \hline
+  \textbf{Testfall -- ID und Bezeichnung} & T200 -- Bib\TeX -Import \\
+  \hline
+  \textbf{Testlauf Nr.} & 1 (SQLite) \\
+  \hline
+  \textbf{Eingaben} &  Die Datei \textit{bib2000.bib} und die Userdaten des
+  \textit{admin}-Benutzers mit dem Password \textit{sep2012} im Request für den
+  \textit{HTTP Status Code 200}.  Der Test läuft automatisch ab und bedarf keiner
+  Interaktion, nur die Error-Datei der \textit{bib2000.bib} muss nach Abschluss
+  geprüft werden.\\
+  \hline
+  \textbf{Soll - Reaktion} & Die Datei \textit{bib2000.bib.err} ist nach
+  Abschluss des Importes vorhanden aber leer und das Django Testing Framework
+  meldet auf der Konsole „0 Errors“ auch als Folge der leeren Fehlerdatei.
+  \\
+  \hline
+  \textbf{Ist -- Reaktion} & Der Test läuft entsprechend der Soll-Reaktion durch.\\
+  \hline
+  \textbf{Ergebnis} & Erfolgreich \\
+  \hline
+\end{longtable}
 
+Im folgenden nun der Import der Datei in eine \Gls{glos:mysql}-Datenbank.
+\begin{longtable}{|p{5cm}|p{10cm}|}
+  \hline
+  \textbf{Testfall -- ID und Bezeichnung} & T200 -- Bib\TeX -Import \\
+  \hline
+  \textbf{Testlauf Nr.} & 2 (MySQL) \\
+  \hline
+  \textbf{Eingaben} &  Die Datei \textit{bib2000.bib} und die Userdaten des
+  \textit{admin}-Benutzers mit dem Password \textit{sep2012} im Request für den
+  \textit{HTTP Status Code 200}.  Der Test läuft automatisch ab und bedarf keiner
+  Interaktion, nur die Error-Datei der \textit{bib2000.bib} muss nach Abschluss
+  geprüft werden.\\
+  \hline
+  \textbf{Soll - Reaktion} & Die Datei \textit{bib2000.bib.err} ist nach
+  Abschluss des Importes vorhanden aber leer und das Django Testing Framework
+  meldet auf der Konsole „0 Errors“ auch als Folge der leeren Fehlerdatei.
+  \\
+  \hline
+  \textbf{Ist -- Reaktion} & Der Test wird von einer Exception abgebrochen, die
+  von \Gls{glos:mysql} wegen eines „Truncate“ geworfen wird. Ein Keyword-Feld ist
+  größer als die definierte Tabellenspalte.\\
+  \hline
+  \textbf{Ergebnis} & Nicht Erfolgreich: Die „Truncate“-Exception wird durch
+  einen Fehler in der {\sffamily import\_bibtex()} ausgelöst, die den
+  Keyword-Eintrag nicht korrekt ausplitten kann. Entsprechend muss dieses
+  Splitten der Keywords überarbeitet werden.\\ \hline
+\end{longtable}
