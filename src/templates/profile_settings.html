@@ -3,22 +3,32 @@
 	<h1> Hallo, {{ user.username }}!</h1>
     <form action="" method="post">
     <fieldset>
-    
-    
+       
     <legend>Persönliche Einstellungen verändern</legend>
 	 
         <table> 
         <tr>
-            <td><b>Passwort</b></td><td><a href="/accounts/password/change">(ändern)</a></td>
+            <td><b>Passwort</b></td>
+            <td><a href="/accounts/password/change">(ändern)</a></td>
         </tr>
         <tr>
-            <td><b>Anschrift</b></td><td><a href="">(ändern)</a></td>    
+            <td><b>Anschrift</b></td>
+            <td>{{ c_user.user_profile.street }} {{ c_user.user_profile.number }} </td> 
+            <td><a href="">(ändern)</a></td>
+        
         </tr>
         <tr>
-            <td><b>E-Mail Adresse:</b>{{ c_user.email }}</td><td><a href="/email/validation/">(ändern)</a></td>
+            <td></td>
+            <td>{{ c_user.user_profile.zipcode }} {{ c_user.user_profile.city }}</td>
         </tr>
         <tr>
-            <td><b>Telefonnummer:</b></td><td><a href="">(ändern)</a></td>    
+            <td><b>E-Mail Adresse</b></td>
+            <td>{{ c_user.email }}</td><td><a href="/email/validation/">(ändern)</a></td>
+        </tr>
+        <tr>
+            <td><b>Telefonnummer:</b></td>
+            <td></td>
+            <td><a href="">(ändern)</a></td>    
 	    </tr>
 	    </table>
 	</fieldset>
