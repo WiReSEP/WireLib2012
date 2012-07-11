@@ -1,9 +1,9 @@
 \subsection{Testfall --/T224/: Ausleihe vermisst melden}
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} &  \textit{/F224/: Ausleihe vermisst melden} \\
+\textbf{Testfall -- ID und Bezeichnung} &  \textnormal{/F224/: Ausleihe vermisst melden} \\
 \hline
-\textbf{Zu testende Objekte und Methoden} &  \textit{\begin{itemize}
+\textbf{Zu testende Objekte und Methoden} &  \textnormal{\begin{itemize}
     \item die Webseite \uline{doc\_detail.html},
     \item in Komponente \emph{Models} die Funktion \lstinline{document.missing()}, 
     \item in Komponente \emph{Models} die Funktion \lstinline{document.set_status()},
@@ -12,18 +12,18 @@
 \\
 \hline
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
-\textit{Erfolgreich: Dokument wird als \glqq vermisst\grqq in der DB gespeichert, 
+\textnormal{Erfolgreich: Dokument wird als \glqq vermisst\grqq in der DB gespeichert, 
 die Webseite reflektiert das Dokument als vermisst, jeder registrierte Benutzer
 bekommt eine Vermisst Meldung per E-Mail zugesendet. } \\
 \hline
-\textbf{Einzelschritte} &  \textit{Nach Überprüfung, ob man angemeldet ist, öffnet
+\textbf{Einzelschritte} &  \textnormal{Nach Überprüfung, ob man angemeldet ist, öffnet
 man die \uline{doc\_detail.html} von einem Dokument. Nun wird auf den Button
 \glqq Als Vermisst melden\grqq geklickt.} \\
 \hline
-\textbf{Beobachtungen / Log} &  \textit{Fehler werden über die Konsole ausgegeben, 
+\textbf{Beobachtungen / Log} &  \textnormal{Fehler werden über die Konsole ausgegeben, 
 der Inhalt der E-Mail wird über \textbf{stdout} ausgegeben, sowie auch alle Adressaten.} \\
 \hline
-\textbf{Besonderheiten } &  \textit{Falls der vorherige Eintrag in \glqq doc\_status \grqq dem neuen bis auf
+\textbf{Besonderheiten } &  \textnormal{Falls der vorherige Eintrag in \glqq doc\_status \grqq dem neuen bis auf
         den Timestamp gleicht, muss natürlich kein neuer Eintrag eingefügt
         werden. Die Funktionen sollten also komplett ignoriert werden.} \\
 \hline
@@ -34,16 +34,16 @@ der Inhalt der E-Mail wird über \textbf{stdout} ausgegeben, sowie auch alle Adr
 Die folgende Tabelle zeigt den Testfall, wenn man ein Buch vermisst meldet.
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{/T224/: Ausleihe vermisst melden} \\
+\textbf{Testfall -- ID und Bezeichnung} & \textnormal{/T224/: Ausleihe vermisst melden} \\
 \hline
-\textbf{Testlauf Nr.} & \textit{1} \\
+\textbf{Testlauf Nr.} & \textnormal{1} \\
 \hline
-\textbf{Eingaben} & \textit{Erforderliche Eingaben für das Vermisst Melden eines Dokumentes ist der
+\textbf{Eingaben} & \textnormal{Erforderliche Eingaben für das Vermisst Melden eines Dokumentes ist der
         Datensatz eines Buches, das Recht des Vermisstmeldens beim angemeldeten 
         User und ein Klick auf den Button \uline{als vermisst melden}. Es muss zudem 
         mindestens eine E-Mail in der DB stehen.} \\
 \hline
-\textbf{Soll - Reaktion} & \textit{Der \glq return\_lend \grq -Wert des letzten Eintrages in \glqq 
+\textbf{Soll - Reaktion} & \textnormal{Der \glq return\_lend \grq -Wert des letzten Eintrages in \glqq 
         doc\_status \grqq zu diesem Dokument wird auf TRUE gesetzt, ein neuer 
         Eintrag mit dem neuen Status sollte in selbiger Tabelle erstellt werden 
         und es sollte nur noch ein Button \uline{Gefunden melden} erscheinen für 
@@ -51,9 +51,9 @@ Die folgende Tabelle zeigt den Testfall, wenn man ein Buch vermisst meldet.
         eine E-Mail mit der Vermisst Meldung bekommen.).
 } \\
 \hline
-\textbf{Ist -- Reaktion} & \textit{Der Test gibt die gewünschten Soll-Reaktionen zurück.} \\
+\textbf{Ist -- Reaktion} & \textnormal{Der Test gibt die gewünschten Soll-Reaktionen zurück.} \\
 \hline
-\textbf{Ergebnis} & \textit{Der Test war erfolgreich} \\
+\textbf{Ergebnis} & \textnormal{Der Test war erfolgreich} \\
 \hline
  \end{longtable}
  
@@ -62,30 +62,30 @@ möchte, obwohl man dieses bereits getan hat (z.B. durch Seitenaktualisierung).
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
 \textbf{Testfall -- ID und Bezeichnung} & 
-\textit{/T224/: Ausleihe vermisst melden} 
+\textnormal{/T224/: Ausleihe vermisst melden} 
 \\
 \hline
-\textbf{Testlauf Nr.} & \textit{2} \\
+\textbf{Testlauf Nr.} & \textnormal{2} \\
 \hline
 \textbf{Eingaben} & 
-\textit{Erforderliche Eingaben für das Vermisst Melden eines Dokumentes ist der
+\textnormal{Erforderliche Eingaben für das Vermisst Melden eines Dokumentes ist der
         Datensatz eines Buches, das Recht des Vermisstmeldens beim angemeldeten 
         User und ein Klick auf den Button \uline{als vermisst melden}. Es muss zudem 
         mindestens eine E-Mail in der DB stehen. }
 \\
 \hline
 \textbf{Soll - Reaktion} & 
-\textit{Die Seite wird genauso zurückgegeben, wie sie bereits ist. Es wird der
+\textnormal{Die Seite wird genauso zurückgegeben, wie sie bereits ist. Es wird der
         letzte \glqq doc\_status \grqq -Eintrag nicht verändert und auch kein 
         neuer hinzugefügt.} 
 \\
 \hline
 \textbf{Ist -- Reaktion} & 
-\textit{Der Test gibt die gewünschten Soll-Reaktionen zurück.} 
+\textnormal{Der Test gibt die gewünschten Soll-Reaktionen zurück.} 
 \\
 \hline
 \textbf{Ergebnis} & 
-\textit{Der Test ist erfolgreich abgelaufen.} \\
+\textnormal{Der Test ist erfolgreich abgelaufen.} \\
 \hline
  \end{longtable}
  

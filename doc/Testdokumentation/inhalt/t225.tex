@@ -4,11 +4,11 @@ Die folgende Tabelle beschreibt den Test der Ausleihe verloren melden. \\
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
 \textbf{Testfall -- ID und Bezeichnung} &  
-\textit{/F225/: Ausleihe verloren melden} 
+\textnormal{/F225/: Ausleihe verloren melden} 
 \\
 \hline
 \textbf{Zu testende Objekte und Methoden} &  
-\textit{\begin{itemize}
+\textnormal{\begin{itemize}
     \item die Webseite \uline{doc\_detail.html},
     \item in Komponente \emph{Models} die Funktion \lstinline{document.lend()}, 
     \item in Komponente \emph{Models} die Funktion \lstinline{document.set_status()},
@@ -17,14 +17,14 @@ Die folgende Tabelle beschreibt den Test der Ausleihe verloren melden. \\
 \\
 \hline
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
-\textit{Zum Einen muss der letzte Eintrag in der Tabelle \glqq doc\_status \grqq\
+\textnormal{Zum Einen muss der letzte Eintrag in der Tabelle \glqq doc\_status \grqq\
         von diesem Dokument aktualisiert werden.
         Außerdem sollte ein neuer Eintrag in dieser Tabelle existieren.
         Auch sollte sich die Webseite aktualisieren.}
 \\
 \hline
 \textbf{Einzelschritte} &  
-\textit{Zuerst sollte gewährleistet sein, dass man angemeldet ist. Danach muss 
+\textnormal{Zuerst sollte gewährleistet sein, dass man angemeldet ist. Danach muss 
         man die \uline{doc\_detail.html} von einem Dokument öffnen, welches man 
         ausgeliehen hat. Schlussendlich wird nur noch auf den Button 
         \uline{Verloren melden} geklickt, der nur angezeigt wird, wenn man das 
@@ -32,12 +32,12 @@ Die folgende Tabelle beschreibt den Test der Ausleihe verloren melden. \\
 \\
 \hline
 \textbf{Beobachtungen / Log} &  
-\textit{Alle Fehler beziehungsweise Logs werden über die Konsole des Servers 
+\textnormal{Alle Fehler beziehungsweise Logs werden über die Konsole des Servers 
         ausgegeben.} 
 \\
 \hline
 \textbf{Besonderheiten } &  
-\textit{Falls der vorherige Eintrag in \glqq doc\_status \grqq dem neuen bis auf
+\textnormal{Falls der vorherige Eintrag in \glqq doc\_status \grqq dem neuen bis auf
         den Timestamp gleicht, muss natürlich kein neuer Eintrag eingefügt
         werden. Die Funktionen sollten also komplett ignoriert werden.} 
 \\
@@ -49,19 +49,19 @@ Die folgende Tabelle zeigt den Testfall, wenn man ein Buch verloren meldet.
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
 \textbf{Testfall -- ID und Bezeichnung} & 
-\textit{/T225/: Ausleihe verloren melden} 
+\textnormal{/T225/: Ausleihe verloren melden} 
 \\
 \hline
-\textbf{Testlauf Nr.} & \textit{1} \\
+\textbf{Testlauf Nr.} & \textnormal{1} \\
 \hline
 \textbf{Eingaben} & 
-\textit{Erforderliche Eingaben für das Verlorenmelden eines Dokumentes ist der
+\textnormal{Erforderliche Eingaben für das Verlorenmelden eines Dokumentes ist der
         Datensatz eines Buches, das Recht des Verlorenmeldens beim angemeldeten 
         User und ein Klick auf den Button \uline{Verloren melden}.}
 \\
 \hline
 \textbf{Soll - Reaktion} & 
-\textit{Der \glq return\_lend \grq -Wert des letzten Eintrages in \glqq 
+\textnormal{Der \glq return\_lend \grq -Wert des letzten Eintrages in \glqq 
         doc\_status \grqq zu diesem Dokument wird auf TRUE gesetzt, ein neuer 
         Eintrag mit dem neuen Status sollte in selbiger Tabelle erstellt werden 
         und es sollte nur noch ein Button \uline{Gefunden melden} erscheinen für 
@@ -69,11 +69,11 @@ Die folgende Tabelle zeigt den Testfall, wenn man ein Buch verloren meldet.
 \\
 \hline
 \textbf{Ist -- Reaktion} & 
-\textit{Der Test gibt die gewünschten Soll-Reaktionen zurück.} 
+\textnormal{Der Test gibt die gewünschten Soll-Reaktionen zurück.} 
 \\
 \hline
 \textbf{Ergebnis} & 
-\textit{Der Test ist erfolgreich abgelaufen.} \\
+\textnormal{Der Test ist erfolgreich abgelaufen.} \\
 \hline
  \end{longtable}
  
@@ -82,29 +82,29 @@ möchte, obwohl man dieses bereits hat (z.B. durch Seitenaktualisierung).
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
 \textbf{Testfall -- ID und Bezeichnung} & 
-\textit{/T225/: Ausleihe verloren melden} 
+\textnormal{/T225/: Ausleihe verloren melden} 
 \\
 \hline
-\textbf{Testlauf Nr.} & \textit{2} \\
+\textbf{Testlauf Nr.} & \textnormal{2} \\
 \hline
 \textbf{Eingaben} & 
-\textit{Erforderliche Eingaben für das Verlorenmelden eines Dokumentes ist der
+\textnormal{Erforderliche Eingaben für das Verlorenmelden eines Dokumentes ist der
         Datensatz eines Buches, das Recht des Verlorenmeldens beim angemeldeten 
         User und ein Klick auf den Button \uline{Verloren melden}.}
 \\
 \hline
 \textbf{Soll - Reaktion} & 
-\textit{Die Seite wird genauso zurückgegeben, wie sie bereits ist. Es wird der
+\textnormal{Die Seite wird genauso zurückgegeben, wie sie bereits ist. Es wird der
         letzte \glqq doc\_status \grqq -Eintrag nicht verändert und auch kein 
         neuer hinzugefügt.} 
 \\
 \hline
 \textbf{Ist -- Reaktion} & 
-\textit{Der Test gibt die gewünschten Soll-Reaktionen zurück.} 
+\textnormal{Der Test gibt die gewünschten Soll-Reaktionen zurück.} 
 \\
 \hline
 \textbf{Ergebnis} & 
-\textit{Der Test ist erfolgreich abgelaufen.} \\
+\textnormal{Der Test ist erfolgreich abgelaufen.} \\
 \hline
  \end{longtable}
 

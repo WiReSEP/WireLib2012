@@ -1,10 +1,10 @@
 \subsection{T214 - Sortierung der Suche  }
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} &  \textit{                                                        /T214/ Sortierung der Suche} \\
+\textbf{Testfall -- ID und Bezeichnung} &  \textnormal{                                                        /T214/ Sortierung der Suche} \\
 \hline
 \textbf {Zu testende Objekte und Methoden.}  &  
-\textit {
+\textnormal {
 \begin{itemize}
     \item In Komponenten \emph{Views}  die Datei \lstinline {search, search_pro,} und \lstinline {doc_list}
     \item In Komponente \emph{Template} die Datei \lstinline {doc_list}
@@ -12,13 +12,13 @@
 \\
 \hline
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle. } &
-\textit{Im Fall, der Sortierung nach Titel ist der Vorgang erfolgreich, wenn die gefundenen Dokumente alphabetisch und absteigend aufgelistet werden. Die Sortierung nach Authoren ist dann erfolgreich abgelaufen, wenn anschließend die Dokumente alphabetisch absteigend nach ihren Autoren augelistet werden. Die Sortierung nach Veröffentlichung ist erfolgreich abgelaufen, wenn anschließend die Documente absteigend nach ihrem Veröffentlichungsdatum aufelistet werden. } \\
+\textnormal{Im Fall, der Sortierung nach Titel ist der Vorgang erfolgreich, wenn die gefundenen Dokumente alphabetisch und absteigend aufgelistet werden. Die Sortierung nach Authoren ist dann erfolgreich abgelaufen, wenn anschließend die Dokumente alphabetisch absteigend nach ihren Autoren augelistet werden. Die Sortierung nach Veröffentlichung ist erfolgreich abgelaufen, wenn anschließend die Documente absteigend nach ihrem Veröffentlichungsdatum aufelistet werden. } \\
 \hline
-\textbf{Einzelschritte} &  \textit{Zum Anfang muss man eine Suche, erweiterte Suche oder das Literaturverzeichnis aufrufen. Je nach Auswahl werden alle oder nur ein Teil der Dokumente aufgelistet. Es stehen dann einige Sortier-Links zur Verfügung. \uline{Dokumententitel}, \uline{Veröffentlichung}, \uline{Autoren}. Ein einfacher Klick reicht um die Sortierungsfunktion nach den Kriterien anzuordnen.} \\
+\textbf{Einzelschritte} &  \textnormal{Zum Anfang muss man eine Suche, erweiterte Suche oder das Literaturverzeichnis aufrufen. Je nach Auswahl werden alle oder nur ein Teil der Dokumente aufgelistet. Es stehen dann einige Sortier-Links zur Verfügung. \uline{Dokumententitel}, \uline{Veröffentlichung}, \uline{Autoren}. Ein einfacher Klick reicht um die Sortierungsfunktion nach den Kriterien anzuordnen.} \\
 \hline
-\textbf{Beobachtungen / Log} &  \textit{ Die Fehler können über den Browser visuell fest gestellt werden, oder über die Konsole gefunden werden. \ldots} \\
+\textbf{Beobachtungen / Log} &  \textnormal{ Die Fehler können über den Browser visuell fest gestellt werden, oder über die Konsole gefunden werden. \ldots} \\
 \hline
-\textbf{Abh\"angigkeiten} &  \textit{Diese Funktion ist teilweise abhängig von der Funktionsfähigkeit der erweiterten Suche. Man kommt auch über das Literaturverzeichnis an sortierbare Documente, aber um durch eine erweiterete Suche an jene zu kommen muss diese funktionieren und und welche liefern. } \\
+\textbf{Abh\"angigkeiten} &  \textnormal{Diese Funktion ist teilweise abhängig von der Funktionsfähigkeit der erweiterten Suche. Man kommt auch über das Literaturverzeichnis an sortierbare Documente, aber um durch eine erweiterete Suche an jene zu kommen muss diese funktionieren und und welche liefern. } \\
 \hline
 
  \end{longtable}
@@ -28,19 +28,19 @@
 
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{/T214/ Sortierung der Suche} \\
+\textbf{Testfall -- ID und Bezeichnung} & \textnormal{/T214/ Sortierung der Suche} \\
 \hline
-\textbf{Testlauf Nr.} & \textit{1} \\
+\textbf{Testlauf Nr.} & \textnormal{1} \\
 \hline
-\textbf{Eingaben} & \textit{In der Navigationsliste links wird wird das Literaturverzeichnis aufgerufen um zu sortierende Dokumente anzuzeigen. Anschließend wird der link \uline{Dokumententitel} einfach angeklickt.} \\
+\textbf{Eingaben} & \textnormal{In der Navigationsliste links wird wird das Literaturverzeichnis aufgerufen um zu sortierende Dokumente anzuzeigen. Anschließend wird der link \uline{Dokumententitel} einfach angeklickt.} \\
 \hline
-\textbf{Soll - Reaktion} & \textit{Es sollten nun immernoch die gleichen Dokumente angezeigt werden, aber in alphabetischer Reihenfolge der Titel absteigend geordnet aufgelistet sein .} \\
+\textbf{Soll - Reaktion} & \textnormal{Es sollten nun immernoch die gleichen Dokumente angezeigt werden, aber in alphabetischer Reihenfolge der Titel absteigend geordnet aufgelistet sein .} \\
 \hline
-\textbf{Ist -- Reaktion} & \textit{Die vor liegenden Dokumente sind alphabetisch nach ihren Titeln absteigend sortiert.} \\
+\textbf{Ist -- Reaktion} & \textnormal{Die vor liegenden Dokumente sind alphabetisch nach ihren Titeln absteigend sortiert.} \\
 \hline
-\textbf{Ergebnis} & \textit{Da die Soll- und Ist- Reaktion übereinstimmen, kann man den Test als erfolgreich betrachten.} \\
+\textbf{Ergebnis} & \textnormal{Da die Soll- und Ist- Reaktion übereinstimmen, kann man den Test als erfolgreich betrachten.} \\
 \hline
-\textbf{Nacharbeiten } & \textit{Ist ein Testlauf nicht erfolgreich
+\textbf{Nacharbeiten } & \textnormal{Ist ein Testlauf nicht erfolgreich
 durchgef\"uhrt worden, so werden hier die erforderlichen Nacharbeiten aufgef\"uhrt
 (z.B. Bugfixes).} \\
 \hline
@@ -48,19 +48,19 @@ durchgef\"uhrt worden, so werden hier die erforderlichen Nacharbeiten aufgef\"uh
  
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{/T214/ Sortieren der Suche} \\
+\textbf{Testfall -- ID und Bezeichnung} & \textnormal{/T214/ Sortieren der Suche} \\
 \hline
-\textbf{Testlauf Nr.} & \textit{2} \\
+\textbf{Testlauf Nr.} & \textnormal{2} \\
 \hline
-\textbf{Eingaben} & \textit{In der Navigationsliste links wird wird das Literaturverzeichnis aufgerufen um zu sortierende Dokumente anzuzeigen. Anschließend wird der link \uline{Veröffentlichung} einfach angeklickt.} \\
+\textbf{Eingaben} & \textnormal{In der Navigationsliste links wird wird das Literaturverzeichnis aufgerufen um zu sortierende Dokumente anzuzeigen. Anschließend wird der link \uline{Veröffentlichung} einfach angeklickt.} \\
 \hline
-\textbf{Soll - Reaktion} & \textit{Es sollten nun immernoch die gleichen Dokumente angezeigt werden, aber in numerischer Reihenfolge des Veröffentlichungsjahr absteigend geordnet aufgelistet sein .} \\
+\textbf{Soll - Reaktion} & \textnormal{Es sollten nun immernoch die gleichen Dokumente angezeigt werden, aber in numerischer Reihenfolge des Veröffentlichungsjahr absteigend geordnet aufgelistet sein .} \\
 \hline
-\textbf{Ist -- Reaktion} & \textit{Die vor liegenden Dokumente sind numerisch nach ihrem Veröffentlichungsjahr absteigend sortiert.} \\
+\textbf{Ist -- Reaktion} & \textnormal{Die vor liegenden Dokumente sind numerisch nach ihrem Veröffentlichungsjahr absteigend sortiert.} \\
 \hline
-\textbf{Ergebnis} & \textit{Da die Soll- und Ist- Reaktion übereinstimmen, kann man den Test als erfolgreich betrachten.} \\
+\textbf{Ergebnis} & \textnormal{Da die Soll- und Ist- Reaktion übereinstimmen, kann man den Test als erfolgreich betrachten.} \\
 \hline
-\textbf{Nacharbeiten } & \textit{Ist ein Testlauf nicht erfolgreich
+\textbf{Nacharbeiten } & \textnormal{Ist ein Testlauf nicht erfolgreich
 durchgef\"uhrt worden, so werden hier die erforderlichen Nacharbeiten aufgef\"uhrt
 (z.B. Bugfixes).} \\
 \hline
@@ -68,19 +68,19 @@ durchgef\"uhrt worden, so werden hier die erforderlichen Nacharbeiten aufgef\"uh
  
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{/T214/ Sortieren der Suche} \\
+\textbf{Testfall -- ID und Bezeichnung} & \textnormal{/T214/ Sortieren der Suche} \\
 \hline
-\textbf{Testlauf Nr.} & \textit{3} \\
+\textbf{Testlauf Nr.} & \textnormal{3} \\
 \hline
-\textbf{Eingaben} & \textit{In der Navigationsliste links wird wird das Literaturverzeichnis aufgerufen um zu sortierende Dokumente anzuzeigen. Anschließend wird der link \uline{Autoren} einfach angeklickt.} \\
+\textbf{Eingaben} & \textnormal{In der Navigationsliste links wird wird das Literaturverzeichnis aufgerufen um zu sortierende Dokumente anzuzeigen. Anschließend wird der link \uline{Autoren} einfach angeklickt.} \\
 \hline
-\textbf{Soll - Reaktion} & \textit{Es sollten nun immernoch die gleichen Dokumente angezeigt werden, aber in alphabetischer Reihenfolge des Autors absteigend geordnet aufgelistet sein .} \\
+\textbf{Soll - Reaktion} & \textnormal{Es sollten nun immernoch die gleichen Dokumente angezeigt werden, aber in alphabetischer Reihenfolge des Autors absteigend geordnet aufgelistet sein .} \\
 \hline
-\textbf{Ist -- Reaktion} & \textit{Die vor liegenden Dokumente sind alphabetisch nach ihrem Autor absteigend sortiert.} \\
+\textbf{Ist -- Reaktion} & \textnormal{Die vor liegenden Dokumente sind alphabetisch nach ihrem Autor absteigend sortiert.} \\
 \hline
-\textbf{Ergebnis} & \textit{Da die Soll- und Ist- Reaktion übereinstimmen, kann man den Test als erfolgreich betrachten.} \\
+\textbf{Ergebnis} & \textnormal{Da die Soll- und Ist- Reaktion übereinstimmen, kann man den Test als erfolgreich betrachten.} \\
 \hline
-\textbf{Nacharbeiten } & \textit{Ist ein Testlauf nicht erfolgreich
+\textbf{Nacharbeiten } & \textnormal{Ist ein Testlauf nicht erfolgreich
 durchgef\"uhrt worden, so werden hier die erforderlichen Nacharbeiten aufgef\"uhrt
 (z.B. Bugfixes).} \\
 \hline
