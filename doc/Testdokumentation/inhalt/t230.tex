@@ -1,98 +1,74 @@
-\subsection{Testfall -- ID und Bezeichnung}
-Jeder Testfall erh\"alt eine eindeutige Identifikation mit Kurzbezeichnung.\\
-Beispiel: /T100/ Lager anlegen\\
-Die folgende Tabelle beschreibt den Testfall. \\
+\subsection{T230 -- Bib\TeX -Export}
+Jeder Benutzer kann in der Detailseite eines Dokumentes einen \BibTeX -Eintrag
+zu dem aktuellen Dokument sehen und zur eigenen Verwendung kopieren.
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} &  \textit{Beispiel:
-                                                        /T100/ Lager anlegen} \\
+\textbf{Testfall -- ID und Bezeichnung} &  T230 -- \BibTeX -Export \\
 \hline
-\textbf{Zu testende Objekte und Methoden} &  \textit{Hier sind alle Testobjekte
-und Methoden zu beschreiben, die von diesem Testfall ausgef\"uhrt werden.
-Testobjekte k\"onnen dabei z.B. auch Komponenten oder einzelne Webseiten sein.}
+\textbf{Zu testende Objekte und Methoden} &  
+\textnormal{
+\begin{itemize}
+  \item In Komponente \emph{views} die Funktion \lstinline{doc_detail()}
+  \item In Komponente \emph{Server (App: Documents)} die Funktion
+	\lstinline{Bibtex.export_doc()}
+\end{itemize}
+}
 \\
 \hline
 \textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
-\textit{Es sind die Kriterien anzugeben, mit denen man feststellt, dass der
-Testfall erfolgreich bzw. fehlgeschlagen ist. } \\
+\textnormal{Die Funktion \lstinline{doc_detail()} liefert im \lstinline{Context} in 
+der Variablen \lstinline{Bibtex.bibtex_string()} einen \BibTeX -String, der die Funktion
+\lstinline{is_valid()} besteht.}\\
 \hline
-\textbf{Einzelschritte} &  \textit{Es ist zu beschreiben, was zu tun ist, um
-einen Testlauf vorzubereiten und ihn zu starten.
-Ggf. sind erforderliche Schritte w\"ahrend seiner Ausf\"uhrung anzugeben (z.B.
-Benutzerinteraktion \"uber ein User-Interface). Ferner ist zu beschreiben, was zu
-tun ist, um den Testlauf ordnungsgem\"aß oder im Falle unvorhergesehener
-Ereignisse anzuhalten (falls er nicht von selbst terminiert).
-Ggf. sind Aufr\"aumarbeiten zu beschreiben, um nach den Tests den urspr\"unglichen
-Zustand wiederherzustellen (falls der Testlauf nicht seiteneffektfrei ist)
-} \\
+\textbf{Einzelschritte} &  Der Test läuft ohne Benutzerinteraktion, also
+vollständig selbständig. Unvorhergesehene Exceptions brechen den Test mit einer
+entsprechenden Fehlermeldung ab. Änderungen an Daten werden nicht durchgeführt.
+\\
 \hline
-\textbf{Beobachtungen / Log} &  \textit{Es sind alle speziellen Methoden oder
-Formate zu beschreiben, mit denen die Ergebnisse der Testl\"aufe, die
-Zwischenf\"alle und sonstige wichtige Ereignisse aufgenommen werden sollen.
-Beispiel: Logdatei eines Servers, Messung der Antwortzeit eines Remote
-Terminals mittels Netzwerk Simulator, \ldots} \\
+\textbf{Beobachtungen / Log} &  Der Test läuft leise ab und gibt nur im
+Fehlerfall die entsprechende Fehlerzeile aus.\\
 \hline
-\textbf{Besonderheiten } &  \textit{optional; auszuf\"ullen, falls es
-Besonderheiten in diesem Testfall gibt.
-Testfallspezifische Besonderheiten, z.B. Ausf\"uhrungsvorschriften oder
-Abweichungen von der Testumgebung (siehe 2.5)  werden hier aufgelistet.} \\
-\hline
-\textbf{Abh\"angigkeiten} &  \textit{optional; auszuf\"ullen, falls es
-Abh\"angigkeiten in diesem Testfall gibt
-Ist dieser Testfall von der Ausf\"uhrung anderer Testf\"alle abh\"angig, so werden
-diese Testf\"alle hier aufgelistet und kurz beschrieben, worin die Abh\"angigkeit
-besteht.} \\
+\textbf{Abh\"angigkeiten} &  
+Dieser Test ist abhängig von dem Test \nameref{t200}.\\
 \hline
 
  \end{longtable}
 
-Die folgenden Tabellen beschreiben, wie der Testfall ausgef\"uhrt wurde und
-welches Ergebnis er geliefert hat. Da es bei Korrektur von Softwarefehlern oder
-anderen Gegebenheiten notwendig ist, einen Test mehrfach durchzuf\"uhren
-(Testl\"aufe), ist jede Testdurchf\"uhrung zu dokumentieren. Daher ist diese
-Tabelle f\"ur \textbf{jeden Testlauf }  zu erstellen und \textbf{ fortlaufend zu
-nummerieren}. \\
+%Die folgenden Tabellen beschreiben, wie der Testfall ausgef\"uhrt wurde und
+%welches Ergebnis er geliefert hat. Da es bei Korrektur von Softwarefehlern oder
+%anderen Gegebenheiten notwendig ist, einen Test mehrfach durchzuf\"uhren
+%(Testl\"aufe), ist jede Testdurchf\"uhrung zu dokumentieren. Daher ist diese
+%Tabelle f\"ur \textbf{jeden Testlauf }  zu erstellen und \textbf{ fortlaufend zu
+%nummerieren}. \\
+Die folgende Tabelle beschreibt den Test mit dem Dokument \emph{K006003} aus
+der Datenbank.
 
 
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
-\textbf{Testfall -- ID und Bezeichnung} & \textit{Beispiel: /T100/ Lager
-anlegen} \\
+\textbf{Testfall -- ID und Bezeichnung} & T230 -- \BibTeX -Export \\
 \hline
-\textbf{Testlauf Nr.} & \textit{Beispiel: 1} \\
+\textbf{Testlauf Nr.} & 1 \\
 \hline
-\textbf{Eingaben} & \textit{Es sind alle Eingabedaten bzw. andere Aktionen
-aufzuf\"uh-ren, die f\"ur die Ausf\"uhrung des Testfalls notwendig sind.
-Diese k\"onnen sowohl als Wert angegeben werden (ggf. mit Toleranzen) als auch
-als Name, falls es sich um konstante Tabellen oder um Dateien handelt. Außerdem
-sind alle betroffenen Datenbanken, Dateien, Terminal Meldungen, etc. anzugeben.
-Hinweis: Es sind nicht noch mal die Einzelschritte aus 3.1.3 zu wiederholen.
-W\"ahrend jene allgemeiner sind (z.B. "`Ein-loggen \"uber das Login-Formular"')
-sind hier die konkreten eingegebenen Testdaten aufzuf\"uhren (z.B. "`Loginname:
-test; Passwort: xxxtest"'`). } \\
+\textbf{Eingaben} & \textnormal{Der Funktion \lstinline{doc_detail()} wird eine
+\lstinline{document} Instanz von \emph{K006003} übergeben, welches der Funktion
+den Zugriff auf alle Attribute des Dokumentes liefert. Nachdem die
+\lstinline{doc_detail()} die Funktion \lstinline{Bibtex.bibtex_string()} mit
+dem Dokument aufruft generiert diese den entsprechenden String, der im
+\lstinline{Context} der \lstinline{doc_detail()} zurückgegeben wird. Diese
+\lstinline{Context}-Variable wird vom Test entnommen und der Methode
+\lstinline{is_valid()} übergeben, die einen \BibTeX -Eintrag auf validität
+prüft und einen Boolean zurück gibt. Wenn dieser \lstinline{True} ist, ist der
+Test erfolgreich.}\\ 
 \hline
-\textbf{Soll - Reaktion} & \textit{Hier ist anzugeben, welches Ergebnis bzw.
-Ausgabe der Test haben soll.
-Hinweis: Es sind nicht noch mal die Erfolgskriterien aus 3.1.2 zu wiederholen.
-W\"ahrend jene allgemeiner sind (z.B. "`Testnachricht wird \"uber Netzwerkkanal
-empfangen"') sind hier die konkreten erhaltenen Testdaten aufzuf\"uhren (z.B.
-Konsole zeigt Meldung: "`Testnachricht 123 erhalten"').
-} \\
+\textbf{Soll - Reaktion} & Die Testgumgebung gibt nichts zurück und führt nur
+den nachfolgenden Test durch.
+\\
 \hline
-\textbf{Ist -- Reaktion} & \textit{Hier ist anzugeben, welches Ergebnisdaten
-bzw. Ausgaben dieser Testlauf geliefert hat.} \\
+\textbf{Ist -- Reaktion} & Die Testumgebung gibt nichts zurück und führt den
+nachfolgenden Test aus. \\
 \hline
-\textbf{Ergebnis} & \textit{F\"ur jeden Testlauf ist zu vermerken, ob der Test
-erfolgreich durchgef\"uhrt werden konnte oder nicht. Einen missgl\"uckten Test
-bitte begr\"unden, sofern der Grund des Fehlschlags bekannt oder offensichtlich
-ist.} \\
-\hline
-\textbf{Unvorhergesehene Ereignisse w\"ahrend des Test-laufs } &
-\textit{optional; nur anzugeben, falls es unvorhergesehene Ereig-nisse gab} \\
-\hline
-\textbf{Nacharbeiten } & \textit{Ist ein Testlauf nicht erfolgreich
-durchgef\"uhrt worden, so werden hier die erforderlichen Nacharbeiten aufgef\"uhrt
-(z.B. Bugfixes).} \\
+\textbf{Ergebnis} & Der Test läuft erfolgreich durch. \\
 \hline
  \end{longtable}
 
