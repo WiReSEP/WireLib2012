@@ -23,7 +23,7 @@ In der folgenden Tabelle wird der Test der Ausleihe zurückgeben beschrieben.
 \hline
 \textbf{Einzelschritte} &  
 \textit{Zuerst sollte gewährleistet sein, dass man angemeldet ist. Danach muss 
-        man die \uline{doc_detail.html} von einem Dokument öffnen, welches man 
+        man die \uline{doc\_detail.html} von einem Dokument öffnen, welches man 
         ausgeliehen hat. Schlussendlich wird nur noch auf den Button 
         \uline{Rückgabe} geklickt.} 
 \\
@@ -39,7 +39,6 @@ In der folgenden Tabelle wird der Test der Ausleihe zurückgeben beschrieben.
         werden. Die Funktionen sollten also komplett ignoriert werden.} 
 \\
 \hline
-}
  \end{longtable}
 
 Die folgende Tabelle zeigt den Testfall, wenn man ein ausgeliehenes Buch 
@@ -57,7 +56,7 @@ zurückgeben möchte.
 \\
 \hline
 \textbf{Soll - Reaktion} & 
-\textit{Der \glq return_lend \grq -Wert des letzten Eintrages in \glqq 
+\textit{Der \glq return\_lend \grq -Wert des letzten Eintrages in \glqq 
         doc\_status \grqq zu diesem Dokument wird auf TRUE gesetzt, ein neuer 
         Eintrag mit dem neuen Status sollte in selbiger Tabelle erstellt werden 
         und der Button \uline{Ausleihen} müsste anstelle von \uline{Rückgabe} 
@@ -89,7 +88,7 @@ obwohl man dieses bereits hat (z.B. durch Seitenaktualisierung).
 \hline
 \textbf{Soll - Reaktion} & 
 \textit{Die Seite wird genauso zurückgegeben, wie sie bereits ist. Es wird der
-        letzte \glqq doc_status \grqq -Eintrag nicht verändert und auch kein 
+        letzte \glqq doc\_status \grqq -Eintrag nicht verändert und auch kein 
         neuer hinzugefügt.} 
 \\
 \hline
