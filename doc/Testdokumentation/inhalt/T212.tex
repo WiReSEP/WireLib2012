@@ -1,7 +1,7 @@
 \subsection{T212 - Erweiterte Suche}
-Jeder Testfall erh\"alt eine eindeutige Identifikation mit Kurzbezeichnung.\\
-Beispiel: /T100/ Lager anlegen\\
-Die folgende Tabelle beschreibt den Testfall. \\
+
+Dieser Testfall testet die Erweiterte Suche mit verschiedenen mögliche Eingaben.
+
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
 \textbf{Testfall -- ID und Bezeichnung} &  \textit{/T212 Erweiterte Suche} \\
@@ -38,6 +38,8 @@ Browsers und des Testservers auf der Konsole benutzt.}\\
 %Tabelle f\"ur \textbf{jeden Testlauf }  zu erstellen und \textbf{ fortlaufend zu
 %nummerieren}. \\
 
+Dieser Testlauf testet den einfachsten Fall eines einzelnen Wortes als
+Suchanfrage.
 
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
@@ -63,6 +65,10 @@ behindert allerdings nicht die Funktionalität.} \\
 \hline
 \end{longtable}
 
+Dieser Testlauf testen den Fall, dass ein Suchwort eingegeben, welches aus
+mehreren Wortfragmenten besteht, welche in nicht richtiger Reihenfolge
+eingegeben werden.
+
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
 \textbf{Testfall -- ID und Bezeichnung} & \textit{/T212/ Erweiterte
@@ -86,6 +92,9 @@ das Eingabefeld des Titels eingetragen.} \\
 behindert allerdings nicht die Funktionalität.} \\
 \hline
 \end{longtable}
+
+Dieser Testlauf testet den Fall das viele Eingaben gemacht werden, sodass
+nurnoch ein einzelnes Dokumet als Ergebnis ausgegeben wird.
 
 \begin{longtable}{|p{5cm}|p{10cm}|}
 \hline
