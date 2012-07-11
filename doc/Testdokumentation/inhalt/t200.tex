@@ -12,9 +12,9 @@ in die Datenbank übertragen.
   \textbf{Zu testende Objekte und Methoden} & 
   \textnormal{
   \begin{itemize}
-	\item In Komponente \emph{views} die Funktion
+	\item In Komponente \textit{views} die Funktion
 	  \lstinline{import_bibtex()}
-	\item In Komponente \emph{Server (App: Documents)} die Funktion
+	\item In Komponente \textit{Server (App: Documents)} die Funktion
 	  \lstinline{Bibtex.do_import()}, \lstinline{insert_doc()} und
 	  \lstinline{is_valid()} 
   \end{itemize} }
@@ -42,14 +42,14 @@ in die Datenbank übertragen.
   \\
   \hline
   \textbf{Besonderheiten } &  Für diesen Test wird als Eingabe Satz die
-  \emph{bib2000.bib} mit entsprechenden Daten verwendet und dafür nur eine
+  \textit{bib2000.bib} mit entsprechenden Daten verwendet und dafür nur eine
   Grundlage Datenbank mit Benutzern, Rechten und E-Mails aber ohne eingetragene
   Dokumente. Weiter wird dieser Test auf den zwei Datenbanksystemen
   \Gls{glos:mysql} und \Gls{glos:sqlite} gefahren\\
   \hline
 \end{longtable}
 
-Im folgenden wird das Testszenario mit der \emph{bib2000.bib}-Datei
+Im folgenden wird das Testszenario mit der \textit{bib2000.bib}-Datei
 beschrieben. Das Szenario ist erfolgreich, wenn auch alle Daten aus der Datei
 in die Datenbank übernommen wurden. Einmal wird das Szenario mit einer
 \Gls{glos:mysql} und einmal mit einer \Gls{glos:sqlite} durchgeführt.
@@ -60,13 +60,13 @@ in die Datenbank übernommen wurden. Einmal wird das Szenario mit einer
   \hline
   \textbf{Testlauf Nr.} & 1 (SQLite) \\
   \hline
-  \textbf{Eingaben} &  Die Datei \emph{bib2000.bib} und die Userdaten des
-  \emph{admin}-Benutzers mit dem Password \emph{sep2012} im Request für den
-  \emph{HTTP Status Code 200}.  Der Test läuft automatisch ab und bedarf keiner
-  Interaktion, nur die Error-Datei der \emph{bib2000.bib} muss nach Abschluss
+  \textbf{Eingaben} &  Die Datei \textit{bib2000.bib} und die Userdaten des
+  \textit{admin}-Benutzers mit dem Password \textit{sep2012} im Request für den
+  \textit{HTTP Status Code 200}.  Der Test läuft automatisch ab und bedarf keiner
+  Interaktion, nur die Error-Datei der \textit{bib2000.bib} muss nach Abschluss
   geprüft werden.\\
   \hline
-  \textbf{Soll - Reaktion} & Die Datei \emph{bib2000.bib.err} ist nach
+  \textbf{Soll - Reaktion} & Die Datei \textit{bib2000.bib.err} ist nach
   Abschluss des Importes vorhanden aber leer und das Django Testing Framework
   meldet auf der Konsole „0 Errors“ auch als Folge der leeren Fehlerdatei.
   \\
@@ -84,13 +84,13 @@ Im folgenden nun der Import der Datei in eine \Gls{glos:mysql}-Datenbank.
   \hline
   \textbf{Testlauf Nr.} & 2 (MySQL) \\
   \hline
-  \textbf{Eingaben} &  Die Datei \emph{bib2000.bib} und die Userdaten des
-  \emph{admin}-Benutzers mit dem Password \emph{sep2012} im Request für den
-  \emph{HTTP Status Code 200}.  Der Test läuft automatisch ab und bedarf keiner
-  Interaktion, nur die Error-Datei der \emph{bib2000.bib} muss nach Abschluss
+  \textbf{Eingaben} &  Die Datei \textit{bib2000.bib} und die Userdaten des
+  \textit{admin}-Benutzers mit dem Password \textit{sep2012} im Request für den
+  \textit{HTTP Status Code 200}.  Der Test läuft automatisch ab und bedarf keiner
+  Interaktion, nur die Error-Datei der \textit{bib2000.bib} muss nach Abschluss
   geprüft werden.\\
   \hline
-  \textbf{Soll - Reaktion} & Die Datei \emph{bib2000.bib.err} ist nach
+  \textbf{Soll - Reaktion} & Die Datei \textit{bib2000.bib.err} ist nach
   Abschluss des Importes vorhanden aber leer und das Django Testing Framework
   meldet auf der Konsole „0 Errors“ auch als Folge der leeren Fehlerdatei.
   \\
