@@ -1,0 +1,127 @@
+\subsection{Testfall -- ID und Bezeichnung}
+Jeder Testfall erh\"alt eine eindeutige Identifikation mit Kurzbezeichnung.\\
+Beispiel: /T100/ Lager anlegen\\
+Die folgende Tabelle beschreibt den Testfall. \\
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} &  \textit{/T212 Erweiterte Suche} \\
+\hline
+\textbf{Zu testende Objekte und Methoden} &  \textit{Es werden das Template der
+Erweiterten Suche und die Funktion search\_pro der views.py getestet.}
+\\
+\hline
+\textbf{Kriterien f\"ur erfolgreiche bzw. fehlgeschlagene Testf\"alle} &
+\textit{Ein Test ist erfolgreich, wenn als Ausgabe die in der Datenbank
+vorhanden auf die Suchanfrage passenden Dokumente ausgegeben werden.} \\
+\hline
+\textbf{Einzelschritte} &  \textit{Zuerst muss per Browser die Webseite  
+der erweiterten Suche aufgerufen werden. Danach werden je nach Testlauf die 
+Felder der erweiterten Suche ausgefüllt und die Suche per Klick auf den 
+entsprechenden Button gestartet. Dies wird mit allen im Testplan angegebenen
+Browsern durchgeführt. Der Prozess sollte in jedem Fall terminieren und entweder
+eine Fehlermeldung oder eine Erfolgsmeldung mitteilen. Sollte sich wieder
+erwarten der Prozess nicht terminieren ist der Django Testserver zu beenden.
+Aufräumschritte sind in keinem Fall nötig.} \\
+\hline
+\textbf{Beobachtungen / Log} &  \textit{Zur Beobachtung werden die Ausgabe des
+Browsers und des Testservers auf der Konsole benutzt.}\\
+\hline
+\textbf{Besonderheiten } &  \textit{Keine Besonderheiten} \\
+\hline
+\textbf{Abh\"angigkeiten} &  \textit{Es sind keine Abhängigkeite vorhanden} \\
+\hline
+
+ \end{longtable}
+
+%Die folgenden Tabellen beschreiben, wie der Testfall ausgef\"uhrt wurde und
+%welches Ergebnis er geliefert hat. Da es bei Korrektur von Softwarefehlern oder
+%anderen Gegebenheiten notwendig ist, einen Test mehrfach durchzuf\"uhren
+%(Testl\"aufe), ist jede Testdurchf\"uhrung zu dokumentieren. Daher ist diese
+%Tabelle f\"ur \textbf{jeden Testlauf }  zu erstellen und \textbf{ fortlaufend zu
+%nummerieren}. \\
+
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{Beispiel: /T212/ Erweiterte
+Suche} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{1} \\
+\hline
+\textbf{Eingaben} & \textit{Es wird der String \lstinline{Analysis} in das
+das Eingabefeld des Titels eingetragen.} \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Es werden alle Bücher mit
+\lstinline{Analysis} im Titel angzeigt.
+} \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Entspricht der Soll-Reaktion} \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test ist erfolgreich verlaufen} \\
+\hline
+\textbf{Unvorhergesehene Ereignisse w\"ahrend des Test-laufs } &
+\textit{Opera zeigt die Buttons nicht mit transparentem Hintergrund an. Dies
+behindert allerdings nicht die Funktionalität.} \\
+\hline
+\textbf{Nacharbeiten } & \textit{-} \\
+\hline
+\end{longtable}
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{Beispiel: /T212/ Erweiterte
+Suche} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{2} \\
+\hline
+\textbf{Eingaben} & \textit{Es wird der String \lstinline{Ana Func} in das
+das Eingabefeld des Titels eingetragen.} \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Es werden alle Bücher mit
+\lstinline{Functional Analysis} im Titel angzeigt.
+} \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Entspricht der Soll-Reaktion} \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test ist erfolgreich verlaufen} \\
+\hline
+\textbf{Unvorhergesehene Ereignisse w\"ahrend des Test-laufs } &
+\textit{Opera zeigt die Buttons nicht mit transparentem Hintergrund an. Dies
+behindert allerdings nicht die Funktionalität.} \\
+\hline
+\textbf{Nacharbeiten } & \textit{-} \\
+\hline
+\end{longtable}
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Testfall -- ID und Bezeichnung} & \textit{Beispiel: /T212/ Erweiterte
+Suche} \\
+\hline
+\textbf{Testlauf Nr.} & \textit{3} \\
+\hline
+\textbf{Eingaben} & \textit{Es wird 
+der String \lstinline{Analysis} in das das Eingabefeld des Titels eingetragen,
+der String \lstinline{Conway} in das das Eingabefeld des Authors eingetragen,
+der String \lstinline{1995} in das das Eingabefeld des Erscheinungsjahrs
+eingetragen,
+der String \lstinline{Springer} in das das Eingabefeld des Herausgebers
+eingetragen,
+der String \lstinline{K056031} in das das Eingabefeld der Bibliotheksnummer eingetragen
+.} \\
+\hline
+\textbf{Soll - Reaktion} & \textit{Es wird die Detailansicht des Buches \emph{A
+Course of Functional Analysis} angezeigt.}
+} \\
+\hline
+\textbf{Ist -- Reaktion} & \textit{Entspricht der Soll-Reaktion} \\
+\hline
+\textbf{Ergebnis} & \textit{Der Test ist erfolgreich verlaufen} \\
+\hline
+\textbf{Unvorhergesehene Ereignisse w\"ahrend des Test-laufs } &
+\textit{Opera zeigt die Buttons nicht mit transparentem Hintergrund an. Dies
+behindert allerdings nicht die Funktionalität.} \\
+\hline
+\textbf{Nacharbeiten } & \textit{-} \\
+\hline
+\end{longtable}
