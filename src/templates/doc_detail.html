@@ -72,7 +72,7 @@
 		<tr>
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
-			<!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
+			{# <!-- TODO funktioniert vermutlich auch noch nicht wirklich --> #}
 			{{ key_len }}
 			{% if key_len > 0 %}
 			{% for k in documents.keywords_set.all %}
@@ -254,7 +254,7 @@
 	      {% else %}
 	        {% if documents.status == 3 %}
 	          Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br />
-	          <!-- TODO Mail an den Bibliothekar wenn gefunden -->
+	         {# <!-- TODO Mail an den Bibliothekar wenn gefunden --> #}
 	          {% if can_miss %}
 		            <input type="submit" name="found" value="Gefunden melden" />
 	            <br />
