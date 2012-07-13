@@ -6,8 +6,8 @@ from django.template import RequestContext, Template
 from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, category_need, emails
 from django.contrib.auth.models import User
-from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
+from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm
 from django.contrib.auth.decorators import login_required
@@ -555,7 +555,27 @@ def allegro_export(request):
     """Seite um den Allegro-Export zu initiieren und für den Zugriff auf bisher
     erstellte Allegro Exporte.
     """
+    hint = ''
+    alg_exp = Allegro()
+    if "allegro_export" in request.POST:
+        alg_exp.start()
+        alg_exp.join()
+        hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
+    if alg_exp.isAlive():
+        hint = "Derzeit läuft ein Export."
+    elif not Allegro.docs_to_export:
+        hint = "Keine Dokumente zum exportieren."
+        Allegro.docs_to_export_lock.acquire()
+        Allegro.docs_to_export = True
+        Allegro.docs_to_export_lock.release()
+    files = {}
+    for file in os.listdir(settings.DOCUMENTS_ALLEGRO_FILES):
+        if ".adt" in file:
+            files[file] = __gen_sec_link("/"+file)
+
+#    Rechte für Template
     v_user = request.user
+#    Snippet Code
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
     perms =  v_user.has_perm('documents.can_see_admin')
@@ -564,11 +584,14 @@ def allegro_export(request):
     miss_query = miss_query.order_by('-doc_status__date')
     return render_to_response("allegro_export.html",
                               context_instance=Context(
-                                        {"user" : v_user,   
-                                         "perm" : perms, 
-                                         "import_perm" : import_perm,
-                                         "export_perm" : export_perm, 
-                                         "miss" : miss_query[0:10]}))
+                                    {"user" : v_user, 
+                                     "perm" : perms, 
+                                     "import_perm" : import_perm,
+                                     "export_perm" : export_perm, 
+                                     "miss" : miss_query[0:10],
+                                     "files" :files,
+                                     "hint" : hint,
+                                     }))
 
 @login_required
 def bibtex_export(request):
@@ -576,7 +599,6 @@ def bibtex_export(request):
     Zugriff auf bisher exportierte BibTeX-Exporte.
     TODO: Zugriff nur auf Benutzer beschränken, die Dokumente hinzufügen
     dürfen.
-    TODO: Dateien für entsprechende Benutzer publizieren.
     """
     if "bibtex_export" in request.POST:
         export_documents = document.objects.filter(

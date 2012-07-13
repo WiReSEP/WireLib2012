@@ -223,8 +223,7 @@ class UglyBibtex(object):
 
 class Bibtex(object):
 
-    @staticmethod
-    def do_import(file):
+    def do_import(self, file):
         """Diese Methode importiert die Dokumente einer Bibtex-Datei.
         """
         UglyBibtex(file).do_import()
@@ -302,8 +301,7 @@ class Bibtex(object):
 
     active = False
 
-    @staticmethod
-    def export_docs(documents, export_path):
+    def export_docs(self, documents, export_path):
         """ Viele Dokumente werden in eine Datei exportiert.
         """
         lock = thread.allocate_lock()

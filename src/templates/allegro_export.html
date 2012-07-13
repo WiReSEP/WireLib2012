@@ -1,10 +1,19 @@
 {% extends "index.html" %}
 {% block content %}
   <h1>Allegro-Export</h1>
-  <br />
-  Dieser Export ist zum Datenaustausch mit Bibliotheken die das Allegroformat
-  nutzen gedacht.<br /><br />
-  <input type="button" value="Allegro-Export starten">
-  <hr>
-  Historie der bisherigen Allegro-Exporte:
+  <p>Dieser Export ist zum Datenaustausch mit Bibliotheken die das Allegroformat
+  nutzen gedacht.
+  <form action="" method="post">
+	<input type="submit" name="allegro_export" value="Allegro-Export starten" />
+  </form>
+  </p>
+  {% if hint %}<p id="hint">{{ hint }}</p>{% endif %}<p>
+  <hr />
+  <h2>Historie der bisherigen Allegro-Exporte:</h2>
+  <ul>
+  {% for file,link in files.items %}
+	<li><a href="{{ link }}">{{ file }}</a></li>
+  {% endfor %}
+  </ul>
+  <p>
 {% endblock %}
