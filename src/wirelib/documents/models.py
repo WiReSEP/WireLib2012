@@ -468,8 +468,8 @@ class EmailValidation(models.Model):
         
 
 class emails(models.Model):
-    name = models.CharField(max_length=20)
-    subject = models.CharField("Betreff", max_length=30)
+    name = models.CharField(max_length=30)
+    subject = models.CharField("Betreff", max_length=50)
     text = models.TextField()
     class Meta:
         permissions = (("can_send_mails", "Can send Emails"),)

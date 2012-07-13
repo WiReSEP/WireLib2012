@@ -18,6 +18,11 @@ urlpatterns = patterns('documents.views',
         url(r'^user/$', 'user'),
         url(r'^user/profile/$', 'profile'), 
         url(r'^user/settings/(?P<user_id>\d+)/$', 'profile_settings'),
+        
+        url(r'^profile/edit/personal/$', personal, name='profile_edit_personal'), 
+        url(r'^user/profile/edit/personal/done/$', direct_to_template,
+            {'template': 'profile/personal_done.html'}, name='profile_edit_personal_done'), 
+        
         url(r'^user/(?P<user_id>\d+)/$', 'profile'),
         url(r'^miss/$', 'docs_miss'),
 )

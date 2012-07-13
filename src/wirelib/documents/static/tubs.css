@@ -71,8 +71,8 @@ div#symbolpic {
 div#logo {
      position:absolute;
      left:820px;
-     top: 6px; 
-     z-index:3;
+     top: 0px; 
+     z-index:0;
      width: 350px;
  	 height: 74px;
      }
