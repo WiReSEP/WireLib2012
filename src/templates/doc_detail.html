@@ -72,7 +72,7 @@
 		<tr>
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
-			<!-- TODO funktioniert vermutlich auch noch nicht wirklich -->
+			{# <!-- TODO funktioniert vermutlich auch noch nicht wirklich --> #}
 			{{ key_len }}
 			{% if key_len > 0 %}
 			{% for k in documents.keywords_set.all %}
@@ -198,7 +198,6 @@
 	    {% if documents.status == 1 %}    
 	      {% if lending %}
 	        {% if lending.non_user_lend %}
-	          {# <!-- TODO Profillinks einfügen --> #}
 	          Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br />
 	          {% if user.id == lending.user_lend.id %}
 	            Als Bürge sind Sie eingetragen.
@@ -255,7 +254,7 @@
 	      {% else %}
 	        {% if documents.status == 3 %}
 	          Das gewünschte Dokument wurde vor kurzem vermisst gemeldet. <br />
-	          <!-- TODO Mail an den Bibliothekar wenn gefunden -->
+	         {# <!-- TODO Mail an den Bibliothekar wenn gefunden --> #}
 	          {% if can_miss %}
 		            <input type="submit" name="found" value="Gefunden melden" />
 	            <br />
@@ -316,7 +315,14 @@
 {% if r.status == 4 %}
     Verloren
 {% endif %}  </td>  
-    <td>{{ r.recent_user }} </td> 
+    <td>
+    {% if not r.user_lend %}
+        {{ r.recent_user }}
+    {%  endif %}  
+    {% if r.user_lend %}
+       {{ r.user_lend }} 
+    {%  endif %}   
+    </td> 
     </tr>
     
     {% endfor %}

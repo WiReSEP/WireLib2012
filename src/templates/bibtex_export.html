@@ -5,6 +5,7 @@
   <form action="" method="post">
 	<input type="submit" name="bibtex_export" value="BibTeX-Export starten" />
   </form>
+  {% if hint %}<p id="hint">{{ hint }}</p>{% endif %}<p>
   <hr />
   Historie der bisherigen BibTeX-Exporte:
   <ul>
