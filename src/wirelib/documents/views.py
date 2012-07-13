@@ -4,16 +4,17 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, category_need, emails
+    EmailValidation, category_need, emails, user_profile
 from django.contrib.auth.models import User
 from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
 from django.db.models import Q
 import datetime
 import os
@@ -352,6 +353,28 @@ def profile_settings(request, user_id):
                                                 "import_perm" : import_perm,
                                                 "export_perm" : export_perm, 
                                                 "miss" : miss_query[0:10]}))
+@login_required
+def personal(request): 
+
+    profile, created = user_profile.objects.get_or_create(user_id=request.user)
+    
+    if request.method == "POST": 
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid(): 
+            form.save()
+            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+    else:
+        form = ProfileForm(instance=profile)
+    
+    template = "profile/personal.html"    
+    data = { 'form': form, } 
+    
+    return render_to_response(template, data, context_instance=RequestContext(request))   
+
+
+
+
+
 
 def email_validation_process(request, key):
 
