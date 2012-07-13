@@ -1,3 +1,0 @@
-{% extends "index.html" %}
-{% load i18n %}
-
