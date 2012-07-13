@@ -41,7 +41,7 @@ class ProfileForm(ModelForm):
 class TelForm(ModelForm): 
     class Meta: 
         model = tel_user
-        exclude = ('id', 'user_id')
+        exclude = ('user_id')
 
 class UploadFileForm(forms.Form):
     file  = forms.FileField()

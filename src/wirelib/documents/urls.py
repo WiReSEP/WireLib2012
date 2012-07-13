@@ -18,16 +18,18 @@ urlpatterns = patterns('documents.views',
         url(r'^user/$', 'user'),
         url(r'^user/profile/$', 'profile'), 
         url(r'^user/settings/(?P<user_id>\d+)/$', 'profile_settings'),
-        
         url(r'^profile/edit/personal/$', personal, name='profile_edit_personal'), 
         url(r'^user/profile/edit/personal/done/$', direct_to_template,
             {'template': 'profile/personal_done.html'}, name='profile_edit_personal_done'), 
         
+        url(r'^profile/edit/tel/$', telpersonal, name='profile_edit_tel'), 
         url(r'^user/(?P<user_id>\d+)/$', 'profile'),
         url(r'^miss/$', 'docs_miss'),
 )
 
-# Links zu Accountfunktionen
+###############PROFIL#############################
+
+#Links zur Profilnavigation
 
 # Links zum Passwortaendern
 urlpatterns += patterns('', 
@@ -48,6 +50,8 @@ urlpatterns += patterns('',
         url(r'^email/validation/(?P<key>.{70})/$', email_validation_process, name='email_validation_process'),
         url(r'^email/validation/reset/$', email_validation_reset),
 ) 
+
+###################################
         
 urlpatterns += patterns('django.contrib.auth.views',
         url(r'^login/$', 'login'),
