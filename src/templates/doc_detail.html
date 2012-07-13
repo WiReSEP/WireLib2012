@@ -198,7 +198,6 @@
 	    {% if documents.status == 1 %}    
 	      {% if lending %}
 	        {% if lending.non_user_lend %}
-	          {# <!-- TODO Profillinks einfügen --> #}
 	          Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br />
 	          {% if user.id == lending.user_lend.id %}
 	            Als Bürge sind Sie eingetragen.
@@ -316,7 +315,14 @@
 {% if r.status == 4 %}
     Verloren
 {% endif %}  </td>  
-    <td>{{ r.recent_user }} </td> 
+    <td>
+    {% if not r.user_lend %}
+        {{ r.recent_user }}
+    {%  endif %}  
+    {% if r.user_lend %}
+       {{ r.user_lend }} 
+    {%  endif %}   
+    </td> 
     </tr>
     
     {% endfor %}
