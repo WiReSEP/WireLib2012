@@ -203,6 +203,7 @@ def doc_detail(request, bib_no_id):
     export_perm = v_user.has_perm('documents.can_export')
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
+    keyword =__show_keywords(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -228,7 +229,8 @@ def doc_detail(request, bib_no_id):
                       "import_perm" : import_perm,
                       "change_document" : change_document,
                       "miss" : miss_query[0:10],
-                      "history" : history })
+                      "history" : history ,
+                      "keyword" : keyword })
     response = HttpResponse(template.render(context))
     return response
 
@@ -887,3 +889,6 @@ def __document_missing_email(document, user):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
     msg.send()
     
+def __show_keywords(doc):
+    keywords = doc.keywords_set.order_by('keyword')
+    return keywords 
