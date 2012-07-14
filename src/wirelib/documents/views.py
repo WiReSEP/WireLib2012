@@ -623,15 +623,21 @@ def bibtex_export(request):
     TODO: Zugriff nur auf Benutzer beschränken, die Dokumente hinzufügen
     dürfen.
     """
-    if "bibtex_export" in request.POST:
+    hint = ''
+    print "Es ist %s" % Bibtex.bibtex_lock.locked()
+    if Bibtex.bibtex_lock.locked():
+        hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
+        print hint
+    elif "bibtex_export" in request.POST:
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
                 )
-        thread.start_new_thread(
-                Bibtex.export_docs,
-                ( export_documents, 
-                    settings.DOCUMENTS_BIBTEX_FILES)
-                )
+        Bibtex().export_data(
+                export_documents,
+                settings.DOCUMENTS_BIBTEX_FILES
+                ).start()
+        hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
+
     files = {}
     for file in os.listdir(settings.DOCUMENTS_BIBTEX_FILES):
         if ".bib" in file:
@@ -654,6 +660,7 @@ def bibtex_export(request):
                                      "export_perm" : export_perm, 
                                      "miss" : miss_query[0:10],
                                      "files" :files,
+                                     "hint" : hint,
                                      }))
 
 @login_required

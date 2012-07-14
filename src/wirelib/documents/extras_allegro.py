@@ -20,9 +20,18 @@ class Allegro(threading.Thread):
     werden können verwendet werden.
     """
     docs_to_export_lock = threading.Lock()
+    """ Lock-Variable für docs_to_export
+    """
+    allegro_lock = threading.Lock()
+    """ Stellt sicher, dass immer nur eine Instanz von Allegro läuft
+    """
 
     def run(self):
+        if Allegro.allegro_lock.locked():
+            return
+        Allegro.allegro_lock.acquire()
         self.doc_export()
+        Allegro.allegro_lock.release()
 
     def doc_export(self):
         """
