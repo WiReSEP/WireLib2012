@@ -4,12 +4,12 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, category_need, emails, user_profile
+    EmailValidation, category_need, emails, user_profile, tel_user
 from django.contrib.auth.models import User
 from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm, ProfileForm
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm 
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -203,6 +203,7 @@ def doc_detail(request, bib_no_id):
     export_perm = v_user.has_perm('documents.can_export')
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
+    keyword =__show_keywords(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -228,7 +229,8 @@ def doc_detail(request, bib_no_id):
                       "import_perm" : import_perm,
                       "change_document" : change_document,
                       "miss" : miss_query[0:10],
-                      "history" : history })
+                      "history" : history ,
+                      "keyword" : keyword })
     response = HttpResponse(template.render(context))
     return response
 
@@ -354,8 +356,11 @@ def profile_settings(request, user_id):
                                                 "export_perm" : export_perm, 
                                                 "miss" : miss_query[0:10]}))
 @login_required
-def personal(request): 
-
+def personal(request):
+    """Zum Editieren von Anschrift
+    """
+     
+    
     profile, created = user_profile.objects.get_or_create(user_id=request.user)
     
     if request.method == "POST": 
@@ -371,8 +376,21 @@ def personal(request):
     
     return render_to_response(template, data, context_instance=RequestContext(request))   
 
+def telpersonal(request): 
 
-
+    tel, created = tel_user.objects.get_or_create(user=request.user)  
+    
+    if request.method == "POST": 
+        form = TelForm(request.POST, instance=tel)
+        if form.is_valid(): 
+            form.save()
+            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+    else: 
+        form = TelForm(instance=tel)
+    template = "profile/tel.html"
+    data = { 'form': form, }
+    
+    return render_to_response(template, data, context_instance=RequestContext(request)) 
 
 
 
@@ -878,3 +896,6 @@ def __document_missing_email(document, user):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
     msg.send()
     
+def __show_keywords(doc):
+    keywords = doc.keywords_set.order_by('keyword')
+    return keywords 

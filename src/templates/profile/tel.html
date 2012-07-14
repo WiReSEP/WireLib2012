@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Telefonnummer ändern" %}{% endblock %}
+
+
+{% block content %}
+	<form class="personal" action="{{ request.path_info }}" method="post" enctype="multipart/form-data">
+	<fieldset>
+		<legend>{% trans "Telefonnummer ändern" %}</legend>
+		{{ form.as_p }}
+	</fieldset>
+  <input type="submit" value="{% trans 'Speichern' %}" />
+	</form>
+{% endblock %}

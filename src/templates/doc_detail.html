@@ -43,7 +43,8 @@
 		  <td><b>Autor:</b></td>
 		  <td>
 			{% for a in documents.authors.all %}
-			{{ a.first_name }} {{ a.last_name }},
+			{{ a.first_name }} {{ a.last_name }}
+			{% if not forloop.last %}, {% endif %}
 			{% endfor %}
 		  </td>
 		</tr>
@@ -72,16 +73,15 @@
 		<tr>
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
-			{# <!-- TODO funktioniert vermutlich auch noch nicht wirklich --> #}
-			{{ key_len }}
-			{% if key_len > 0 %}
-			{% for k in documents.keywords_set.all %}
-			{{ k.keyword }}{% if not forloop.last %},
-			{% endif %}
-			{% endfor %}
-			{% else %}
-			-
-			{% endif %}
+		    {% for k in keyword %}
+			<li>{{k.keyword}}</li>
+			{% if not forloop.last %} {% endif %}
+			
+			
+			
+			
+	        
+		  {% endfor %}
 		  </td>
 		</tr>
 		

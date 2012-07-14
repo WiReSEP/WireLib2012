@@ -9,27 +9,39 @@
         <table> 
         <tr>
             <td><b>Passwort</b></td>
+            <th colspan="2">*********</th>
             <td><a href="/accounts/password/change">(ändern)</a></td>
         </tr>
         <tr>
+            <td><b>E-Mail Adresse</b></td>
+            <th colspan="2">{{ c_user.email }}</th>
+            <td><a href="/email/validation/">(ändern)</a></td>
+        </tr>
+               
+        <tr>
             <td><b>Anschrift</b></td>
-            <td>{{ c_user.user_profile.street }} {{ c_user.user_profile.number }} </td> 
+            <th colspan="2">{{ c_user.user_profile.street }} {{ c_user.user_profile.number }} </th> 
             <td><a href="/profile/edit/personal">(ändern)</a></td>
         
         </tr>
         <tr>
             <td></td>
-            <td>{{ c_user.user_profile.zipcode }} {{ c_user.user_profile.city }}</td>
-        </tr>
-        <tr>
-            <td><b>E-Mail Adresse</b></td>
-            <td>{{ c_user.email }}</td><td><a href="/email/validation/">(ändern)</a></td>
+            <th colspan="2">{{ c_user.user_profile.zipcode }} {{ c_user.user_profile.city }}</th>
         </tr>
         <tr>
             <td><b>Telefonnummer:</b></td>
-            <td></td>
-            <td><a href="">(ändern)</a></td>    
+            <th colspan="2"></th>
+            <td><a href="/profile/edit/tel">(ändern)</a></td>    
 	    </tr>
+	    {% for i in c_user.tel_user_set.all %}
+	    <tr>
+	        <td></td>
+	        <td>{{ i.tel_type }}</td>
+	        <td>{{ i.tel_nr }}</td>
+	    </tr>
+	    {% endfor %}
+	    
+	    
 	    </table>
 	</fieldset>
 	</form>
