@@ -4,16 +4,17 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, category_need, emails
+    EmailValidation, category_need, emails, user_profile, tel_user
 from django.contrib.auth.models import User
-from documents.extras_doc_funcs import insert_doc
 from documents.extras_bibtex import Bibtex
+from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm 
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
 from django.db.models import Q
 import datetime
 import os
@@ -261,6 +262,7 @@ def doc_detail(request, bib_no_id):
     export_perm = v_user.has_perm('documents.can_export')
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
+    keyword =__show_keywords(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -286,7 +288,8 @@ def doc_detail(request, bib_no_id):
                       "import_perm" : import_perm,
                       "change_document" : change_document,
                       "miss" : miss_query[0:10],
-                      "history" : history })
+                      "history" : history ,
+                      "keyword" : keyword })
     response = HttpResponse(template.render(context))
     return response
 
@@ -411,6 +414,44 @@ def profile_settings(request, user_id):
                                                 "import_perm" : import_perm,
                                                 "export_perm" : export_perm, 
                                                 "miss" : miss_query[0:10]}))
+@login_required
+def personal(request):
+    """Zum Editieren von Anschrift
+    """
+     
+    
+    profile, created = user_profile.objects.get_or_create(user_id=request.user)
+    
+    if request.method == "POST": 
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid(): 
+            form.save()
+            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+    else:
+        form = ProfileForm(instance=profile)
+    
+    template = "profile/personal.html"    
+    data = { 'form': form, } 
+    
+    return render_to_response(template, data, context_instance=RequestContext(request))   
+
+def telpersonal(request): 
+
+    tel, created = tel_user.objects.get_or_create(user=request.user)  
+    
+    if request.method == "POST": 
+        form = TelForm(request.POST, instance=tel)
+        if form.is_valid(): 
+            form.save()
+            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+    else: 
+        form = TelForm(instance=tel)
+    template = "profile/tel.html"
+    data = { 'form': form, }
+    
+    return render_to_response(template, data, context_instance=RequestContext(request)) 
+
+
 
 def email_validation_process(request, key):
 
@@ -614,7 +655,27 @@ def allegro_export(request):
     """Seite um den Allegro-Export zu initiieren und für den Zugriff auf bisher
     erstellte Allegro Exporte.
     """
+    hint = ''
+    alg_exp = Allegro()
+    if "allegro_export" in request.POST:
+        alg_exp.start()
+        alg_exp.join()
+        hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
+    if alg_exp.isAlive():
+        hint = "Derzeit läuft ein Export."
+    elif not Allegro.docs_to_export:
+        hint = "Keine Dokumente zum exportieren."
+        Allegro.docs_to_export_lock.acquire()
+        Allegro.docs_to_export = True
+        Allegro.docs_to_export_lock.release()
+    files = {}
+    for file in os.listdir(settings.DOCUMENTS_ALLEGRO_FILES):
+        if ".adt" in file:
+            files[file] = __gen_sec_link("/"+file)
+
+#    Rechte für Template
     v_user = request.user
+#    Snippet Code
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
     perms =  v_user.has_perm('documents.can_see_admin')
@@ -623,11 +684,14 @@ def allegro_export(request):
     miss_query = miss_query.order_by('-doc_status__date')
     return render_to_response("allegro_export.html",
                               context_instance=Context(
-                                        {"user" : v_user,   
-                                         "perm" : perms, 
-                                         "import_perm" : import_perm,
-                                         "export_perm" : export_perm, 
-                                         "miss" : miss_query[0:10]}))
+                                    {"user" : v_user, 
+                                     "perm" : perms, 
+                                     "import_perm" : import_perm,
+                                     "export_perm" : export_perm, 
+                                     "miss" : miss_query[0:10],
+                                     "files" :files,
+                                     "hint" : hint,
+                                     }))
 
 @login_required
 def bibtex_export(request):
@@ -635,17 +699,22 @@ def bibtex_export(request):
     Zugriff auf bisher exportierte BibTeX-Exporte.
     TODO: Zugriff nur auf Benutzer beschränken, die Dokumente hinzufügen
     dürfen.
-    TODO: Dateien für entsprechende Benutzer publizieren.
     """
-    if "bibtex_export" in request.POST:
+    hint = ''
+    print "Es ist %s" % Bibtex.bibtex_lock.locked()
+    if Bibtex.bibtex_lock.locked():
+        hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
+        print hint
+    elif "bibtex_export" in request.POST:
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
                 )
-        thread.start_new_thread(
-                Bibtex.export_docs,
-                ( export_documents, 
-                    settings.DOCUMENTS_BIBTEX_FILES)
-                )
+        Bibtex().export_data(
+                export_documents,
+                settings.DOCUMENTS_BIBTEX_FILES
+                ).start()
+        hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
+
     files = {}
     for file in os.listdir(settings.DOCUMENTS_BIBTEX_FILES):
         if ".bib" in file:
@@ -668,6 +737,7 @@ def bibtex_export(request):
                                      "export_perm" : export_perm, 
                                      "miss" : miss_query[0:10],
                                      "files" :files,
+                                     "hint" : hint,
                                      }))
 
 @login_required
@@ -885,3 +955,6 @@ def __document_missing_email(document, user):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
     msg.send()
     
+def __show_keywords(doc):
+    keywords = doc.keywords_set.order_by('keyword')
+    return keywords 

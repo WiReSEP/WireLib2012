@@ -60,12 +60,13 @@
 	 {% endspaceless %}</div>
 	  <div id="year">{{ d.year }}</div>
 	  <div id="volume">{% spaceless %}
-	  <div id="publisher">{{ d.publisher|default_if_none:"" }}</div>
-            {# TODO ersetzen durch schöneren Aufruf #}      
-            
+	  {% if d.publisher %}
+	  <div id="publisher">{{ d.publisher }}</div>
+      {% endif %}
+      <div id="Umfang">      
             {% for b in d.doc_extra_set.all %}
                 {% if b.bib_field == "volume" %}     
-                    Seitenzahl:   {{ b }}
+                    Umfang:   {{ b }}
                 {% endif %}
             {% endfor %}    
             {% endspaceless %}</div>

@@ -71,8 +71,8 @@ div#symbolpic {
 div#logo {
      position:absolute;
      left:820px;
-     top: 6px; 
-     z-index:3;
+     top: 0px; 
+     z-index:0;
      width: 350px;
  	 height: 74px;
      }
@@ -650,6 +650,10 @@ div.metas {
 .inhalt ul#list_body li#status_4:before{
   content: "✗";
   color: #880000;
+}
+
+.inhalt #hint{
+  color: red;
 }
 
 .inhalt ul#list_body li div{
