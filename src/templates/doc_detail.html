@@ -75,12 +75,10 @@
 		  <td>
 		    {% for k in keyword %}
 			<li>{{k.keyword}}</li>
-			{% if not forloop.last %} {% endif %}
-			
-			
-			
-			
-	        
+			{% if not k.keyword %}
+			-
+			{% endif  %}
+			        
 		  {% endfor %}
 		  </td>
 		</tr>
