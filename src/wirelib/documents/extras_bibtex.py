@@ -4,9 +4,8 @@ from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
 from django.contrib.auth.models import User
 
-import os
 import datetime
-import thread
+import threading
 import extras_doc_funcs
 import re
 import codecs
@@ -221,7 +220,31 @@ class UglyBibtex(object):
         self.errout.write('\n')
 
 
-class Bibtex(object):
+class Bibtex(threading.Thread):
+    """ Threadfähiger Bibtex-Parser für den Import von Bibtex-Dateien in die
+    Datenbank und für einen Export. Export sollte aus Sicherheitsgründen immer
+    über einen Thread laufen, vorher muss jedoch die Funktion export_data()
+    ausgeführt werden.
+    """
+
+    bibtex_lock = threading.Lock()
+    """ Stellt sicher, dass nur ein Bibtex-Thread läuft
+    """
+    def export_data(self, documents, export_path):
+        """ Zum setzen der für den Export notwendigen Daten.
+        """
+        self.documents = documents
+        self.export_path = export_path
+        return self
+
+    def run(self):
+        if Bibtex.bibtex_lock.locked():
+            return
+        if not (self.documents and self.export_path):
+            return
+        Bibtex.bibtex_lock.acquire()
+        self.__export_docs(self.documents, self.export_path)
+        Bibtex.bibtex_lock.release()
 
     def do_import(self, file):
         """Diese Methode importiert die Dokumente einer Bibtex-Datei.
@@ -301,10 +324,10 @@ class Bibtex(object):
 
     active = False
 
-    def export_docs(self, documents, export_path):
+    def __export_docs(self, documents, export_path):
         """ Viele Dokumente werden in eine Datei exportiert.
         """
-        lock = thread.allocate_lock()
+        lock = threading.Lock()
         lock.acquire()
         if Bibtex.active == True:
             return
