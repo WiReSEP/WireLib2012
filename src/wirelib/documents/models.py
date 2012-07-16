@@ -251,6 +251,7 @@ class document_authors(models.Model):
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
+        unique_together = ('document', 'author')
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
