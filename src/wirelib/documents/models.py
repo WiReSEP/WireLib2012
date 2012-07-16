@@ -368,8 +368,8 @@ class doc_status(models.Model):
     date = models.DateTimeField(auto_now_add=True) 
         #Datum an dem es geschah
     return_lend = models.BooleanField(default=False)
-        # Aktueller Eintrag vorhanden
-    date_term_lend = models.DateTimeField(blank=True, null=True) 
+        # Aktuellerer Eintrag vorhanden
+    date_term_lend = models.DateField(blank=True, null=True) 
         #Ende der Rückgabefrist
     user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender User
