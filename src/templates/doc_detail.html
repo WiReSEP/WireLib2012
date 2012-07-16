@@ -74,8 +74,10 @@
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
 		    {% for k in keyword %}
+			
+			{% if k.keyword %}
 			<li>{{k.keyword}}</li>
-			{% if not k.keyword %}
+			{% elif %}
 			-
 			{% endif  %}
 			        
