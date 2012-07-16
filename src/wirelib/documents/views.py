@@ -524,12 +524,12 @@ def doc_add(request, bib_no_id=None):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
-            filename = 'imports/' + datetime.datetime.strftime(date, '%s') + '.bib'
+            filename = settings.DOCUMENTS_IMPORT_FILES + datetime.datetime.strftime(date, '%s') + '.bib'
             destination = open(filename, 'wb+')
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)
             destination.close()
-            Bibtex.do_import(filename)
+            Bibtex().do_import(filename)
             os.remove(filename)
             filesize = os.path.getsize(filename + '.err')
             if filesize == 0:
