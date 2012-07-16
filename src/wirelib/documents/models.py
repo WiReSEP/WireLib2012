@@ -336,7 +336,7 @@ class tel_user(models.Model):
 class non_user(models.Model):
     first_name = models.CharField("vorname",max_length=30)
     last_name = models.CharField("nachname",max_length=30)
-    email = models.EmailField("e-mail",unique=True)
+    email = models.EmailField("e-mail",max_length=50)
     street = models.CharField("straße",max_length=30)
     number = models.CharField("nummer",max_length=5)
     zipcode = models.CharField("postleitzahl",max_length=5)
@@ -368,8 +368,8 @@ class doc_status(models.Model):
     date = models.DateTimeField(auto_now_add=True) 
         #Datum an dem es geschah
     return_lend = models.BooleanField(default=False)
-        # Aktuellerer Eintrag vorhanden
-    date_term_lend = models.DateField(blank=True, null=True) 
+        # Aktueller Eintrag vorhanden
+    date_term_lend = models.DateTimeField(blank=True, null=True) 
         #Ende der Rückgabefrist
     user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender User
