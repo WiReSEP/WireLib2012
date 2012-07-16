@@ -191,7 +191,7 @@ class document(models.Model):
         if self.status == document.LEND:
             dstat = self.doc_status_set.latest('date')
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
-                raise LendingError()
+                return
         # zum Ausleihen oder Wiederfinden
         elif self.status == document.ORDERED:
             raise LendingError()
