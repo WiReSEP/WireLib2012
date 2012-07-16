@@ -186,11 +186,15 @@ class UglyBibtex(object):
         if key_val[0] == u'author':
             key_val[1] = key_val[1].split(',')
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
+            for entry in key_val[1]:
+                entry.strip()
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'keywords':
             key_val[1] = re.split('[,;/]', key_val[1])
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
+            for entry in key_val[1]:
+                entry.strip()
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'price':
@@ -211,7 +215,7 @@ class UglyBibtex(object):
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
             self.entry[key_val[0]] = key_val[1]
         else:       # Extra Field
-            self.extra_entry[key_val[0]] = key_val[1]
+            self.extra_entry[key_val[0]] = key_val[1].strip()
 
     def __log_error(self):
         self.errout.write("Zeile %d: " % self.line_no)
