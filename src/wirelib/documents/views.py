@@ -33,17 +33,77 @@ def search(request):
         suchtext = request.GET.get('query','')
         #Erstellen eines Sets aus allen Suchbegriffen.
         #Aufgrund des Verfahrens eine ODER-Suche
-        search_set = (
-                Q(title__icontains = suchtext) |
-                Q(authors__last_name__icontains = suchtext) |
-                Q(isbn__icontains = suchtext) |
-                Q(bib_no__icontains = suchtext) |
-                Q(publisher__name__icontains = suchtext) |
-                Q(keywords__keyword__icontains = suchtext)
+        suchtext_gesplittet = suchtext.split(" ")
+        first_for = True
+        next_action = "none"
+        not_active = False
+        for i in suchtext_gesplittet:
+            if first_for:
+                first_for = False
+                search_set = (
+                    Q(title__icontains = i) |
+                    Q(authors__last_name__icontains = i) |
+                    Q(isbn__icontains = i) |
+                    Q(bib_no__icontains = i) |
+                    Q(publisher__name__icontains = i) |
+                    Q(keywords__keyword__icontains = i))
+                document_query = document.objects.filter(search_set).distinct()
+            else:
+                if not_active == False :
+                    if i == "not":
+                        not_active = True
 
-        )
-        #Filtern nach den Suchbegriffen des search_set
-        document_query = document.objects.filter(search_set).distinct()
+                if next_action == "none":
+                    if i == "and":
+                        next_action = "and"
+                    elif i == "or":
+                        next_action = "or"
+                    else:
+                        search_set = (
+                            Q(title__icontains = i) |
+                            Q(authors__last_name__icontains = i) |
+                            Q(isbn__icontains = i) |
+                            Q(bib_no__icontains = i) |
+                            Q(publisher__name__icontains = i) |
+                            Q(keywords__keyword__icontains = i))
+                        document_query = document_query.filter(search_set).distinct()
+
+                else:
+                    if next_action == "or":
+                        if not_active:
+                            search_set = (
+                                Q(title__icontains = i) |
+                                Q(authors__last_name__icontains = i) |
+                                Q(isbn__icontains = i) |
+                                Q(bib_no__icontains = i) |
+                                Q(publisher__name__icontains = i) |
+                                Q(keywords__keyword__icontains = i))
+                            search_query = not document.objects.filter(search_set).distinct() & document.objects.all
+                            document_query = document_query | search_query
+                        else:
+                            search_set = (
+                                Q(title__icontains = i) |
+                                Q(authors__last_name__icontains = i) |
+                                Q(isbn__icontains = i) |
+                                Q(bib_no__icontains = i) |
+                                Q(publisher__name__icontains = i) |
+                                Q(keywords__keyword__icontains = i))
+                            search_query = document.objects.filter(search_set).distinct()
+                            document_query = document_query | search_query
+                        document_query = document_query.distinct()
+                        next_action = "none"
+
+                    if next_action == "and":
+                        search_set = (
+                            Q(title__icontains = i) |
+                            Q(authors__last_name__icontains = i) |
+                            Q(isbn__icontains = i) |
+                            Q(bib_no__icontains = i) |
+                            Q(publisher__name__icontains = i) |
+                            Q(keywords__keyword__icontains = i))
+                        document_query = document_query.filter(search_set).distinct()
+                        next_action = "none"
+
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if document_query.count()==1:
             return doc_detail(request, document_query[0].bib_no)
@@ -88,7 +148,6 @@ def search_pro(request):
             title_query = s_title.split(" ")
             for i in title_query:
                 s_documents = s_documents.filter(title__icontains = i)
-        #TODO : String parsen und aufsplitten bei title und keywords
         if s_fn_author != "":
             s_documents = s_documents.filter(authors__first_name__icontains =
                                              s_fn_author)
@@ -239,6 +298,7 @@ def doc_assign(request, bib_no_id):
     userform = SelectUser(v_user)
     nonuserform = NonUserForm()
     user_lend = ""
+    message = 'test'
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -255,6 +315,15 @@ def doc_assign(request, bib_no_id):
                 document_query.lend(user=user_lend, editor=v_user)
             #print userform.fields['users']
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+            
+    elif 'assign-ex' in request.POST:
+        nonuserform = NonUserForm(request.POST)
+        if nonuserform.is_valid():
+            nonuserform.save()
+            # TODO :Buch soll auf Bürgen entliehen bleiben?
+            # wo wird der Bürge gespeichert?
+            # Anzeige wer entliehen hat
+            return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
 
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
@@ -268,6 +337,7 @@ def doc_assign(request, bib_no_id):
                        "lending" : lending_query, 
                        "userform": userform,
                        "nonuserform" : nonuserform,
+                       "message" : message,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
