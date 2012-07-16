@@ -967,5 +967,5 @@ def __document_missing_email(document, user):
     msg.send()
     
 def __show_keywords(doc):
-    keywords = doc.keywords_set.filter(keyword__startswith="%")
+    keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
