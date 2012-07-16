@@ -74,14 +74,14 @@
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
 		    {% for k in keyword %}
-			{% if k.keyword %}
-			{{k.keyword}}
-			{% if not forloop.last %}, {% endif %}
-			{% else %}
-			-
-			{% endif  %}
-			        
-		  {% endfor %}
+			    {{k.keyword}}
+			    {% if not forloop.last %},{% endif %}
+			    		        
+		    {% endfor %}
+		    {% if not keyword %}
+		    -
+		    {% endif %}
+		    
 		  </td>
 		</tr>
 		
