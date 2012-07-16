@@ -7,8 +7,17 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.auth.models import User
-from documents.models import EmailValidation, document, author, non_user
+from documents.models import EmailValidation, document, author, non_user,\
+    user_profile, tel_user
 import mimetypes, urllib
+
+if not settings.AUTH_PROFILE_MODULE: 
+    raise SiteProfileNotAvailable
+try:
+    app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
+    Profile = models.get_model(app_label, model_name)
+except (ImportError, ImproperlyConfigured): 
+    raise SiteProfileNotAvailable
 
 
 class EmailValidationForm(forms.Form):
@@ -24,6 +33,16 @@ class EmailValidationForm(forms.Form):
 
         raise forms.ValidationError(_("Die Email existiert schon."))
         
+class ProfileForm(ModelForm): 
+    class Meta: 
+        model = user_profile
+        exclude = ('user_id')
+
+class TelForm(ModelForm): 
+    class Meta: 
+        model = tel_user
+        exclude = ('user_id')
+
 class UploadFileForm(forms.Form):
     file  = forms.FileField()
 

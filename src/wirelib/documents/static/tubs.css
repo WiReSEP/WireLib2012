@@ -652,6 +652,10 @@ div.metas {
   color: #880000;
 }
 
+.inhalt #hint{
+  color: red;
+}
+
 .inhalt ul#list_body li div{
   padding-right: 5px;
 }
