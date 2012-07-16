@@ -2,10 +2,10 @@
 {% block content %}
 
 <h1>{{ documents.title }}</h1> 
-<table width="100%" >
+<table>
 <tr>
   <td>
-    <table>
+    <table width = "100%">
     
       {% if change_document %}
         <tr>
@@ -74,14 +74,14 @@
 		  <td><b>Schlüsselwörter:</b></td>
 		  <td>
 		    {% for k in keyword %}
-			<li>{{k.keyword}}</li>
-			{% if not forloop.last %} {% endif %}
-			
-			
-			
-			
-	        
-		  {% endfor %}
+			    {{k.keyword}}
+			    {% if not forloop.last %},{% endif %}
+			    		        
+		    {% endfor %}
+		    {% if not keyword %}
+		    -
+		    {% endif %}
+		    
 		  </td>
 		</tr>
 		
@@ -321,6 +321,9 @@
     {%  endif %}  
     {% if r.user_lend %}
        {{ r.user_lend }} 
+    {%  endif %}   
+    {% if r.non_user_lend %}
+       {{ r.non_user_lend }} 
     {%  endif %}   
     </td> 
     </tr>

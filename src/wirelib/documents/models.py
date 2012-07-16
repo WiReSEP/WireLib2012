@@ -191,7 +191,7 @@ class document(models.Model):
         if self.status == document.LEND:
             dstat = self.doc_status_set.latest('date')
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
-                raise LendingError()
+                return
         # zum Ausleihen oder Wiederfinden
         elif self.status == document.ORDERED:
             raise LendingError()
@@ -251,6 +251,7 @@ class document_authors(models.Model):
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
+        unique_together = ('document', 'author')
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
@@ -336,7 +337,7 @@ class tel_user(models.Model):
 class non_user(models.Model):
     first_name = models.CharField("vorname",max_length=30)
     last_name = models.CharField("nachname",max_length=30)
-    email = models.EmailField("e-mail",unique=True)
+    email = models.EmailField("e-mail",max_length=50)
     street = models.CharField("straße",max_length=30)
     number = models.CharField("nummer",max_length=5)
     zipcode = models.CharField("postleitzahl",max_length=5)

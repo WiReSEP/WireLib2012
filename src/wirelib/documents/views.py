@@ -220,10 +220,10 @@ def doc_detail(request, bib_no_id):
     #vermisst melden
     if 'missing' in request.POST and request.user.is_authenticated():
         document_query.missing(v_user)
-        thread.start_new_thread(
-            __document_missing_email,
-            (document_query, v_user)
-            )
+       # thread.start_new_thread(
+       #     __document_missing_email,  deaktiviert, um Spam vorzubeugen TODO
+       #     (document_query, v_user)
+       #     )
         
         
     #verloren melden
@@ -298,7 +298,6 @@ def doc_assign(request, bib_no_id):
     userform = SelectUser(v_user)
     nonuserform = NonUserForm()
     user_lend = ""
-    message = 'test'
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -319,11 +318,10 @@ def doc_assign(request, bib_no_id):
     elif 'assign-ex' in request.POST:
         nonuserform = NonUserForm(request.POST)
         if nonuserform.is_valid():
-            nonuserform.save()
-            # TODO :Buch soll auf Bürgen entliehen bleiben?
-            # wo wird der Bürge gespeichert?
-            # Anzeige wer entliehen hat
-            return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+            non_user_lend = nonuserform.save()
+            if non_user_lend and not non_user_lend == "":
+                document_query.lend(user=v_user, non_user=non_user_lend)
+                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
 
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
@@ -337,7 +335,6 @@ def doc_assign(request, bib_no_id):
                        "lending" : lending_query, 
                        "userform": userform,
                        "nonuserform" : nonuserform,
-                       "message" : message,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
@@ -524,12 +521,12 @@ def doc_add(request, bib_no_id=None):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
-            filename = 'imports/' + datetime.datetime.strftime(date, '%s') + '.bib'
+            filename = settings.DOCUMENTS_IMPORT_FILES + datetime.datetime.strftime(date, '%s') + '.bib'
             destination = open(filename, 'wb+')
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)
             destination.close()
-            Bibtex.do_import(filename)
+            Bibtex().do_import(filename)
             os.remove(filename)
             filesize = os.path.getsize(filename + '.err')
             if filesize == 0:
@@ -952,20 +949,55 @@ def __filter_history(doc):
 def __document_missing_email(document, user):
     email = emails.objects.get(name = "Vermisst Gemeldet")
     plaintext = Template(email.text)
-    staffmember = User.objects.values_list('email', flat=True)
-    #staffmember = ('zapdoshameyer@web.de', 'tim3out@arcor.de')
+    member = User.objects.values_list('email', flat=True)
+   # member = ('zapdoshameyer@web.de', 'tim3out@arcor.de')
     c = Context({"document_name" : document.title,
                      "user_name" : user.first_name,
-                     "user_email" : "" })
+               })
     subject, from_email, to, bcc = ('[WiReLib] Vermisstmeldung', 
                                     'j.hameyer@tu-bs.de',
-                                    'j.hameyer@tu-bs.de', 
-                                    staffmember
+                                    'j.hameyer@tu-bs.de', #TODO
+                                    member
                                     )
     text_content = plaintext.render(c)
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
     msg.send()
     
+
+def __document_expired_email():
+    current_day = datetime.date.today() 
+    
+    if current_day.weekday() == 1:
+        expired_docs = doc_status.objects.filter(
+                         Q(return_lend=False),
+                         Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
+                         Q(date_term_lend__exact=current_day + datetime.timedelta(7)) |
+                         Q(date_term_lend__exact=current_day + datetime.timedelta(8))
+                         )
+    elif current_day.weekday() == 0:
+        expired_docs = doc_status.objects.filter(
+                         Q(return_lend=False),
+                         Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
+                         Q(date_term_lend__exact=current_day + datetime.timedelta(7))
+                         )
+    else:
+        expired_docs = doc_status.objects.filter(return_lend=False, 
+                                                 date_term_lend__exact=current_day + datetime.timedelta(6)
+                                                 )
+                                                 
+    email = emails.objects.get(name = "Frist Erinnerungsemail")
+    plaintext = Template(email.text)
+    
+    c = Context({"document_name" : "" ,
+                 "user_name" : "" ,
+                 "user_email" :"" })
+    subject, from_email, to = ( '[WireLib] Erinnerungsmail',
+                                'TODO@TODO.de',
+                                'TODO@TODO.de'
+                                )
+    
+                   
 def __show_keywords(doc):
-    keywords = doc.keywords_set.order_by('keyword')
+    keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
+
