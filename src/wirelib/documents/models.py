@@ -336,7 +336,7 @@ class tel_user(models.Model):
 class non_user(models.Model):
     first_name = models.CharField("vorname",max_length=30)
     last_name = models.CharField("nachname",max_length=30)
-    email = models.EmailField("e-mail",unique=True)
+    email = models.EmailField("e-mail",max_length=50)
     street = models.CharField("straße",max_length=30)
     number = models.CharField("nummer",max_length=5)
     zipcode = models.CharField("postleitzahl",max_length=5)
