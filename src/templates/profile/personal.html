@@ -8,7 +8,10 @@
 	<form class="personal" action="{{ request.path_info }}" method="post" enctype="multipart/form-data">
 	<fieldset>
 		<legend>{% trans "Persönliche Einstellungen verändern" %}</legend>
-		{{ form.as_p }}
+		<table> 
+		
+		{{ form.as_table }}
+		</table> 
 	</fieldset>
   <input type="submit" value="{% trans 'Save' %}" />
 	</form>
