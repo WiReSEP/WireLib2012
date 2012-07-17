@@ -49,6 +49,10 @@ class publisher(models.Model):
     
     def __unicode__(self):
         return self.name
+        
+    class Meta:
+        verbose_name = "Publisher"
+        verbose_name_plural = "Publisher"
 
 
 class author(models.Model):
@@ -64,25 +68,25 @@ class author(models.Model):
         return (self.last_name + ', ' + self.first_name)
 
 class document(models.Model):
-    bib_no = models.CharField("Bibliotheksnummer", max_length=15, primary_key=True)
-    inv_no = models.CharField("Inventar-Nummer", max_length=15, unique=True)
+    bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
+    inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
-    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=20, blank=True, null=True) 
+    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=60, blank=True, null=True) 
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=200)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
     category = models.ForeignKey(category,verbose_name="Kategorie")
-    last_updated = models.DateField("Letztes Update",auto_now=True)
+    last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
     last_edit_by = models.ForeignKey(User,verbose_name="Zuletzt geändert von")
     publisher = models.ForeignKey(publisher, blank=True, null=True)
     year = models.IntegerField("Jahr",blank=True, null=True)
     address = models.CharField("Adresse",max_length=100, blank=True, null=True)
     price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
     currency = models.CharField("Währung",max_length=3, blank=True, null=True)
-    date_of_purchase = models.DateField("Kaufdatum",auto_now_add=True)
-    ub_date = models.DateField(blank=True, null=True) 
+    date_of_purchase = models.DateField("Kaufdatum", auto_now_add=True)
+    ub_date = models.DateField("UB-Export", blank=True, null=True) 
         #Datum des Allegro-Exports
-    bib_date = models.DateField(blank=True, null=True) 
+    bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
     authors = models.ManyToManyField(author,
@@ -100,18 +104,21 @@ class document(models.Model):
         
 
     AVAILABLE= 0  #vorhanden
-    LEND = 1       #ausgeliehen
-    ORDERED = 2    #bestellt
-    MISSING = 3       #vermisst
-    LOST = 4       #verloren
+    LEND = 1      #ausgeliehen
+    ORDERED = 2   #bestellt
+    MISSING = 3   #vermisst
+    LOST = 4      #verloren
     
     def save(self, user=None, *args, **kwargs):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
+#        if not self.date_of_purchase:
+#            self.date_of_purchase = datetime.datetime.today()
         if user == None:
             user = User.objects.get(id=1)
-        self.last_edit_by=user
+        self.last_edit_by = user
+#        self.last_updated = datetime.datetime.today()
         super(document, self).save(*args, **kwargs)
     
     def __status(self):
@@ -191,7 +198,7 @@ class document(models.Model):
         if self.status == document.LEND:
             dstat = self.doc_status_set.latest('date')
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
-                raise LendingError()
+                return
         # zum Ausleihen oder Wiederfinden
         elif self.status == document.ORDERED:
             raise LendingError()
@@ -251,10 +258,11 @@ class document_authors(models.Model):
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
+        unique_together = ('document', 'author')
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
-    keyword = models.CharField("Schlüsselwort",max_length=50)
+    keyword = models.CharField("Schlüsselwort",max_length=200)
     class Meta:
         unique_together = ('document', 'keyword')
     #primary_key(document, keyword)
@@ -336,7 +344,7 @@ class tel_user(models.Model):
 class non_user(models.Model):
     first_name = models.CharField("vorname",max_length=30)
     last_name = models.CharField("nachname",max_length=30)
-    email = models.EmailField("e-mail",unique=True)
+    email = models.EmailField("e-mail",max_length=50)
     street = models.CharField("straße",max_length=30)
     number = models.CharField("nummer",max_length=5)
     zipcode = models.CharField("postleitzahl",max_length=5)
@@ -368,8 +376,8 @@ class doc_status(models.Model):
     date = models.DateTimeField(auto_now_add=True) 
         #Datum an dem es geschah
     return_lend = models.BooleanField(default=False)
-        # Aktuellerer Eintrag vorhanden
-    date_term_lend = models.DateField(blank=True, null=True) 
+        # Aktueller Eintrag vorhanden
+    date_term_lend = models.DateTimeField(blank=True, null=True) 
         #Ende der Rückgabefrist
     user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender User
