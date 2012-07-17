@@ -1,6 +1,11 @@
 {% extends "index.html" %}
 {% block content %}
 
+{% if suchtext != "" %}
+{% include 'search_template.html' %}
+<hr/>
+{% endif %}
+
 <h1>{{ documents.title }}</h1> 
 <table>
 <tr>

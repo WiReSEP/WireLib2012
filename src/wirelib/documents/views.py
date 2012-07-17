@@ -137,9 +137,9 @@ def search(request):
 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if document_query.count()==1:
-            return doc_detail(request, document_query[0].bib_no)
+            return doc_detail(request, document_query[0].bib_no, suchtext)
         else:
-            return __list(request, document_query)
+            return __list(request, document_query,None, 0, suchtext)
         return __list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
@@ -232,7 +232,7 @@ def doc_list(request):
     documents = document.objects.all()
     return __list(request, documents)
 
-def doc_detail(request, bib_no_id):
+def doc_detail(request, bib_no_id, suchtext=""):
     """
     Gibt alle Informationen für die Dateilansicht eines Dokumentes zurück
     """
@@ -320,7 +320,8 @@ def doc_detail(request, bib_no_id):
                       "change_document" : change_document,
                       "miss" : miss_query[0:10],
                       "history" : history ,
-                      "keyword" : keyword })
+                      "keyword" : keyword ,
+                      "suchtext" : suchtext })
     response = HttpResponse(template.render(context))
     return response
 
@@ -783,7 +784,7 @@ def user(request):
             doc_status__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents, documents_non_user=None, form=0):
+def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
@@ -868,6 +869,7 @@ def __list(request, documents, documents_non_user=None, form=0):
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form,
+                suchtext = suchtext,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
 
