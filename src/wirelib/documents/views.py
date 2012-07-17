@@ -33,11 +33,14 @@ def search(request):
         suchtext = request.GET.get('query','')
         #Erstellen eines Sets aus allen Suchbegriffen.
         #Aufgrund des Verfahrens eine ODER-Suche
+        #Aufspaltung des Suchbegriffs
         suchtext_gesplittet = suchtext.split(" ")
+        #Initialisierung der für Schleife benötigten Variablen
         first_for = True
         next_action = "none"
         not_active = False
         for i in suchtext_gesplittet:
+            #Falls erster Schleifendurchgang
             if first_for:
                 first_for = False
                 search_set = (
@@ -47,17 +50,27 @@ def search(request):
                     Q(bib_no__icontains = i) |
                     Q(publisher__name__icontains = i) |
                     Q(keywords__keyword__icontains = i))
+                #Statt Filtern QuerySet erstellen
                 document_query = document.objects.filter(search_set).distinct()
+            #Falls nicht erste Schleife
             else:
+                print i
+                #Wenn not nicht aktuell wirkend
                 if not_active == False :
                     if i == "not":
                         not_active = True
-
+                        print "not gesetzt"
+                        continue
+                
+                #Wenn aktuell kein logischer Ausdruck aktiv
                 if next_action == "none":
+                    #Prüfe auf restliche Schlüsselwörter
                     if i == "and":
                         next_action = "and"
                     elif i == "or":
                         next_action = "or"
+                    #Falls kein Schlüsselwort und keine logischer Ausdruck
+                    #gemerkt führe normale "und"-Suche durch
                     else:
                         search_set = (
                             Q(title__icontains = i) |
@@ -68,8 +81,11 @@ def search(request):
                             Q(keywords__keyword__icontains = i))
                         document_query = document_query.filter(search_set).distinct()
 
+                #Falls ein logischer Ausdruck aktiv
                 else:
+                    #Wenn dieser Ausdruck "or" ist.
                     if next_action == "or":
+                        #"or" wenn "not" aktiv
                         if not_active:
                             search_set = (
                                 Q(title__icontains = i) |
@@ -78,8 +94,10 @@ def search(request):
                                 Q(bib_no__icontains = i) |
                                 Q(publisher__name__icontains = i) |
                                 Q(keywords__keyword__icontains = i))
-                            search_query = not document.objects.filter(search_set).distinct() & document.objects.all
+                            search_query = document.objects.exclude(search_set).distinct()
                             document_query = document_query | search_query
+                            not_active = False
+                        #"or" wenn "not" nicht aktiv
                         else:
                             search_set = (
                                 Q(title__icontains = i) |
@@ -94,14 +112,27 @@ def search(request):
                         next_action = "none"
 
                     if next_action == "and":
-                        search_set = (
-                            Q(title__icontains = i) |
-                            Q(authors__last_name__icontains = i) |
-                            Q(isbn__icontains = i) |
-                            Q(bib_no__icontains = i) |
-                            Q(publisher__name__icontains = i) |
-                            Q(keywords__keyword__icontains = i))
-                        document_query = document_query.filter(search_set).distinct()
+                        #"and" wenn "not" aktiv
+                        if not_active:
+                            search_set = (
+                                Q(title__icontains = i) |
+                                Q(authors__last_name__icontains = i) |
+                                Q(isbn__icontains = i) |
+                                Q(bib_no__icontains = i) |
+                                Q(publisher__name__icontains = i) |
+                                Q(keywords__keyword__icontains = i))
+                            document_query = document_query.exclude(search_set).distinct()
+                            not_active = False
+                        #"and" wenn "not" nicht aktiv
+                        else:
+                            search_set = (
+                                Q(title__icontains = i) |
+                                Q(authors__last_name__icontains = i) |
+                                Q(isbn__icontains = i) |
+                                Q(bib_no__icontains = i) |
+                                Q(publisher__name__icontains = i) |
+                                Q(keywords__keyword__icontains = i))
+                            document_query = document_query.filter(search_set).distinct()
                         next_action = "none"
 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
