@@ -64,13 +64,14 @@ class Allegro(threading.Thread):
         for doc in list(allegro_query):
             if doc.status <= 1:
                 print >> tmp_file, u"#00"
-                print >> tmp_file, __doc_to_string(doc, allegro_dict).encode("iso-8859-1", "strict")
+                print >> tmp_file, Allegro.__doc_to_string(doc, allegro_dict).encode("iso-8859-1", "strict")
         tmp_file.close()
         allegro_query.update(ub_date=date)
         for doc in allegro_query:
             doc.save()
         return tmp_file
     
+    @staticmethod
     def __doc_to_string(document, allegro_dict):
         """
         Diese Methode übernimmt die Erstellung des richtigen Export-Formates der
@@ -81,7 +82,10 @@ class Allegro(threading.Thread):
         authors = list(document.authors.all())
         line_end = u"\n"
         #speichern aller benötigten Feldinhalte in den Rückgabestring
-        doc_str = u"" + allegro_dict[u"isbn"] + u" " + document.isbn + line_end
+        isbn = document.isbn
+        if isbn == None:
+            isbn = u""
+        doc_str = u"" + allegro_dict[u"isbn"] + u" " + isbn + line_end
         doc_str += allegro_dict[u"publisher"] + u" "
         doc_str += document.publisher.name + line_end
         try:
@@ -107,12 +111,15 @@ class Allegro(threading.Thread):
                 j += 1
         locn = document.lib_of_con_nr
         if locn == None:
-            locn = ""
+            locn = u""
         doc_str += allegro_dict[u"LibraryOfCongressNo"] + u" "
         doc_str += locn + line_end
         doc_str += allegro_dict[u"bookid"] + u" " + document.bibtex_id + line_end
         doc_str += allegro_dict[u"title"] + u" " + document.title + line_end
-        doc_str += allegro_dict[u"address"] + u" " + document.address + line_end
+        address = document.address
+        if address == None:
+            address = u""
+        doc_str += allegro_dict[u"address"] + u" " + address + line_end
         # hier werden die keywords in das richtige String-Format gebracht
         keywords_list = []
         for k in keywords_db:

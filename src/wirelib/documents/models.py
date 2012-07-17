@@ -49,6 +49,10 @@ class publisher(models.Model):
     
     def __unicode__(self):
         return self.name
+        
+    class Meta:
+        verbose_name = "Publisher"
+        verbose_name_plural = "Publisher"
 
 
 class author(models.Model):
@@ -64,25 +68,25 @@ class author(models.Model):
         return (self.last_name + ', ' + self.first_name)
 
 class document(models.Model):
-    bib_no = models.CharField("Bibliotheksnummer", max_length=15, primary_key=True)
-    inv_no = models.CharField("Inventar-Nummer", max_length=15, unique=True)
+    bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
+    inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
     lib_of_con_nr = models.CharField("Library Of Congress No", max_length=60, blank=True, null=True) 
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=200)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
     category = models.ForeignKey(category,verbose_name="Kategorie")
-    last_updated = models.DateField("Letztes Update",auto_now=True)
+    last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
     last_edit_by = models.ForeignKey(User,verbose_name="Zuletzt geändert von")
     publisher = models.ForeignKey(publisher, blank=True, null=True)
     year = models.IntegerField("Jahr",blank=True, null=True)
     address = models.CharField("Adresse",max_length=100, blank=True, null=True)
     price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
     currency = models.CharField("Währung",max_length=3, blank=True, null=True)
-    date_of_purchase = models.DateField("Kaufdatum",auto_now_add=True)
-    ub_date = models.DateField(blank=True, null=True) 
+    date_of_purchase = models.DateField("Kaufdatum", auto_now_add=True)
+    ub_date = models.DateField("UB-Export", blank=True, null=True) 
         #Datum des Allegro-Exports
-    bib_date = models.DateField(blank=True, null=True) 
+    bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
     authors = models.ManyToManyField(author,
@@ -100,18 +104,21 @@ class document(models.Model):
         
 
     AVAILABLE= 0  #vorhanden
-    LEND = 1       #ausgeliehen
-    ORDERED = 2    #bestellt
-    MISSING = 3       #vermisst
-    LOST = 4       #verloren
+    LEND = 1      #ausgeliehen
+    ORDERED = 2   #bestellt
+    MISSING = 3   #vermisst
+    LOST = 4      #verloren
     
     def save(self, user=None, *args, **kwargs):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
+#        if not self.date_of_purchase:
+#            self.date_of_purchase = datetime.datetime.today()
         if user == None:
             user = User.objects.get(id=1)
-        self.last_edit_by=user
+        self.last_edit_by = user
+#        self.last_updated = datetime.datetime.today()
         super(document, self).save(*args, **kwargs)
     
     def __status(self):
