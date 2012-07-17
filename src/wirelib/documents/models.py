@@ -359,8 +359,8 @@ class non_user(models.Model):
 class tel_non_user(models.Model):
 
     non_user = models.ForeignKey(non_user, verbose_name="externer")
-    tel_nr = models.CharField("tel Nr.",max_length=20)
     tel_type = models.CharField("tel Typ ( Privat,Büro,Mobil ... )",max_length=20)
+    tel_nr = models.CharField("tel Nr.",max_length=20)
     # TODO eigene Telefonnummerklasser
     class Meta:
         unique_together = ('non_user', 'tel_nr')
@@ -384,7 +384,7 @@ class doc_status(models.Model):
     non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
-        permissions = (("c_nlend", "Can lend documents"),
+        permissions = (("can_lend", "Can lend documents"),
                        ("can_unlend", "Can unlend documents"),
                        ("can_miss", "Can miss documents"),
                        ("can_order", "Can order documents"),
