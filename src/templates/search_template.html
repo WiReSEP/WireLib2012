@@ -1,0 +1,13 @@
+<!-- Beginn des Forms, dass bei einer Suchanfrage abgeschickt wird -->
+<form method="get" action="">
+  <table>
+	<tr class="suchanfrage">
+	  <td class="such_wort"> Suche: </td>
+	  <!-- Eine mit 'suchwort' übergebene Variable des Contextes erscheint als
+	  voreingetragener Wert in dem Eingabefeld -->
+	  <td> <input type="text" name="query"
+		value="{{ suchtext }}" /> </td>
+	  <td>     <input type="submit" value="Suchanfrage starten" /> </td>
+	</tr> 
+  </table>
+</form>
