@@ -298,7 +298,6 @@ def doc_assign(request, bib_no_id):
     userform = SelectUser(v_user)
     nonuserform = NonUserForm()
     user_lend = ""
-    message = 'test'
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -313,17 +312,15 @@ def doc_assign(request, bib_no_id):
             user_lend = userform.cleaned_data['users']
             if user_lend and not user_lend == "":
                 document_query.lend(user=user_lend, editor=v_user)
-            #print userform.fields['users']
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
             
     elif 'assign-ex' in request.POST:
         nonuserform = NonUserForm(request.POST)
         if nonuserform.is_valid():
-            nonuserform.save()
-            # TODO :Buch soll auf Bürgen entliehen bleiben?
-            # wo wird der Bürge gespeichert?
-            # Anzeige wer entliehen hat
-            return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+            non_user_lend = nonuserform.save()
+            if non_user_lend and not non_user_lend == "":
+                document_query.lend(user=v_user, non_user=non_user_lend)
+                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
 
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
@@ -337,7 +334,6 @@ def doc_assign(request, bib_no_id):
                        "lending" : lending_query, 
                        "userform": userform,
                        "nonuserform" : nonuserform,
-                       "message" : message,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
@@ -524,12 +520,12 @@ def doc_add(request, bib_no_id=None):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
-            filename = 'imports/' + datetime.datetime.strftime(date, '%s') + '.bib'
+            filename = settings.DOCUMENTS_IMPORT_FILES + datetime.datetime.strftime(date, '%s') + '.bib'
             destination = open(filename, 'wb+')
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)
             destination.close()
-            Bibtex.do_import(filename)
+            Bibtex().do_import(filename)
             os.remove(filename)
             filesize = os.path.getsize(filename + '.err')
             if filesize == 0:
@@ -712,10 +708,8 @@ def bibtex_export(request):
     dürfen.
     """
     hint = ''
-    print "Es ist %s" % Bibtex.bibtex_lock.locked()
     if Bibtex.bibtex_lock.locked():
         hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
-        print hint
     elif "bibtex_export" in request.POST:
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
@@ -1001,6 +995,6 @@ def __document_expired_email():
     
                    
 def __show_keywords(doc):
-    keywords = doc.keywords_set.order_by('keyword')
+    keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
 

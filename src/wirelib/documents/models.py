@@ -67,7 +67,7 @@ class document(models.Model):
     bib_no = models.CharField("Bibliotheksnummer", max_length=15, primary_key=True)
     inv_no = models.CharField("Inventar-Nummer", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
-    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=20, blank=True, null=True) 
+    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=60, blank=True, null=True) 
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=200)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
@@ -191,7 +191,7 @@ class document(models.Model):
         if self.status == document.LEND:
             dstat = self.doc_status_set.latest('date')
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
-                raise LendingError()
+                return
         # zum Ausleihen oder Wiederfinden
         elif self.status == document.ORDERED:
             raise LendingError()
@@ -251,10 +251,11 @@ class document_authors(models.Model):
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
+        unique_together = ('document', 'author')
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
-    keyword = models.CharField("Schlüsselwort",max_length=50)
+    keyword = models.CharField("Schlüsselwort",max_length=200)
     class Meta:
         unique_together = ('document', 'keyword')
     #primary_key(document, keyword)
@@ -336,7 +337,7 @@ class tel_user(models.Model):
 class non_user(models.Model):
     first_name = models.CharField("vorname",max_length=30)
     last_name = models.CharField("nachname",max_length=30)
-    email = models.EmailField("e-mail",unique=True)
+    email = models.EmailField("e-mail",max_length=50)
     street = models.CharField("straße",max_length=30)
     number = models.CharField("nummer",max_length=5)
     zipcode = models.CharField("postleitzahl",max_length=5)
@@ -368,8 +369,8 @@ class doc_status(models.Model):
     date = models.DateTimeField(auto_now_add=True) 
         #Datum an dem es geschah
     return_lend = models.BooleanField(default=False)
-        # Aktuellerer Eintrag vorhanden
-    date_term_lend = models.DateField(blank=True, null=True) 
+        # Aktueller Eintrag vorhanden
+    date_term_lend = models.DateTimeField(blank=True, null=True) 
         #Ende der Rückgabefrist
     user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender User
