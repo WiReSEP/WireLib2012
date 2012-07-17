@@ -3,6 +3,7 @@
 from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
 from django.contrib.auth.models import User
+from django.conf import settings
 
 import datetime
 import threading
@@ -29,6 +30,7 @@ class UglyBibtex(object):
             u"price" : u"price",
             u"dateofpurchase" : u"date_of_purchase",
             u"author" : u"author",
+            u"editor" : u"editor",
             u"keywords" : u"keywords",
             }
     BIBTEX_SPLIT= r'[{}@,="\n]'
@@ -63,16 +65,23 @@ class UglyBibtex(object):
             with codecs.open(self.errout_file,mode='w', encoding='utf-8') as self.errout:
                 for self.line in bib:
                     self.line_no += 1
-                    if re.match(r'^\s*@',self.line):
+                    if re.match(r'^\s*@',self.line): 
+                        # Neuer Eintrag
                         self.worker = self.__get_entry
 
-                    if self.worker != self.do_import:
+                    if self.worker != self.do_import: 
+                        # Eintrag abarbeiten.
                         try:
                             self.worker()
-                        except ValueError:
+                        except ValueError: 
+                            if self.worker == self.__get_entry:
+                                self.errout.write("Fehler in Eintrag\n")
+                            else :
+                                self.errout.write("Fehler in Feld\n")
                             self.__log_error()
                             self.worker = self.do_import
-                    else:
+                    else: 
+                        # Eintragende, reset
                         self.go_further = False
                         self.stack = 0
                 
@@ -174,6 +183,9 @@ class UglyBibtex(object):
             self.entry[u'extras'] = self.extra_entry
             try:
                 extras_doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
+                if settings.DEBUG:
+                    self.errout.write("Erfolgreich\n")
+                    self.__log_error()
             except ValueError, e:
                 self.errout.write("Eintrag kein valides Format\n")
                 self.errout.write(u"Begründung: %s\n" % e.message)
@@ -190,7 +202,7 @@ class UglyBibtex(object):
                 self.__log_error()
 
     def __insert_field(self, key_val):
-        if key_val[0] == u'author':
+        if key_val[0] == u'author' or key_val[0] == u'editor':
             key_val[1] = key_val[1].split(',')
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
             key_val[1] = [ s.strip() for s in key_val[1] ]
