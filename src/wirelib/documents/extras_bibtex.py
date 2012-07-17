@@ -316,6 +316,8 @@ class Bibtex(threading.Thread):
             counter += 1
         last_element = len(editors) - 1
         doc_str += u"  editor = {"
+        if -1 == last_element:
+            doc_str += u"},\n"
         for edit in editors: 
             doc_str += edit.last_name + u", " + edit.first_name
             if counter == last_element:

@@ -697,7 +697,6 @@ def allegro_export(request):
     alg_exp = Allegro()
     if "allegro_export" in request.POST:
         alg_exp.start()
-        alg_exp.join()
         hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
     if alg_exp.isAlive():
         hint = "Derzeit läuft ein Export."
