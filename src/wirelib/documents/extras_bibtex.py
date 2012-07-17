@@ -181,20 +181,21 @@ class UglyBibtex(object):
             except DuplicateKeyError:
                 self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
+            except BaseException, e:
+                self.errout.write("Unexpected Error\n")
+                self.__log_error()
 
     def __insert_field(self, key_val):
         if key_val[0] == u'author':
             key_val[1] = key_val[1].split(',')
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
-            for entry in key_val[1]:
-                entry.strip()
+            key_val[1] = [ s.strip() for s in key_val[1] ]
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'keywords':
             key_val[1] = re.split('[,;/]', key_val[1])
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
-            for entry in key_val[1]:
-                entry.strip()
+            key_val[1] = [ s.strip() for s in key_val[1] ]
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'price':

@@ -312,7 +312,6 @@ def doc_assign(request, bib_no_id):
             user_lend = userform.cleaned_data['users']
             if user_lend and not user_lend == "":
                 document_query.lend(user=user_lend, editor=v_user)
-            #print userform.fields['users']
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
             
     elif 'assign-ex' in request.POST:
@@ -709,10 +708,8 @@ def bibtex_export(request):
     dürfen.
     """
     hint = ''
-    print "Es ist %s" % Bibtex.bibtex_lock.locked()
     if Bibtex.bibtex_lock.locked():
         hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
-        print hint
     elif "bibtex_export" in request.POST:
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
