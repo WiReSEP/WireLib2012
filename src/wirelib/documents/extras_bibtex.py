@@ -183,7 +183,7 @@ class UglyBibtex(object):
             self.entry[u'extras'] = self.extra_entry
             try:
                 extras_doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
-                if settings.DEBUG:
+                if settings.BIBTEX_DEBUG:
                     self.errout.write("Erfolgreich\n")
                     self.__log_error()
             except ValueError, e:
@@ -279,7 +279,12 @@ class Bibtex(threading.Thread):
         """
          # init der Variablen
         extra_fields = list(document.doc_extra_set.all())
-        authors = list(document.authors.all())
+        authors = list(document.authors.filter(
+            document_authors__editor = False
+            ))
+        editors = list(document.authors.filter(
+            document_authors__editor = True
+            ))
         category = document.category.name
         bib_no = document.bib_no
         inv_no = document.inv_no
@@ -297,13 +302,22 @@ class Bibtex(threading.Thread):
 
          # Beginn mit schreiben des Strings
         doc_str = u"@" + category + u"{" + bib_id + u",\n"
-        doc_str += u"  author = {"
         counter = 0
         last_element = len(authors) - 1
+        doc_str += u"  author = {"
         if -1 == last_element:
             doc_str += u"},\n"
         for auth in authors:
             doc_str += auth.last_name + u", " + auth.first_name
+            if counter == last_element:
+                doc_str += u"},\n"
+            else :
+                doc_str += u" AND "
+            counter += 1
+        last_element = len(editors) - 1
+        doc_str += u"  editor = {"
+        for edit in editors: 
+            doc_str += edit.last_name + u", " + edit.first_name
             if counter == last_element:
                 doc_str += u"},\n"
             else :
