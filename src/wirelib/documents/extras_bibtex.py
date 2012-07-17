@@ -150,7 +150,7 @@ class UglyBibtex(object):
                     raise
             else:
                 self.current_keyval = key_val
-        elif len(key_val) == 1: # Nur noch Value Ergänzung
+        elif len(key_val) == 1 and self.current_keyval:#Nur noch Value Ergänzung
             key_val[0] =re.sub(r'(^\s*)|(["}\s]*,\s*$)','',key_val[0])
             key_val.insert(0,self.current_keyval[0])
             key_val[1] += " "+self.current_keyval[1]
@@ -165,6 +165,10 @@ class UglyBibtex(object):
                 raise ValueError()
             else:
                 self.current_keyval = key_val
+        else :
+            self.errout.write("Fehler im Format:\n")
+            self.__log_error()
+            raise ValueError()
 
         if self.worker == self.do_import:   # Eintrag in DB schreiben
             self.entry[u'extras'] = self.extra_entry
@@ -172,13 +176,13 @@ class UglyBibtex(object):
                 extras_doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
             except ValueError, e:
                 self.errout.write("Eintrag kein valides Format\n")
-                self.errout.write(u"Begründung: " + e.message +"\n")
+                self.errout.write(u"Begründung: %s\n" % e.message)
                 self.__log_error()
             except UnknownCategoryError:
                 errmsg = "Kategorie %s nicht bekannt\n" % self.entry[u'category']
                 self.errout.write(errmsg)
                 self.__log_error()
-            except DuplicateKeyError:
+            except DuplicateKeyError, e:
                 self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
             except BaseException, e:
