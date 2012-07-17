@@ -13,6 +13,7 @@ from documents.models import document_authors
 from documents.models import non_user
 from documents.models import tel_non_user
 from documents.models import emails
+from documents.models import category_need
 """
 Definition der Adminseiten der Models.
 Jede Klasse steht für ein Model, dass angezeigt werden soll
@@ -24,6 +25,8 @@ nur eine Auswahl an Attributen des Models an.
 #class keywords_admin(admin.ModelAdmin):
  #   fields = ['keyword','document']
  
+ 
+ #TODO Massenfunktionen einfügen á la https://docs.djangoproject.com/en/dev/ref/contrib/admin/actions/
 class keywords_inline(admin.StackedInline):
     model = keywords
 
@@ -32,11 +35,16 @@ class tel_user_inline(admin.StackedInline):
     fk_name = 'user'
     extra = 1
 
+class category_needs_inline(admin.StackedInline):
+    model = category_need
+    extra = 4
+
 class category_admin(admin.ModelAdmin):
     fields = ['name']
+    inlines = [category_needs_inline]
 
-#class publisher_admin(admin.ModelAdmin):
- #   fields = ['name']
+class publisher_admin(admin.ModelAdmin):
+    fields = ['name']
 
 class author_admin(admin.ModelAdmin):
     fields = ['first_name', 'last_name']
@@ -45,13 +53,20 @@ class document_authors_inline(admin.StackedInline):
     model = document_authors
 
 class document_admin(admin.ModelAdmin):
-     list_display = ('bib_no', 'inv_no', 'title', 'isbn', 
-                     'category', 'publisher', 'bibtex_id')
-     list_filter = ('bib_no', 'title', 'category', 'publisher')
-     ordering = ['bib_no'] 
-     search_fields = ('bib_no', 'title', 'publisher', 
-                         'isbn', 'inv_no', 'bibtex_id')
-     inlines = [document_authors_inline, keywords_inline]
+    list_display = ('bib_no', 'inv_no', 'title', 
+                    'publisher', 'ub_date', 'bib_date', 'last_updated', )
+    #TODO Filter für Daten (Pl. Datum) anpassen, sodass man nicht nach den 
+    #entsprechenden Datum filtern kann und nicht mehr nur nach letzten Tag, Woche, Monat, Jahr
+    list_filter = ('category', )
+    ordering = ['bib_no'] 
+    search_fields = ('bib_no', 'title', 'publisher', 
+                     'isbn', 'inv_no', 'bibtex_id', )
+    fields = ['bib_no',  'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title', 
+              'isbn', 'category', 'last_updated', 'last_edit_by', 'publisher',
+              'year', 'address', 'price', 'currency', 'date_of_purchase', 
+              'ub_date', 'bib_date', 'comment']
+    readonly_fields = ('last_edit_by', 'last_updated', 'date_of_purchase')
+    inlines = [document_authors_inline, keywords_inline]
     
 class tel_non_user_inline(admin.TabularInline):
     model = tel_non_user
@@ -73,7 +88,7 @@ class emails_admin(admin.ModelAdmin):
     list_display = ('name', 'subject') 
 
 #Registrierung aller anzuzeigenden Tabellen.
-#admin.site.register(publisher, publisher_admin)
+admin.site.register(publisher, publisher_admin)
 admin.site.register(author, author_admin)
 admin.site.register(category, category_admin)
 admin.site.register(document, document_admin)
