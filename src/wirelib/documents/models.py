@@ -64,7 +64,7 @@ class author(models.Model):
         verbose_name_plural = "Autoren"
     
     def __unicode__(self):
-        return (self.last_name + ', ' + self.first_name)
+        return (self.first_name + ' ' + self.last_name)
 
 class document(models.Model):
     bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)

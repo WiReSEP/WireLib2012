@@ -7,11 +7,12 @@ from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, emails, user_profile, tel_user, \
     tel_non_user
 from django.contrib.auth.models import User
+from django.forms.models import modelformset_factory
 from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
-    TelNonUserForm, NameForm, PublisherAddForm
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelNonUserForm,\
+    NameForm, PublisherAddForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -20,10 +21,12 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 
+
 import datetime
 import os
 import settings
 import thread
+
 
 
 def search(request):
@@ -293,6 +296,8 @@ def doc_detail(request, bib_no_id, searchtext=""):
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
     keyword =__show_keywords(document_query)
+    editoren =__diff_editors(document_query)
+    autoren =__diff_authors(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -327,8 +332,11 @@ def doc_detail(request, bib_no_id, searchtext=""):
                       "miss" : miss_query[0:10],
                       "history" : history ,
                       "keyword" : keyword ,
+                      "editoren" : editoren  ,
+                      "autoren" : autoren })
                       "searchmode" : searchmode,
                       "searchtext" : searchtext })
+
     response = HttpResponse(template.render(context))
     return response
 
@@ -487,17 +495,27 @@ def personal(request):
 
 def telpersonal(request): 
 
-    tel, created = tel_user.objects.get_or_create(user=request.user)  
+    #tel, created = tel_user.objects.get_or_create(user=request.user)  
     
     if request.method == "POST": 
-        form = TelForm(request.POST, instance=tel)
-        if form.is_valid(): 
-            form.save()
+        telformset = modelformset_factory(tel_user, extra=3, max_num=3,\
+                can_delete=True, exclude='user')
+        formset = telformset(request.POST,\
+                queryset=tel_user.objects.filter(user=request.user))
+        if formset.is_valid():
+            formset.save
+            instances = formset.save(commit= False)
+            for instance in instances:
+                instance.user = request.user
+                print instance
+                instance.save()
             return HttpResponseRedirect(reverse("profile_edit_personal_done"))
     else: 
-        form = TelForm(instance=tel)
+        telformset = modelformset_factory(tel_user, extra=3, max_num=3,\
+                can_delete=True, exclude='user')
+        formset = telformset(queryset=tel_user.objects.filter(user=request.user))
     template = "profile/tel.html"
-    data = { 'form': form, }
+    data = { 'formset': formset, }
     
     return render_to_response(template, data, context_instance=RequestContext(request)) 
 
@@ -1095,4 +1113,12 @@ def __send_expired_mail(receiver, subject, emailcontent, connection, **context):
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
+    
+def __diff_authors(doc):
+    autoren = doc.document_authors_set.order_by('-author').exclude(editor=True)       
+    return autoren    
+
+def __diff_editors(doc):
+   editoren = doc.document_authors_set.order_by('-author').exclude(editor=False)       
+   return editoren      
 
