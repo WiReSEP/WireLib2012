@@ -333,7 +333,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
                       "history" : history ,
                       "keyword" : keyword ,
                       "editoren" : editoren  ,
-                      "autoren" : autoren })
+                      "autoren" : autoren ,
                       "searchmode" : searchmode,
                       "searchtext" : searchtext })
 
