@@ -698,6 +698,14 @@ div.metas {
 .inhalt div#nav div#list_filter{
   text-align: right;
 }
+
+.inhalt select#id_authors {
+  height: 10em;
+}
+
+.inhalt select#id_editors {
+  height: 10em;
+}
 /******************************************************
 	RECHTE SPALTE
 *******************************************************/
