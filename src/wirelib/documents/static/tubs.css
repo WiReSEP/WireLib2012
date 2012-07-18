@@ -683,6 +683,14 @@ div.metas {
   font-weight: 700;
   float: left;
 }
+
+.inhalt select#id_authors {
+  height: 10em;
+}
+
+.inhalt select#id_editors {
+  height: 10em;
+}
 /******************************************************
 	RECHTE SPALTE
 *******************************************************/
