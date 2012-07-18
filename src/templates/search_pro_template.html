@@ -6,22 +6,13 @@
 		<script>
 		  window.onload=function() {
 			elem = document.getElementById('kennhide');
-			spoiler(elem, 'test1', '--Kennnummern--', '--Kennnummern--');
-			spoiler(elem, 'test2', '--Kennnummern--', '--Kennnummern--');
+			spoiler(elem, 'bib_no_row', '--Kennnummern--', '--Kennnummern--');
+			spoiler(elem, 'isbn_row', '--Kennnummern--', '--Kennnummern--');
 			elem = document.getElementById('pubhide');
 			spoiler(elem, 'year', '--Publikationsinformationen--',
 			'--Publikationsinformationen--');
 			spoiler(elem, 'publisher', '--Publikationsinformationen--',
 			'--Publikationsinformationen--');
-			elem = document.getElementById('bashide');
-			spoiler(elem,'title_row','--Basisinformationen--',
-			'--Basisinformationen--');
-			spoiler(elem,'fn_author_row', '--Basisinformationen--',
-			'--Basisinformationen--');
-			spoiler(elem,'ln_author_row', '--Basisinformationen--',
-			'--Basisinformationen--');
-			spoiler(elem,'keyword_row','--Basisinformation--',
-			'--Basisinformation--') 
 			elem = document.getElementById('stathide');
 			spoiler(elem,'status_row','--Statusinformationen--',
 			'--Statusinformationen--');
@@ -38,6 +29,8 @@
 		'--Basisinformationen--');spoiler(this,'fn_author_row',
 		'--Basisinformationen--','--Basisinformationen--');
 		spoiler(this,'ln_author_row','--Basisinformationen','--Basisinformationen');
+		spoiler(this,'fn_editor_row','--Basisinformationen','--Basisinformationen');
+		spoiler(this,'ln_editor_row','--Basisinformationen','--Basisinformationen');
 		spoiler(this,'keyword_row','--Basisinformation--','--Basisinformation--')" 
 		type="button" 
 		style="border-style:none;background-color:inherit;">
@@ -48,22 +41,32 @@
 	Werte zu übergeben. -->
 	<tr id="title_row">
 	  <td>Titel:</td>
-	  <td><input type="text" name="title" value="{{ suchtext.2 }}" />
+	  <td><input type="text" name="title" value="{{ searchtext.0 }}" />
 	  </td>
 	</tr>
 	<tr id="fn_author_row">
 	  <td>Vorname Autor:</td>
-	  <td><input type="text" name="fn_author" value="{{ suchtext.0 }}" />
+	  <td><input type="text" name="fn_author" value="{{ searchtext.1 }}" />
 	  </td>
 	</tr>
 	<tr id="ln_author_row">
 	  <td>Nachname Autor:</td>
-	  <td><input type="text" name="ln_author" value="{{ suchtext.1 }}" />
+	  <td><input type="text" name="ln_author" value="{{ searchtext.2 }}" />
+	  </td>
+	</tr>
+	<tr id="fn_editor_row">
+	  <td>Vorname Editor:</td>
+	  <td><input type="text" name="fn_editor" value="{{ searchtext.3 }}" />
+	  </td>
+	</tr>
+	<tr id="ln_editor_row">
+	  <td>Nachname Editor:</td>
+	  <td><input type="text" name="ln_editor" value="{{ searchtext.4 }}" />
 	  </td>
 	</tr>
 	<tr id="keyword_row">
 	  <td>Schlüsselwörter:</td>
-	  <td><input type="text" name="keywords" value="{{ suchtext.7 }}" />
+	  <td><input type="text" name="keywords" value="{{ searcht0ext.5 }}" />
 	  </td>
 	</tr>
 	<!-- Start des Abschnittes Publikationsinformationen -->
@@ -80,34 +83,34 @@
 	</tr>
 	<tr id = year>
 	  <td>Jahr:</td>
-	  <td><input type="text" name="year" value="{{ suchtext.3 }}" />
+	  <td><input type="text" name="year" value="{{ searchtext.6 }}" />
 	  </td>
 	</tr>
 	<tr id = publisher>
 	  <td>Herausgeber:</td>
-	  <td><input type="text" name="publisher" value="{{ suchtext.4 }}" />
+	  <td><input type="text" name="publisher" value="{{ searchtext.7 }}" />
 	  </td>
 	</tr>
 	<!-- Start des Abschnittes Kennnummern -->
 	<tr>
 	  <td>
 		<input value="--Kennnummern--" id="kennhide" 
-		onclick="spoiler(this,'test1','--Kennnummern--',
-		'--Kennnummern--');spoiler(this,'test2', '--Kennnummern--',
+		onclick="spoiler(this,'bib_no_row','--Kennnummern--',
+		'--Kennnummern--');spoiler(this,'isbn_row', '--Kennnummern--',
 		'--Kennnummern--')" 
 		type="button" 
 		style="border-style:none;background-color:inherit;">
 	  </td>
 	</tr>
 	<div id="knummern">
-	  <tr id="test1">
+	  <tr id="bib_no_row">
 		<td>Bibliotheks-Nummer:</td>
-		<td><input type="text" name="bib_no" value="{{ suchtext.5 }}"/>
+		<td><input type="text" name="bib_no" value="{{ searchtext.8 }}"/>
 		</td>
 	  </tr>
-	  <tr id="test2">
+	  <tr id="isbn_row">
 		<td>ISBN:</td>
-		<td><input type="text" name="isbn" value="{{ suchtext.6 }}" />
+		<td><input type="text" name="isbn" value="{{ searchtext.9 }}" />
 		</td>
 	  </tr>
 	</div>
@@ -124,7 +127,7 @@
 	<tr id="status_row">
 	  <td>Buchstatus:</td>
 	  <td>
-		<select name="doc_status" size=6 selected="{{ suchtext.8 }}">
+		<select name="doc_status" size=6 selected="{{ searchtext.10 }}">
 	<!-- Die values werden dem Context von der views.py übergeben und
 	entsprechen den möglichen Werten von documents.doc_status -->
 		  <option value="">Alle</option>

@@ -1,15 +1,24 @@
 from django import forms
-from django.forms import ModelForm
-from django.forms.formsets import formset_factory
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.exceptions import ImproperlyConfigured
-from django.db import models
-from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.auth.models import User
-from documents.models import EmailValidation, document, author, non_user,\
-    user_profile, tel_user, tel_non_user
-import mimetypes, urllib
+from django.forms import ModelForm
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+from django.forms.formsets import formset_factory
+from django.utils.translation import ugettext as _
+from documents.models import author
+from documents.models import document
+from documents.models import EmailValidation
+from documents.models import non_user
+from documents.models import publisher
+from documents.models import tel_non_user
+from documents.models import tel_user
+from documents.models import user_profile
+from documents.models import doc_extra
+import mimetypes
+import urllib
 
 if not settings.AUTH_PROFILE_MODULE: 
     raise SiteProfileNotAvailable
@@ -37,11 +46,11 @@ class ProfileForm(ModelForm):
     class Meta: 
         model = user_profile
         exclude = ('user_id')
-
-class TelForm(ModelForm): 
-    class Meta: 
-        model = tel_user
-        exclude = ('user_id')
+ 
+class NameForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
 
 class TelNonUserForm(ModelForm):
     class Meta:
@@ -66,6 +75,10 @@ class DocForm(ModelForm):
 class AuthorAddForm(ModelForm):
     class Meta:
         model = author
+       
+class PublisherAddForm(ModelForm):
+    class Meta:
+        model = publisher
 
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):

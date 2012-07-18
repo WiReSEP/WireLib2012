@@ -1,129 +1,141 @@
 #!/usr/bin/env python
 # vim set fileencoding=utf-8
-from documents.models import category
-from documents.models import category_need
-from documents.models import user_profile
-from documents.models import tel_user
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
+from documents.models import category
+from documents.models import need
+from documents.models import need_groups
+from documents.models import tel_user
+from documents.models import user_profile
 import datetime
 
 def importieren():
+    #Mussfeldergruppen(name)
+    mg_au_ed = need_groups(name='author_v_editor')
+    mg_title = need_groups(name='title')
+    mg_publisher = need_groups(name='publisher')
+    mg_year = need_groups(name='year')
+    mg_author = need_groups(name='author')
+    mg_school = need_groups(name='school')
+    mg_note = need_groups(name='note')
+    mg_au_ed.save()
+    mg_title.save()
+    mg_publisher.save()
+    mg_year.save()
+    mg_author.save()
+    mg_school.save()
+    mg_note.save()
+    
+    #Mussfelder(name, group)
+    m = need(name='author', group=mg_au_ed)
+    m.save()
+    m = need(name='author', group=mg_author)
+    m.save()
+    m = need(name='editor', group=mg_au_ed)
+    m.save()
+    m = need(name='title', group=mg_title)
+    m.save()
+    m = need(name='publisher', group=mg_publisher)
+    m.save()
+    m = need(name='year', group=mg_year)
+    m.save()
+    m = need(name='school', group=mg_school)
+    m.save()
+    m = need(name='note', group=mg_note)
+    m.save()
+
     #Kategorien
     c_book = category(name='book')
     c_book.save()
+    c_book.needs.add(mg_au_ed)
+    c_book.needs.add(mg_title)
+    c_book.needs.add(mg_publisher)
+    c_book.needs.add(mg_year)
+    
     c_unpub = category(name='unpublished')
     c_unpub.save()
+    c_unpub.needs.add(mg_author)
+    c_unpub.needs.add(mg_title)
+    c_unpub.needs.add(mg_note)
+    
     c_proj = category(name='projectwork')
     c_proj.save()
+    
     c_phdt = category(name='phdthesis')
     c_phdt.save()
+    c_phdt.needs.add(mg_author)
+    c_phdt.needs.add(mg_title)
+    c_phdt.needs.add(mg_school)
+    c_phdt.needs.add(mg_year)
+    
     c_bach = category(name='bachelorthesis')
     c_bach.save()
+    c_bach.needs.add(mg_author)
+    c_bach.needs.add(mg_title)
+    c_bach.needs.add(mg_school)
+    c_bach.needs.add(mg_year)
+    
     c_mast = category(name='mastersthesis')
     c_mast.save()
-
-    #Kategories-Need
-        #book
-    cn = category_need(category=c_book, need="author")
-    cn.save()
-    cn = category_need(category=c_book, need="editor")
-    cn.save()
-    cn = category_need(category=c_book, need="title")
-    cn.save()    
-    cn = category_need(category=c_book, need="publisher")
-    cn.save()    
-    cn = category_need(category=c_book, need="year")
-    cn.save() 
-        #unpublished
-    cn = category_need(category=c_unpub, need="author")
-    cn.save()
-    cn = category_need(category=c_unpub, need="title")
-    cn.save()
-    cn = category_need(category=c_unpub, need="note")
-    cn.save()
-        #phdthesis
-    cn = category_need(category=c_phdt, need="author")
-    cn.save()
-    cn = category_need(category=c_phdt, need="title")
-    cn.save()
-    cn = category_need(category=c_phdt, need="school")
-    cn.save()
-    cn = category_need(category=c_phdt, need="year")
-    cn.save()
-        #bachelorthesis
-    cn = category_need(category=c_bach, need="author")
-    cn.save()
-    cn = category_need(category=c_bach, need="title")
-    cn.save()
-    cn = category_need(category=c_bach, need="school")
-    cn.save()
-    cn = category_need(category=c_bach, need="year")
-    cn.save()
-        #masterthesis
-    cn = category_need(category=c_mast, need="author")
-    cn.save()
-    cn = category_need(category=c_mast, need="title")
-    cn.save()
-    cn = category_need(category=c_mast, need="school")
-    cn.save()
-    cn = category_need(category=c_mast, need="year")
-    cn.save()
+    c_mast.needs.add(mg_author)
+    c_mast.needs.add(mg_title)
+    c_mast.needs.add(mg_school)
+    c_mast.needs.add(mg_year)
     
     #User
     user1 = User(username="User1", first_name="Jörn", last_name="Hameyer", 
-              email="user1@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False, 
+              email="user1@van-nahl.org", 
+              is_staff=False, is_active=True, is_superuser=False, 
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
-    user1.set_password("sep2012")
+    user1.set_password('sep2012')
     user1.save()
     user2 = User(username="User2", first_name="Stephan", last_name="Sobol", 
               email="user2@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False, 
+              is_staff=False, is_active=True, is_superuser=False, 
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user2.set_password("sep2012")
     user2.save()
     user3 = User(username="User3", first_name="Eric", last_name="Anders", 
               email="user3@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user3.set_password("sep2012")
     user3.save()
     user4 = User(username="User4", first_name="Johann", last_name="Hong", 
               email="user4@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user4.set_password("sep2012")
     user4.save()
     user5 = User(username="User5", first_name="Marco", last_name="Melzer", 
               email="user5@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user5.set_password("sep2012")
     user5.save()
     user6 = User(username="User6", first_name="Markus", last_name="Dietrich", 
               email="user6@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user6.set_password("sep2012")
     user6.save()
     user7 = User(username="User7", first_name="Philipp", last_name="Offensand", 
               email="user7@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user7.set_password("sep2012")
     user7.save()
     user8 = User(username="User8", first_name="Theodor van", last_name="Nahl", 
               email="user8@van-nahl.org", password=hash("sep2012"),
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user8.set_password("sep2012")

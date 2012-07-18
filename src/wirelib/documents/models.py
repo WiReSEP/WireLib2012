@@ -1,48 +1,47 @@
 # vim: set fileencoding=utf-8
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
+from django.db import models
 from django.db.models.signals import post_save
+from django.template import Context
+from django.template import loader
 from exceptions import LendingError
-from django.template import loader, Context 
-from django.conf import settings
+
+
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
     def __init__(self, *args, **kwargs):
         super(ManyToManyField_NoSyncdb,self).__init__(*args, **kwargs)
         self.creates_table = False
 """
+class need_groups(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+        verbose_name = "Mussfeldgruppe"
+        verbose_name_plural = "Mussfeldgruppen"
+
+    def __unicode__(self):
+        return self.name
 
 class category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
-        #article
-        #book
-        #booklet
-        #conference
-        #''inbook (Teilstück von book)
-        #''incollection (Teilstück von book)
-        #''inproceedings (Teilstück von proceedings)
-        #manual
-        #mastersthesis
-        #''misc ("beliebiger Eintrag": also wohl nicht in der DB)
-        #phdthesis
-        #proceedings
-        #techreport
-        #unpublished
+    needs = models.ManyToManyField(need_groups, verbose_name="Mussfelder")
     class Meta:
         verbose_name = "Kategorie"
         verbose_name_plural = "Kategorien"
 
     def __unicode__(self):
         return self.name
-
-class category_need(models.Model):
-    category = models.ForeignKey(category)
-    need = models.CharField(max_length=30)
-
-    def __unicode__(self):
-        return self.category + u":" + self.need
+        
+class need(models.Model):
+    name = models.CharField(max_length=30)
+    group = models.ForeignKey(need_groups)
+    class Meta:
+        unique_together= ('name', 'group')
+        verbose_name = "Mussfeld"
+        verbose_name_plural = "Mussfelder"
     
 class publisher(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
@@ -65,7 +64,7 @@ class author(models.Model):
         verbose_name_plural = "Autoren"
     
     def __unicode__(self):
-        return (self.last_name + ', ' + self.first_name)
+        return (self.first_name + ' ' + self.last_name)
 
 class document(models.Model):
     bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
@@ -241,14 +240,14 @@ class document(models.Model):
         """
         Methode um dem Dokument einen Autoren zuzuweisen
         """
-        d = document_authors(document=self, author=author, editor=False)
+        d, dummy = document_authors.objects.get_or_create(document=self, author=author, editor=False)
         d.save()
 
     def add_editor(self, editor):
         """
         Methode um dem Dokument einen Autoren als Editor zuzuweisen
         """
-        d = document_authors(document=self, author=editor, editor=True)
+        d, dummy = document_authors.objects.get_or_create(document=self, author=editor, editor=True)
         d.save()
 
 class document_authors(models.Model):
