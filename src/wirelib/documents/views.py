@@ -1036,9 +1036,9 @@ def __document_expired_email():
 
 def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connection):
     #Mail Bearbeitung für den Bürgen
-    user = entry.username
-    document = entry.title
-    user_target_email = entry.email
+    user = entry.user_lend.username
+    document = entry.doc_id.title
+    user_target_email = entry.user_lend.email
     user_c = Context({"document_name" : document, 
                              "user_name" : user
                             })
@@ -1050,9 +1050,9 @@ def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connecti
                                             connection=connection
                                             )        
     #Mail Bearbeitung für den Externen
-    nonuser_firstname = entry.firstname
-    nonuser_lastname = entry.lastname
-  # nonuser_target_email = entry.#TODO
+    nonuser_firstname = entry.non_user_lend.firstname
+    nonuser_lastname = entry.non_user_lend.lastname
+    nonuser_target_email = entry.non_user_lend.email
     nonuser_c = Context({"document_name" : document,
                              "nonuser_firstname" : nonuser_firstname,
                              "nonuser_lastname" : nonuser_lastname,
@@ -1065,7 +1065,10 @@ def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connecti
                                            connection=connection
                                            )
     #Versenden beider Emails
-    connection.send_messages([user_finalemail, nonuser_finalemail])                       
+    connection.send_messages([user_finalemail, nonuser_finalemail]) 
+
+def __get_subject(emailname)
+    subject = emails.object.get(            
         
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
