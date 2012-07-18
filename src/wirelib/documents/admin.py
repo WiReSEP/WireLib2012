@@ -64,8 +64,7 @@ class document_admin(admin.ModelAdmin):
     #entsprechenden Datum filtern kann und nicht mehr nur nach letzten Tag, Woche, Monat, Jahr
     list_filter = ('category', )
     ordering = ['bib_no'] 
-    search_fields = ('bib_no', 'title', 'publisher', 
-                     'isbn', 'inv_no', 'bibtex_id', )
+    search_fields = ['bib_no', 'title', 'publisher__name' ,'isbn', 'inv_no', 'bibtex_id', ]
     fields = ['bib_no',  'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title', 
               'isbn', 'category', 'last_updated', 'last_edit_by', 'publisher',
               'year', 'address', 'price', 'currency', 'date_of_purchase', 
