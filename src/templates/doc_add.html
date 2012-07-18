@@ -72,15 +72,27 @@ function changeCategory(elem) {
   {% endif %}  
 		  <table>
 			{{ form_doc.as_table }}
-			<tr><td>Autoren</td></tr>
+			<tr><td><input type="submit" name="submit" value="Dokument speichern" /> <br /><br /> </td></tr>
+			<tr><td><b><u>Autoren und Editoren</u></b></td></tr>
+			<tr><td style="color:#ff0000;" colspan="2">ACHTUNG! Der erstellte Autor oder Editor wird noch nicht dem Dokument zugewiesen. Dieses sollten Sie noch selbst erledigen!</td></tr>
 			{{ form_author.as_table }}
 			<tr>
 			  <td>
-				<input type="submit" name="sub_author" value="Autor	hinzufügen" />
+				<input type="submit" name="sub_author" 
+				       value="Autor/Editor hinzufügen"/>
+				<br /><br />
+			  </td>
+			</tr>
+			<tr><td><b><u>Publisher</u></b></td></tr>
+			{{ form_publisher.as_table }}
+			<tr>
+			  <td>
+				<input type="submit" name="sub_publisher" 
+				       value="Publisher hinzufügen"/>
+				<br /><br />
 			  </td>
 			</tr>
 		  </table>
-	    <input type="submit" name="submit" value="Dokument speichern" />
 	  </form>
 	</div>
 	{% if form %}

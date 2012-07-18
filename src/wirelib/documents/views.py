@@ -11,12 +11,13 @@ from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
-    TelNonUserForm
+    TelNonUserForm, NameForm, PublisherAddForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 
 import datetime
@@ -53,7 +54,6 @@ def search(request):
                         __get_searchset(i)).distinct()
             #Falls nicht erste Schleife
             else:
-                print i
                 #Wenn not nicht aktuell wirkend
                 if not_active == False :
                     if i == "not":
@@ -146,7 +146,9 @@ def search_pro(request):
     if "title" in request.GET:
         #Auslesen der benötigten Variablen aus dem Request
         s_fn_author = request.GET.get('fn_author','')
-        s_ln_author = request.GET.get('ln_author','')
+        s_ln_author = request.GET.get('ln_author','nicht gefunden')
+        s_fn_editor = request.GET.get('fn_editor','')
+        s_ln_editor = request.GET.get('ln_editor','')
         s_title = request.GET.get('title','')
         s_year = request.GET.get('year','')
         s_publisher = request.GET.get('publisher','')
@@ -155,8 +157,9 @@ def search_pro(request):
         s_keywords = request.GET.get('keywords','')
         s_doc_status = request.GET.get('doc_status','')
         #Verpackung in einer Liste zur einheitlichen Übergabe
-        searchtext = [s_fn_author, s_ln_author, s_title, s_year, s_publisher,
-                    s_bib_no, s_isbn, s_keywords, s_doc_status]
+        searchtext = [s_title, s_fn_author, s_ln_author, s_fn_editor,
+                s_ln_editor, s_keywords, s_year, s_publisher, s_bib_no, s_isbn,
+                s_doc_status]
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
         s_documents = document.objects.filter(year__icontains = s_year)
@@ -166,10 +169,20 @@ def search_pro(request):
                 s_documents = s_documents.filter(title__icontains = i)
         if s_fn_author != "":
             s_documents = s_documents.filter(authors__first_name__icontains =
-                                             s_fn_author)
+                                             s_fn_author).filter(
+                                             document_authors__editor=False)
         if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
-                                             s_ln_author)
+                                             s_ln_author).filter(
+                                             document_authors__editor=False)
+        if s_fn_editor != "":
+            s_documents = s_documents.filter(authors__first_name__icontains =
+                                             s_fn_editor).filter(
+                                             document_authors__editor=True)
+        if s_ln_editor != "":
+            s_documents = s_documents.filter(authors__last_name__icontains =
+                                             s_ln_editor).filter(
+                                             document_authors__editor=True)
         if s_publisher != "":
             s_documents = s_documents.filter(publisher__name__icontains = s_publisher)
         if s_bib_no != "":
@@ -184,6 +197,7 @@ def search_pro(request):
         if s_doc_status !="":
             s_documents = s_documents.filter(doc_status__status =
                     s_doc_status,doc_status__return_lend = False) 
+        s_documents = s_documents.distinct()
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if s_documents.count()==1:
             return doc_detail(request, s_documents[0].bib_no, searchtext)
@@ -406,10 +420,8 @@ def profile(request, user_id):
     v_user = request.user
     try:
         p_user = User.objects.get(id = user_id)
-        #TODO :Richtige Exception einbauen. User.DoesNotExist funktioniert
-        #nicht.
-    except "User existiert nicht":
-        raise Http404
+    except User.DoesNotExist :
+        raise Http404add_document
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -489,7 +501,22 @@ def telpersonal(request):
     
     return render_to_response(template, data, context_instance=RequestContext(request)) 
 
-
+def profile_edit_name(request):
+    """
+        Methode zum Ändern des eigenen Namens
+    """
+    v_user = request.user
+    if request.method == "POST":
+        form = NameForm(request.POST, instance=v_user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+    else:
+        form = NameForm(instance=v_user)
+    template = "profile/name.html"
+    data = { 'form' : form, }
+    return render_to_response(template, data, 
+                              context_instance=RequestContext(request))
 
 def email_validation_process(request, key):
 
@@ -541,13 +568,15 @@ def doc_add(request, bib_no_id=None):
         * Import durch Formeingabe
         * Import durch Upload einer BibTeX-Datei
     """
-    #TODO Rechtekontrolle
     success = True
     v_user = request.user
+    if not v_user.has_perm("add_document"):
+        raise PermissionDenied
     #Datei-Import
     if len(request.FILES) > 0:
         form_doc = DocForm()
         form_author = AuthorAddForm()
+        form_publisher = PublisherAddForm()
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
@@ -575,6 +604,7 @@ def doc_add(request, bib_no_id=None):
             form = UploadFileForm()
             form_doc = DocForm(request.POST)
             form_author = AuthorAddForm(request.POST)
+            form_publisher = PublisherAddForm(request.POST)
         else:
             try:
                 doc = document.objects.get(bib_no=bib_no_id)
@@ -583,14 +613,17 @@ def doc_add(request, bib_no_id=None):
             form = None
             form_doc = DocForm(request.POST, instance=doc)
             form_author = AuthorAddForm(request.POST)
+            form_publisher = PublisherAddForm(request.POST)
         success = False
         message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
-        if request.POST['submit'] == 'Autor hinzufügen' and form_author.is_valid():
+        if u'sub_author' in request.POST and form_author.is_valid():
             form_author.save()
             message = 'Autor erfolgreich hinzugefügt'
+            for item in form_doc.errors:
+                form_doc.errors[item] = ''
             success = True
             form_author = AuthorAddForm()
-        elif request.POST['submit'] == 'Dokument speichern' and form_doc.is_valid():
+        elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
             doc = form_doc.save(commit=False)
             doc.save()
             for editor in form_doc.cleaned_data['editors']:
@@ -602,11 +635,19 @@ def doc_add(request, bib_no_id=None):
             form_author.errors['last_name'] = ''
             message = 'Daten erfolgreich übernommen'
             success = True
+        elif u'sub_publisher' in request.POST and form_publisher.is_valid():
+            form_publisher.save()
+            message = 'Publisher erfolgreich hinzugefügt'
+            for item in form_publisher.errors:
+                form_publisher.errors[item] = ''
+            success = True
+            form_publisher = PublisherAddForm()
     elif bib_no_id is None:
         message = ''
         form_doc = DocForm()
         form_author = AuthorAddForm()
         form = UploadFileForm()
+        form_publisher = PublisherAddForm()
     else:
         message = ''
         try:
@@ -617,7 +658,7 @@ def doc_add(request, bib_no_id=None):
         form_author = AuthorAddForm()
         form = None
 #    category_needs = category_need.objects.all()
-#    needs = dict()
+    needs = dict()
 #    for c in category_needs:
 #        if (u""+c.category.name) not in needs:
 #            needs[u"" + c.category.name] = []
@@ -639,6 +680,7 @@ def doc_add(request, bib_no_id=None):
                                    "form" : form,
                                    "form_doc" : form_doc,
                                    "form_author" : form_author,
+                                   "form_publisher" : form_publisher,
                                    "message" : message,
                                    "success" : success,
                                    "miss" : miss_query[0:10],
@@ -708,7 +750,7 @@ def allegro_export(request):
         Allegro.docs_to_export_lock.release()
     files = {}
     for file in os.listdir(settings.DOCUMENTS_ALLEGRO_FILES):
-        if ".adt" in file:
+        if str(file).lower().endswith(".adt"):
             files[file] = __gen_sec_link("/"+file)
 
 #    Rechte für Template
@@ -876,7 +918,7 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form,
-                suchtext = searchtext,
+                searchtext = searchtext,
                 searchmode = searchmode,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
@@ -1064,7 +1106,7 @@ def __send_expired_mail(receiver, subject, emailcontent, connection, **context):
                                    connection=connection
                                    )       
     finalemail.send()             
-        
+
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
