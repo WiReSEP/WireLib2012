@@ -4,12 +4,14 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, category_need, emails, user_profile, tel_user
+    EmailValidation, category_need, emails, user_profile, tel_user, \
+    tel_non_user
 from django.contrib.auth.models import User
 from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm 
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
+    TelNonUserForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -342,6 +344,7 @@ def doc_assign(request, bib_no_id):
     v_user = request.user
     userform = SelectUser(v_user)
     nonuserform = NonUserForm()
+    telnonuserform = TelNonUserForm()
     user_lend = ""
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
@@ -361,8 +364,12 @@ def doc_assign(request, bib_no_id):
             
     elif 'assign-ex' in request.POST:
         nonuserform = NonUserForm(request.POST)
-        if nonuserform.is_valid():
+        telnonuserform = TelNonUserForm(request.POST)
+        if nonuserform.is_valid() and telnonuserform.is_valid():
             non_user_lend = nonuserform.save()
+            telnonuser, created = tel_non_user.objects.get_or_create(non_user=non_user_lend)
+            telnonuserform = TelNonUserForm(request.POST, instance=telnonuser)
+            telnonuserform.save()
             if non_user_lend and not non_user_lend == "":
                 document_query.lend(user=v_user, non_user=non_user_lend)
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
@@ -379,6 +386,7 @@ def doc_assign(request, bib_no_id):
                        "lending" : lending_query, 
                        "userform": userform,
                        "nonuserform" : nonuserform,
+                       "telnonuserform" : telnonuserform,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
