@@ -683,6 +683,29 @@ div.metas {
   font-weight: 700;
   float: left;
 }
+.inhalt div#nav{
+  display: block;
+  background-color: #ccc;
+}
+.inhalt div#nav div#sort_list{
+  float: left;
+}
+.inhalt div#nav div#sort_item{
+  float: left;
+  border-top: 1px;
+  padding: 6px 3px;
+}
+.inhalt div#nav div#list_filter{
+  text-align: right;
+}
+
+.inhalt select#id_authors {
+  height: 10em;
+}
+
+.inhalt select#id_editors {
+  height: 10em;
+}
 /******************************************************
 	RECHTE SPALTE
 *******************************************************/

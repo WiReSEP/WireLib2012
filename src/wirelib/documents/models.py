@@ -64,7 +64,7 @@ class author(models.Model):
         verbose_name_plural = "Autoren"
     
     def __unicode__(self):
-        return (self.last_name + ', ' + self.first_name)
+        return (self.first_name + ' ' + self.last_name)
 
 class document(models.Model):
     bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
@@ -240,14 +240,14 @@ class document(models.Model):
         """
         Methode um dem Dokument einen Autoren zuzuweisen
         """
-        d = document_authors(document=self, author=author, editor=False)
+        d, dummy = document_authors.objects.get_or_create(document=self, author=author, editor=False)
         d.save()
 
     def add_editor(self, editor):
         """
         Methode um dem Dokument einen Autoren als Editor zuzuweisen
         """
-        d = document_authors(document=self, author=editor, editor=True)
+        d, dummy = document_authors.objects.get_or_create(document=self, author=editor, editor=True)
         d.save()
 
 class document_authors(models.Model):
