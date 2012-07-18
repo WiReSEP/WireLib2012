@@ -1032,45 +1032,38 @@ def __document_expired_email():
     connection.open()
     
     for entry in expired_docs:
-       __send_expired_mail(entry, user_plaintext, nonuser_plaintext, connection)
-    
+       __send_expired_mail(
+                           receiver=entry.user_lend.email,
+                           subject=user_email.subject,
+                           emailcontent=user_plaintext, 
+                           connection=connection, 
+                           user_name=entry.user_lend.username, 
+                           document_name=entry.doc_id.title,
+                           nonuser_firstname=entry.non_user_lend.firstname, 
+                           nonuser_lastname=entry.non_user_lend.lastname
+                          )
+       __send_expired_mail(
+                           receiver=entry.non_user_lend.email,
+                           subject=nonuser_email.subject,
+                           emailcontent=nonuser_plaintext,
+                           connection=connection,
+                           user_name=entry.user_lend.username, 
+                           document_name=entry.doc_id.title,
+                           nonuser_firstname=entry.non_user_lend.firstname, 
+                           nonuser_lastname=entry.non_user_lend.lastname
+                          )
     connection.close() 
 
-def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connection):
-    #Mail Bearbeitung für den Bürgen
-    user = entry.user_lend.username
-    document = entry.doc_id.title
-    user_target_email = entry.user_lend.email
-    user_c = Context({"document_name" : document, 
-                             "user_name" : user
-                            })
-    user_text_content = user_emailcontent.render(user_c)                    
-    user_finalemail = mail.EmailMessage('[WireLib] Erinnerungmail', 
-                                            user_text_content, 
-                                            'j.hameyer@tu-bs.de', #TODO
-                                            [user_target_email], 
-                                            connection=connection
-                                            )        
-    #Mail Bearbeitung für den Externen
-    nonuser_firstname = entry.non_user_lend.firstname
-    nonuser_lastname = entry.non_user_lend.lastname
-    nonuser_target_email = entry.non_user_lend.email
-    nonuser_c = Context({"document_name" : document,
-                             "nonuser_firstname" : nonuser_firstname,
-                             "nonuser_lastname" : nonuser_lastname,
-                             })
-    nonuser_text_content = nonuser_emailcontent.render(nonuser_c)
-    nonuser_finalemail = mail.Emailmessage('[WireLib] Erinnerungsmail',
-                                           nonuser_text_content,
-                                           'j.hameyer@tu-bs.de', #TODO
-                                           [nonuser_target_email],
-                                           connection=connection
-                                           )
-    #Versenden beider Emails
-    connection.send_messages([user_finalemail, nonuser_finalemail]) 
-
-def __get_subject(emailname)
-    subject = emails.object.get(            
+def __send_expired_mail(receiver, subject, emailcontent, connection, **context):
+    c = Context(context)
+    text_content = emailcontent.render(c)                    
+    finalemail = mail.EmailMessage(subject, 
+                                   text_content, 
+                                   'j.hameyer@tu-bs.de', #TODO
+                                   [receiver], 
+                                   connection=connection
+                                   )       
+    finalemail.send()             
         
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
