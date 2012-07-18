@@ -1,6 +1,8 @@
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.forms import ModelForm
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -37,12 +39,7 @@ class ProfileForm(ModelForm):
     class Meta: 
         model = user_profile
         exclude = ('user_id')
-
-class TelForm(ModelForm): 
-    class Meta: 
-        model = tel_user
-        exclude = ('user_id')
-        
+ 
 class NameForm(ModelForm):
     class Meta:
         model = User
