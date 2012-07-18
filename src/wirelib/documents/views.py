@@ -11,7 +11,7 @@ from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
-    TelNonUserForm, NameForm
+    TelNonUserForm, NameForm, PublisherAddForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -579,6 +579,7 @@ def doc_add(request, bib_no_id=None):
     if len(request.FILES) > 0:
         form_doc = DocForm()
         form_author = AuthorAddForm()
+        form_publisher = PublisherAddForm()
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
@@ -606,6 +607,7 @@ def doc_add(request, bib_no_id=None):
             form = UploadFileForm()
             form_doc = DocForm(request.POST)
             form_author = AuthorAddForm(request.POST)
+            form_publisher = PublisherAddForm(request.POST)
         else:
             try:
                 doc = document.objects.get(bib_no=bib_no_id)
@@ -614,6 +616,7 @@ def doc_add(request, bib_no_id=None):
             form = None
             form_doc = DocForm(request.POST, instance=doc)
             form_author = AuthorAddForm(request.POST)
+            form_publisher = PublisherAddForm(request.POST)
         success = False
         message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
         if u'sub_author' in request.POST and form_author.is_valid():
@@ -635,11 +638,19 @@ def doc_add(request, bib_no_id=None):
             form_author.errors['last_name'] = ''
             message = 'Daten erfolgreich übernommen'
             success = True
+        elif u'sub_publisher' in request.POST and form_publisher.is_valid():
+            form_publisher.save()
+            message = 'Publisher erfolgreich hinzugefügt'
+            for item in form_publisher.errors:
+                form_publisher.errors[item] = ''
+            success = True
+            form_publisher = PublisherAddForm()
     elif bib_no_id is None:
         message = ''
         form_doc = DocForm()
         form_author = AuthorAddForm()
         form = UploadFileForm()
+        form_publisher = PublisherAddForm()
     else:
         message = ''
         try:
@@ -672,6 +683,7 @@ def doc_add(request, bib_no_id=None):
                                    "form" : form,
                                    "form_doc" : form_doc,
                                    "form_author" : form_author,
+                                   "form_publisher" : form_publisher,
                                    "message" : message,
                                    "success" : success,
                                    "miss" : miss_query[0:10],

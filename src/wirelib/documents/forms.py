@@ -8,7 +8,7 @@ from django.forms import ModelForm
 from django.forms.formsets import formset_factory
 from django.utils.translation import ugettext as _
 from documents.models import author, document, EmailValidation, non_user,\
-    tel_non_user, tel_user, user_profile
+    publisher, tel_non_user, tel_user, user_profile
 import mimetypes, urllib
 
 if not settings.AUTH_PROFILE_MODULE: 
@@ -71,6 +71,10 @@ class DocForm(ModelForm):
 class AuthorAddForm(ModelForm):
     class Meta:
         model = author
+       
+class PublisherAddForm(ModelForm):
+    class Meta:
+        model = publisher
 
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
