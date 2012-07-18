@@ -585,12 +585,12 @@ def doc_add(request, bib_no_id=None):
             form_author = AuthorAddForm(request.POST)
         success = False
         message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
-        if request.POST['submit'] == 'Autor hinzufügen' and form_author.is_valid():
+        if u'sub_author' in request.POST and form_author.is_valid():
             form_author.save()
             message = 'Autor erfolgreich hinzugefügt'
             success = True
             form_author = AuthorAddForm()
-        elif request.POST['submit'] == 'Dokument speichern' and form_doc.is_valid():
+        elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
             doc = form_doc.save(commit=False)
             doc.save()
             for editor in form_doc.cleaned_data['editors']:
