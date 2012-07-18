@@ -4,12 +4,14 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, category_need, emails, user_profile, tel_user
+    EmailValidation, category_need, emails, user_profile, tel_user, \
+    tel_non_user
 from django.contrib.auth.models import User
 from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm 
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
+    TelNonUserForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -30,85 +32,86 @@ def search(request):
     #Wenn bereits eine Suche gestartet wurde
     if "query" in request.GET:
         #Eingabe des Users aus dem request auslesen
-        suchtext = request.GET.get('query','')
+        searchtext = request.GET.get('query','')
         #Erstellen eines Sets aus allen Suchbegriffen.
         #Aufgrund des Verfahrens eine ODER-Suche
-        suchtext_gesplittet = suchtext.split(" ")
+        #Aufspaltung des Suchbegriffs
+        searchtext_split = searchtext.split(" ")
+        #Verpackung in eine Liste für einheitliche Übergabe
+        searchtext = [searchtext]
+        #Initialisierung der für Schleife benötigten Variablen
         first_for = True
         next_action = "none"
         not_active = False
-        for i in suchtext_gesplittet:
+        for i in searchtext_split:
+            #Falls erster Schleifendurchgang
             if first_for:
                 first_for = False
-                search_set = (
-                    Q(title__icontains = i) |
-                    Q(authors__last_name__icontains = i) |
-                    Q(isbn__icontains = i) |
-                    Q(bib_no__icontains = i) |
-                    Q(publisher__name__icontains = i) |
-                    Q(keywords__keyword__icontains = i))
-                document_query = document.objects.filter(search_set).distinct()
+                #Statt Filtern QuerySet erstellen
+                document_query = document.objects.filter(
+                        __get_searchset(i)).distinct()
+            #Falls nicht erste Schleife
             else:
+                print i
+                #Wenn not nicht aktuell wirkend
                 if not_active == False :
                     if i == "not":
                         not_active = True
-
+                        continue
+                
+                #Wenn aktuell kein logischer Ausdruck aktiv
                 if next_action == "none":
+                    #Prüfe auf restliche Schlüsselwörter
                     if i == "and":
                         next_action = "and"
                     elif i == "or":
                         next_action = "or"
+                    #Falls kein Schlüsselwort und keine logischer Ausdruck
+                    #gemerkt führe normale "und"-Suche durch
                     else:
-                        search_set = (
-                            Q(title__icontains = i) |
-                            Q(authors__last_name__icontains = i) |
-                            Q(isbn__icontains = i) |
-                            Q(bib_no__icontains = i) |
-                            Q(publisher__name__icontains = i) |
-                            Q(keywords__keyword__icontains = i))
-                        document_query = document_query.filter(search_set).distinct()
-
-                else:
-                    if next_action == "or":
                         if not_active:
-                            search_set = (
-                                Q(title__icontains = i) |
-                                Q(authors__last_name__icontains = i) |
-                                Q(isbn__icontains = i) |
-                                Q(bib_no__icontains = i) |
-                                Q(publisher__name__icontains = i) |
-                                Q(keywords__keyword__icontains = i))
-                            search_query = not document.objects.filter(search_set).distinct() & document.objects.all
-                            document_query = document_query | search_query
+                            document_query = document_query.exclude(
+                                    __get_searchset(i)).distinct()
+                            not_active = False
                         else:
-                            search_set = (
-                                Q(title__icontains = i) |
-                                Q(authors__last_name__icontains = i) |
-                                Q(isbn__icontains = i) |
-                                Q(bib_no__icontains = i) |
-                                Q(publisher__name__icontains = i) |
-                                Q(keywords__keyword__icontains = i))
-                            search_query = document.objects.filter(search_set).distinct()
+                            document_query = document_query.filter(
+                                    __get_searchset(i)).distinct()
+
+                #Falls ein logischer Ausdruck aktiv
+                else:
+                    #Wenn dieser Ausdruck "or" ist.
+                    if next_action == "or":
+                        #"or" wenn "not" aktiv
+                        if not_active:
+                            search_query = document.objects.exclude(
+                                    __get_searchset(i)).distinct()
+                            document_query = document_query | search_query
+                            not_active = False
+                        #"or" wenn "not" nicht aktiv
+                        else:
+                            search_query = document.objects.filter(
+                                    __get_searchset(i)).distinct()
                             document_query = document_query | search_query
                         document_query = document_query.distinct()
                         next_action = "none"
 
                     if next_action == "and":
-                        search_set = (
-                            Q(title__icontains = i) |
-                            Q(authors__last_name__icontains = i) |
-                            Q(isbn__icontains = i) |
-                            Q(bib_no__icontains = i) |
-                            Q(publisher__name__icontains = i) |
-                            Q(keywords__keyword__icontains = i))
-                        document_query = document_query.filter(search_set).distinct()
+                        #"and" wenn "not" aktiv
+                        if not_active:
+                            document_query = document_query.exclude(
+                                    __get_searchset(i)).distinct()
+                            not_active = False
+                        #"and" wenn "not" nicht aktiv
+                        else:
+                            document_query = document_query.filter(
+                                    __get_searchset(i)).distinct()
                         next_action = "none"
 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if document_query.count()==1:
-            return doc_detail(request, document_query[0].bib_no)
+            return doc_detail(request, document_query[0].bib_no, searchtext)
         else:
-            return __list(request, document_query)
+            return __list(request, document_query,None, 0, searchtext)
         return __list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
@@ -122,6 +125,15 @@ def search(request):
                            "export_perm" : export_perm})
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
+
+def __get_searchset(searchvalue):
+    return (Q(title__icontains = searchvalue) |
+            Q(authors__first_name__icontains = searchvalue) |
+            Q(authors__last_name__icontains = searchvalue) |
+            Q(isbn__icontains = searchvalue) |
+            Q(bib_no__icontains = searchvalue) |
+            Q(publisher__name__icontains = searchvalue) |
+            Q(keywords__keyword__icontains = searchvalue))
 
 def search_pro(request):
     """ Erweiterte Suche nach Dokumeten.
@@ -141,6 +153,9 @@ def search_pro(request):
         s_isbn = request.GET.get('isbn','')
         s_keywords = request.GET.get('keywords','')
         s_doc_status = request.GET.get('doc_status','')
+        #Verpackung in einer Liste zur einheitlichen Übergabe
+        searchtext = [s_fn_author, s_ln_author, s_title, s_year, s_publisher,
+                    s_bib_no, s_isbn, s_keywords, s_doc_status]
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
         s_documents = document.objects.filter(year__icontains = s_year)
@@ -170,9 +185,9 @@ def search_pro(request):
                     s_doc_status,doc_status__return_lend = False) 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if s_documents.count()==1:
-            return doc_detail(request, s_documents[0].bib_no)
+            return doc_detail(request, s_documents[0].bib_no, searchtext)
         else:
-            return __list(request, s_documents)
+            return __list(request, s_documents, None, 0, searchtext)
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
         v_user = request.user
@@ -201,7 +216,7 @@ def doc_list(request):
     documents = document.objects.all()
     return __list(request, documents)
 
-def doc_detail(request, bib_no_id):
+def doc_detail(request, bib_no_id, searchtext=""):
     """
     Gibt alle Informationen für die Dateilansicht eines Dokumentes zurück
     """
@@ -266,6 +281,13 @@ def doc_detail(request, bib_no_id):
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
+    #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
+    if len(searchtext) == 1:
+        searchmode = 1
+    elif len(searchtext) > 1:
+        searchmode = 2
+    else:
+        searchmode = 0
     
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
@@ -289,7 +311,9 @@ def doc_detail(request, bib_no_id):
                       "change_document" : change_document,
                       "miss" : miss_query[0:10],
                       "history" : history ,
-                      "keyword" : keyword })
+                      "keyword" : keyword ,
+                      "searchmode" : searchmode,
+                      "searchtext" : searchtext })
     response = HttpResponse(template.render(context))
     return response
 
@@ -297,8 +321,8 @@ def doc_assign(request, bib_no_id):
     v_user = request.user
     userform = SelectUser(v_user)
     nonuserform = NonUserForm()
+    telnonuserform = TelNonUserForm()
     user_lend = ""
-    message = 'test'
     try:
         document_query = document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
@@ -313,17 +337,19 @@ def doc_assign(request, bib_no_id):
             user_lend = userform.cleaned_data['users']
             if user_lend and not user_lend == "":
                 document_query.lend(user=user_lend, editor=v_user)
-            #print userform.fields['users']
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
             
     elif 'assign-ex' in request.POST:
         nonuserform = NonUserForm(request.POST)
-        if nonuserform.is_valid():
-            nonuserform.save()
-            # TODO :Buch soll auf Bürgen entliehen bleiben?
-            # wo wird der Bürge gespeichert?
-            # Anzeige wer entliehen hat
-            return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+        telnonuserform = TelNonUserForm(request.POST)
+        if nonuserform.is_valid() and telnonuserform.is_valid():
+            non_user_lend = nonuserform.save()
+            telnonuser, created = tel_non_user.objects.get_or_create(non_user=non_user_lend)
+            telnonuserform = TelNonUserForm(request.POST, instance=telnonuser)
+            telnonuserform.save()
+            if non_user_lend and not non_user_lend == "":
+                document_query.lend(user=v_user, non_user=non_user_lend)
+                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
 
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
@@ -337,7 +363,7 @@ def doc_assign(request, bib_no_id):
                        "lending" : lending_query, 
                        "userform": userform,
                        "nonuserform" : nonuserform,
-                       "message" : message,
+                       "telnonuserform" : telnonuserform,
                        "perm" : perms, 
                        "import_perm" : import_perm,
                        "export_perm" : export_perm,
@@ -466,7 +492,7 @@ def telpersonal(request):
 
 def email_validation_process(request, key):
 
-    if EmailValidation.objects.verify(key=key): 
+    if Emaireal-world or knuthlValidation.objects.verify(key=key): 
         successful = True
     else: 
         successful = False
@@ -524,12 +550,12 @@ def doc_add(request, bib_no_id=None):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
-            filename = 'imports/' + datetime.datetime.strftime(date, '%s') + '.bib'
+            filename = settings.DOCUMENTS_IMPORT_FILES + datetime.datetime.strftime(date, '%s') + '.bib'
             destination = open(filename, 'wb+')
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)
             destination.close()
-            Bibtex.do_import(filename)
+            Bibtex().do_import(filename)
             os.remove(filename)
             filesize = os.path.getsize(filename + '.err')
             if filesize == 0:
@@ -670,7 +696,6 @@ def allegro_export(request):
     alg_exp = Allegro()
     if "allegro_export" in request.POST:
         alg_exp.start()
-        alg_exp.join()
         hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
     if alg_exp.isAlive():
         hint = "Derzeit läuft ein Export."
@@ -712,10 +737,8 @@ def bibtex_export(request):
     dürfen.
     """
     hint = ''
-    print "Es ist %s" % Bibtex.bibtex_lock.locked()
     if Bibtex.bibtex_lock.locked():
         hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
-        print hint
     elif "bibtex_export" in request.POST:
         export_documents = document.objects.filter(
                 bib_date__isnull=True,
@@ -759,7 +782,7 @@ def user(request):
             doc_status__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents, documents_non_user=None, form=0):
+def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
@@ -834,6 +857,13 @@ def __list(request, documents, documents_non_user=None, form=0):
                      path_starts = params_starts,
                      form = form),
                  context_instance=RequestContext(request))
+    #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
+    if len(searchtext) == 1:
+        searchmode = 1
+    elif len(searchtext) > 1:
+        searchmode = 2
+    else:
+        searchmode = 0
     return render_to_response("doc_list_wrapper.html", 
             dict(documents = documents,
                 user = v_user, 
@@ -844,6 +874,8 @@ def __list(request, documents, documents_non_user=None, form=0):
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form,
+                suchtext = searchtext,
+                searchmode = searchmode,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
 
@@ -1036,6 +1068,6 @@ def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connecti
     connection.send_messages([user_finalemail, nonuser_finalemail])                       
         
 def __show_keywords(doc):
-    keywords = doc.keywords_set.order_by('keyword')
+    keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
 

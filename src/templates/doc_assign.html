@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-	<h1>Übertragen</h1>
+  <h1>Übertragen</h1>
 	  <table>
 		<tbody id = origin>
 			<tr>
@@ -37,10 +37,11 @@
 	    <tbody>
 	        <tr><td><b>Externe</b></td></tr>
 			{{ nonuserform.as_table }}
+			{{ telnonuserform.as_table }}
 			{% endif %}
 			</tbody>
 		  </table>
-			 <input type="submit" name="assign-ex" value="An Externe &uuml;bertragen" />
+			 <input type="submit" name="assign-ex" value="An Externe uebertragen" />
 		  </form>
 
 		

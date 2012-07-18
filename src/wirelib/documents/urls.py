@@ -3,7 +3,7 @@ from django.views.generic.simple import direct_to_template
 from documents.views import *
 
 urlpatterns = patterns('documents.views',
-        url(r'^$', 'index'), 
+        url(r'^$', 'index', name='index'), 
         url(r'^export/$', 'export'), 
         url(r'^export/allegro/$', 'allegro_export'),
         url(r'^export/bibtex/$', 'bibtex_export'), 
