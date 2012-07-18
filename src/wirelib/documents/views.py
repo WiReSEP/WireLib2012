@@ -969,37 +969,72 @@ def __document_missing_email(document, user):
 
 def __document_expired_email():
     current_day = datetime.date.today() 
-    
+
     if current_day.weekday() == 1:
         expired_docs = doc_status.objects.filter(
-                         Q(return_lend=False),
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(7)) |
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(8))
-                         )
+                  Q(return_lend=False),
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(7)) |
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(8))
+                  )
     elif current_day.weekday() == 0:
         expired_docs = doc_status.objects.filter(
-                         Q(return_lend=False),
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(7))
-                         )
+                  Q(return_lend=False),
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(7))
+                  )
     else:
-        expired_docs = doc_status.objects.filter(return_lend=False, 
-                                                 date_term_lend__exact=current_day + datetime.timedelta(6)
-                                                 )
-                                                 
-    email = emails.objects.get(name = "Frist Erinnerungsemail")
-    plaintext = Template(email.text)
+        expired_docs = doc_status.objects.filter(
+                      return_lend=False, 
+                      date_term_lend__exact=current_day + datetime.timedelta(6)
+                      )
     
-    c = Context({"document_name" : "" ,
-                 "user_name" : "" ,
-                 "user_email" :"" })
-    subject, from_email, to = ( '[WireLib] Erinnerungsmail',
-                                'TODO@TODO.de',
-                                'TODO@TODO.de'
-                                )
+    #Vorbereiten der 2 Emails, öffnen der Verbindung                                           
+    user_email = emails.objects.get(name = "Frist Erinnerungsemail(B)")
+    nonuser_email = emails.object.get(name = "Frist Erinnerungsemail(E)")
+    user_plaintext = Template(user_email.text)
+    nonuser_plaintext = Template(nonuser_email.text)
+    connection = mail.get_connection()
+    connection.open()
     
-                   
+    for entry in expired_docs:
+       __send_expired_mail(entry, user_plaintext, nonuser_plaintext, connection)
+    
+    connection.close() 
+
+def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connection):
+    #Mail Bearbeitung für den Bürgen
+    user = entry.username
+    document = entry.title
+    user_target_email = entry.email
+    user_c = Context({"document_name" : document, 
+                             "user_name" : user
+                            })
+    user_text_content = user_emailcontent.render(user_c)                    
+    user_finalemail = mail.EmailMessage('[WireLib] Erinnerungmail', 
+                                            user_text_content, 
+                                            'j.hameyer@tu-bs.de', #TODO
+                                            [user_target_email], 
+                                            connection=connection
+                                            )        
+    #Mail Bearbeitung für den Externen
+    nonuser_firstname = entry.firstname
+    nonuser_lastname = entry.lastname
+  # nonuser_target_email = entry.#TODO
+    nonuser_c = Context({"document_name" : document,
+                             "nonuser_firstname" : nonuser_firstname,
+                             "nonuser_lastname" : nonuser_lastname,
+                             })
+    nonuser_text_content = nonuser_emailcontent.render(nonuser_c)
+    nonuser_finalemail = mail.Emailmessage('[WireLib] Erinnerungsmail',
+                                           nonuser_text_content,
+                                           'j.hameyer@tu-bs.de', #TODO
+                                           [nonuser_target_email],
+                                           connection=connection
+                                           )
+    #Versenden beider Emails
+    connection.send_messages([user_finalemail, nonuser_finalemail])                       
+        
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('keyword')
     return keywords 
