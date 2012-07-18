@@ -86,56 +86,56 @@ def importieren():
     #User
     user1 = User(username="User1", first_name="Jörn", last_name="Hameyer", 
               email="user1@van-nahl.org", 
-              is_staff=False, is_active=False, is_superuser=False, 
+              is_staff=False, is_active=True, is_superuser=False, 
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user1.set_password('sep2012')
     user1.save()
     user2 = User(username="User2", first_name="Stephan", last_name="Sobol", 
               email="user2@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False, 
+              is_staff=False, is_active=True, is_superuser=False, 
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user2.set_password("sep2012")
     user2.save()
     user3 = User(username="User3", first_name="Eric", last_name="Anders", 
               email="user3@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user3.set_password("sep2012")
     user3.save()
     user4 = User(username="User4", first_name="Johann", last_name="Hong", 
               email="user4@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user4.set_password("sep2012")
     user4.save()
     user5 = User(username="User5", first_name="Marco", last_name="Melzer", 
               email="user5@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user5.set_password("sep2012")
     user5.save()
     user6 = User(username="User6", first_name="Markus", last_name="Dietrich", 
               email="user6@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user6.set_password("sep2012")
     user6.save()
     user7 = User(username="User7", first_name="Philipp", last_name="Offensand", 
               email="user7@van-nahl.org", password=hash("sep2012"), 
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user7.set_password("sep2012")
     user7.save()
     user8 = User(username="User8", first_name="Theodor van", last_name="Nahl", 
               email="user8@van-nahl.org", password=hash("sep2012"),
-              is_staff=False, is_active=False, is_superuser=False,
+              is_staff=False, is_active=True, is_superuser=False,
               last_login=datetime.datetime.today(), 
               date_joined=datetime.datetime.today())
     user8.set_password("sep2012")

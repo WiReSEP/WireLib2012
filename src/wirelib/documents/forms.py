@@ -42,6 +42,11 @@ class TelForm(ModelForm):
     class Meta: 
         model = tel_user
         exclude = ('user_id')
+        
+class NameForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
 
 class TelNonUserForm(ModelForm):
     class Meta:

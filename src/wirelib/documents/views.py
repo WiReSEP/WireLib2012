@@ -11,7 +11,7 @@ from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
-    TelNonUserForm
+    TelNonUserForm, NameForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -489,7 +489,22 @@ def telpersonal(request):
     
     return render_to_response(template, data, context_instance=RequestContext(request)) 
 
-
+def profile_edit_name(request):
+    """
+        Methode zum Ändern des eigenen Namens
+    """
+    v_user = request.user
+    if request.method == "POST":
+        form = NameForm(request.POST, instance=v_user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+    else:
+        form = NameForm(instance=v_user)
+    template = "profile/name.html"
+    data = { 'form' : form, }
+    return render_to_response(template, data, 
+                              context_instance=RequestContext(request))
 
 def email_validation_process(request, key):
 
