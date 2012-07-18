@@ -429,7 +429,7 @@ def profile(request, user_id):
     try:
         p_user = User.objects.get(id = user_id)
     except User.DoesNotExist :
-        raise Http404add_document
+        raise Http404
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -671,6 +671,8 @@ def doc_add(request, bib_no_id=None):
                                     queryset=doc_extra.objects.filter(doc_id=doc))
             if bib_no_id is None:
                 form_doc = DocForm()
+            else :
+                return HttpResponseRedirect("/doc/%s/"%bib_no_id)
             form_author.errors['first_name'] = ''
             form_author.errors['last_name'] = ''
             success = True
