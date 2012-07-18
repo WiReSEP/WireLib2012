@@ -1061,27 +1061,12 @@ def __document_missing_email(document, user):
     msg.send()
     
 
-def __document_expired_email():
+def __document_expired_email(day_amount):
     current_day = datetime.date.today() 
-
-    if current_day.weekday() == 1:
-        expired_docs = doc_status.objects.filter(
-                  Q(return_lend=False),
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(7)) |
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(8))
-                  )
-    elif current_day.weekday() == 0:
-        expired_docs = doc_status.objects.filter(
-                  Q(return_lend=False),
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(7))
-                  )
-    else:
-        expired_docs = doc_status.objects.filter(
-                      return_lend=False, 
-                      date_term_lend__exact=current_day + datetime.timedelta(6)
-                      )
+    expired_docs = doc_status.objects.filter(
+                  return_lend=False,
+                  date_term_lend__exact=current_day + datetime.timedelta(day_amount))
+                  
     
     #Vorbereiten der 2 Emails, öffnen der Verbindung                                           
     user_email = emails.objects.get(name = "Frist Erinnerungsemail(B)")
