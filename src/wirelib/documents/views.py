@@ -11,7 +11,7 @@ from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
-    TelNonUserForm
+    TelNonUserForm, NameForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -501,7 +501,22 @@ def telpersonal(request):
     
     return render_to_response(template, data, context_instance=RequestContext(request)) 
 
-
+def profile_edit_name(request):
+    """
+        Methode zum Ändern des eigenen Namens
+    """
+    v_user = request.user
+    if request.method == "POST":
+        form = NameForm(request.POST, instance=v_user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+    else:
+        form = NameForm(instance=v_user)
+    template = "profile/name.html"
+    data = { 'form' : form, }
+    return render_to_response(template, data, 
+                              context_instance=RequestContext(request))
 
 def email_validation_process(request, key):
 
@@ -598,12 +613,14 @@ def doc_add(request, bib_no_id=None):
             form_author = AuthorAddForm(request.POST)
         success = False
         message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
-        if request.POST['submit'] == 'Autor hinzufügen' and form_author.is_valid():
+        if u'sub_author' in request.POST and form_author.is_valid():
             form_author.save()
             message = 'Autor erfolgreich hinzugefügt'
+            for item in form_doc.errors:
+                form_doc.errors[item] = ''
             success = True
             form_author = AuthorAddForm()
-        elif request.POST['submit'] == 'Dokument speichern' and form_doc.is_valid():
+        elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
             doc = form_doc.save(commit=False)
             doc.save()
             for editor in form_doc.cleaned_data['editors']:
