@@ -1,5 +1,5 @@
 {% extends "index.html" %}
-{% block header %}
+{% block script %}
 function addAuthor(div_id, elem, edau) {
 	var auths = document.getElementsByName(edau+'_last_name');
 	var last_auth = auths[auths.length-2];
@@ -54,7 +54,7 @@ function changeCategory(elem) {
 	field.innerHTML = '*';
   }
 }
-{% endblock header %}
+{% endblock script %}
 {% block content %}
 
 	{% if form %}

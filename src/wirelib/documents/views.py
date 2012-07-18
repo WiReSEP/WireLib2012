@@ -23,6 +23,10 @@ import os
 import settings
 import thread
 
+# Für Filter von dict
+from django import template
+register = template.Library()
+
 
 def search(request):
     """ Suche nach Dokumenten.
@@ -848,12 +852,27 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
-    miss_query = None
+    miss_query = None 
+    # options für Filter-Dropdown
+    startswith_filter = {
+        'all': ['value=all', 'Alle'],
+        '0-9': ['value=0-9', '0-9'],
+        'a-c': ['value=a-c', 'A-C'],
+        'd-f': ['value=d-f', 'D-F'],
+        'g-i': ['value=g-i', 'G-I'],
+        'j-k': ['value=j-k', 'J-K'],
+        'm-o': ['value=m-o', 'M-O'],
+        'p-s': ['value=p-s', 'P-S'],
+        't-v': ['value=t-v', 'T-V'],
+        'w-z': ['value=w-z', 'W-Z'],
+        'special_sign': ['value=special_sign', 'Sonderzeichen'],
+        }
+    selected_filter = request.GET.get('starts', default='all')
+    startswith_filter[selected_filter][0] += ' selected=selected'
     if form != 2:
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                              doc_status__return_lend = False)
         miss_query = miss_query.order_by('-doc_status__date')
-    params_starts = __truncate_get(request, 'starts', 'page')
     if form == 1:
         return render_to_response("doc_rent.html", 
                 dict(documents = documents,
@@ -864,8 +883,8 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
                     import_perm = import_perm,
                     export_perm = export_perm,
                     path_sort = params_sort, 
-                    path_starts = params_starts,
                     form = form,
+                    filter = startswith_filter,
                     miss = miss_query[0:10]),
                 context_instance=RequestContext(request))
     if form == 2:
@@ -877,7 +896,7 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
                      import_perm = import_perm,
                      export_perm = export_perm,
                      path_sort = params_sort,
-                     path_starts = params_starts,
+                     filter = startswith_filter,
                      form = form),
                  context_instance=RequestContext(request))
     #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
@@ -895,10 +914,10 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
                 import_perm = import_perm,
                 export_perm = export_perm,
                 path_sort = params_sort, 
-                path_starts = params_starts,
                 form = form,
                 suchtext = suchtext,
                 searchmode = searchmode,
+                filter = startswith_filter,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
 
@@ -926,7 +945,7 @@ def __filter_names(documents, request):
     """
     sw = request.GET.get('starts', '')
     
-    if sw == "Sonderzeichen":
+    if sw == "special_sign":
         documents = documents.exclude(
                          Q(title__iregex='[A-Za-z]'))
     elif sw == "0-9":
