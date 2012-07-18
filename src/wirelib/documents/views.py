@@ -366,23 +366,17 @@ def doc_assign(request, bib_no_id):
                 document_query.lend(user=v_user, non_user=non_user_lend)
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
 
-    perms =  v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
     template = loader.get_template("doc_assign.html")
-    context = Context({"documents" : document_query, 
-                       "user" : v_user,
-                       "lending" : lending_query, 
-                       "userform": userform,
-                       "nonuserform" : nonuserform,
-                       "telnonuserform" : telnonuserform,
-                       "perm" : perms, 
-                       "import_perm" : import_perm,
-                       "export_perm" : export_perm,
-                       "miss" : miss_query[0:10]})
+    dict_response = get_dict_response(request)
+    dict_response["documents"] = document_query
+    dict_response["lending"] = lending_query
+    dict_response["userform"] = userform
+    dict_response["nonuserform"] = nonuserform
+    dict_response["telnonuserform"] = telnonuserform
+    context = Context(dict_response)
     response = HttpResponse(template.render(context))
     return response
 
@@ -789,7 +783,6 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
         1 = Ausleihe
         2 = Vermisst
     """
-    v_user = request.user
     documents = __filter_names(documents, request)
     sort = request.GET.get('sort')
     path_sort = __truncate_get(request, 'sort') + u'&sort='
@@ -823,9 +816,6 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
             documents = documents.order_by("doc_status__date")
         else:
             documents = documents.order_by(sort)
-    perms =  v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
     miss_query = None 
     # options für Filter-Dropdown
     startswith_filter = {
@@ -872,8 +862,8 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
         searchmode = 2
     else:
         searchmode = 0
-        dict_response["searchtext"] = searchtext
-        dict_response["searchmode"] = searchmode
+    dict_response["searchtext"] = searchtext
+    dict_response["searchmode"] = searchmode
     return render_to_response(
             "doc_list_wrapper.html", 
             dict_response,

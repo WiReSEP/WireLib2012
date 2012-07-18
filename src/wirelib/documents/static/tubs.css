@@ -693,7 +693,7 @@ div.metas {
 .inhalt div#nav div#sort_item{
   float: left;
   border-top: 1px;
-  padding: 6px 3px;
+  padding: 0px 3px;
 }
 .inhalt div#nav div#list_filter{
   text-align: right;
