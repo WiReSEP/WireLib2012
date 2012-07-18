@@ -16,10 +16,12 @@ from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.db.models import F
 import datetime
 import os
 import settings
 import thread
+
 
 
 def search(request):
@@ -263,6 +265,8 @@ def doc_detail(request, bib_no_id):
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
     keyword =__show_keywords(document_query)
+    editoren =__diff_editors(document_query)
+    autoren =__diff_authors(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -289,7 +293,9 @@ def doc_detail(request, bib_no_id):
                       "change_document" : change_document,
                       "miss" : miss_query[0:10],
                       "history" : history ,
-                      "keyword" : keyword })
+                      "keyword" : keyword ,
+                      "editoren" : editoren  ,
+                      "autoren" : autoren })
     response = HttpResponse(template.render(context))
     return response
 
@@ -1000,4 +1006,12 @@ def __document_expired_email():
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
+    
+def __diff_authors(doc):
+    autoren = doc.document_authors_set.order_by('-author').exclude(editor=True)       
+    return autoren    
+
+def __diff_editors(doc):
+   editoren = doc.document_authors_set.order_by('-author').exclude(editor=False)       
+   return editoren      
 
