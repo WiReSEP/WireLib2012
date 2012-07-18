@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.auth.models import User
 from documents.models import EmailValidation, document, author, non_user,\
-    user_profile, tel_user
+    user_profile, tel_user, tel_non_user
 import mimetypes, urllib
 
 if not settings.AUTH_PROFILE_MODULE: 
@@ -43,6 +43,11 @@ class TelForm(ModelForm):
         model = tel_user
         exclude = ('user_id')
 
+class TelNonUserForm(ModelForm):
+    class Meta:
+        model = tel_non_user
+        exclude = ('non_user')
+
 class UploadFileForm(forms.Form):
     file  = forms.FileField()
 
@@ -71,8 +76,7 @@ class SelectUser(forms.Form):
         super(SelectUser, self).__init__(*args, **kwargs)
         self.fields['users'].queryset = User.objects.all().exclude(id=user.id)
         
-    users = UserModelChoiceField(queryset=User.objects.all(), label="", empty_label="") #label="Nutzer \
-    #auf den uebertragen werden soll", empty_label="")
+    users = UserModelChoiceField(queryset=User.objects.all(), label="", empty_label="")
    
 
 class NonUserForm(ModelForm):
