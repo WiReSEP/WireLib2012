@@ -198,6 +198,7 @@ def search_pro(request):
         if s_doc_status !="":
             s_documents = s_documents.filter(doc_status__status =
                     s_doc_status,doc_status__return_lend = False) 
+        s_documents = s_documents.distinct()
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if s_documents.count()==1:
             return doc_detail(request, s_documents[0].bib_no, searchtext)
