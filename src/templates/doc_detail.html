@@ -52,13 +52,27 @@
 	  <tr>
 		  <td><b>Autor:</b></td>
 		  <td>
-			{% for a in documents.authors.all %}
-			{{ a.first_name }} {{ a.last_name }}
-			{% if not forloop.last %}, {% endif %}
+			{% for a in autoren %}
+			        {{a.author}}
+			        {% if not forloop.last %},{% endif %}
 			{% endfor %}
+		    {% if not autoren %}
+	            -
+	        {% endif %}
 		  </td>
 		</tr>
-		
+	<tr>
+	    <td><b>Editor:</b></td>
+	    <td>	
+		{% for e in editoren %}
+			        {{e.author}}
+			        {% if not forloop.last %},{% endif %}
+	    {% endfor %}
+	    {% if not editoren %}
+	        -
+	    {% endif %}
+		</td>
+		</tr>
 		<tr>
 		  <td><b>Kategorie:</b></td>
 		  <td>{{ documents.category }}</td>
@@ -198,7 +212,7 @@
 	    {% if can_lend %}
 		      <input type="submit" name="lend" value="Ausleihen" /> 
 	      <br />
-	      {# <!-- Ausleihe an externen --> #}
+	      
 	    {% endif %}
 	    {% if can_miss %}
 		    <input type="submit" name="missing" value="Vermisst melden" /> <br />
@@ -236,7 +250,7 @@
 			        <a href="/doc/{{documents.bib_no}}/assign">
 	              <input type="button" name="assign" value="&Uuml;bertragen" /> <br />
 	            </a>
-	            {# <!-- TODO Ausleihe an externen --> #}
+	            
 	            
 	          {% endif %}
 	        {% endif %}
@@ -244,7 +258,7 @@
 	          {% if lending.user_lend == user %}
 	              <input type="submit" name="restitution" value="R&uuml;ckgabe" />
 	            <br />
-	            {# <!-- TODO übertragen vom ausleihenden aus --> #}
+	            
 	          {% endif %}
 	        {% endif %}
 	        {% if can_miss %}

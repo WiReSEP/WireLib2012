@@ -7,6 +7,7 @@ from documents.models import document, doc_status, doc_extra, category,\
     EmailValidation, emails, user_profile, tel_user, \
     tel_non_user
 from django.contrib.auth.models import User
+from django.forms.models import modelformset_factory
 from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
@@ -21,10 +22,12 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 
+
 import datetime
 import os
 import settings
 import thread
+
 
 
 def search(request):
@@ -294,6 +297,8 @@ def doc_detail(request, bib_no_id, searchtext=""):
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
     keyword =__show_keywords(document_query)
+    editoren =__diff_editors(document_query)
+    autoren =__diff_authors(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -328,8 +333,11 @@ def doc_detail(request, bib_no_id, searchtext=""):
                       "miss" : miss_query[0:10],
                       "history" : history ,
                       "keyword" : keyword ,
+                      "editoren" : editoren  ,
+                      "autoren" : autoren })
                       "searchmode" : searchmode,
                       "searchtext" : searchtext })
+
     response = HttpResponse(template.render(context))
     return response
 
@@ -488,17 +496,26 @@ def personal(request):
 
 def telpersonal(request): 
 
-    tel, created = tel_user.objects.get_or_create(user=request.user)  
+    #tel, created = tel_user.objects.get_or_create(user=request.user)  
     
     if request.method == "POST": 
-        form = TelForm(request.POST, instance=tel)
-        if form.is_valid(): 
-            form.save()
+        telformset = modelformset_factory(tel_user, extra=3, max_num=3,\
+                can_delete=True, exclude='user')
+        formset = telformset(request.POST,\
+                queryset=tel_user.objects.filter(user=request.user))
+        if formset.is_valid():
+            instances = formset.save(commit= False)
+            for instance in instances:
+                instance.user = request.user
+                print instance
+                instance.save()
             return HttpResponseRedirect(reverse("profile_edit_personal_done"))
     else: 
-        form = TelForm(instance=tel)
+        telformset = modelformset_factory(tel_user, extra=3, max_num=3,\
+                can_delete=True, exclude='user')
+        formset = telformset(queryset=tel_user.objects.filter(user=request.user))
     template = "profile/tel.html"
-    data = { 'form': form, }
+    data = { 'formset': formset, }
     
     return render_to_response(template, data, context_instance=RequestContext(request)) 
 
@@ -576,7 +593,9 @@ def doc_add(request, bib_no_id=None):
     #Datei-Import
     if len(request.FILES) > 0:
         form_doc = DocForm()
-        form_extras = DocExtraAddForm()
+        extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+        form_extras = extras_formset(queryset=doc_extra.objects.all())
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
         form = UploadFileForm(request.POST, request.FILES)
@@ -605,7 +624,9 @@ def doc_add(request, bib_no_id=None):
         if bib_no_id is None:
             form = UploadFileForm()
             form_doc = DocForm(request.POST)
-            form_extras = DocExtraAddForm(request.POST)
+            extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+            form_extras = extras_formset(request.POST, queryset=doc_extra.objects.all())
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         else:
@@ -615,6 +636,11 @@ def doc_add(request, bib_no_id=None):
                 raise Http404
             form = None
             form_doc = DocForm(request.POST, instance=doc)
+            extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+            form_extras = extras_formset(
+                                    request.POST,
+                                    queryset=doc_extra.objects.filter(doc_id=doc))
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         success = False
@@ -629,6 +655,14 @@ def doc_add(request, bib_no_id=None):
         elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
             doc = form_doc.save(commit=False)
             doc.save()
+            if form_extras.is_valid():
+                instances = form_extras.save(commit=False)
+                for instance in instances:
+                    instance.doc_id=doc
+                    instance.save()
+            message = 'Daten erfolgreich übernommen'
+            else :
+                message = "Extra-Felder nicht valide"
             for editor in form_doc.cleaned_data['editors']:
                 doc.add_editor(editor)
             for author in form_doc.cleaned_data['authors']:
@@ -636,7 +670,6 @@ def doc_add(request, bib_no_id=None):
             doc.save()
             form_author.errors['first_name'] = ''
             form_author.errors['last_name'] = ''
-            message = 'Daten erfolgreich übernommen'
             success = True
         elif u'sub_publisher' in request.POST and form_publisher.is_valid():
             form_publisher.save()
@@ -1082,45 +1115,48 @@ def __document_expired_email():
     connection.open()
     
     for entry in expired_docs:
-       __send_expired_mail(entry, user_plaintext, nonuser_plaintext, connection)
-    
+       __send_expired_mail(
+                           receiver=entry.user_lend.email,
+                           subject=user_email.subject,
+                           emailcontent=user_plaintext, 
+                           connection=connection, 
+                           user_name=entry.user_lend.username, 
+                           document_name=entry.doc_id.title,
+                           nonuser_firstname=entry.non_user_lend.firstname, 
+                           nonuser_lastname=entry.non_user_lend.lastname
+                          )
+       __send_expired_mail(
+                           receiver=entry.non_user_lend.email,
+                           subject=nonuser_email.subject,
+                           emailcontent=nonuser_plaintext,
+                           connection=connection,
+                           user_name=entry.user_lend.username, 
+                           document_name=entry.doc_id.title,
+                           nonuser_firstname=entry.non_user_lend.firstname, 
+                           nonuser_lastname=entry.non_user_lend.lastname
+                          )
     connection.close() 
 
-def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connection):
-    #Mail Bearbeitung für den Bürgen
-    user = entry.user_lend.username
-    document = entry.doc_id.title
-    user_target_email = entry.user_lend.email
-    user_c = Context({"document_name" : document, 
-                             "user_name" : user
-                            })
-    user_text_content = user_emailcontent.render(user_c)                    
-    user_finalemail = mail.EmailMessage('[WireLib] Erinnerungmail', 
-                                            user_text_content, 
-                                            'j.hameyer@tu-bs.de', #TODO
-                                            [user_target_email], 
-                                            connection=connection
-                                            )        
-    #Mail Bearbeitung für den Externen
-    nonuser_firstname = entry.non_user_lend.firstname
-    nonuser_lastname = entry.non_user_lend.lastname
-    nonuser_target_email = entry.non_user_lend.email
-    nonuser_c = Context({"document_name" : document,
-                             "nonuser_firstname" : nonuser_firstname,
-                             "nonuser_lastname" : nonuser_lastname,
-                             })
-    nonuser_text_content = nonuser_emailcontent.render(nonuser_c)
-    nonuser_finalemail = mail.Emailmessage('[WireLib] Erinnerungsmail',
-                                           nonuser_text_content,
-                                           'j.hameyer@tu-bs.de', #TODO
-                                           [nonuser_target_email],
-                                           connection=connection
-                                           )
-    #Versenden beider Emails
-    connection.send_messages([user_finalemail, nonuser_finalemail]) 
+def __send_expired_mail(receiver, subject, emailcontent, connection, **context):
+    c = Context(context)
+    text_content = emailcontent.render(c)                    
+    finalemail = mail.EmailMessage(subject, 
+                                   text_content, 
+                                   'j.hameyer@tu-bs.de', #TODO
+                                   [receiver], 
+                                   connection=connection
+                                   )       
+    finalemail.send()             
 
-        
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
+    
+def __diff_authors(doc):
+    autoren = doc.document_authors_set.order_by('-author').exclude(editor=True)       
+    return autoren    
+
+def __diff_editors(doc):
+   editoren = doc.document_authors_set.order_by('-author').exclude(editor=False)       
+   return editoren      
 
