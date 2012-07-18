@@ -48,22 +48,22 @@
 	Werte zu übergeben. -->
 	<tr id="title_row">
 	  <td>Titel:</td>
-	  <td><input type="text" name="title" value="{{ suchtext.2 }}" />
+	  <td><input type="text" name="title" value="{{ searchtext.2 }}" />
 	  </td>
 	</tr>
 	<tr id="fn_author_row">
 	  <td>Vorname Autor:</td>
-	  <td><input type="text" name="fn_author" value="{{ suchtext.0 }}" />
+	  <td><input type="text" name="fn_author" value="{{ searchtext.0 }}" />
 	  </td>
 	</tr>
 	<tr id="ln_author_row">
 	  <td>Nachname Autor:</td>
-	  <td><input type="text" name="ln_author" value="{{ suchtext.1 }}" />
+	  <td><input type="text" name="ln_author" value="{{ searchtext.1 }}" />
 	  </td>
 	</tr>
 	<tr id="keyword_row">
 	  <td>Schlüsselwörter:</td>
-	  <td><input type="text" name="keywords" value="{{ suchtext.7 }}" />
+	  <td><input type="text" name="keywords" value="{{ searcht0ext.7 }}" />
 	  </td>
 	</tr>
 	<!-- Start des Abschnittes Publikationsinformationen -->
@@ -80,12 +80,12 @@
 	</tr>
 	<tr id = year>
 	  <td>Jahr:</td>
-	  <td><input type="text" name="year" value="{{ suchtext.3 }}" />
+	  <td><input type="text" name="year" value="{{ searchtext.3 }}" />
 	  </td>
 	</tr>
 	<tr id = publisher>
 	  <td>Herausgeber:</td>
-	  <td><input type="text" name="publisher" value="{{ suchtext.4 }}" />
+	  <td><input type="text" name="publisher" value="{{ searchtext.4 }}" />
 	  </td>
 	</tr>
 	<!-- Start des Abschnittes Kennnummern -->
@@ -102,12 +102,12 @@
 	<div id="knummern">
 	  <tr id="test1">
 		<td>Bibliotheks-Nummer:</td>
-		<td><input type="text" name="bib_no" value="{{ suchtext.5 }}"/>
+		<td><input type="text" name="bib_no" value="{{ searchtext.5 }}"/>
 		</td>
 	  </tr>
 	  <tr id="test2">
 		<td>ISBN:</td>
-		<td><input type="text" name="isbn" value="{{ suchtext.6 }}" />
+		<td><input type="text" name="isbn" value="{{ searchtext.6 }}" />
 		</td>
 	  </tr>
 	</div>
@@ -124,7 +124,7 @@
 	<tr id="status_row">
 	  <td>Buchstatus:</td>
 	  <td>
-		<select name="doc_status" size=6 selected="{{ suchtext.8 }}">
+		<select name="doc_status" size=6 selected="{{ searchtext.8 }}">
 	<!-- Die values werden dem Context von der views.py übergeben und
 	entsprechen den möglichen Werten von documents.doc_status -->
 		  <option value="">Alle</option>
