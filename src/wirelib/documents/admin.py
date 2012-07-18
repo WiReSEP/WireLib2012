@@ -90,7 +90,10 @@ class CustomUserAdmin(UserAdmin):
     
 class emails_admin(admin.ModelAdmin):
     pass
-    list_display = ('name', 'subject') 
+    list_display = ('name', 'subject')
+   # sollte man, nachdem alle Emails eingefügt worden, entkommentieren TODO
+   # readonly_fields = ('name',) 
+                                                        
 
 #Registrierung aller anzuzeigenden Tabellen.
 admin.site.register(publisher, publisher_admin)

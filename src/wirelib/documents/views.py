@@ -32,30 +32,24 @@ def search(request):
     #Wenn bereits eine Suche gestartet wurde
     if "query" in request.GET:
         #Eingabe des Users aus dem request auslesen
-        suchtext = request.GET.get('query','')
+        searchtext = request.GET.get('query','')
         #Erstellen eines Sets aus allen Suchbegriffen.
         #Aufgrund des Verfahrens eine ODER-Suche
         #Aufspaltung des Suchbegriffs
-        suchtext_gesplittet = suchtext.split(" ")
+        searchtext_split = searchtext.split(" ")
         #Verpackung in eine Liste für einheitliche Übergabe
-        suchtext = [suchtext]
+        searchtext = [searchtext]
         #Initialisierung der für Schleife benötigten Variablen
         first_for = True
         next_action = "none"
         not_active = False
-        for i in suchtext_gesplittet:
+        for i in searchtext_split:
             #Falls erster Schleifendurchgang
             if first_for:
                 first_for = False
-                search_set = (
-                    Q(title__icontains = i) |
-                    Q(authors__last_name__icontains = i) |
-                    Q(isbn__icontains = i) |
-                    Q(bib_no__icontains = i) |
-                    Q(publisher__name__icontains = i) |
-                    Q(keywords__keyword__icontains = i))
                 #Statt Filtern QuerySet erstellen
-                document_query = document.objects.filter(search_set).distinct()
+                document_query = document.objects.filter(
+                        __get_searchset(i)).distinct()
             #Falls nicht erste Schleife
             else:
                 print i
@@ -63,7 +57,6 @@ def search(request):
                 if not_active == False :
                     if i == "not":
                         not_active = True
-                        print "not gesetzt"
                         continue
                 
                 #Wenn aktuell kein logischer Ausdruck aktiv
@@ -76,14 +69,13 @@ def search(request):
                     #Falls kein Schlüsselwort und keine logischer Ausdruck
                     #gemerkt führe normale "und"-Suche durch
                     else:
-                        search_set = (
-                            Q(title__icontains = i) |
-                            Q(authors__last_name__icontains = i) |
-                            Q(isbn__icontains = i) |
-                            Q(bib_no__icontains = i) |
-                            Q(publisher__name__icontains = i) |
-                            Q(keywords__keyword__icontains = i))
-                        document_query = document_query.filter(search_set).distinct()
+                        if not_active:
+                            document_query = document_query.exclude(
+                                    __get_searchset(i)).distinct()
+                            not_active = False
+                        else:
+                            document_query = document_query.filter(
+                                    __get_searchset(i)).distinct()
 
                 #Falls ein logischer Ausdruck aktiv
                 else:
@@ -91,26 +83,14 @@ def search(request):
                     if next_action == "or":
                         #"or" wenn "not" aktiv
                         if not_active:
-                            search_set = (
-                                Q(title__icontains = i) |
-                                Q(authors__last_name__icontains = i) |
-                                Q(isbn__icontains = i) |
-                                Q(bib_no__icontains = i) |
-                                Q(publisher__name__icontains = i) |
-                                Q(keywords__keyword__icontains = i))
-                            search_query = document.objects.exclude(search_set).distinct()
+                            search_query = document.objects.exclude(
+                                    __get_searchset(i)).distinct()
                             document_query = document_query | search_query
                             not_active = False
                         #"or" wenn "not" nicht aktiv
                         else:
-                            search_set = (
-                                Q(title__icontains = i) |
-                                Q(authors__last_name__icontains = i) |
-                                Q(isbn__icontains = i) |
-                                Q(bib_no__icontains = i) |
-                                Q(publisher__name__icontains = i) |
-                                Q(keywords__keyword__icontains = i))
-                            search_query = document.objects.filter(search_set).distinct()
+                            search_query = document.objects.filter(
+                                    __get_searchset(i)).distinct()
                             document_query = document_query | search_query
                         document_query = document_query.distinct()
                         next_action = "none"
@@ -118,32 +98,20 @@ def search(request):
                     if next_action == "and":
                         #"and" wenn "not" aktiv
                         if not_active:
-                            search_set = (
-                                Q(title__icontains = i) |
-                                Q(authors__last_name__icontains = i) |
-                                Q(isbn__icontains = i) |
-                                Q(bib_no__icontains = i) |
-                                Q(publisher__name__icontains = i) |
-                                Q(keywords__keyword__icontains = i))
-                            document_query = document_query.exclude(search_set).distinct()
+                            document_query = document_query.exclude(
+                                    __get_searchset(i)).distinct()
                             not_active = False
                         #"and" wenn "not" nicht aktiv
                         else:
-                            search_set = (
-                                Q(title__icontains = i) |
-                                Q(authors__last_name__icontains = i) |
-                                Q(isbn__icontains = i) |
-                                Q(bib_no__icontains = i) |
-                                Q(publisher__name__icontains = i) |
-                                Q(keywords__keyword__icontains = i))
-                            document_query = document_query.filter(search_set).distinct()
+                            document_query = document_query.filter(
+                                    __get_searchset(i)).distinct()
                         next_action = "none"
 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if document_query.count()==1:
-            return doc_detail(request, document_query[0].bib_no, suchtext)
+            return doc_detail(request, document_query[0].bib_no, searchtext)
         else:
-            return __list(request, document_query,None, 0, suchtext)
+            return __list(request, document_query,None, 0, searchtext)
         return __list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
@@ -157,6 +125,15 @@ def search(request):
                            "export_perm" : export_perm})
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
+
+def __get_searchset(searchvalue):
+    return (Q(title__icontains = searchvalue) |
+            Q(authors__first_name__icontains = searchvalue) |
+            Q(authors__last_name__icontains = searchvalue) |
+            Q(isbn__icontains = searchvalue) |
+            Q(bib_no__icontains = searchvalue) |
+            Q(publisher__name__icontains = searchvalue) |
+            Q(keywords__keyword__icontains = searchvalue))
 
 def search_pro(request):
     """ Erweiterte Suche nach Dokumeten.
@@ -177,7 +154,7 @@ def search_pro(request):
         s_keywords = request.GET.get('keywords','')
         s_doc_status = request.GET.get('doc_status','')
         #Verpackung in einer Liste zur einheitlichen Übergabe
-        suchtext = [s_fn_author, s_ln_author, s_title, s_year, s_publisher,
+        searchtext = [s_fn_author, s_ln_author, s_title, s_year, s_publisher,
                     s_bib_no, s_isbn, s_keywords, s_doc_status]
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
@@ -208,9 +185,9 @@ def search_pro(request):
                     s_doc_status,doc_status__return_lend = False) 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if s_documents.count()==1:
-            return doc_detail(request, s_documents[0].bib_no, suchtext)
+            return doc_detail(request, s_documents[0].bib_no, searchtext)
         else:
-            return __list(request, s_documents, None, 0, suchtext)
+            return __list(request, s_documents, None, 0, searchtext)
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
         v_user = request.user
@@ -239,7 +216,7 @@ def doc_list(request):
     documents = document.objects.all()
     return __list(request, documents)
 
-def doc_detail(request, bib_no_id, suchtext=""):
+def doc_detail(request, bib_no_id, searchtext=""):
     """
     Gibt alle Informationen für die Dateilansicht eines Dokumentes zurück
     """
@@ -305,9 +282,9 @@ def doc_detail(request, bib_no_id, suchtext=""):
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
     #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
-    if len(suchtext) == 1:
+    if len(searchtext) == 1:
         searchmode = 1
-    elif len(suchtext) > 1:
+    elif len(searchtext) > 1:
         searchmode = 2
     else:
         searchmode = 0
@@ -336,7 +313,7 @@ def doc_detail(request, bib_no_id, suchtext=""):
                       "history" : history ,
                       "keyword" : keyword ,
                       "searchmode" : searchmode,
-                      "suchtext" : suchtext })
+                      "searchtext" : searchtext })
     response = HttpResponse(template.render(context))
     return response
 
@@ -515,7 +492,7 @@ def telpersonal(request):
 
 def email_validation_process(request, key):
 
-    if EmailValidation.objects.verify(key=key): 
+    if Emaireal-world or knuthlValidation.objects.verify(key=key): 
         successful = True
     else: 
         successful = False
@@ -805,7 +782,7 @@ def user(request):
             doc_status__non_user_lend__exact = None)
     return __list(request, lend_documents)
 
-def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
+def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
@@ -881,9 +858,9 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
                      form = form),
                  context_instance=RequestContext(request))
     #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
-    if len(suchtext) == 1:
+    if len(searchtext) == 1:
         searchmode = 1
-    elif len(suchtext) > 1:
+    elif len(searchtext) > 1:
         searchmode = 2
     else:
         searchmode = 0
@@ -897,7 +874,7 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form,
-                suchtext = suchtext,
+                suchtext = searchtext,
                 searchmode = searchmode,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
@@ -1024,37 +1001,72 @@ def __document_missing_email(document, user):
 
 def __document_expired_email():
     current_day = datetime.date.today() 
-    
+
     if current_day.weekday() == 1:
         expired_docs = doc_status.objects.filter(
-                         Q(return_lend=False),
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(7)) |
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(8))
-                         )
+                  Q(return_lend=False),
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(7)) |
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(8))
+                  )
     elif current_day.weekday() == 0:
         expired_docs = doc_status.objects.filter(
-                         Q(return_lend=False),
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                         Q(date_term_lend__exact=current_day + datetime.timedelta(7))
-                         )
+                  Q(return_lend=False),
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
+                  Q(date_term_lend__exact=current_day + datetime.timedelta(7))
+                  )
     else:
-        expired_docs = doc_status.objects.filter(return_lend=False, 
-                                                 date_term_lend__exact=current_day + datetime.timedelta(6)
-                                                 )
-                                                 
-    email = emails.objects.get(name = "Frist Erinnerungsemail")
-    plaintext = Template(email.text)
+        expired_docs = doc_status.objects.filter(
+                      return_lend=False, 
+                      date_term_lend__exact=current_day + datetime.timedelta(6)
+                      )
     
-    c = Context({"document_name" : "" ,
-                 "user_name" : "" ,
-                 "user_email" :"" })
-    subject, from_email, to = ( '[WireLib] Erinnerungsmail',
-                                'TODO@TODO.de',
-                                'TODO@TODO.de'
-                                )
+    #Vorbereiten der 2 Emails, öffnen der Verbindung                                           
+    user_email = emails.objects.get(name = "Frist Erinnerungsemail(B)")
+    nonuser_email = emails.object.get(name = "Frist Erinnerungsemail(E)")
+    user_plaintext = Template(user_email.text)
+    nonuser_plaintext = Template(nonuser_email.text)
+    connection = mail.get_connection()
+    connection.open()
     
-                   
+    for entry in expired_docs:
+       __send_expired_mail(entry, user_plaintext, nonuser_plaintext, connection)
+    
+    connection.close() 
+
+def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connection):
+    #Mail Bearbeitung für den Bürgen
+    user = entry.username
+    document = entry.title
+    user_target_email = entry.email
+    user_c = Context({"document_name" : document, 
+                             "user_name" : user
+                            })
+    user_text_content = user_emailcontent.render(user_c)                    
+    user_finalemail = mail.EmailMessage('[WireLib] Erinnerungmail', 
+                                            user_text_content, 
+                                            'j.hameyer@tu-bs.de', #TODO
+                                            [user_target_email], 
+                                            connection=connection
+                                            )        
+    #Mail Bearbeitung für den Externen
+    nonuser_firstname = entry.firstname
+    nonuser_lastname = entry.lastname
+  # nonuser_target_email = entry.#TODO
+    nonuser_c = Context({"document_name" : document,
+                             "nonuser_firstname" : nonuser_firstname,
+                             "nonuser_lastname" : nonuser_lastname,
+                             })
+    nonuser_text_content = nonuser_emailcontent.render(nonuser_c)
+    nonuser_finalemail = mail.Emailmessage('[WireLib] Erinnerungsmail',
+                                           nonuser_text_content,
+                                           'j.hameyer@tu-bs.de', #TODO
+                                           [nonuser_target_email],
+                                           connection=connection
+                                           )
+    #Versenden beider Emails
+    connection.send_messages([user_finalemail, nonuser_finalemail])                       
+        
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
     return keywords 
