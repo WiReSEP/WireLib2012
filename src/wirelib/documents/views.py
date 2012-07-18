@@ -12,6 +12,7 @@ from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
     TelNonUserForm, NameForm, PublisherAddForm
+from documents.forms import DocExtraAddForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -575,6 +576,7 @@ def doc_add(request, bib_no_id=None):
     #Datei-Import
     if len(request.FILES) > 0:
         form_doc = DocForm()
+        form_extras = DocExtraAddForm()
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
         form = UploadFileForm(request.POST, request.FILES)
@@ -603,6 +605,7 @@ def doc_add(request, bib_no_id=None):
         if bib_no_id is None:
             form = UploadFileForm()
             form_doc = DocForm(request.POST)
+            form_extras = DocExtraAddForm(request.POST)
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         else:
@@ -642,13 +645,17 @@ def doc_add(request, bib_no_id=None):
                 form_publisher.errors[item] = ''
             success = True
             form_publisher = PublisherAddForm()
+            form_author.errors['first_name'] = ''
+            form_author.errors['last_name'] = ''
+            for item in form_doc.errors:
+                form_doc.errors[item] = ''
     elif bib_no_id is None:
         message = ''
         form_doc = DocForm()
         form_author = AuthorAddForm()
         form = UploadFileForm()
         form_publisher = PublisherAddForm()
-    else:
+    else :
         message = ''
         try:
             doc = document.objects.get(bib_no=bib_no_id)
@@ -656,6 +663,7 @@ def doc_add(request, bib_no_id=None):
             raise Http404
         form_doc = DocForm(instance=doc)
         form_author = AuthorAddForm()
+        form_publisher = PublisherAddForm()
         form = None
 #    category_needs = category_need.objects.all()
     needs = dict()

@@ -7,9 +7,18 @@ from django.db import models
 from django.forms import ModelForm
 from django.forms.formsets import formset_factory
 from django.utils.translation import ugettext as _
-from documents.models import author, document, EmailValidation, non_user,\
-    publisher, tel_non_user, tel_user, user_profile
-import mimetypes, urllib
+from documents.models import author
+from documents.models import author document
+from documents.models import author 
+from documents.models import EmailValidation
+from documents.models import non_user
+from documents.models import publisher
+from documents.models import tel_non_user
+from documents.models import tel_user
+from documents.models import user_profile
+from documents.models import doc_extra
+import mimetypes
+import urllib
 
 if not settings.AUTH_PROFILE_MODULE: 
     raise SiteProfileNotAvailable
@@ -75,6 +84,9 @@ class AuthorAddForm(ModelForm):
 class PublisherAddForm(ModelForm):
     class Meta:
         model = publisher
+class DocExtraAddForm(ModelForm):
+    class Meta:
+        model = doc_extra
 
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
