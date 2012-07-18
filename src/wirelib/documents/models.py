@@ -240,14 +240,14 @@ class document(models.Model):
         """
         Methode um dem Dokument einen Autoren zuzuweisen
         """
-        d = document_authors(document=self, author=author, editor=False)
+        d, dummy = document_authors.objects.get_or_create(document=self, author=author, editor=False)
         d.save()
 
     def add_editor(self, editor):
         """
         Methode um dem Dokument einen Autoren als Editor zuzuweisen
         """
-        d = document_authors(document=self, author=editor, editor=True)
+        d, dummy = document_authors.objects.get_or_create(document=self, author=editor, editor=True)
         d.save()
 
 class document_authors(models.Model):

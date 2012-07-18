@@ -11,9 +11,8 @@ from django.forms.models import modelformset_factory
 from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelForm , \
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, \
     TelNonUserForm, NameForm, PublisherAddForm
-from documents.forms import DocExtraAddForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -595,7 +594,7 @@ def doc_add(request, bib_no_id=None):
         form_doc = DocForm()
         extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=doc_extra.objects.all())
+        form_extras = extras_formset(queryset=doc_extra.objects.none())
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
         form = UploadFileForm(request.POST, request.FILES)
@@ -626,7 +625,7 @@ def doc_add(request, bib_no_id=None):
             form_doc = DocForm(request.POST)
             extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
-            form_extras = extras_formset(request.POST, queryset=doc_extra.objects.all())
+            form_extras = extras_formset(request.POST, queryset=doc_extra.objects.none())
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         else:
@@ -660,7 +659,7 @@ def doc_add(request, bib_no_id=None):
                 for instance in instances:
                     instance.doc_id=doc
                     instance.save()
-            message = 'Daten erfolgreich übernommen'
+                message = 'Daten erfolgreich übernommen'
             else :
                 message = "Extra-Felder nicht valide"
             for editor in form_doc.cleaned_data['editors']:
@@ -668,6 +667,10 @@ def doc_add(request, bib_no_id=None):
             for author in form_doc.cleaned_data['authors']:
                 doc.add_author(author)
             doc.save()
+            form_extras = extras_formset(
+                                    queryset=doc_extra.objects.filter(doc_id=doc))
+            if bib_no_id is None:
+                form_doc = DocForm()
             form_author.errors['first_name'] = ''
             form_author.errors['last_name'] = ''
             success = True
@@ -685,6 +688,9 @@ def doc_add(request, bib_no_id=None):
     elif bib_no_id is None:
         message = ''
         form_doc = DocForm()
+        extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+        form_extras = extras_formset(queryset=doc_extra.objects.none())
         form_author = AuthorAddForm()
         form = UploadFileForm()
         form_publisher = PublisherAddForm()
@@ -695,6 +701,9 @@ def doc_add(request, bib_no_id=None):
         except document.DoesNotExist:
             raise Http404
         form_doc = DocForm(instance=doc)
+        extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+        form_extras = extras_formset(queryset=doc_extra.objects.filter(doc_id=doc))
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
         form = None
@@ -720,12 +729,13 @@ def doc_add(request, bib_no_id=None):
                                    "category" : cat,
                                    "form" : form,
                                    "form_doc" : form_doc,
+                                   "form_extras" : form_extras,
                                    "form_author" : form_author,
                                    "form_publisher" : form_publisher,
                                    "message" : message,
                                    "success" : success,
                                    "miss" : miss_query[0:10],
-#                                   "category_needs" : needs
+                                   "category_needs" : needs
                                    }))
 
 @login_required

@@ -6,12 +6,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.forms import ModelForm
 from django.forms.formsets import formset_factory
 from django.utils.translation import ugettext as _
 from documents.models import author
-from documents.models import author document
-from documents.models import author 
+from documents.models import document
 from documents.models import EmailValidation
 from documents.models import non_user
 from documents.models import publisher
@@ -81,9 +79,6 @@ class AuthorAddForm(ModelForm):
 class PublisherAddForm(ModelForm):
     class Meta:
         model = publisher
-class DocExtraAddForm(ModelForm):
-    class Meta:
-        model = doc_extra
 
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
