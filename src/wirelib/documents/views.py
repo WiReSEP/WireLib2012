@@ -69,8 +69,13 @@ def search(request):
                     #Falls kein Schlüsselwort und keine logischer Ausdruck
                     #gemerkt führe normale "und"-Suche durch
                     else:
-                        document_query = document_query.filter(
-                                __get_searchset(i)).distinct()
+                        if not_active:
+                            document_query = document_query.exclude(
+                                    __get_searchset(i)).distinct()
+                            not_active = False
+                        else:
+                            document_query = document_query.filter(
+                                    __get_searchset(i)).distinct()
 
                 #Falls ein logischer Ausdruck aktiv
                 else:
