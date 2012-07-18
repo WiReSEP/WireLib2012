@@ -332,8 +332,8 @@ def doc_detail(request, bib_no_id, searchtext=""):
                       "miss" : miss_query[0:10],
                       "history" : history ,
                       "keyword" : keyword ,
-                      "editoren" : editoren  ,
-                      "autoren" : autoren })
+                      "editoren" : editoren,
+                      "autoren" : autoren,
                       "searchmode" : searchmode,
                       "searchtext" : searchtext })
 
