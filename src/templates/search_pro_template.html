@@ -6,16 +6,16 @@
 		<script>
 		  window.onload=function() {
 			elem = document.getElementById('kennhide');
-			spoiler(elem, 'bib_no_row', '--Kennnummern--', '--Kennnummern--');
-			spoiler(elem, 'isbn_row', '--Kennnummern--', '--Kennnummern--');
+			spoiler(elem, 'bib_no_row', '►--Kennnummern--', '▼--Kennnummern--');
+			spoiler(elem, 'isbn_row', '►--Kennnummern--', '▼--Kennnummern--');
 			elem = document.getElementById('pubhide');
-			spoiler(elem, 'year', '--Publikationsinformationen--',
-			'--Publikationsinformationen--');
-			spoiler(elem, 'publisher', '--Publikationsinformationen--',
-			'--Publikationsinformationen--');
+			spoiler(elem, 'year', '►--Publikationsinformationen--',
+			'▼--Publikationsinformationen--');
+			spoiler(elem, 'publisher', '►--Publikationsinformationen--',
+			'▼--Publikationsinformationen--');
 			elem = document.getElementById('stathide');
-			spoiler(elem,'status_row','--Statusinformationen--',
-			'--Statusinformationen--');
+			spoiler(elem,'status_row','►--Statusinformationen--',
+			'▼--Statusinformationen--');
 		  }
 		</script>
   <table>
@@ -24,14 +24,14 @@
 	  <td>
 		<!-- Button der für das Auf- und Zuklappen zuständig ist. spoiler()
 		wird in der index.html definiert -->
-		<input value="--Basisinformationen--" id="bashide" 
+		<input value="▼--Basisinformationen--" id="bashide" 
 		onclick="spoiler(this,'title_row','--Basisinformationen--',
 		'--Basisinformationen--');spoiler(this,'fn_author_row',
 		'--Basisinformationen--','--Basisinformationen--');
-		spoiler(this,'ln_author_row','--Basisinformationen','--Basisinformationen');
-		spoiler(this,'fn_editor_row','--Basisinformationen','--Basisinformationen');
-		spoiler(this,'ln_editor_row','--Basisinformationen','--Basisinformationen');
-		spoiler(this,'keyword_row','--Basisinformation--','--Basisinformation--')" 
+		spoiler(this,'ln_author_row','►--Basisinformationen','▼--Basisinformationen');
+		spoiler(this,'fn_editor_row','►--Basisinformationen','▼--Basisinformationen');
+		spoiler(this,'ln_editor_row','►--Basisinformationen','▼--Basisinformationen');
+		spoiler(this,'keyword_row','►--Basisinformation--','▼--Basisinformation--')" 
 		type="button" 
 		style="border-style:none;background-color:inherit;">
 	  </td>
@@ -73,10 +73,10 @@
 	<tr>
 	  <td>
 		<input value="--Publikationsinformationen--" id="pubhide" 
-		onclick="spoiler(this,'year','--Publikationsinformationen--',
-		'--Publikationsinformationen--');spoiler(this,'publisher',
-		'--Publikationsinformationen--',
-		'--Publikationsinformationen--')" 
+		onclick="spoiler(this,'year','►--Publikationsinformationen--',
+		'▼--Publikationsinformationen--');spoiler(this,'publisher',
+		'►--Publikationsinformationen--',
+		'▼--Publikationsinformationen--')" 
 		type="button" 
 		style="border-style:none;background-color:inherit;">
 	  </td>
@@ -95,9 +95,9 @@
 	<tr>
 	  <td>
 		<input value="--Kennnummern--" id="kennhide" 
-		onclick="spoiler(this,'bib_no_row','--Kennnummern--',
-		'--Kennnummern--');spoiler(this,'isbn_row', '--Kennnummern--',
-		'--Kennnummern--')" 
+		onclick="spoiler(this,'bib_no_row','►--Kennnummern--',
+		'▼--Kennnummern--');spoiler(this,'isbn_row', '►--Kennnummern--',
+		'▼--Kennnummern--')" 
 		type="button" 
 		style="border-style:none;background-color:inherit;">
 	  </td>
@@ -118,8 +118,8 @@
 	<tr>
 	  <td>
 		<input value="--Statusinformationen--" id="stathide" 
-		onclick="spoiler(this,'status_row','--Statusinformationen--',
-		'--Statusinformationen--')" 
+		onclick="spoiler(this,'status_row','►--Statusinformationen--',
+		'▼--Statusinformationen--')" 
 		type="button" 
 		style="border-style:none;background-color:inherit;">
 	  </td>

@@ -1,48 +1,40 @@
 {% load pagination_tags %}
-<h1>{{ page_title }}</h1>
-<p>{{ page_text }}</p>
 <p>
-	<div id="list_startfilter">
-	  <a href="?{{ path_starts }}&starts=0-9">0-9</a>
-	  <a href="?{{ path_starts }}&starts=a-c">A-C</a>
-	  <a href="?{{ path_starts }}&starts=d-f">D-F</a>
-	  <a href="?{{ path_starts }}&starts=g-i">G-I</a>
-	  <a href="?{{ path_starts }}&starts=j-l">J-K</a>
-	  <a href="?{{ path_starts }}&starts=m-o">M-O</a>
-	  <a href="?{{ path_starts }}&starts=p-s">P-S</a>
-	  <a href="?{{ path_starts }}&starts=t-v">T-V</a>
-	  <a href="?{{ path_starts }}&starts=w-z">W-Z</a>
-	  <a href="?{{ path_starts }}&starts=Sonderzeichen">Sonderzeichen</a>
-	  <a href="?{{ path_starts }}&starts=all">alle</a>
+	<div id="nav">
+	<div id="sort_list">
+	  <div id="sort_item">
+		Sortieren nach:
+	  </div>
+	  {% for key, value in path_sort.items %}
+	  <div id="sort_item">
+	    <a href="?{{ value }}">{{ key }}</a>
+	  </div>
+	  {% endfor %}
 	</div>
 
-	<div id="list_sort">
-	  {% for key, value in path_sort.items %}
-	  <a href="?{{ value }}">{{ key }}</a>
-	  {% endfor %}
-	  <!--a href="?{{ path_sort }}&sort=title">Dokumententitel</a-->
-      <!--a href="?{{ path_sort }}&sort=category">Kategorie</a-->
-	  <!--a href="?{{ path_sort }}&sort=authors">Autoren</a-->
-	  <!--a href="?{{ path_sort }}&sort=year">Veröffentlichung</a-->
-	  <!--{# {% if form == 2 %}-->
-	  <!--a href="?{{ path_sort }}&sort=date">Datum</a-->
-	  <!--{% endif %} #}-->
-	  <!--a href="?{{ path_sort }}&sort=status">Status</a-->
-	  <!--a href="?{{ path_sort }}&sort=isbn">Isbn</a-->
+	<div id="list_filter">
+	  <form action="" method="GET">
+		<label for="filter_id" >
+		  Beginnt mit:
+		</label>
+		<select id="filter_id" name="starts"
+		  onchange="insertParam('starts', this.form.starts.value)">
+		  {% for key,val in filter.items %}
+		  <option {{ val.0 }}>{{ val.1 }}</option>
+		  {% endfor %}
+        </select>
+      </form>
+	</div>
 	</div>
 	{% autopaginate documents 10 %}
-
 	<ul id="list_body">
 	{% for d in documents %}
-	
-
 	  <li id="{% spaceless %}
 		  {% if form == 0 %}
 			status_{{ d.status }} 
 			{% else %}{% if form == 1 %}
 			{% endif %}{% endif %}
 		  {% endspaceless %}">
-
 	  <div id="title">
 		  <a href="/doc/{{ d.bib_no}}">{{ d }}</a>
 		  {% if form == 1 %}
@@ -70,7 +62,6 @@
                 {% endif %}
             {% endfor %}    
             {% endspaceless %}</div>
-	
     	{% if form == 1 %}	
         <div id="date_lend"> 
     	  Ausgeliehen am:
