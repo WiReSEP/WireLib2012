@@ -706,6 +706,11 @@ div.metas {
 .inhalt select#id_editors {
   height: 10em;
 }
+
+.inhalt fieldset {
+  line-height: 0;
+  border: none;
+}
 /******************************************************
 	RECHTE SPALTE
 *******************************************************/
