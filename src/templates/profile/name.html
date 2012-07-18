@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Name ändern" %}{% endblock %}
+
+
+{% block content %}
+	<form class="name" action="{{ request.path_info }}" method="post" enctype="multipart/form-data">
+	<fieldset>
+		<legend>{% trans "Name ändern" %}</legend>
+		<table>
+		{{ form.as_table }}
+		</table>
+	</fieldset>
+  <input type="submit" value="{% trans 'Speichern' %}" />
+	</form>
+{% endblock %}
