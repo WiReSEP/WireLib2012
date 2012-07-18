@@ -1085,8 +1085,6 @@ def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connecti
     #Versenden beider Emails
     connection.send_messages([user_finalemail, nonuser_finalemail]) 
 
-def __get_subject(emailname)
-    subject = emails.object.get(            
         
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
