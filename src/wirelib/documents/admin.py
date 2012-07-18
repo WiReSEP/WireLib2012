@@ -53,6 +53,8 @@ class publisher_admin(admin.ModelAdmin):
 
 class author_admin(admin.ModelAdmin):
     fields = ['first_name', 'last_name']
+    list_display = ('first_name', 'last_name')
+    search_fields = ('first_name', 'last_name')
 
 class document_authors_inline(admin.StackedInline):
     model = document_authors

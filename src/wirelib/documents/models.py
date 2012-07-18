@@ -122,11 +122,10 @@ class document(models.Model):
         Methode zum Löschen nun überflüssiger Schriftsteller
         """
         for aut in (self.get_authors() or self.get_editors()):
-            print aut.first_name + ' ' + aut.last_name
             if len(aut.document_set.all())==1:
-                print 'in f'
                 aut.delete()
-            print 'Länge: ' + len(aut.document_set.all())
+        if len(self.publisher.document_set.all())==1:
+            self.publisher.delete()
         super(document, self).delete(*args, **kwargs)
     
     def __status(self):
