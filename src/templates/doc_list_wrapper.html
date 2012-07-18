@@ -1,7 +1,11 @@
 {% extends "index.html" %}
 {% block content %}
-  {% if suchtext != "" %}
+  {% if searchmode == 1 %}
   {% include "search_template.html" %}
+  <hr>
+  {% endif %}
+  {% if searchmode == 2 %}
+  {% include "search_pro_template.html" %}
   <hr>
   {% endif %}
   {% include "doc_list.html" %}

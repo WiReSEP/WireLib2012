@@ -35,6 +35,8 @@ def search(request):
         #Aufgrund des Verfahrens eine ODER-Suche
         #Aufspaltung des Suchbegriffs
         suchtext_gesplittet = suchtext.split(" ")
+        #Verpackung in eine Liste für einheitliche Übergabe
+        suchtext = [suchtext]
         #Initialisierung der für Schleife benötigten Variablen
         first_for = True
         next_action = "none"
@@ -172,6 +174,9 @@ def search_pro(request):
         s_isbn = request.GET.get('isbn','')
         s_keywords = request.GET.get('keywords','')
         s_doc_status = request.GET.get('doc_status','')
+        #Verpackung in einer Liste zur einheitlichen Übergabe
+        suchtext = [s_fn_author, s_ln_author, s_title, s_year, s_publisher,
+                    s_bib_no, s_isbn, s_keywords, s_doc_status]
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
         s_documents = document.objects.filter(year__icontains = s_year)
@@ -201,9 +206,9 @@ def search_pro(request):
                     s_doc_status,doc_status__return_lend = False) 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if s_documents.count()==1:
-            return doc_detail(request, s_documents[0].bib_no)
+            return doc_detail(request, s_documents[0].bib_no, suchtext)
         else:
-            return __list(request, s_documents)
+            return __list(request, s_documents, None, 0, suchtext)
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
         v_user = request.user
@@ -297,6 +302,13 @@ def doc_detail(request, bib_no_id, suchtext=""):
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
+    #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
+    if len(suchtext) == 1:
+        searchmode = 1
+    elif len(suchtext) > 1:
+        searchmode = 2
+    else:
+        searchmode = 0
     
     context = Context({"documents" : document_query,
                       "lending" : lending_query,
@@ -321,6 +333,7 @@ def doc_detail(request, bib_no_id, suchtext=""):
                       "miss" : miss_query[0:10],
                       "history" : history ,
                       "keyword" : keyword ,
+                      "searchmode" : searchmode,
                       "suchtext" : suchtext })
     response = HttpResponse(template.render(context))
     return response
@@ -860,6 +873,13 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
                      path_starts = params_starts,
                      form = form),
                  context_instance=RequestContext(request))
+    #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
+    if len(suchtext) == 1:
+        searchmode = 1
+    elif len(suchtext) > 1:
+        searchmode = 2
+    else:
+        searchmode = 0
     return render_to_response("doc_list_wrapper.html", 
             dict(documents = documents,
                 user = v_user, 
@@ -871,6 +891,7 @@ def __list(request, documents, documents_non_user=None, form=0, suchtext=""):
                 path_starts = params_starts,
                 form = form,
                 suchtext = suchtext,
+                searchmode = searchmode,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
 
