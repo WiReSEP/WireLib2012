@@ -619,6 +619,8 @@ def doc_add(request, bib_no_id=None):
         if u'sub_author' in request.POST and form_author.is_valid():
             form_author.save()
             message = 'Autor erfolgreich hinzugefügt'
+            for item in form_doc.errors:
+                form_doc.errors[item] = ''
             success = True
             form_author = AuthorAddForm()
         elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
