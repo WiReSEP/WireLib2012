@@ -17,6 +17,7 @@ from django.http import QueryDict
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 
 import datetime
@@ -146,7 +147,6 @@ def search_pro(request):
         #Auslesen der benötigten Variablen aus dem Request
         s_fn_author = request.GET.get('fn_author','')
         s_ln_author = request.GET.get('ln_author','nicht gefunden')
-        print s_ln_author
         s_fn_editor = request.GET.get('fn_editor','')
         s_ln_editor = request.GET.get('ln_editor','')
         s_title = request.GET.get('title','')
@@ -171,8 +171,6 @@ def search_pro(request):
             s_documents = s_documents.filter(authors__first_name__icontains =
                                              s_fn_author).filter(
                                              document_authors__editor=False)
-        print "Query"
-        print s_ln_author
         if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
                                              s_ln_author).filter(
@@ -422,10 +420,8 @@ def profile(request, user_id):
     v_user = request.user
     try:
         p_user = User.objects.get(id = user_id)
-        #TODO :Richtige Exception einbauen. User.DoesNotExist funktioniert
-        #nicht.
-    except "User existiert nicht":
-        raise Http404
+    except User.DoesNotExist :
+        raise Http404add_document
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -557,9 +553,10 @@ def doc_add(request, bib_no_id=None):
         * Import durch Formeingabe
         * Import durch Upload einer BibTeX-Datei
     """
-    #TODO Rechtekontrolle
     success = True
     v_user = request.user
+    if not v_user.has_perm("add_document"):
+        raise PermissionDenied
     #Datei-Import
     if len(request.FILES) > 0:
         form_doc = DocForm()
