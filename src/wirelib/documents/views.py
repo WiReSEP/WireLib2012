@@ -52,7 +52,6 @@ def search(request):
                         __get_searchset(i)).distinct()
             #Falls nicht erste Schleife
             else:
-                print i
                 #Wenn not nicht aktuell wirkend
                 if not_active == False :
                     if i == "not":
@@ -145,7 +144,10 @@ def search_pro(request):
     if "title" in request.GET:
         #Auslesen der benötigten Variablen aus dem Request
         s_fn_author = request.GET.get('fn_author','')
-        s_ln_author = request.GET.get('ln_author','')
+        s_ln_author = request.GET.get('ln_author','nicht gefunden')
+        print s_ln_author
+        s_fn_editor = request.GET.get('fn_editor','')
+        s_ln_editor = request.GET.get('ln_editor','')
         s_title = request.GET.get('title','')
         s_year = request.GET.get('year','')
         s_publisher = request.GET.get('publisher','')
@@ -154,8 +156,9 @@ def search_pro(request):
         s_keywords = request.GET.get('keywords','')
         s_doc_status = request.GET.get('doc_status','')
         #Verpackung in einer Liste zur einheitlichen Übergabe
-        searchtext = [s_fn_author, s_ln_author, s_title, s_year, s_publisher,
-                    s_bib_no, s_isbn, s_keywords, s_doc_status]
+        searchtext = [s_title, s_fn_author, s_ln_author, s_fn_editor,
+                s_ln_editor, s_keywords, s_year, s_publisher, s_bib_no, s_isbn,
+                s_doc_status]
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
         s_documents = document.objects.filter(year__icontains = s_year)
@@ -165,10 +168,22 @@ def search_pro(request):
                 s_documents = s_documents.filter(title__icontains = i)
         if s_fn_author != "":
             s_documents = s_documents.filter(authors__first_name__icontains =
-                                             s_fn_author)
+                                             s_fn_author).filter(
+                                             document_authors__editor=False)
+        print "Query"
+        print s_ln_author
         if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
-                                             s_ln_author)
+                                             s_ln_author).filter(
+                                             document_authors__editor=False)
+        if s_fn_editor != "":
+            s_documents = s_documents.filter(authors__first_name__icontains =
+                                             s_fn_editor).filter(
+                                             document_authors__editor=True)
+        if s_ln_editor != "":
+            s_documents = s_documents.filter(authors__last_name__icontains =
+                                             s_ln_editor).filter(
+                                             document_authors__editor=True)
         if s_publisher != "":
             s_documents = s_documents.filter(publisher__name__icontains = s_publisher)
         if s_bib_no != "":
@@ -874,7 +889,7 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form,
-                suchtext = searchtext,
+                searchtext = searchtext,
                 searchmode = searchmode,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
