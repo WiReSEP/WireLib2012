@@ -1,54 +1,57 @@
 # vim: set fileencoding=utf-8
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
+from django.db import models
 from django.db.models.signals import post_save
+from django.template import Context
+from django.template import loader
 from exceptions import LendingError
-from django.template import loader, Context 
-from django.conf import settings
+
+
 """
 class ManyToManyField_NoSyncdb(models.ManyToManyField):
     def __init__(self, *args, **kwargs):
         super(ManyToManyField_NoSyncdb,self).__init__(*args, **kwargs)
         self.creates_table = False
 """
+class need_groups(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+        verbose_name = "Mussfeldgruppe"
+        verbose_name_plural = "Mussfeldgruppen"
+
+    def __unicode__(self):
+        return self.name
 
 class category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
-        #article
-        #book
-        #booklet
-        #conference
-        #''inbook (Teilstück von book)
-        #''incollection (Teilstück von book)
-        #''inproceedings (Teilstück von proceedings)
-        #manual
-        #mastersthesis
-        #''misc ("beliebiger Eintrag": also wohl nicht in der DB)
-        #phdthesis
-        #proceedings
-        #techreport
-        #unpublished
+    needs = models.ManyToManyField(need_groups, verbose_name="Mussfelder")
     class Meta:
         verbose_name = "Kategorie"
         verbose_name_plural = "Kategorien"
 
     def __unicode__(self):
         return self.name
-
-class category_need(models.Model):
-    category = models.ForeignKey(category)
-    need = models.CharField(max_length=30)
-
-    def __unicode__(self):
-        return self.category + u":" + self.need
+        
+class need(models.Model):
+    name = models.CharField(max_length=30)
+    group = models.ForeignKey(need_groups)
+    class Meta:
+        unique_together= ('name', 'group')
+        verbose_name = "Mussfeld"
+        verbose_name_plural = "Mussfelder"
     
 class publisher(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
     
     def __unicode__(self):
         return self.name
+        
+    class Meta:
+        verbose_name = "Publisher"
+        verbose_name_plural = "Publisher"
 
 
 class author(models.Model):
@@ -64,25 +67,25 @@ class author(models.Model):
         return (self.first_name + ' ' + self.last_name)
 
 class document(models.Model):
-    bib_no = models.CharField("Bibliotheksnummer", max_length=15, primary_key=True)
-    inv_no = models.CharField("Inventar-Nummer", max_length=15, unique=True)
+    bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
+    inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
-    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=20, blank=True, null=True) 
+    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=60, blank=True, null=True) 
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=200)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
     category = models.ForeignKey(category,verbose_name="Kategorie")
-    last_updated = models.DateField("Letztes Update",auto_now=True)
+    last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
     last_edit_by = models.ForeignKey(User,verbose_name="Zuletzt geändert von")
     publisher = models.ForeignKey(publisher, blank=True, null=True)
     year = models.IntegerField("Jahr",blank=True, null=True)
     address = models.CharField("Adresse",max_length=100, blank=True, null=True)
     price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
     currency = models.CharField("Währung",max_length=3, blank=True, null=True)
-    date_of_purchase = models.DateField("Kaufdatum",auto_now_add=True)
-    ub_date = models.DateField(blank=True, null=True) 
+    date_of_purchase = models.DateField("Kaufdatum", auto_now_add=True)
+    ub_date = models.DateField("UB-Export", blank=True, null=True) 
         #Datum des Allegro-Exports
-    bib_date = models.DateField(blank=True, null=True) 
+    bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
     authors = models.ManyToManyField(author,
@@ -100,18 +103,21 @@ class document(models.Model):
         
 
     AVAILABLE= 0  #vorhanden
-    LEND = 1       #ausgeliehen
-    ORDERED = 2    #bestellt
-    MISSING = 3       #vermisst
-    LOST = 4       #verloren
+    LEND = 1      #ausgeliehen
+    ORDERED = 2   #bestellt
+    MISSING = 3   #vermisst
+    LOST = 4      #verloren
     
     def save(self, user=None, *args, **kwargs):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
+#        if not self.date_of_purchase:
+#            self.date_of_purchase = datetime.datetime.today()
         if user == None:
             user = User.objects.get(id=1)
-        self.last_edit_by=user
+        self.last_edit_by = user
+#        self.last_updated = datetime.datetime.today()
         super(document, self).save(*args, **kwargs)
     
     def __status(self):
@@ -251,10 +257,11 @@ class document_authors(models.Model):
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
+        unique_together = ('document', 'author')
 
 class keywords(models.Model):
     document = models.ForeignKey(document)
-    keyword = models.CharField("Schlüsselwort",max_length=50)
+    keyword = models.CharField("Schlüsselwort",max_length=200)
     class Meta:
         unique_together = ('document', 'keyword')
     #primary_key(document, keyword)
@@ -351,8 +358,8 @@ class non_user(models.Model):
 class tel_non_user(models.Model):
 
     non_user = models.ForeignKey(non_user, verbose_name="externer")
-    tel_nr = models.CharField("tel Nr.",max_length=20)
     tel_type = models.CharField("tel Typ ( Privat,Büro,Mobil ... )",max_length=20)
+    tel_nr = models.CharField("tel Nr.",max_length=20)
     # TODO eigene Telefonnummerklasser
     class Meta:
         unique_together = ('non_user', 'tel_nr')
@@ -376,7 +383,7 @@ class doc_status(models.Model):
     non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
-        permissions = (("c_nlend", "Can lend documents"),
+        permissions = (("can_lend", "Can lend documents"),
                        ("can_unlend", "Can unlend documents"),
                        ("can_miss", "Can miss documents"),
                        ("can_order", "Can order documents"),

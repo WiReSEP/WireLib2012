@@ -1,14 +1,16 @@
 from django import forms
-from django.forms import ModelForm
-from django.forms.formsets import formset_factory
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.exceptions import ImproperlyConfigured
-from django.db import models
-from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.auth.models import User
-from documents.models import EmailValidation, document, author, non_user,\
-    user_profile, tel_user
+from django.forms import ModelForm
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+from django.forms import ModelForm
+from django.forms.formsets import formset_factory
+from django.utils.translation import ugettext as _
+from documents.models import author, document, EmailValidation, non_user,\
+    publisher, tel_non_user, tel_user, user_profile
 import mimetypes, urllib
 
 if not settings.AUTH_PROFILE_MODULE: 
@@ -37,11 +39,16 @@ class ProfileForm(ModelForm):
     class Meta: 
         model = user_profile
         exclude = ('user_id')
+ 
+class NameForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
 
-class TelForm(ModelForm): 
-    class Meta: 
-        model = tel_user
-        exclude = ('user_id')
+class TelNonUserForm(ModelForm):
+    class Meta:
+        model = tel_non_user
+        exclude = ('non_user')
 
 class UploadFileForm(forms.Form):
     file  = forms.FileField()
@@ -61,6 +68,10 @@ class DocForm(ModelForm):
 class AuthorAddForm(ModelForm):
     class Meta:
         model = author
+       
+class PublisherAddForm(ModelForm):
+    class Meta:
+        model = publisher
 
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -71,8 +82,7 @@ class SelectUser(forms.Form):
         super(SelectUser, self).__init__(*args, **kwargs)
         self.fields['users'].queryset = User.objects.all().exclude(id=user.id)
         
-    users = UserModelChoiceField(queryset=User.objects.all(), label="", empty_label="") #label="Nutzer \
-    #auf den uebertragen werden soll", empty_label="")
+    users = UserModelChoiceField(queryset=User.objects.all(), label="", empty_label="")
    
 
 class NonUserForm(ModelForm):

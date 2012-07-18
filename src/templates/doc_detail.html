@@ -1,6 +1,16 @@
 {% extends "index.html" %}
 {% block content %}
 
+{% if searchmode == 1 %}
+{% include 'search_template.html' %}
+<hr/>
+{% endif %}
+
+{% if searchmode == 2 %}
+{% include 'search_pro_template.html' %}
+<hr/>
+{% endif %}
+
 <h1>{{ documents.title }}</h1> 
 <table>
 <tr>
@@ -212,7 +222,7 @@
 	    {% if documents.status == 1 %}    
 	      {% if lending %}
 	        {% if lending.non_user_lend %}
-	          Das Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br />
+	          Dieses Dokument ist von {{ lending.non_user_lend.first_name }} {{ lending.non_user_lend.last_name }} ausgeliehen. <br />
 	          {% if user.id == lending.user_lend.id %}
 	            Als Bürge sind Sie eingetragen.
 	          {% else %}
@@ -220,7 +230,7 @@
 	          {% endif %}
 	        {% else %}
 	          {% if user.id == lending.user_lend.id %}
-	            Das Dokument wurde bereits von Ihnen ausgeliehen. <br />
+	            Dieses Dokument wird bereits von Ihnen ausgeliehen. <br />
 	          {% else %}
 	            {% if lending.user_lend.first_name %}
 	              {% if lending.user_lend.last_name %}

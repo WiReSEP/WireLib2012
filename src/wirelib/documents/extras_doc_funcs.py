@@ -15,7 +15,7 @@ from models import doc_extra
 def is_valid(dict_data): #TODO
     """Diese Methode überprüft, ob es sich bei dem übergebenen dict um ein 
     BibteX-kompatibles Format handelt"""
-    try:
+    try :
         bib_no_r = r"[PKDRM]\d+"#TODO regex im backend zur bearbeitung freigeben
         if not re.match(bib_no_r, dict_data["bib_no"]):
             return False, u"InformatikBibNo hat falsches Format"
@@ -26,7 +26,7 @@ def is_valid(dict_data): #TODO
         if dict_data[u"category"] == u"book": #checking book
             auths = dict_data.get(u"author", [])
             editors = dict_data.get(u"editor", [])
-            if __lst_is_empty(auths + editors):
+            if __lst_is_empty(auths) and __lst_is_empty(editors):
                 return False, u"Autor und Editor"
             if dict_data[u"title"] == u"":
                 return False, u"Title"
@@ -158,7 +158,7 @@ def insert_doc(dict_insert, user):
             message = u"Das Feld " + message + u" ist leer"
         raise ValueError(message)
     # .get wird verwendet für erlaubt fehlende Einträge
-    try:
+    try :
         bib_no_f = dict_insert[u"bib_no"]
         inv_no_f = dict_insert[u"inv_no"]
         bibtex_id_f = dict_insert[u"bibtex_id"]
@@ -175,7 +175,7 @@ def insert_doc(dict_insert, user):
                 datetime.date.today())
         ub_date_f = None
         comment_f = dict_insert.get(u"comment", None)
-        author_f = dict_insert[u"author"]
+        author_f = dict_insert.get(u"author",[])
         editor_f = dict_insert.get(u"editor",[])
         keywords_f = dict_insert.get(u"keywords", [])
         extra_fields_f = dict_insert.get(u"extras", {})
@@ -183,11 +183,11 @@ def insert_doc(dict_insert, user):
         last_edit_by_f = user
     except KeyError:
         raise ValueError(u"Daten haben nicht die benötigten Felder")
-    try:
+    try :
         # Erstellung des Dokumentes in der Datenbank, ebenso zugehörende
         # Elemente: author, publisher, editor, keywords...
         publisher_db, dummy = publisher.objects.get_or_create(name=publisher_f)
-        try:
+        try :
             category_db = category.objects.get(name=category_f)
         except category.DoesNotExist:
             raise UnknownCategoryError(category_f)
@@ -217,53 +217,58 @@ def insert_doc(dict_insert, user):
             if len(au) > 1:
                 last_name_f = au[0]
                 first_name_f = au[1]
-            else:
+            else :
                 name_f = au[0].split(" ")
                 last_name_f = name_f[-1]
                 first_name_f = " ".join(name_f[:-1])
-            try:
+            try :
                 auth_db = author.objects.get(last_name=last_name_f, 
                         first_name=first_name_f)
             except author.DoesNotExist:
                 auth_db = author(last_name=last_name_f,
                         first_name=first_name_f)
-            auth_db.save(last_edit_by_f)
+            auth_db.save()
             document_db.add_author(auth_db)
             document_db.save(user)
+
         for auth in editor_f:
             au = auth.split(", ", 2)
             if len(au) > 1:
                 last_name_f = au[0]
                 first_name_f = au[1]
-            else:
+            else :
                 name_f = au[0].split(" ")
                 last_name_f = name_f[-1]
                 first_name_f = " ".join(name_f[:-1])
-            try:
+            try :
                 auth_db = author.objects.get(last_name=last_name_f, 
                         first_name=first_name_f)
             except author.DoesNotExist:
                 auth_db = author(last_name=last_name_f,
                         first_name=first_name_f)
-            auth_db.save(last_edit_by_f)
+            auth_db.save()
             document_db.add_editor(auth_db)
             document_db.save(user)
         keywords_db = []
+
         for key in keywords_f:
             if key == '' or key == None:
                 continue
             key_db, dummy = keywords.objects.get_or_create(
                     document=document_db,
                     keyword=key)
-            keywords_db.append(key_db)
+            if dummy:
+                keywords_db.append(key_db)
         extras_db = []
         for extra in extra_fields_f:
             value = extra_fields_f[extra]
             if value != "":
                 extra_db, dummy = doc_extra.objects.get_or_create(
                     doc_id=document_db, bib_field=extra, content=value)
-                extras_db.append(extra_db)
+                if dummy:
+                    extras_db.append(extra_db)
     except IntegrityError, e:
+        print 'IntegrityError:', e
         raise DuplicateKeyError(e.message) #TODO regex basteln für Feld
 
 def __lst_is_empty(list_data):
