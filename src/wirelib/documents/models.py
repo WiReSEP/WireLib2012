@@ -112,13 +112,22 @@ class document(models.Model):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
-#        if not self.date_of_purchase:
-#            self.date_of_purchase = datetime.datetime.today()
         if user == None:
             user = User.objects.get(id=1)
         self.last_edit_by = user
-#        self.last_updated = datetime.datetime.today()
         super(document, self).save(*args, **kwargs)
+    
+    def delete(self, *args, **kwargs):
+        """
+        Methode zum Löschen nun überflüssiger Schriftsteller
+        """
+        for aut in (self.get_authors() or self.get_editors()):
+            print aut.first_name + ' ' + aut.last_name
+            if len(aut.document_set.all())==1:
+                print 'in f'
+                aut.delete()
+            print 'Länge: ' + len(aut.document_set.all())
+        super(document, self).delete(*args, **kwargs)
     
     def __status(self):
         """ 
