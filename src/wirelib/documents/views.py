@@ -11,8 +11,8 @@ from django.forms.models import modelformset_factory
 from documents.extras_bibtex import Bibtex
 from documents.extras_allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
-    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, TelNonUserForm,\
-    NameForm, PublisherAddForm
+    AuthorAddForm, SelectUser, NonUserForm, ProfileForm, \
+    TelNonUserForm, NameForm, PublisherAddForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -27,6 +27,23 @@ import os
 import settings
 import thread
 
+# Für Filter von dict
+from django import template
+register = template.Library()
+
+def get_dict_response(request):
+    v_user = request.user
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
+    perms =  v_user.has_perm('documents.can_see_admin')
+    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+                                             doc_status__return_lend = False)
+    miss_query = miss_query.order_by('-doc_status__date')
+    return {"user" : v_user, 
+            "perm" : perms,
+            "miss" : miss_query[0:10],
+            "import_perm" : import_perm,
+            "export_perm" : export_perm}
 
 
 def search(request):
@@ -119,14 +136,8 @@ def search(request):
         return __list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
-        v_user = request.user
-        import_perm = v_user.has_perm('documents.can_import')
-        export_perm = v_user.has_perm('documents.can_export')
-        perms =  v_user.has_perm('documents.can_see_admin')
-        context = Context({"user" : v_user, 
-                           "perm" : perms,
-                           "import_perm" : import_perm,
-                           "export_perm" : export_perm})
+        dict_response = get_dict_response(request)
+        context = Context(dict_response)
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
 
@@ -208,25 +219,13 @@ def search_pro(request):
             return __list(request, s_documents, None, 0, searchtext)
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
-        v_user = request.user
-        perms =  v_user.has_perm('documents.can_see_admin')
-        import_perm = v_user.has_perm('documents.can_import')
-        export_perm = v_user.has_perm('documents.can_export')
-        miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                             doc_status__return_lend = False)
-        miss_query = miss_query.order_by('-doc_status__date')
-        return render_to_response("search_pro.html",
-                                  context_instance=Context(
-                                               {"user" : v_user, 
-                                                "perm" : perms, 
-                                                "import_perm" : import_perm,
-                                                "export_perm" : export_perm, 
-                                                "miss" : miss_query[0:10],
-                                                "AVAILABLE" : document.AVAILABLE,
-                                                "LEND" : document.LEND,
-                                                "MISSING" : document.MISSING,
-                                                "ORDERED" : document.ORDERED,
-                                                "LOST" : document.LOST}))
+        dict_response = get_dict_response(request)
+        dict_response['AVAILABLE'] = document.AVAILABLE
+        dict_response[ "LEND"] = document.LEND
+        dict_response["MISSING"] = document.MISSING
+        dict_response["ORDERED"] = document.ORDERED
+        dict_response["LOST"] = document.LOST
+        return render_to_response("search_pro.html", context_instance=Context(dict_response))
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -279,7 +278,6 @@ def doc_detail(request, bib_no_id, searchtext=""):
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
     #auslesen der für die doc_detail.html benötigten Rechte
-    perms =  v_user.has_perm('documents.can_see_admin')
     can_lend = v_user.has_perm('documents.can_lend')
     can_unlend = v_user.has_perm('documents.can_unlend')
     can_miss = v_user.has_perm('documents.can_miss')
@@ -291,8 +289,6 @@ def doc_detail(request, bib_no_id, searchtext=""):
     can_see_last_update = v_user.has_perm('documents.can_see_last_update_info')
     can_see_date_of_purchase = v_user.has_perm('documents.can_see_date_of_purchase')
     can_see_export = v_user.has_perm('documents.can_see_export')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
     keyword =__show_keywords(document_query)
@@ -308,34 +304,30 @@ def doc_detail(request, bib_no_id, searchtext=""):
         searchmode = 2
     else:
         searchmode = 0
-    
-    context = Context({"documents" : document_query,
-                      "lending" : lending_query,
-                      "doc_extra" : doc_extra_query,
-                      "bibtex_string" : bibtex_string,
-                      "user" : v_user,
-                      "perm" : perms,
-                      "can_lend" : can_lend,
-                      "can_unlend" : can_unlend,
-                      "can_miss" : can_miss,
-                      "can_lost" : can_lost,
-                      "can_order" : can_order,
-                      "can_see_history" : can_see_history,
-                      "can_see_price" : can_see_price,
-                      "can_see_locn" : can_see_locn,
-                      "can_see_last_update" : can_see_last_update,
-                      "can_see_date_of_purchase" : can_see_date_of_purchase,
-                      "can_see_export" : can_see_export,
-                      "export_perm" : export_perm,
-                      "import_perm" : import_perm,
-                      "change_document" : change_document,
-                      "miss" : miss_query[0:10],
-                      "history" : history ,
-                      "keyword" : keyword ,
-                      "editoren" : editoren  ,
-                      "autoren" : autoren ,
-                      "searchmode" : searchmode,
-                      "searchtext" : searchtext })
+    dict_response = get_dict_response(request)
+    dict_response["documents"] = document_query
+    dict_response["lending"] = lending_query
+    dict_response["doc_extra"] = doc_extra_query
+    dict_response["bibtex_string"] = bibtex_string
+    dict_response["can_lend"] = can_lend
+    dict_response["can_unlend"] = can_unlend
+    dict_response["can_miss"] = can_miss
+    dict_response["can_lost"] = can_lost
+    dict_response["can_order"] = can_order
+    dict_response["can_see_history"] = can_see_history
+    dict_response["can_see_price"] = can_see_price
+    dict_response["can_see_locn"] = can_see_locn
+    dict_response["can_see_last_update"] = can_see_last_update
+    dict_response["can_see_date_of_purchase"] = can_see_date_of_purchase
+    dict_response["can_see_export"] = can_see_export
+    dict_response["change_document"] = change_document,
+    dict_response["history"] = history
+    dict_response["keyword"] = keyword
+    dict_response["editoren"] = editoren
+    dict_response["autoren"] = autoren
+    dict_response["searchmode"] = searchmode
+    dict_response["searchtext"] = searchtext
+    context = Context(dict_response)
 
     response = HttpResponse(template.render(context))
     return response
@@ -395,20 +387,8 @@ def doc_assign(request, bib_no_id):
     return response
 
 def index(request): 
-    v_user = request.user
-    perms =  v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("index.html",
-                              context_instance=Context(
-                                               {"user" : v_user, 
-                                                "perm" : perms, 
-                                                "import_perm" : import_perm,
-                                                "export_perm" : export_perm,
-                                                "miss" : miss_query[0:10]}))
+    context = Context(get_dict_response(request))
+    return render_to_response("index.html",context_instance=context)
 
 def docs_miss(request):
     """
@@ -429,55 +409,34 @@ def profile(request, user_id):
     try:
         p_user = User.objects.get(id = user_id)
     except User.DoesNotExist :
-        raise Http404add_document
-    perms =  v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
+        raise Http404
     see_groups = v_user.has_perm('documents.can_see_others_groups')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
+    dict_response = get_dict_response(request)
     if p_user.id == v_user.id :
-        return render_to_response("profile.html",context_instance=Context({"user" :
-                              v_user, "perm" : perms, "import_perm" : import_perm,
-                              "export_perm" : export_perm, "miss" : miss_query[0:10]}))
+        context = Context(dict_response)
+        return render_to_response("profile.html", context_instance=context)
     else:
-        return render_to_response("stranger_profile.html",
-                                  context_instance=Context({"user" :v_user, 
-                                                            "p_user" : p_user,
-                                                            "perm" : perms, 
-                                                            "import_perm" : import_perm,
-                                                            "export_perm" : export_perm, 
-                                                            "see_groups" : see_groups,
-                                                            "miss" : miss_query[0:10]}))
+        dict_response["see_groups"] = see_groups
+        context = Context(dict_response)
+        return render_to_response("stranger_profile.html", context_instance=context)
 
 @login_required
 def profile_settings(request, user_id):
     """View der Accounteinstellung
     """ 
-
-    v_user = request.user
     c_user= User.objects.get(id = user_id)
-    perms =  v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("profile_settings.html",
-                              context_instance=Context(
-                                               {"user" : v_user,
-                                                "c_user" : c_user,  
-                                                "perm" : perms, 
-                                                "import_perm" : import_perm,
-                                                "export_perm" : export_perm, 
-                                                "miss" : miss_query[0:10]}))
+    dict_response = get_dict_response(request)
+    dict_response["c_user"] = c_user
+    context = Context(dict_response)
+    return render_to_response("profile_settings.html", context_instance=context)
+
 @login_required
 def personal(request):
     """Zum Editieren von Anschrift
     """
-     
-    
     profile, created = user_profile.objects.get_or_create(user_id=request.user)
     
     if request.method == "POST": 
@@ -503,7 +462,6 @@ def telpersonal(request):
         formset = telformset(request.POST,\
                 queryset=tel_user.objects.filter(user=request.user))
         if formset.is_valid():
-            formset.save
             instances = formset.save(commit= False)
             for instance in instances:
                 instance.user = request.user
@@ -593,6 +551,9 @@ def doc_add(request, bib_no_id=None):
     #Datei-Import
     if len(request.FILES) > 0:
         form_doc = DocForm()
+        extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+        form_extras = extras_formset(queryset=doc_extra.objects.none())
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
         form = UploadFileForm(request.POST, request.FILES)
@@ -621,6 +582,9 @@ def doc_add(request, bib_no_id=None):
         if bib_no_id is None:
             form = UploadFileForm()
             form_doc = DocForm(request.POST)
+            extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+            form_extras = extras_formset(request.POST, queryset=doc_extra.objects.none())
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         else:
@@ -630,6 +594,11 @@ def doc_add(request, bib_no_id=None):
                 raise Http404
             form = None
             form_doc = DocForm(request.POST, instance=doc)
+            extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+            form_extras = extras_formset(
+                                    request.POST,
+                                    queryset=doc_extra.objects.filter(doc_id=doc))
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         success = False
@@ -644,14 +613,27 @@ def doc_add(request, bib_no_id=None):
         elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
             doc = form_doc.save(commit=False)
             doc.save()
+            if form_extras.is_valid():
+                instances = form_extras.save(commit=False)
+                for instance in instances:
+                    instance.doc_id=doc
+                    instance.save()
+                message = 'Daten erfolgreich übernommen'
+            else :
+                message = "Extra-Felder nicht valide"
             for editor in form_doc.cleaned_data['editors']:
                 doc.add_editor(editor)
             for author in form_doc.cleaned_data['authors']:
                 doc.add_author(author)
             doc.save()
+            form_extras = extras_formset(
+                                    queryset=doc_extra.objects.filter(doc_id=doc))
+            if bib_no_id is None:
+                form_doc = DocForm()
+            else :
+                return HttpResponseRedirect("/doc/%s/"%bib_no_id)
             form_author.errors['first_name'] = ''
             form_author.errors['last_name'] = ''
-            message = 'Daten erfolgreich übernommen'
             success = True
         elif u'sub_publisher' in request.POST and form_publisher.is_valid():
             form_publisher.save()
@@ -660,50 +642,52 @@ def doc_add(request, bib_no_id=None):
                 form_publisher.errors[item] = ''
             success = True
             form_publisher = PublisherAddForm()
+            form_author.errors['first_name'] = ''
+            form_author.errors['last_name'] = ''
+            for item in form_doc.errors:
+                form_doc.errors[item] = ''
     elif bib_no_id is None:
         message = ''
         form_doc = DocForm()
+        extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+        form_extras = extras_formset(queryset=doc_extra.objects.none())
         form_author = AuthorAddForm()
         form = UploadFileForm()
         form_publisher = PublisherAddForm()
-    else:
+    else :
         message = ''
         try:
             doc = document.objects.get(bib_no=bib_no_id)
         except document.DoesNotExist:
             raise Http404
         form_doc = DocForm(instance=doc)
+        extras_formset = modelformset_factory(doc_extra, extra=4,\
+                can_delete=True, exclude='doc_id')
+        form_extras = extras_formset(queryset=doc_extra.objects.filter(doc_id=doc))
         form_author = AuthorAddForm()
+        form_publisher = PublisherAddForm()
         form = None
+# TODO
 #    category_needs = category_need.objects.all()
     needs = dict()
 #    for c in category_needs:
 #        if (u""+c.category.name) not in needs:
 #            needs[u"" + c.category.name] = []
 #        needs[u"" + c.category.name].append(c.need)
-    perms = v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
     cat = category.objects.filter()
-    return render_to_response("doc_add.html",
-                              context_instance=Context(
-                                  {"user" : v_user, 
-                                   "perm" : perms,
-                                   "import_perm" : import_perm,
-                                   "export_perm" : export_perm,
-                                   "category" : cat,
-                                   "form" : form,
-                                   "form_doc" : form_doc,
-                                   "form_author" : form_author,
-                                   "form_publisher" : form_publisher,
-                                   "message" : message,
-                                   "success" : success,
-                                   "miss" : miss_query[0:10],
-#                                   "category_needs" : needs
-                                   }))
+    dict_response = get_dict_response(request)
+    dict_response["category"] = cat
+    dict_response["form"] = form
+    dict_response["form_doc"] = form_doc
+    dict_response["form_extras"] = form_extras
+    dict_response["form_author"] = form_author
+    dict_response["form_publisher"] = form_publisher
+    dict_response["message"] = message
+    dict_response["success"] = success
+    dict_response["category_needs"] = needs
+    context = Context(dict_response)
+    return render_to_response("doc_add.html", context_instance=context)
 
 @login_required
 def doc_rent(request):
@@ -715,18 +699,10 @@ def doc_rent(request):
     documents = document.objects.filter(doc_status__user_lend=v_user,
                                         doc_status__non_user_lend__isnull=True,
                                         doc_status__return_lend=False)
-    #documents = document.objects.filter(
-    #        doc_status__user_lend=v_user).filter(
-    #        doc_status__non_user_lend__isnull=True).filter(
-    #        doc_status__return_lend=False)
     documents_non_user = document.objects.filter(
                                         doc_status__user_lend=v_user,
                                         doc_status__non_user_lend__isnull=False,
                                         doc_status__return_lend=False)
-    #documents_non_user = document.objects.filter(
-    #        doc_status__user_lend=v_user).filter(
-    #        doc_status__non_user_lend__isnull=False).filter(
-    #        doc_status__return_lend=False)
     return __list(request, documents, documents_non_user, 1)
 
 @login_required
@@ -734,20 +710,8 @@ def export(request):
     """Oberseite der Exporte. Die View lädt einfach das entsprechende Template
     unter Abfrage der für Navileiste benötigten Rechte
     """
-    v_user = request.user
-    perms =  v_user.has_perm('documents.can_see_admin')
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("export.html",
-                              context_instance=Context(
-                                        {"user" : v_user, 
-                                         "perm" : perms, 
-                                         "import_perm" : import_perm,
-                                         "export_perm" : export_perm, 
-                                         "miss" : miss_query[0:10]}))
+    context = Context(get_dict_response(request))
+    return render_to_response("export.html", context_instance=context)
 
 @login_required
 def allegro_export(request):
@@ -771,25 +735,13 @@ def allegro_export(request):
         if str(file).lower().endswith(".adt"):
             files[file] = __gen_sec_link("/"+file)
 
-#    Rechte für Template
-    v_user = request.user
 #    Snippet Code
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
-    perms =  v_user.has_perm('documents.can_see_admin')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
+    dict_response = get_dict_response(request)
+    dict_response["files"] =files
+    dict_response["hint"] = hint
+    context = Context(dict_response)
     return render_to_response("allegro_export.html",
-                              context_instance=Context(
-                                    {"user" : v_user, 
-                                     "perm" : perms, 
-                                     "import_perm" : import_perm,
-                                     "export_perm" : export_perm, 
-                                     "miss" : miss_query[0:10],
-                                     "files" :files,
-                                     "hint" : hint,
-                                     }))
+                              context_instance=context)
 
 @login_required
 def bibtex_export(request):
@@ -816,25 +768,12 @@ def bibtex_export(request):
         if ".bib" in file:
             files[file] = __gen_sec_link("/"+file)
 
-#    Rechte für Template
-    v_user = request.user
 #    Snippet Code
-    import_perm = v_user.has_perm('documents.can_import')
-    export_perm = v_user.has_perm('documents.can_export')
-    perms =  v_user.has_perm('documents.can_see_admin')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
-    return render_to_response("bibtex_export.html",
-                              context_instance=Context(
-                                    {"user" : v_user, 
-                                     "perm" : perms, 
-                                     "import_perm" : import_perm,
-                                     "export_perm" : export_perm, 
-                                     "miss" : miss_query[0:10],
-                                     "files" :files,
-                                     "hint" : hint,
-                                     }))
+    dict_response = get_dict_response(request)
+    dict_response["files"] =files
+    dict_response["hint"] = hint
+    context = Context(dict_response)
+    return render_to_response("bibtex_export.html", context_instance=context)
 
 @login_required
 def user(request):
@@ -887,38 +826,45 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
     perms =  v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
-    miss_query = None
+    miss_query = None 
+    # options für Filter-Dropdown
+    startswith_filter = {
+        'all': ['value=all', 'Alle'],
+        '0-9': ['value=0-9', '0-9'],
+        'a-c': ['value=a-c', 'A-C'],
+        'd-f': ['value=d-f', 'D-F'],
+        'g-i': ['value=g-i', 'G-I'],
+        'j-k': ['value=j-k', 'J-K'],
+        'm-o': ['value=m-o', 'M-O'],
+        'p-s': ['value=p-s', 'P-S'],
+        't-v': ['value=t-v', 'T-V'],
+        'w-z': ['value=w-z', 'W-Z'],
+        'special_sign': ['value=special_sign', 'Sonderzeichen'],
+        }
+    selected_filter = request.GET.get('starts', default='all')
+    startswith_filter[selected_filter][0] += ' selected=selected'
     if form != 2:
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                              doc_status__return_lend = False)
         miss_query = miss_query.order_by('-doc_status__date')
     params_starts = __truncate_get(request, 'starts', 'page')
+    dict_response = get_dict_response(request)
+    dict_response["documents"] = documents
+    dict_response["settings"] = settings
+    dict_response["path_sort"] = params_sort
+    dict_response["path_starts"] = params_starts
+    dict_response["form"] = form
+    dict_response["filter"] = startswith_filter
     if form == 1:
-        return render_to_response("doc_rent.html", 
-                dict(documents = documents,
-                    documents_non_user = documents_non_user,
-                    user = v_user, 
-                    settings = settings, 
-                    perm = perms,
-                    import_perm = import_perm,
-                    export_perm = export_perm,
-                    path_sort = params_sort, 
-                    path_starts = params_starts,
-                    form = form,
-                    miss = miss_query[0:10]),
+        return render_to_response(
+                "doc_rent.html", 
+                dict_response, 
                 context_instance=RequestContext(request))
     if form == 2:
-        return render_to_response("missing.html",
-                dict(documents = documents,
-                     user = v_user,
-                     settings = settings,
-                     perm = perms,
-                     import_perm = import_perm,
-                     export_perm = export_perm,
-                     path_sort = params_sort,
-                     path_starts = params_starts,
-                     form = form),
-                 context_instance=RequestContext(request))
+        return render_to_response(
+                "missing.html",
+                dict_response,
+                context_instance=RequestContext(request))
     #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
     if len(searchtext) == 1:
         searchmode = 1
@@ -926,19 +872,11 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
         searchmode = 2
     else:
         searchmode = 0
-    return render_to_response("doc_list_wrapper.html", 
-            dict(documents = documents,
-                user = v_user, 
-                settings = settings, 
-                perm = perms,
-                import_perm = import_perm,
-                export_perm = export_perm,
-                path_sort = params_sort, 
-                path_starts = params_starts,
-                form = form,
-                searchtext = searchtext,
-                searchmode = searchmode,
-                miss = miss_query[0:10]),
+        dict_response["searchtext"] = searchtext
+        dict_response["searchmode"] = searchmode
+    return render_to_response(
+            "doc_list_wrapper.html", 
+            dict_response,
             context_instance=RequestContext(request))
 
 def __truncate_get(request, *var):
@@ -965,7 +903,7 @@ def __filter_names(documents, request):
     """
     sw = request.GET.get('starts', '')
     
-    if sw == "Sonderzeichen":
+    if sw == "special_sign":
         documents = documents.exclude(
                          Q(title__iregex='[A-Za-z]'))
     elif sw == "0-9":
@@ -1061,27 +999,12 @@ def __document_missing_email(document, user):
     msg.send()
     
 
-def __document_expired_email():
+def __document_expired_email(day_amount):
     current_day = datetime.date.today() 
-
-    if current_day.weekday() == 1:
-        expired_docs = doc_status.objects.filter(
-                  Q(return_lend=False),
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(7)) |
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(8))
-                  )
-    elif current_day.weekday() == 0:
-        expired_docs = doc_status.objects.filter(
-                  Q(return_lend=False),
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(6)) |
-                  Q(date_term_lend__exact=current_day + datetime.timedelta(7))
-                  )
-    else:
-        expired_docs = doc_status.objects.filter(
-                      return_lend=False, 
-                      date_term_lend__exact=current_day + datetime.timedelta(6)
-                      )
+    expired_docs = doc_status.objects.filter(
+                  return_lend=False,
+                  date_term_lend__exact=current_day + datetime.timedelta(day_amount))
+                  
     
     #Vorbereiten der 2 Emails, öffnen der Verbindung                                           
     user_email = emails.objects.get(name = "Frist Erinnerungsemail(B)")
