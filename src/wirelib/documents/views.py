@@ -4,7 +4,7 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, category_need, emails, user_profile, tel_user, \
+    EmailValidation, emails, user_profile, tel_user, \
     tel_non_user
 from django.contrib.auth.models import User
 from documents.extras_bibtex import Bibtex
@@ -610,12 +610,12 @@ def doc_add(request, bib_no_id=None):
         form_doc = DocForm(instance=doc)
         form_author = AuthorAddForm()
         form = None
-    category_needs = category_need.objects.all()
+#    category_needs = category_need.objects.all()
     needs = dict()
-    for c in category_needs:
-        if (u""+c.category.name) not in needs:
-            needs[u"" + c.category.name] = []
-        needs[u"" + c.category.name].append(c.need)
+#    for c in category_needs:
+#        if (u""+c.category.name) not in needs:
+#            needs[u"" + c.category.name] = []
+#        needs[u"" + c.category.name].append(c.need)
     perms = v_user.has_perm('documents.can_see_admin')
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -701,7 +701,7 @@ def allegro_export(request):
         Allegro.docs_to_export_lock.release()
     files = {}
     for file in os.listdir(settings.DOCUMENTS_ALLEGRO_FILES):
-        if ".adt" in file:
+        if str(file).endswith(".adt"):
             files[file] = __gen_sec_link("/"+file)
 
 #    Rechte für Template
