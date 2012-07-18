@@ -53,7 +53,6 @@ def search(request):
                         __get_searchset(i)).distinct()
             #Falls nicht erste Schleife
             else:
-                print i
                 #Wenn not nicht aktuell wirkend
                 if not_active == False :
                     if i == "not":
@@ -146,7 +145,10 @@ def search_pro(request):
     if "title" in request.GET:
         #Auslesen der benötigten Variablen aus dem Request
         s_fn_author = request.GET.get('fn_author','')
-        s_ln_author = request.GET.get('ln_author','')
+        s_ln_author = request.GET.get('ln_author','nicht gefunden')
+        print s_ln_author
+        s_fn_editor = request.GET.get('fn_editor','')
+        s_ln_editor = request.GET.get('ln_editor','')
         s_title = request.GET.get('title','')
         s_year = request.GET.get('year','')
         s_publisher = request.GET.get('publisher','')
@@ -155,8 +157,9 @@ def search_pro(request):
         s_keywords = request.GET.get('keywords','')
         s_doc_status = request.GET.get('doc_status','')
         #Verpackung in einer Liste zur einheitlichen Übergabe
-        searchtext = [s_fn_author, s_ln_author, s_title, s_year, s_publisher,
-                    s_bib_no, s_isbn, s_keywords, s_doc_status]
+        searchtext = [s_title, s_fn_author, s_ln_author, s_fn_editor,
+                s_ln_editor, s_keywords, s_year, s_publisher, s_bib_no, s_isbn,
+                s_doc_status]
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
         s_documents = document.objects.filter(year__icontains = s_year)
@@ -166,10 +169,22 @@ def search_pro(request):
                 s_documents = s_documents.filter(title__icontains = i)
         if s_fn_author != "":
             s_documents = s_documents.filter(authors__first_name__icontains =
-                                             s_fn_author)
+                                             s_fn_author).filter(
+                                             document_authors__editor=False)
+        print "Query"
+        print s_ln_author
         if s_ln_author != "":
             s_documents = s_documents.filter(authors__last_name__icontains =
-                                             s_ln_author)
+                                             s_ln_author).filter(
+                                             document_authors__editor=False)
+        if s_fn_editor != "":
+            s_documents = s_documents.filter(authors__first_name__icontains =
+                                             s_fn_editor).filter(
+                                             document_authors__editor=True)
+        if s_ln_editor != "":
+            s_documents = s_documents.filter(authors__last_name__icontains =
+                                             s_ln_editor).filter(
+                                             document_authors__editor=True)
         if s_publisher != "":
             s_documents = s_documents.filter(publisher__name__icontains = s_publisher)
         if s_bib_no != "":
@@ -184,6 +199,7 @@ def search_pro(request):
         if s_doc_status !="":
             s_documents = s_documents.filter(doc_status__status =
                     s_doc_status,doc_status__return_lend = False) 
+        s_documents = s_documents.distinct()
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
         if s_documents.count()==1:
             return doc_detail(request, s_documents[0].bib_no, searchtext)
@@ -632,7 +648,7 @@ def doc_add(request, bib_no_id=None):
         form_author = AuthorAddForm()
         form = None
 #    category_needs = category_need.objects.all()
-#    needs = dict()
+    needs = dict()
 #    for c in category_needs:
 #        if (u""+c.category.name) not in needs:
 #            needs[u"" + c.category.name] = []
@@ -723,7 +739,7 @@ def allegro_export(request):
         Allegro.docs_to_export_lock.release()
     files = {}
     for file in os.listdir(settings.DOCUMENTS_ALLEGRO_FILES):
-        if ".adt" in file:
+        if str(file).lower().endswith(".adt"):
             files[file] = __gen_sec_link("/"+file)
 
 #    Rechte für Template
@@ -891,7 +907,7 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
                 path_sort = params_sort, 
                 path_starts = params_starts,
                 form = form,
-                suchtext = searchtext,
+                searchtext = searchtext,
                 searchmode = searchmode,
                 miss = miss_query[0:10]),
             context_instance=RequestContext(request))
@@ -1053,9 +1069,9 @@ def __document_expired_email():
 
 def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connection):
     #Mail Bearbeitung für den Bürgen
-    user = entry.username
-    document = entry.title
-    user_target_email = entry.email
+    user = entry.user_lend.username
+    document = entry.doc_id.title
+    user_target_email = entry.user_lend.email
     user_c = Context({"document_name" : document, 
                              "user_name" : user
                             })
@@ -1067,9 +1083,9 @@ def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connecti
                                             connection=connection
                                             )        
     #Mail Bearbeitung für den Externen
-    nonuser_firstname = entry.firstname
-    nonuser_lastname = entry.lastname
-  # nonuser_target_email = entry.#TODO
+    nonuser_firstname = entry.non_user_lend.firstname
+    nonuser_lastname = entry.non_user_lend.lastname
+    nonuser_target_email = entry.non_user_lend.email
     nonuser_c = Context({"document_name" : document,
                              "nonuser_firstname" : nonuser_firstname,
                              "nonuser_lastname" : nonuser_lastname,
@@ -1082,7 +1098,8 @@ def __send_expired_mail(entry, user_emailcontent, nonuser_emailcontent, connecti
                                            connection=connection
                                            )
     #Versenden beider Emails
-    connection.send_messages([user_finalemail, nonuser_finalemail])                       
+    connection.send_messages([user_finalemail, nonuser_finalemail]) 
+
         
 def __show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
