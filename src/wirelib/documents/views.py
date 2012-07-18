@@ -706,7 +706,7 @@ def allegro_export(request):
         Allegro.docs_to_export_lock.release()
     files = {}
     for file in os.listdir(settings.DOCUMENTS_ALLEGRO_FILES):
-        if str(file).endswith(".adt"):
+        if str(file).lower().endswith(".adt"):
             files[file] = __gen_sec_link("/"+file)
 
 #    Rechte für Template
