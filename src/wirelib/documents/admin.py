@@ -1,19 +1,21 @@
 # vim: set fileencoding=utf-8
-from documents.models import document
-from documents.models import user_profile
-from documents.models import tel_user
-from documents.models import category
 from django.contrib import admin
-from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from documents.models import publisher
+from django.contrib.auth.models import User
 from documents.models import author
-from documents.models import keywords
+from documents.models import category
+from documents.models import document
 from documents.models import document_authors
-from documents.models import non_user
-from documents.models import tel_non_user
 from documents.models import emails
-from documents.models import category_need
+from documents.models import keywords
+from documents.models import need
+from documents.models import need_groups
+from documents.models import non_user
+from documents.models import publisher
+from documents.models import tel_non_user
+from documents.models import tel_user
+from documents.models import user_profile
+
 """
 Definition der Adminseiten der Models.
 Jede Klasse steht für ein Model, dass angezeigt werden soll
@@ -35,13 +37,16 @@ class tel_user_inline(admin.StackedInline):
     fk_name = 'user'
     extra = 1
 
-class category_needs_inline(admin.StackedInline):
-    model = category_need
-    extra = 4
+class need_inline(admin.StackedInline):
+    model = need
+    extra = 1
+
+class need_groups_admin(admin.ModelAdmin):
+    fields = ['name']
+    inlines = [need_inline]
 
 class category_admin(admin.ModelAdmin):
-    fields = ['name']
-    inlines = [category_needs_inline]
+    fields = ['name', 'needs']
 
 class publisher_admin(admin.ModelAdmin):
     fields = ['name']
@@ -55,7 +60,7 @@ class document_authors_inline(admin.StackedInline):
 class document_admin(admin.ModelAdmin):
     list_display = ('bib_no', 'inv_no', 'title', 
                     'publisher', 'ub_date', 'bib_date', 'last_updated', )
-    #TODO Filter für Daten (Pl. Datum) anpassen, sodass man nicht nach den 
+    #TODO Filter für Daten (Plural Datum) anpassen, sodass man nicht nach den 
     #entsprechenden Datum filtern kann und nicht mehr nur nach letzten Tag, Woche, Monat, Jahr
     list_filter = ('category', )
     ordering = ['bib_no'] 
@@ -92,6 +97,7 @@ admin.site.register(publisher, publisher_admin)
 admin.site.register(author, author_admin)
 admin.site.register(category, category_admin)
 admin.site.register(document, document_admin)
+admin.site.register(need_groups, need_groups_admin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(non_user, non_user_admin)
