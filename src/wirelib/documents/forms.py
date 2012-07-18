@@ -1,14 +1,14 @@
 from django import forms
-from django.forms import ModelForm
-from django.forms.formsets import formset_factory
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.exceptions import ImproperlyConfigured
-from django.db import models
-from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.auth.models import User
-from documents.models import EmailValidation, document, author, non_user,\
-    user_profile, tel_user, tel_non_user
+from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+from django.forms import ModelForm
+from django.forms.formsets import formset_factory
+from django.utils.translation import ugettext as _
+from documents.models import author, document, EmailValidation, non_user,\
+    tel_non_user, tel_user, user_profile
 import mimetypes, urllib
 
 if not settings.AUTH_PROFILE_MODULE: 
@@ -42,6 +42,11 @@ class TelForm(ModelForm):
     class Meta: 
         model = tel_user
         exclude = ('user_id')
+        
+class NameForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
 
 class TelNonUserForm(ModelForm):
     class Meta:
