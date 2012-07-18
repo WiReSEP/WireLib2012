@@ -183,7 +183,7 @@ class UglyBibtex(object):
             self.entry[u'extras'] = self.extra_entry
             try:
                 extras_doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
-                if settings.BIBTEX_DEBUG:
+                if getattr(settings, "BIBTEX_DEBUG", False):
                     self.errout.write("Erfolgreich\n")
                     self.__log_error()
             except ValueError, e:
@@ -230,7 +230,7 @@ class UglyBibtex(object):
 
         elif key_val[0] in UglyBibtex.BIB_FIELDS:
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
-            self.entry[key_val[0]] = key_val[1]
+            self.entry[key_val[0]] = key_val[1].strip()
         else:       # Extra Field
             self.extra_entry[key_val[0]] = key_val[1].strip()
 
