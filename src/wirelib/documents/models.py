@@ -490,3 +490,6 @@ class emails(models.Model):
         permissions = (("can_send_mails", "Can send Emails"),)
         verbose_name = "E-Mail"
         verbose_name_plural = "E-Mails"
+        
+    def __unicode__(self):
+        return (self.name)

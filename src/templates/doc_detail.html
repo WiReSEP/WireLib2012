@@ -16,16 +16,15 @@
 <tr>
   <td>
     <table width = "100%">
-    
       {% if change_document %}
         <tr>
           <td>
             <a href="/doc/{{documents.bib_no}}/edit" class="nolink">
 		          <input type="button" name="edit" value="Editieren" />
-	          </a>
-	        </td>
-	      </tr>
-	    {% endif %}
+	        </a>
+	      </td>
+	    </tr>
+	  {% endif %}
       <tr>
 		  <td><b>Status:  </b></td> 
 		  <td>
@@ -108,7 +107,6 @@
 		    
 		  </td>
 		</tr>
-		
 		{% if can_see_date_of_purchase %}	    
 		<tr>
 		  <td><b>In der Bibliothek seit:</b></td>
