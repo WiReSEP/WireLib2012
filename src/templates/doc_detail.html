@@ -20,7 +20,7 @@
       {% if change_document %}
         <tr>
           <td>
-            <a href="/doc/{{documents.bib_no}}/edit" method="post">
+            <a href="/doc/{{documents.bib_no}}/edit" class="nolink">
 		          <input type="button" name="edit" value="Editieren" />
 	          </a>
 	        </td>
@@ -247,7 +247,7 @@
 	          {% if lending.user_lend.id != user.id %}
 	              <input type="submit" name="lend" value="&Uuml;bertragen" /> <br />
 	          {% else %}
-			        <a href="/doc/{{documents.bib_no}}/assign">
+			        <a href="/doc/{{documents.bib_no}}/assign" class="nolink">
 	              <input type="button" name="assign" value="&Uuml;bertragen" /> <br />
 	            </a>
 	            

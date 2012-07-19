@@ -711,6 +711,15 @@ div.metas {
   line-height: 0;
   border: none;
 }
+
+.inhalt a.nolink {
+  text-decoration: none;
+}
+
+.inhalt a.nolink:hover {
+  background-color: inherit;
+  color: inherit;
+}
 /******************************************************
 	RECHTE SPALTE
 *******************************************************/
