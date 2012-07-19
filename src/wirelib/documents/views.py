@@ -287,7 +287,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     can_see_price = v_user.has_perm('documents.can_see_price')
     can_see_locn = v_user.has_perm('documents.can_see_locn')
     can_see_last_update = v_user.has_perm('documents.can_see_last_update_info')
-    can_see_date_of_purchase = v_user.has_perm('documents.can_see_date_of_purchase')
+    can_see_date_of_purchase = v_user.has_perm('documents.can_see_dop')
     can_see_export = v_user.has_perm('documents.can_see_export')
     change_document = v_user.has_perm('documents.change_document')
     history =__filter_history(document_query)
@@ -320,7 +320,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     dict_response["can_see_last_update"] = can_see_last_update
     dict_response["can_see_date_of_purchase"] = can_see_date_of_purchase
     dict_response["can_see_export"] = can_see_export
-    dict_response["change_document"] = change_document,
+    dict_response["change_document"] = change_document
     dict_response["history"] = history
     dict_response["keyword"] = keyword
     dict_response["editoren"] = editoren
@@ -540,7 +540,7 @@ def doc_add(request, bib_no_id=None):
     """
     success = True
     v_user = request.user
-    if not v_user.has_perm("add_document"):
+    if (not v_user.has_perm('documents.add_document') and not v_user.has_perm('documents.change_document')):
         raise PermissionDenied
     #Datei-Import
     if len(request.FILES) > 0:
