@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 from documents.models import category
+from documents.models import emails
 from documents.models import need
 from documents.models import need_groups
 from documents.models import tel_user
@@ -283,3 +284,50 @@ def importieren():
     for perm in Permission.objects.all():
         perm.group_set.add(g_admin)
     
+    #Emails
+    name = models.CharField(max_length=30)
+    subject = models.CharField("Betreff", max_length=50)
+    text = models.TextField()
+    e = emails(name='Vermisst Gemeldet', subject='Vermisstmeldung', 
+               text='Sehr geehrte Damen und Herren, \n\n Vor kurzem wurde' + 
+                    ' Dokument {{ document_name }} von {{ user_name }} als ' + 
+                    'vermisst gemeldet. \n Falls Sie 1. das Buch besitzen ' + 
+                    'sollten oder \n 2. Informationen über den Verbleib dieses' +  
+                    'Dokumentes haben, \n\n melden Sie dies bitte dem Institut '+ 
+                    'für Wissenschaftliches Rechnen. \n Für weitere ' +  
+                    'Informationen erkundigen Sie sich entweder bei dem ' + 
+                    '{{ user_name }} oder dem Institut. \n\n Diese E-Mail ' + 
+                    'wurde automatisch generiert und muss nicht beantwortet werden.')
+    e.save()
+    e = emails(name='Frist Erinnerungsmail(B)', subject='Erinnerung_Bürge', 
+               text='Sehr geehrter/e {{ user_name }}, \n\n ' +
+                    'es wurde festgestellt, dass sich das Dokument {{ document_name }} noch in ' +
+                    'dem Besitz eines Ihnen zugeteilten Externen befindet. \n' +
+                    'Wir möchten Sie daran erinnern, dass die Rückgabefrist in wenigen Tagen ausläuft. \n\n ' +
+                    'Bitte setzen Sie sich mit dem entsprechenden Externen ' +
+                    'in Verbindung für eine Rückgabe oder eventuelle Verlängerung des Dokumentes. \n\n\n' +
+                    'Institut: \n' +
+                    'Institut für Wissenschaftliches Rechnen \n' +
+                    'Technische Universität Braunschweig \n' +
+                    'D-38092 Braunschweig \n' +
+                    'Tel. +49-531-391-3000 \n' +
+                    'Fax  +49-531-391-3003 \n' +
+                    'Gebäude: Hans-Sommer-Straße 65 (Rechenzentrum) 1. Stock (PLZ 38106) \n\n\n' +
+                    'Diese E-Mail wurde automatisch generiert und muss nicht beantwortet werden. ')
+    e.save()
+    e = emails(name='Frist Erinnerungsmail(E)', subject='Erinnerung_Externer', 
+               text='Sehr geehrter/e {{ nonuser_firstname }} {{ nonuser_lastname }} \n\n'+
+                    'es wurde festgestellt, dass sich das Dokument {{ document_name }} noch in ihrem Besitz befindet. \n' +
+                    'Wir möchten Sie daran erinnern, dass die Rückgabefrist in wenigen Tagen ausläuft. \n\n' +
+                    'Bitte setzen Sie sich entweder mit dem Institut oder ihrem \n' +
+                    'persönlichen Bürge in Verbindung für eine Rückgabe oder eventuelle Verlängerung \n' +
+                    'des Dokumentes. \n\n\n' +
+                    'Institut: \n' +
+                    'Institut für Wissenschaftliches Rechnen \n' +
+                    'Technische Universität Braunschweig \n' +
+                    'D-38092 Braunschweig \n' +
+                    'Tel. +49-531-391-3000 \n' +
+                    'Fax  +49-531-391-3003 \n' +
+                    'Gebäude: Hans-Sommer-Straße 65 (Rechenzentrum) 1. Stock (PLZ 38106) \n\n\n' +
+                    'Diese E-Mail wurde automatisch generiert und muss nicht beantwortet werden.  ')
+    e.save()
