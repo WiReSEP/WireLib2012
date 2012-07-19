@@ -57,7 +57,7 @@ class Allegro(threading.Thread):
             tmp_list = line.split(u" ")
             allegro_dict[tmp_list[0]] = tmp_list[1]
         file_allegro_dict.close()
-        filepath = settings.DCOUMENTS_SECDIR + settings.DOCUMENTS_ALLEGRO_FILES
+        filepath = settings.DOCUMENTS_SECDIR + settings.DOCUMENTS_ALLEGRO_FILES
 #        filepath = getattr(settings, 'DOCUMENTS_ALLEGRO_FILES', "documents/exports/")
         filename = u"WiReLib_" + date.strftime("%d-%m-%Y") + u".ADT"
         # ab hier wird in die Datei geschrieben, iso-8859-1 für Kompatiblität
