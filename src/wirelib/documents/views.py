@@ -725,9 +725,13 @@ def allegro_export(request):
         Allegro.docs_to_export = True
         Allegro.docs_to_export_lock.release()
     files = {}
-    for file in os.listdir(settings.DOCUMENTS_ALLEGRO_FILES):
+    for file in os.listdir(settings.DOCUMENTS_SECDIR
+            +settings.DOCUMENTS_ALLEGRO_FILES):
         if str(file).lower().endswith(".adt"):
-            files[file] = __gen_sec_link("/"+file)
+            files[file] = __gen_sec_link(
+                    "/"
+                    +settings.DOCUMENTS_ALLEGRO_FILES
+                    +file)
 
 #    Snippet Code
     dict_response = get_dict_response(request)
@@ -753,14 +757,19 @@ def bibtex_export(request):
                 )
         Bibtex().export_data(
                 export_documents,
-                settings.DOCUMENTS_BIBTEX_FILES
+                settings.DOCUMENTS_SECDIR+settings.DOCUMENTS_BIBTEX_FILES
                 ).start()
         hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
 
     files = {}
-    for file in os.listdir(settings.DOCUMENTS_BIBTEX_FILES):
+    for file in os.listdir(settings.DOCUMENTS_SECDIR
+            +settings.DOCUMENTS_BIBTEX_FILES):
         if ".bib" in file:
-            files[file] = __gen_sec_link("/"+file)
+            files[file] = __gen_sec_link(
+                    "/"
+                    +settings.DOCUMENTS_BIBTEX_FILES
+                    +file
+                    )
 
 #    Snippet Code
     dict_response = get_dict_response(request)
