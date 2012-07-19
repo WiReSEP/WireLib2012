@@ -541,7 +541,7 @@ def doc_add(request, bib_no_id=None):
     """
     success = True
     v_user = request.user
-    if (not v_user.has_perm('documents.add_document') and not v_user.has_perm('documents.change_document')):
+    if (not v_user.has_perm('documents.add_document') and not v_user.has_perm('documents.change_document') and not v_user.has_perm('documents.can_import')):
         raise PermissionDenied
     #Datei-Import
     if len(request.FILES) > 0:
