@@ -285,9 +285,6 @@ def importieren():
         perm.group_set.add(g_admin)
     
     #Emails
-    name = models.CharField(max_length=30)
-    subject = models.CharField("Betreff", max_length=50)
-    text = models.TextField()
     e = emails(name='Vermisst Gemeldet', subject='Vermisstmeldung', 
                text='Sehr geehrte Damen und Herren, \n\n Vor kurzem wurde' + 
                     ' Dokument {{ document_name }} von {{ user_name }} als ' + 
