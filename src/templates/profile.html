@@ -3,10 +3,12 @@
 	<h1> Hallo, {{ user.username }}!</h1>
 	<h2> Hier hast du Zugriff auf die folgenden Funktionen: </h2>
 
-	<hr noshade="noshade" /> 
+	<ul type="disc">
+	<li>
 	<a href="/account/rent">Ausleihliste</a>
-	
-	<hr noshade="noshade" />
+	</li>
+	<li>
 	<a href="/user/settings/{{ user.id }}">Accounteinstellung</a> 
-	
+	</li>
+	</ul>
 {% endblock %}

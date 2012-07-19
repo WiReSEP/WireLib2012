@@ -413,6 +413,7 @@ def profile(request, user_id):
         context = Context(dict_response)
         return render_to_response("profile.html", context_instance=context)
     else:
+        dict_response["p_user"] = p_user
         dict_response["see_groups"] = see_groups
         context = Context(dict_response)
         return render_to_response("stranger_profile.html", context_instance=context)
