@@ -1,3 +1,28 @@
+Wilkommen bei WireLib2012
+=========================
+WireLib2012 ist ein freies Bibliotheksmanagmentsystem.
+
+Anwendungsdetails
+-----------------
+  * Basiert auf Django
+  * Layout entspricht Corporate Design der TU Braunschweig
+  * Export zu Allegro möglich
+  * BibTeX-kompatibel
+
+Anforderungen
+-------------
+  * Django 1.3
+  * mysql oder sqlite
+  * Webserver
+optional:
+  * git
+
+Installation
+------------
+Für die Installation folgen Sie bitte den Schritten im Wiki.
+
+Beschreibung
+------------
 Das WireLib2012-Projekt ist ein auf dem Webframework Django basierendes 
 Bibliotheksmangementsystem, geschrieben in der Programmiersprache Python. Das
 Managementsystem ermöglicht den Verleih von Dokumenten an registrierte Nutzer,
