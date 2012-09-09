@@ -232,6 +232,22 @@ ul#tu_navlist li#tu_sprachwahl a {
         border-left:1px solid white;
 }
 
+/* LOGIN AS */
+ul#tu_navlist li#tu_logged_in {
+  background-color: #be1e3c;
+  color: white;
+  margin: 0;
+  height: 22px;
+  display: block;
+  padding-left: 6px;
+  padding-right: 6px;
+  line-height: 21px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.7em;
+  text-align: center;
+  border-left: 1px solid white;
+}
 
 /* LOGIN */
 ul#tu_navlist li#tu_login_logout a {
@@ -707,7 +723,7 @@ div.metas {
   height: 10em;
 }
 
-.inhalt fieldset {
+.inhalt fieldset.doc_add {
   line-height: 0;
   border: none;
 }

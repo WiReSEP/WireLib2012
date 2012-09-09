@@ -9,10 +9,14 @@
 	</li>
 
 	<li id="tu_profil"><a href="/user/{{ user.id }}">Profil</a></li>
+	<li id="tu_logged_in" style="z-index:999;">
+	Eingeloggt als {{ user.username }}
+	</li>
 	{% else %}
 	<li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 	onmouseout="cleandelay()" style="z-index:999;">
 	<a href="/login">LogIn</a>                                   
+	</li>
 	{% endif %}
   </ul>
 </div>
