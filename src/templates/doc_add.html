@@ -57,7 +57,7 @@ function changeCategory(elem) {
 {% endblock script %}
 {% block content %}
 
-	{% if form %}
+	{% if is_importform %}
     <h1>Import</h1>
 	{% else %}
 	<a href=".."><input type="button" value="zurück" /></a>

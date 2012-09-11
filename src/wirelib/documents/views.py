@@ -585,17 +585,19 @@ def doc_add(request, bib_no_id=None):
     #Web-Interface-Import
     if 'title' in request.POST:
         if bib_no_id is None:
+            is_importform = True
             form_doc = DocForm(request.POST)
             extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
             form_extras = extras_formset(request.POST, queryset=doc_extra.objects.none())
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
-        else:
-            try:
+        else :
+            try :
                 doc = document.objects.get(bib_no=bib_no_id)
             except document.DoesNotExist:
                 raise Http404
+            is_importform = False
             form_doc = DocForm(request.POST, instance=doc)
             extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
@@ -650,6 +652,7 @@ def doc_add(request, bib_no_id=None):
             for item in form_doc.errors:
                 form_doc.errors[item] = ''
     elif bib_no_id is None:
+        is_importform = True
         message = ''
         form_doc = DocForm()
         extras_formset = modelformset_factory(doc_extra, extra=4,\
@@ -659,10 +662,11 @@ def doc_add(request, bib_no_id=None):
         form_publisher = PublisherAddForm()
     else :
         message = ''
-        try:
+        try :
             doc = document.objects.get(bib_no=bib_no_id)
         except document.DoesNotExist:
             raise Http404
+        is_importform = False
         form_doc = DocForm(instance=doc)
         extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
@@ -678,6 +682,7 @@ def doc_add(request, bib_no_id=None):
 #        needs[u"" + c.category.name].append(c.need)
     cat = category.objects.filter()
     dict_response = get_dict_response(request)
+    dict_response["is_importform"] = is_importform
     dict_response["category"] = cat
     dict_response["form_doc"] = form_doc
     dict_response["form_extras"] = form_extras
