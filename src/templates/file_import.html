@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block content %}
+  {% if not success %}
+    <font color="#FF0000"> {{ message|linebreaksbr }}</font>
+  {% else %}
+    <font color="#00FF00"> {{ message|linebreaksbr }} </font>
+  {% endif %} 
+  <form method="post" action="" enctype="multipart/form-data">
+    {{ form.as_p }}
+    <p>
+      <input type="submit" value="Start" />
+    </p>
+  </form> 
+{% endblock content %}

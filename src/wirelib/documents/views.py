@@ -531,26 +531,17 @@ def email_validation_reset(request):
     return HttpResponseRedirect(reverse("email_validation_reset_response", args=[response]))                   
 
 
-@login_required
-def doc_add(request, bib_no_id=None):
-    """ Ein Dokument hinzufügen
-    Hier kann der Benutzer mit den entsprechenden Rechten ein Dokument der
-    Datenbank hinzufügen. Dies kann auf folgende Arten geschehen:
-        * Import durch Formeingabe
-        * Import durch Upload einer BibTeX-Datei
+def doc_import(request):
+    """ BibTeX-Dateien importieren
+    Hier kann der Benutzer mit den entsprechenden Rechten eine BibTeX-Datei
+    hochladen und deren Inhalte der Datenbank hinzufügen.
     """
     success = True
+    message = ""
     v_user = request.user
     if (not v_user.has_perm('documents.add_document') and not v_user.has_perm('documents.change_document') and not v_user.has_perm('documents.can_import')):
         raise PermissionDenied
-    #Datei-Import
     if len(request.FILES) > 0:
-        form_doc = DocForm()
-        extras_formset = modelformset_factory(doc_extra, extra=4,\
-                can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=doc_extra.objects.none())
-        form_author = AuthorAddForm()
-        form_publisher = PublisherAddForm()
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
@@ -572,10 +563,28 @@ def doc_add(request, bib_no_id=None):
                     message += line
                 errfile.close()
             os.remove(filename + '.err')
+    else :
+        form = UploadFileForm()
+    dict_response = get_dict_response(request)
+    dict_response["form"] = form
+    dict_response["message"] = message
+    dict_response["success"] = success
+    context = Context(dict_response)
+    return render_to_response("file_import.html", context_instance=context)
+
+@login_required
+def doc_add(request, bib_no_id=None):
+    """ Ein Dokument hinzufügen
+    Hier kann der Benutzer mit den entsprechenden Rechten ein Dokument der
+    Datenbank hinzufügen. Dies wird durch Formeingabe ermöglicht.
+    """
+    success = True
+    v_user = request.user
+    if (not v_user.has_perm('documents.add_document') and not v_user.has_perm('documents.change_document') and not v_user.has_perm('documents.can_import')):
+        raise PermissionDenied
     #Web-Interface-Import
-    elif 'title' in request.POST:
+    if 'title' in request.POST:
         if bib_no_id is None:
-            form = UploadFileForm()
             form_doc = DocForm(request.POST)
             extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
@@ -587,7 +596,6 @@ def doc_add(request, bib_no_id=None):
                 doc = document.objects.get(bib_no=bib_no_id)
             except document.DoesNotExist:
                 raise Http404
-            form = None
             form_doc = DocForm(request.POST, instance=doc)
             extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
@@ -648,7 +656,6 @@ def doc_add(request, bib_no_id=None):
                 can_delete=True, exclude='doc_id')
         form_extras = extras_formset(queryset=doc_extra.objects.none())
         form_author = AuthorAddForm()
-        form = UploadFileForm()
         form_publisher = PublisherAddForm()
     else :
         message = ''
@@ -662,7 +669,6 @@ def doc_add(request, bib_no_id=None):
         form_extras = extras_formset(queryset=doc_extra.objects.filter(doc_id=doc))
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
-        form = None
 # TODO
 #    category_needs = category_need.objects.all()
     needs = dict()
@@ -673,7 +679,6 @@ def doc_add(request, bib_no_id=None):
     cat = category.objects.filter()
     dict_response = get_dict_response(request)
     dict_response["category"] = cat
-    dict_response["form"] = form
     dict_response["form_doc"] = form_doc
     dict_response["form_extras"] = form_extras
     dict_response["form_author"] = form_author
