@@ -3,8 +3,8 @@
 import datetime
 import re
 from django.db import IntegrityError
-from exceptions import UnknownCategoryError
-from exceptions import DuplicateKeyError
+from lib.exceptions import UnknownCategoryError
+from lib.exceptions import DuplicateKeyError
 from models import publisher
 from models import category
 from models import document
