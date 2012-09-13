@@ -8,8 +8,8 @@ from documents.models import document, doc_status, doc_extra, category,\
     tel_non_user
 from django.contrib.auth.models import User
 from django.forms.models import modelformset_factory
-from documents.extras_bibtex import Bibtex
-from documents.extras_allegro import Allegro
+from documents.lib.bibtex import Bibtex
+from documents.lib.allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, \
     TelNonUserForm, NameForm, PublisherAddForm
