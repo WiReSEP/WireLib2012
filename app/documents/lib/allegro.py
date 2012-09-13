@@ -2,7 +2,7 @@
 import threading
 from documents.models import document
 from documents.models import doc_extra
-from documents.exceptions import ExportError
+from documents.lib.exceptions import ExportError
 from datetime import datetime
 from django.conf import settings
 
