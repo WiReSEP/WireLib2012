@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.template import Context
 from django.template import loader
-from exceptions import LendingError
+from documents.lib.exceptions import LendingError
 
 
 """
