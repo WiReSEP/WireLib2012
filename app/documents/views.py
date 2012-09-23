@@ -26,6 +26,8 @@ import datetime
 import os
 import settings
 import thread
+import lib.views as lib_views
+#import lib.mails as lib_mails
 
 # Für Filter von dict
 from django import template
@@ -71,7 +73,7 @@ def search(request):
                 first_for = False
                 #Statt Filtern QuerySet erstellen
                 document_query = document.objects.filter(
-                        __get_searchset(i)).distinct()
+                                lib_views._get_searchset(i)).distinct()
             #Falls nicht erste Schleife
             else:
                 #Wenn not nicht aktuell wirkend
@@ -92,11 +94,11 @@ def search(request):
                     else:
                         if not_active:
                             document_query = document_query.exclude(
-                                    __get_searchset(i)).distinct()
+                                            lib_views._get_searchset(i)).distinct()
                             not_active = False
                         else:
                             document_query = document_query.filter(
-                                    __get_searchset(i)).distinct()
+                                            lib_views._get_searchset(i)).distinct()
 
                 #Falls ein logischer Ausdruck aktiv
                 else:
@@ -105,13 +107,13 @@ def search(request):
                         #"or" wenn "not" aktiv
                         if not_active:
                             search_query = document.objects.exclude(
-                                    __get_searchset(i)).distinct()
+                                            lib_views._get_searchset(i)).distinct()
                             document_query = document_query | search_query
                             not_active = False
                         #"or" wenn "not" nicht aktiv
                         else:
                             search_query = document.objects.filter(
-                                    __get_searchset(i)).distinct()
+                                        lib_views._get_searchset(i)).distinct()
                             document_query = document_query | search_query
                         document_query = document_query.distinct()
                         next_action = "none"
@@ -120,12 +122,12 @@ def search(request):
                         #"and" wenn "not" aktiv
                         if not_active:
                             document_query = document_query.exclude(
-                                    __get_searchset(i)).distinct()
+                                            lib_views._get_searchset(i)).distinct()
                             not_active = False
                         #"and" wenn "not" nicht aktiv
                         else:
                             document_query = document_query.filter(
-                                    __get_searchset(i)).distinct()
+                                            lib_views._get_searchset(i)).distinct()
                         next_action = "none"
 
         #Wenn das Ergebnis nur aus einem Dokument besteht, öffne die doc_detail
@@ -784,7 +786,7 @@ def bibtex_export(request):
 
 #    Snippet Code
     dict_response = get_dict_response(request)
-    dict_response["files"] =files
+    dict_response["files"] = files
     dict_response["hint"] = hint
     context = Context(dict_response)
     return render_to_response("bibtex_export.html", context_instance=context)

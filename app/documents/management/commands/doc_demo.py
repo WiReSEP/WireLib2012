@@ -2,7 +2,7 @@
 from django.core.management.base import BaseCommand
 #from optparse import make_option
 
-from documents.extras_bibtex import UglyBibtex
+from documents.lib.bibtex import UglyBibtex
 import os
 
 #Für die 
@@ -12,9 +12,11 @@ class Command(BaseCommand):
     args = ""
 
     def handle(self, *args, **options):
-        Command.__base_init()
+        #Command.__base_init()
         for file in os.listdir('olddb'):
+            print 'handling', file
             if file.__str__().endswith('.bib'):
+                print 'importing', file
                 UglyBibtex('olddb/%s'%file).do_import()
 
     @staticmethod
