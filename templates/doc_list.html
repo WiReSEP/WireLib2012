@@ -34,7 +34,7 @@
 			{% endif %}{% endif %}
 		  {% endspaceless %}">
 	  <div id="title">
-		  <a href="/doc/{{ d.bib_no}}">{{ d }}</a>
+		<a href="{% url 'doc' d.bib_no %}">{{ d }}</a>
 		  {% if form == 1 %}
 		        {% if d.lending.non_user_lend == True %}		        
 		              {{ d.doc_status.date_term_lend }}		    
@@ -79,12 +79,12 @@
               <div id="recent_user">Gemeldet von: 
               {% if s.recent_user.first_name %}
                 {% if s.recent_user.last_name %}
-                  <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.first_name }} {{ s.recent_user.last_name }}</a> <br />
+				<a href="{% url 'user' lending.user_lend.id %}">{{ s.recent_user.first_name }} {{ s.recent_user.last_name }}</a> <br />
                 {% else %}
-                  <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.username }}</a> <br \>
+				<a href="{% url 'user' lending.user_lend.id %}">{{ s.recent_user.username }}</a> <br \>
                 {% endif %}
               {% else %}
-                <a href="/user/{{ lending.user_lend.id }}">{{ s.recent_user.username }}</a> <br />
+			  <a href="{% url 'user' lending.user_lend.id %}">{{ s.recent_user.username }}</a> <br />
               {% endif %}
               </div>
               <div id="since">Vermisst seit: {{ s.date }}</div>

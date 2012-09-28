@@ -3,14 +3,14 @@
 import datetime
 import re
 from django.db import IntegrityError
-from lib.exceptions import UnknownCategoryError
-from lib.exceptions import DuplicateKeyError
-from models import publisher
-from models import category
-from models import document
-from models import author
-from models import keywords
-from models import doc_extra
+from exceptions import UnknownCategoryError
+from exceptions import DuplicateKeyError
+from documents.models import publisher
+from documents.models import category
+from documents.models import document
+from documents.models import author
+from documents.models import keywords
+from documents.models import doc_extra
 
 def is_valid(dict_data): #TODO
     """Diese Methode überprüft, ob es sich bei dem übergebenen dict um ein 

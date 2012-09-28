@@ -7,7 +7,7 @@ from django.conf import settings
 
 import datetime
 import threading
-import documents.extras_doc_funcs
+import doc_funcs
 import re
 import codecs
 
