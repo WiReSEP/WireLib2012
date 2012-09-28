@@ -33,7 +33,7 @@ import lib.views as lib_views
 from django import template
 register = template.Library()
 
-def get_dict_response(request):
+def _get_dict_response(request):
     v_user = request.user
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -134,23 +134,14 @@ def search(request):
         if document_query.count()==1:
             return doc_detail(request, document_query[0].bib_no, searchtext)
         else:
-            return __list(request, document_query,None, 0, searchtext)
-        return __list(request, document_query)
+            return _list(request, document_query,None, 0, searchtext)
+        return _list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
-        dict_response = get_dict_response(request)
+        dict_response = _get_dict_response(request)
         context = Context(dict_response)
         template = loader.get_template("search.html")
         return HttpResponse(template.render(context))
-
-def __get_searchset(searchvalue):
-    return (Q(title__icontains = searchvalue) |
-            Q(authors__first_name__icontains = searchvalue) |
-            Q(authors__last_name__icontains = searchvalue) |
-            Q(isbn__icontains = searchvalue) |
-            Q(bib_no__icontains = searchvalue) |
-            Q(publisher__name__icontains = searchvalue) |
-            Q(keywords__keyword__icontains = searchvalue))
 
 def search_pro(request):
     """ Erweiterte Suche nach Dokumeten.
@@ -218,10 +209,10 @@ def search_pro(request):
         if s_documents.count()==1:
             return doc_detail(request, s_documents[0].bib_no, searchtext)
         else:
-            return __list(request, s_documents, None, 0, searchtext)
+            return _list(request, s_documents, None, 0, searchtext)
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
-        dict_response = get_dict_response(request)
+        dict_response = _get_dict_response(request)
         dict_response['AVAILABLE'] = document.AVAILABLE
         dict_response[ "LEND"] = document.LEND
         dict_response["MISSING"] = document.MISSING
@@ -233,7 +224,7 @@ def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
     """
     documents = document.objects.all()
-    return __list(request, documents)
+    return _list(request, documents)
 
 def doc_detail(request, bib_no_id, searchtext=""):
     """
@@ -292,10 +283,10 @@ def doc_detail(request, bib_no_id, searchtext=""):
     can_see_date_of_purchase = v_user.has_perm('documents.can_see_dop')
     can_see_export = v_user.has_perm('documents.can_see_export')
     change_document = v_user.has_perm('documents.change_document')
-    history =__filter_history(document_query)
-    keyword =__show_keywords(document_query)
-    editoren =__diff_editors(document_query)
-    autoren =__diff_authors(document_query)
+    history = lib_views._filter_history(document_query)
+    keyword = lib_views._show_keywords(document_query)
+    editoren = lib_views._diff_editors(document_query)
+    autoren = lib_views._diff_authors(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
@@ -306,7 +297,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
         searchmode = 2
     else:
         searchmode = 0
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     dict_response["documents"] = document_query
     dict_response["lending"] = lending_query
     dict_response["doc_extra"] = doc_extra_query
@@ -372,7 +363,7 @@ def doc_assign(request, bib_no_id):
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
     template = loader.get_template("doc_assign.html")
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     dict_response["documents"] = document_query
     dict_response["lending"] = lending_query
     dict_response["userform"] = userform
@@ -383,7 +374,7 @@ def doc_assign(request, bib_no_id):
     return response
 
 def index(request): 
-    context = Context(get_dict_response(request))
+    context = Context(_get_dict_response(request))
     return render_to_response("index.html",context_instance=context)
 
 def docs_miss(request):
@@ -393,7 +384,7 @@ def docs_miss(request):
     miss_query = document.objects.filter(doc_status__status = document.MISSING,        
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')  
-    return __list(request, miss_query, form=2)
+    return _list(request, miss_query, form=2)
                               
 @login_required
 
@@ -410,7 +401,7 @@ def profile(request, user_id):
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     if p_user.id == v_user.id :
         context = Context(dict_response)
         return render_to_response("profile.html", context_instance=context)
@@ -425,7 +416,7 @@ def profile_settings(request, user_id):
     """View der Accounteinstellung
     """ 
     c_user= User.objects.get(id = user_id)
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     dict_response["c_user"] = c_user
     context = Context(dict_response)
     return render_to_response("profile_settings.html", context_instance=context)
@@ -567,7 +558,7 @@ def doc_import(request):
             os.remove(filename + '.err')
     else :
         form = UploadFileForm()
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     dict_response["form"] = form
     dict_response["message"] = message
     dict_response["success"] = success
@@ -683,7 +674,7 @@ def doc_add(request, bib_no_id=None):
 #            needs[u"" + c.category.name] = []
 #        needs[u"" + c.category.name].append(c.need)
     cat = category.objects.filter()
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     dict_response["is_importform"] = is_importform
     dict_response["category"] = cat
     dict_response["form_doc"] = form_doc
@@ -710,14 +701,14 @@ def doc_rent(request):
                                         doc_status__user_lend=v_user,
                                         doc_status__non_user_lend__isnull=False,
                                         doc_status__return_lend=False)
-    return __list(request, documents, documents_non_user, 1)
+    return _list(request, documents, documents_non_user, 1)
 
 @login_required
 def export(request):
     """Oberseite der Exporte. Die View lädt einfach das entsprechende Template
     unter Abfrage der für Navileiste benötigten Rechte
     """
-    context = Context(get_dict_response(request))
+    context = Context(_get_dict_response(request))
     return render_to_response("export.html", context_instance=context)
 
 @login_required
@@ -741,13 +732,13 @@ def allegro_export(request):
     for file in os.listdir(settings.DOCUMENTS_SECDIR
             +settings.DOCUMENTS_ALLEGRO_FILES):
         if str(file).lower().endswith(".adt"):
-            files[file] = __gen_sec_link(
+            files[file] = lib_views._gen_sec_link(
                     "/"
                     +settings.DOCUMENTS_ALLEGRO_FILES
                     +file)
 
 #    Snippet Code
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     dict_response["files"] =files
     dict_response["hint"] = hint
     context = Context(dict_response)
@@ -778,14 +769,14 @@ def bibtex_export(request):
     for file in os.listdir(settings.DOCUMENTS_SECDIR
             +settings.DOCUMENTS_BIBTEX_FILES):
         if ".bib" in file:
-            files[file] = __gen_sec_link(
+            files[file] = lib_views._gen_sec_link(
                     "/"
                     +settings.DOCUMENTS_BIBTEX_FILES
                     +file
                     )
 
 #    Snippet Code
-    dict_response = get_dict_response(request)
+    dict_response = _get_dict_response(request)
     dict_response["files"] = files
     dict_response["hint"] = hint
     context = Context(dict_response)
@@ -797,17 +788,17 @@ def user(request):
             doc_status__return_lend__exact = False,
             doc_status__user_lend__exact = request.user,
             doc_status__non_user_lend__exact = None)
-    return __list(request, lend_documents)
+    return _list(request, lend_documents)
 
-def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
+def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     """ Erzeugt eine Liste vom Typ "form".
         0 = Literaturverzeichnis oder Suchergebnis
         1 = Ausleihe
         2 = Vermisst
     """
-    documents = __filter_names(documents, request)
+    documents = lib_views._filter_names(documents, request)
     sort = request.GET.get('sort')
-    path_sort = __truncate_get(request, 'sort') + u'&sort='
+    path_sort = _truncate_get(request, 'sort') + u'&sort='
     params_sort = {}
     if form == 2:
         params_sort[u'Datum'] = path_sort
@@ -859,8 +850,8 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
         miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                              doc_status__return_lend = False)
         miss_query = miss_query.order_by('-doc_status__date')
-    params_starts = __truncate_get(request, 'starts', 'page')
-    dict_response = get_dict_response(request)
+    params_starts = _truncate_get(request, 'starts', 'page')
+    dict_response = _get_dict_response(request)
     dict_response["documents"] = documents
     dict_response["settings"] = settings
     dict_response["path_sort"] = params_sort
@@ -891,7 +882,7 @@ def __list(request, documents, documents_non_user=None, form=0, searchtext=""):
             dict_response,
             context_instance=RequestContext(request))
 
-def __truncate_get(request, *var):
+def _truncate_get(request, *var):
     params = request.GET.copy()
     test = False
     for arg in var:
@@ -905,170 +896,3 @@ def __truncate_get(request, *var):
             params_tmp += key + u"=" + params[key] + u"&"
     params = QueryDict(params_tmp)
     return params.urlencode()
-
-def __filter_names(documents, request):
-    """ Dem Benutzer wird ein reichhaltiges Angebot an Dokumenten angeboten und
-    übersichtlich präsentiert. Er kann nach belieben zwischen Dokumenten die
-    'A' beginnend oder Autoren mit 'Z' beginnend wählen.
-    Jedes Dokument muss selbständig abgeholt werden, wir haften nicht für den
-    Reiseweg!
-    """
-    sw = request.GET.get('starts', '')
-    
-    if sw == "special_sign":
-        documents = documents.exclude(
-                         Q(title__iregex='[A-Za-z]'))
-    elif sw == "0-9":
-        documents = documents.filter(
-                         Q(title__istartswith='0') | 
-                         Q(title__istartswith='1') | 
-                         Q(title__istartswith='2') |
-                         Q(title__istartswith='3') |
-                         Q(title__istartswith='4') |
-                         Q(title__istartswith='5') |
-                         Q(title__istartswith='6') |
-                         Q(title__istartswith='7') |
-                         Q(title__istartswith='8') |
-                         Q(title__istartswith='9')) 
-    elif sw == "a-c":
-        documents = documents.filter(
-                         Q(title__istartswith='a') |
-                         Q(title__istartswith='ä') |
-                         Q(title__istartswith='b') | 
-                         Q(title__istartswith='c'))
-    elif sw == "d-f": 
-        documents = documents.filter(
-                         Q(title__istartswith='d') | 
-                         Q(title__istartswith='e') | 
-                         Q(title__istartswith='f'))
-    elif sw == "g-i":
-        documents = documents.filter(
-                         Q(title__istartswith='g') | 
-                         Q(title__istartswith='h') | 
-                         Q(title__istartswith='i'))
-    elif sw == "j-l":
-        documents = documents.filter(
-                         Q(title__istartswith='j') | 
-                         Q(title__istartswith='k') | 
-                         Q(title__istartswith='l'))
-    elif sw == "m-o":
-        documents = documents.filter(
-                         Q(title__istartswith='m') | 
-                         Q(title__istartswith='n') | 
-                         Q(title__istartswith='o') |
-                         Q(title__istartswith='ö'))
-    elif sw == "p-s":
-        documents = documents.filter(
-                         Q(title__istartswith='p') | 
-                         Q(title__istartswith='q') | 
-                         Q(title__istartswith='r') |
-                         Q(title__istartswith='s'))
-    elif sw == "t-v":
-        documents = documents.filter(
-                         Q(title__istartswith='t') | 
-                         Q(title__istartswith='u') |
-                         Q(title__istartswith='ü') | 
-                         Q(title__istartswith='v'))
-    elif sw == "w-z":
-        documents = documents.filter(
-                         Q(title__istartswith='w') | 
-                         Q(title__istartswith='x') | 
-                         Q(title__istartswith='y') |
-                         Q(title__istartswith='z'))   
-      
-                         
-    elif sw == "all":
-        documents = documents.all()                     
-    return documents
-
-def __gen_sec_link(path):
-    import time, hashlib
-    secret = settings.SECRET_KEY
-    uri_prefix = '/dl/'
-    hextime = "%08x" % time.time()
-    token = hashlib.md5(secret + path + hextime).hexdigest()
-    return '%s%s/%s%s' % (uri_prefix, token, hextime, path)
-    
-def __filter_history(doc):
-    new_history = doc.doc_status_set.order_by('-date')[0:10]
-    return new_history
-    
-def __document_missing_email(document, user):
-    email = emails.objects.get(name = "Vermisst Gemeldet")
-    plaintext = Template(email.text)
-    member = User.objects.values_list('email', flat=True)
-   # member = ('zapdoshameyer@web.de', 'tim3out@arcor.de')
-    c = Context({"document_name" : document.title,
-                     "user_name" : user.first_name,
-               })
-    subject, from_email, to, bcc = ('[WiReLib] Vermisstmeldung', 
-                                    'j.hameyer@tu-bs.de',
-                                    'j.hameyer@tu-bs.de', #TODO
-                                    member
-                                    )
-    text_content = plaintext.render(c)
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to], bcc)
-    msg.send()
-    
-
-def __document_expired_email(day_amount):
-    current_day = datetime.date.today() 
-    expired_docs = doc_status.objects.filter(
-                  return_lend=False,
-                  date_term_lend__exact=current_day + datetime.timedelta(day_amount))
-                  
-    
-    #Vorbereiten der 2 Emails, öffnen der Verbindung                                           
-    user_email = emails.objects.get(name = "Frist Erinnerungsemail(B)")
-    nonuser_email = emails.object.get(name = "Frist Erinnerungsemail(E)")
-    user_plaintext = Template(user_email.text)
-    nonuser_plaintext = Template(nonuser_email.text)
-    connection = mail.get_connection()
-    connection.open()
-    
-    for entry in expired_docs:
-       __send_expired_mail(
-                           receiver=entry.user_lend.email,
-                           subject=user_email.subject,
-                           emailcontent=user_plaintext, 
-                           connection=connection, 
-                           user_name=entry.user_lend.username, 
-                           document_name=entry.doc_id.title,
-                           nonuser_firstname=entry.non_user_lend.firstname, 
-                           nonuser_lastname=entry.non_user_lend.lastname
-                          )
-       __send_expired_mail(
-                           receiver=entry.non_user_lend.email,
-                           subject=nonuser_email.subject,
-                           emailcontent=nonuser_plaintext,
-                           connection=connection,
-                           user_name=entry.user_lend.username, 
-                           document_name=entry.doc_id.title,
-                           nonuser_firstname=entry.non_user_lend.firstname, 
-                           nonuser_lastname=entry.non_user_lend.lastname
-                          )
-    connection.close() 
-
-def __send_expired_mail(receiver, subject, emailcontent, connection, **context):
-    c = Context(context)
-    text_content = emailcontent.render(c)                    
-    finalemail = mail.EmailMessage(subject, 
-                                   text_content, 
-                                   'j.hameyer@tu-bs.de', #TODO
-                                   [receiver], 
-                                   connection=connection
-                                   )       
-    finalemail.send()             
-
-def __show_keywords(doc):
-    keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="") 
-    return keywords 
-    
-def __diff_authors(doc):
-    autoren = doc.document_authors_set.order_by('-author').exclude(editor=True)       
-    return autoren    
-
-def __diff_editors(doc):
-   editoren = doc.document_authors_set.order_by('-author').exclude(editor=False)       
-   return editoren      
-

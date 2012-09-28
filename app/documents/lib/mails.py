@@ -38,7 +38,7 @@ def _document_expired_email(day_amount):
     # Vorbereiten der EMails
 
     for entry in expired_docs:
-        _send_mail(receiver=entry.user_lend.email,
+        _send_mail(receiver=[entry.user_lend.email],
                    subject=user_email.subject,
                    emailcontent=plaintext_user,
                    user_name=entry.user_lend.username,
@@ -46,7 +46,7 @@ def _document_expired_email(day_amount):
                    nonuser_firstname=entry.non_user_lend.firstname,
                    nonuser_lastname=entry.non_user_lend.lastname
                    )
-        _send_mail(receiver=entry.non_user_lend.email,
+        _send_mail(receiver=[entry.non_user_lend.email],
                    subject=nonuser_email.subject,
                    emailcontent=plaintext_user,
                    user_name=entry.user_lend.username,

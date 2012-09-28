@@ -182,7 +182,7 @@ class UglyBibtex(object):
         if self.worker == self.do_import:   # Eintrag in DB schreiben
             self.entry[u'extras'] = self.extra_entry
             try:
-                extras_doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
+                doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
                 if getattr(settings, "BIBTEX_DEBUG", False):
                     self.errout.write("Erfolgreich\n")
                     self.__log_error()
@@ -199,6 +199,7 @@ class UglyBibtex(object):
                 self.__log_error()
             except BaseException, e:
                 self.errout.write("Unexpected Error\n")
+                print e
                 self.__log_error()
 
     def __insert_field(self, key_val):
