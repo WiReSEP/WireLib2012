@@ -1,5 +1,9 @@
 # vim: set fileencoding=utf-8
 from django.db.models import Q
+from django.conf import settings
+import datetime
+import time
+import hashlib
 
 def _get_searchset(searchvalue):
     return (Q(title__icontains = searchvalue) |

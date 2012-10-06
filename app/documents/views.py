@@ -735,7 +735,8 @@ def allegro_export(request):
             files[file] = lib_views._gen_sec_link(
                     "/"
                     +settings.DOCUMENTS_ALLEGRO_FILES
-                    +file)
+                    +file
+                    )
 
 #    Snippet Code
     dict_response = _get_dict_response(request)

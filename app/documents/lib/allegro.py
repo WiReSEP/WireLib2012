@@ -50,7 +50,7 @@ class Allegro(threading.Thread):
         date = datetime.today()
         date = date.date()
         # einlesen der Hashmap für Speicherung von Einträgen im ADT-Format
-        file_allegro_dict = open(u"documents/dict_allegro.txt", "r")
+        file_allegro_dict = open(u"documents/lib/dict_allegro.txt", "r")
         allegro_dict = {}
         for line in file_allegro_dict:
             line = line.strip()
