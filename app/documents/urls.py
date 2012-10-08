@@ -8,42 +8,42 @@ urlpatterns = patterns('documents.views',
 #lists
         url(r'^doc_list/$', 'doc_list', name='docs'),
         #url(r'^account/rent/$', 'doc_rent', name='doc_rent'), # Ausleihliste
-        url(r'^miss/$', 'docs_miss', name='docs_missed'),
+        url(r'^miss/$', 'docs_miss', name='docs.missed'),
 
 #search
         url(r'^search/$', 'search', name='search'),
-        url(r'^search_pro/$', 'search_pro', name='search_pro'),
+        url(r'^search_pro/$', 'search_pro', name='search.pro'),
 
 #docs
         url(r'^doc/(?P<bib_no_id>\w\d+)/$', 'doc_detail', name='doc'),
-        url(r'^doc/(?P<bib_no_id>\w\d+)/assign/$', 'doc_assign', name='doc_assign'),
-        url(r'^doc/(?P<bib_no_id>\w\d+)/edit/$', 'doc_add', name='doc_edit'),
+        url(r'^doc/(?P<bib_no_id>\w\d+)/assign/$', 'doc_assign', name='doc.assign'),
+        url(r'^doc/(?P<bib_no_id>\w\d+)/edit/$', 'doc_add', name='doc.edit'),
 
 #import
-        url(r'^doc/add/$', 'doc_add', name='doc_add'),
-        url(r'^doc/import/$', 'doc_import', name='doc_import'),
+        url(r'^doc/add/$', 'doc_add', name='doc.add'),
+        url(r'^doc/import/$', 'doc_import', name='doc.import'),
 
 #export
         url(r'^export/$', 'export', name='export'), 
-        url(r'^export/allegro/$', 'allegro_export', name='export_allegro'),
-        url(r'^export/bibtex/$', 'bibtex_export', name='export_bibtex'), 
+        url(r'^export/allegro/$', 'allegro_export', name='export.allegro'),
+        url(r'^export/bibtex/$', 'bibtex_export', name='export.bibtex'), 
 
 #user
         #url(r'^user/$', 'user', name='user'),
         url(r'^user/$', 'profile', name='user'), 
-        url(r'^user/docs/$', 'doc_rent', name='doc_rent'),
+        url(r'^user/docs/$', 'doc_rent', name='doc.rent'),
         url(r'^user/profile/$', 'profile', name='profile'), 
-        url(r'^user/settings/$', 'profile_settings', name='profile_settings'),
+        url(r'^user/settings/$', 'profile_settings', name='profile.settings'),
         url(r'^user/settings/(?P<user_id>\d+)/$', 'profile_settings',
-            name='profile_settings_other'),
-        url(r'^user/(?P<user_id>\d+)/$', 'profile', name='user_profile'),
+            name='profile.settings.other'),
+        url(r'^user/(?P<user_id>\d+)/$', 'profile', name='user.profile'),
         url(r'^user/profile/edit/personal/done/$', direct_to_template,
             {'template': 'profile/personal_done.html'}, name='profile_edit_personal_done'), 
 
 #profile
-        url(r'^profile/edit/personal/$', personal, name='profile_edit_personal'), 
-        url(r'^profile/edit/tel/$', telpersonal, name='profile_edit_tel'),
-        url(r'^profile/edit/name/$', 'profile_edit_name', name='edit_name'), 
+        url(r'^profile/edit/personal/$', personal, name='profile.edit.personal'), 
+        url(r'^profile/edit/tel/$', telpersonal, name='profile.edit.tel'),
+        url(r'^profile/edit/name/$', 'profile_edit_name', name='profile.edit.name'), 
 )
 
 ###############PROFIL#############################
@@ -57,14 +57,14 @@ urlpatterns += patterns('',
              'email_template_name': 'email/password_reset_email.txt'}),
         url(r'^accounts/password/change/$', 'django.contrib.auth.views.password_change',
             {'template_name': 'account/password_change.html'},
-            name='profile_edit_passwd'),
+            name='profile.edit.passwd'),
         url(r'^accounts/password/change/done/$', 'django.contrib.auth.views.password_change_done',
             {'template_name': 'account/password_change_done.html'}),  
 ) 
 
 #Links zum Emailaendern 
 urlpatterns += patterns('', 
-        url(r'^email/validation/$', email_validation, name='profile_edit_mail'), 
+        url(r'^email/validation/$', email_validation, name='profile.edit.mail'), 
         url(r'^email/validation/processed/$', direct_to_template,  
             {'template': 'account/email_validation_processed.html'}),
         url(r'^email/validation/(?P<key>.{70})/$', email_validation_process, name='email_validation_process'),

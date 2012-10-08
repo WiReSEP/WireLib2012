@@ -96,7 +96,7 @@ function spoilIt(elem, idname) {
 		{# ein Item besteht aus <div class="snippet"><h1>Headline</h1><p>text</p></div> #}
 		{% if miss %}
 		<div class="snippet">
-		  <h1><a href="{% url 'docs_missed' %}">Vermisst:</a></h1>
+		  <h1><a href="{% url 'docs.missed' %}">Vermisst:</a></h1>
 		  <p>
 		  <ul>
 		  {% for m in miss %}
