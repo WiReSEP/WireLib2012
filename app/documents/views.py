@@ -389,15 +389,18 @@ def docs_miss(request):
                               
 @login_required
 
-def profile(request, user_id):
+def profile(request, user_id=None):
     """View der Profilübersicht
     """
 
     v_user = request.user
-    try:
-        p_user = User.objects.get(id = user_id)
-    except User.DoesNotExist :
-        raise Http404
+    if user_id:
+        try:
+            p_user = User.objects.get(id = user_id)
+        except User.DoesNotExist :
+            raise Http404
+    else :
+        p_user = v_user
     see_groups = v_user.has_perm('documents.can_see_others_groups')
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)

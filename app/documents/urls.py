@@ -30,7 +30,8 @@ urlpatterns = patterns('documents.views',
 
 #user
         #url(r'^user/$', 'user', name='user'),
-        url(r'^user/$', 'doc_rent', name='doc_rent'),
+        url(r'^user/$', 'profile', name='user'), 
+        url(r'^user/docs/$', 'doc_rent', name='doc_rent'),
         url(r'^user/profile/$', 'profile', name='profile'), 
         url(r'^user/settings/$', 'profile_settings', name='profile_settings'),
         url(r'^user/settings/(?P<user_id>\d+)/$', 'profile_settings',
