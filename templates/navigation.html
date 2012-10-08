@@ -5,7 +5,7 @@
 
 	<li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 	onmouseout="cleandelay()" style="z-index:999;">
-	  <a href="{% url 'logout' %}">LogOut</a>                                        
+	  <a href="{% url logout %}">LogOut</a>                                        
 	</li>
 
 	<li id="tu_profil"><a href="{% url 'user_profile' user.id %}">Profil</a></li>
@@ -24,7 +24,7 @@
 {# Linke Navigation #}
 <div class="linke_spalte">
   <div class="navi1">
-    <a href="{% url 'index' %}" style="display:block;">
+    <a href="{% url index %}" style="display:block;">
       Home
     </a>
   </div>
