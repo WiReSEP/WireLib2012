@@ -12,7 +12,7 @@
      <th><a href="?sort=isbn">Isbn</a></th>
 	 
 	 {% for d in documents %}		
-	   <tr><td><a href="{% url 'doc' d.bib_no %}">{{d}}</a></td> 
+	   <tr><td><a href="{% url doc d.bib_no %}">{{d}}</a></td> 
 	   <td>{{d.category}}</td>
 	   <td> {% for au in d.authors.all %}
 	     {{au}}

@@ -79,16 +79,16 @@
               <div id="recent_user">Gemeldet von: 
               {% if s.recent_user.first_name %}
                 {% if s.recent_user.last_name %}
-				<a href="{% url 'user.profile' lending.user_lend.id %}">
+				<a href="{% url user.profile lending.user_lend.id %}">
 				  {{ s.recent_user.first_name }} {{ s.recent_user.last_name }}
 				</a> <br />
                 {% else %}
-				<a href="{% url 'user.profile' lending.user_lend.id %}">
+				<a href="{% url user.profile lending.user_lend.id %}">
 				  {{ s.recent_user.username }}
 				</a> <br \>
                 {% endif %}
               {% else %}
-			  <a href="{% url 'user.profile' lending.user_lend.id %}">
+			  <a href="{% url user.profile lending.user_lend.id %}">
 				{{ s.recent_user.username }}
 			  </a> <br />
               {% endif %}
