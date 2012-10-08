@@ -5,7 +5,7 @@
 		<tbody id = origin>
 			<tr>
 			  <td><b>Dokument welches übertragen werden soll ist:</b></td>
-			  <td><label><a href="/doc/{{documents.bib_no}}">{{documents.title}}</a></label></td>
+			  <td><label><a href="{% url 'doc' documents.bib_no %}">{{documents.title}}</a></label></td>
 			</tr>
 	    </tbody>
 	 </table>

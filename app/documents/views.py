@@ -298,6 +298,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     else:
         searchmode = 0
     dict_response = _get_dict_response(request)
+    dict_response["bib_no"] = bib_no_id
     dict_response["documents"] = document_query
     dict_response["lending"] = lending_query
     dict_response["doc_extra"] = doc_extra_query
@@ -412,10 +413,17 @@ def profile(request, user_id):
         return render_to_response("stranger_profile.html", context_instance=context)
 
 @login_required
-def profile_settings(request, user_id):
+def profile_settings(request, user_id=None):
     """View der Accounteinstellung
     """ 
-    c_user= User.objects.get(id = user_id)
+    v_user = request.user
+    if user_id:
+        c_user= User.objects.get(id=user_id)
+        if not v_user == c_user:
+            #test rights to edit other users
+            raise PermissionDenied
+    else :
+        c_user = v_user
     dict_response = _get_dict_response(request)
     dict_response["c_user"] = c_user
     context = Context(dict_response)

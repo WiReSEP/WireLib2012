@@ -4,38 +4,33 @@
    <h1> Suchergebnis </h1>
 
    <table class="sortable" border = "3" bgcolor="#FFFFFF"> 
-  
-   
-
-       <th><a href="?sort=title">Dokumententitel</a></th>
-       <th><a href="?sort=category">Kategorie</a></th> 
-       <th><a href="?sort=authors">Authoren</a></th>    
-       <th><a href="?sort=year">Veröffentlichung</a></th> 
-       <th><a href="?sort=status">Status</a></th> 
-       <th><a href="?sort=isbn">Isbn</a></th>
-      
-       	{% for d in documents %}		
-	<tr><td><a href="../doc/{{d.bib_no}}">{{d}}</a></td> 
-	<td>{{d.category}}</td>
+     <th><a href="?sort=title">Dokumententitel</a></th>
+     <th><a href="?sort=category">Kategorie</a></th> 
+     <th><a href="?sort=authors">Authoren</a></th>    
+     <th><a href="?sort=year">Veröffentlichung</a></th> 
+     <th><a href="?sort=status">Status</a></th> 
+     <th><a href="?sort=isbn">Isbn</a></th>
+	 
+	 {% for d in documents %}		
+	   <tr><td><a href="{% url 'doc' d.bib_no %}">{{d}}</a></td> 
+	   <td>{{d.category}}</td>
 	   <td> {% for au in d.authors.all %}
-	    {{au}}
-	    {% endfor %}</td>
-	<td>{{d.year}}</td>
-	<td>
-	{% if d.status = 0 %}
-	Vorhanden
-	{% endif %}
-	{% if d.status = 1 %}
-	Verliehen
-	{% endif %}
-	{% if d.status = 2 %}
-	Betsellt
-	{% endif %}
-	</td>
-	<td>{{d.isbn}}</td>
-	
-	</tr>
-	
-	{% endfor %} </table>
-
+	     {{au}}
+	     {% endfor %}</td>
+	   <td>{{d.year}}</td>
+	   <td>
+		 {% if d.status = 0 %}
+		   Vorhanden
+		 {% endif %}
+		 {% if d.status = 1 %}
+		   Verliehen
+		 {% endif %}
+		 {% if d.status = 2 %}
+		   Betsellt
+		 {% endif %}
+	   </td>
+	   <td>{{d.isbn}}</td>
+	 </tr>
+	 {% endfor %} 
+  </table>
 {% endblock %}

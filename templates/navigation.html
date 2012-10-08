@@ -5,17 +5,17 @@
 
 	<li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 	onmouseout="cleandelay()" style="z-index:999;">
-	<a href="/logout">LogOut</a>                                        
+	  <a href="{% url 'logout' %}">LogOut</a>                                        
 	</li>
 
-	<li id="tu_profil"><a href="/user/{{ user.id }}">Profil</a></li>
+	<li id="tu_profil"><a href="{% url 'user_profile' user.id %}">Profil</a></li>
 	<li id="tu_logged_in" style="z-index:999;">
-	Eingeloggt als {{ user.username }}
+	  Eingeloggt als {{ user.username }}
 	</li>
 	{% else %}
 	<li id="tu_login_logout" onmouseover="mouseonmenu(1)" 
 	onmouseout="cleandelay()" style="z-index:999;">
-	<a href="/login">LogIn</a>                                   
+	  <a href="{% url 'login' %}">LogIn</a>                                   
 	</li>
 	{% endif %}
   </ul>
@@ -24,53 +24,53 @@
 {# Linke Navigation #}
 <div class="linke_spalte">
   <div class="navi1">
-    <a href ="{% url index %}" style="display:block;">
+    <a href="{% url 'index' %}" style="display:block;">
       Home
     </a>
   </div>
   <div class="navi1"> 
-	<a href="{% url docs %}" style="display:block;">
+	<a href="{% url 'docs' %}" style="display:block;">
 	  Literaturverzeichnis
 	</a>
   </div>
 
   <div class="navi2">
-	<a href="{% url search %}" style="display:block;">
+	<a href="{% url 'search' %}" style="display:block;">
 	  Suche
 	</a>
   </div>
 
   <div class="navi2">
-	<a href="{% url search_pro %}" style="display:block;">
+	<a href="{% url 'search_pro' %}" style="display:block;">
 	  Erweiterte Suche
 	</a>
   </div>
 
   {% if export_perm %}
   <div class="navi1">
-	<a href ="{% url export %}" style="display:block;">Export</a>
+	<a href="{% url 'export' %}" style="display:block;">Export</a>
   </div>
 
   <div class="navi2">
-	<a href="{% url export_bibtex %}" style="display:block;">
+	<a href="{% url 'export_bibtex' %}" style="display:block;">
 	  BibTeX-Export
 	</a>
 
   </div>
   <div class="navi2">
-	<a href="{% url export_allegro %}" style="display:block;">
+	<a href="{% url 'export_allegro' %}" style="display:block;">
 	  Allegro-Export
 	</a>
   </div>
   {% endif %}
   {% if import_perm %}
   <div class="navi1">
-	<a href="{% url doc_add %}" style="display:block;">
+	<a href="{% url 'doc_add' %}" style="display:block;">
 	  Import
 	</a>
   </div>
   <div class="navi2">
-	<a href="{% url doc_import %}" style="display:block;">
+	<a href="{% url 'doc_import' %}" style="display:block;">
 	  Datei hochladen
 	</a>
   </div>

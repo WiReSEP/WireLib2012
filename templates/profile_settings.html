@@ -10,23 +10,23 @@
         <tr>
             <td><b>Name</b></td>
             <th colspan="2">{{c_user.first_name}} {{c_user.last_name}}</th>
-            <td><a href="/profile/edit/name/">(ändern)</a></td>
+			<td><a href="{% url 'profile_edit_name' %}">(ändern)</a></td>
         </tr>
         <tr>
             <td><b>Passwort</b></td>
             <th colspan="2">*********</th>
-            <td><a href="/accounts/password/change">(ändern)</a></td>
+			<td><a href="{% url 'profile_edit_passwd %}">(ändern)</a></td>
         </tr>
         <tr>
             <td><b>E-Mail Adresse</b></td>
             <th colspan="2">{{ c_user.email }}</th>
-            <td><a href="/email/validation/">(ändern)</a></td>
+			<td><a href="{% url 'profile_edit_email' %}">(ändern)</a></td>
         </tr>
                
         <tr>
             <td><b>Anschrift</b></td>
             <th colspan="2">{{ c_user.user_profile.street }} {{ c_user.user_profile.number }} </th> 
-            <td><a href="/profile/edit/personal">(ändern)</a></td>
+			<td><a href="{% url 'profile_edit_personal' %}">(ändern)</a></td>
         
         </tr>
         <tr>
@@ -36,7 +36,7 @@
         <tr>
             <td><b>Telefonnummer:</b></td>
             <th colspan="2"></th>
-            <td><a href="/profile/edit/tel">(ändern)</a></td>    
+			<td><a href="{% url 'profile_edit_tel' %}">(ändern)</a></td>    
 	    </tr>
 	    {% for i in c_user.tel_user_set.all %}
 	    <tr>

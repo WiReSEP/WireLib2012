@@ -60,7 +60,7 @@ function changeCategory(elem) {
 	{% if is_importform %}
     <h1>Import</h1>
 	{% else %}
-	<a href=".."><input type="button" value="zurück" /></a>
+	<a href="{% url 'doc' bib_no %}"><input type="button" value="zurück" /></a>
 	<h1>Bearbeiten</h1>
 	{% endif %}
 	<div id="spoiler" name="spoiler">

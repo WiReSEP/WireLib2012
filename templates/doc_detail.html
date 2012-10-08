@@ -19,7 +19,7 @@
       {% if change_document %}
         <tr>
           <td>
-            <a href="/doc/{{documents.bib_no}}/edit" class="nolink">
+			<a href="{% url 'doc_edit' documents.bib_no %}t" class="nolink">
 		          <input type="button" name="edit" value="Editieren" />
 	        </a>
 	      </td>
@@ -224,7 +224,10 @@
 	          {% if user.id == lending.user_lend.id %}
 	            Als Bürge sind Sie eingetragen.
 	          {% else %}
-	            Als Bürge fungiert <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a>. <br />
+			  Als Bürge fungiert 
+			  <a href="{% url 'user_profile' lending.user_lend.id %}">
+				{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}
+			  </a>. <br />
 	          {% endif %}
 	        {% else %}
 	          {% if user.id == lending.user_lend.id %}
@@ -232,12 +235,21 @@
 	          {% else %}
 	            {% if lending.user_lend.first_name %}
 	              {% if lending.user_lend.last_name %}
-	                Das Dokument ist von <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}</a> ausgeliehen. <br />
+					Das Dokument ist von 
+					<a href="{% url 'user_profile' lending.user_lend.id %}">
+					  {{ lending.user_lend.first_name }} {{ lending.user_lend.last_name }}
+					</a> ausgeliehen. <br />
 	              {% else %}
-	                Das Dokument ist vom User <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
-                {% endif %}
-              {% else %}
-                  Das Dokument ist vom User <a href="/user/{{ lending.user_lend.id }}">{{ lending.user_lend.username }}</a> ausgeliehen. <br />
+					Das Dokument ist vom User 
+					<a href="{% url 'user_profile' lending.user_lend.id %}">
+					  {{ lending.user_lend.username }}
+					</a> ausgeliehen. <br />
+				  {% endif %}
+				{% else %}
+				  Das Dokument ist vom User 
+				  <a href="{% url 'user_profile' lending.user_lend.id %}">
+					{{ lending.user_lend.username }}
+				  </a> ausgeliehen. <br />
 	            {% endif %}
 	          {% endif %}
 	        {% endif %}
@@ -245,7 +257,7 @@
 	          {% if lending.user_lend.id != user.id %}
 	              <input type="submit" name="lend" value="&Uuml;bertragen" /> <br />
 	          {% else %}
-			        <a href="/doc/{{documents.bib_no}}/assign" class="nolink">
+				<a href="{% url 'doc_assign' documents.bib_no %}" class="nolink">
 	              <input type="button" name="assign" value="&Uuml;bertragen" /> <br />
 	            </a>
 	            

@@ -5,10 +5,10 @@
 
 	<ul type="disc">
 	<li>
-	<a href="/account/rent">Ausleihliste</a>
+	<a href="{% url 'doc_rent' %}">Ausleihliste</a>
 	</li>
 	<li>
-	<a href="/user/settings/{{ user.id }}">Accounteinstellung</a> 
+	<a href="{% url 'profile_settings' %}">Accounteinstellung</a> 
 	</li>
 	</ul>
 {% endblock %}

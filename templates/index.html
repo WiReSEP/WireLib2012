@@ -57,18 +57,28 @@ function spoilIt(elem, idname) {
   {# Der Header-Bereich mit Symbolfoto TU-Siegel, Institutslogo und horizontaler Navigation #}
 
 		<div id="tu_siegel" class="logo">
-		<a href="http://www.tu-braunschweig.de" title="TU Start">
-		  <img src="{{ STATIC_PREFIX }}icons/tubsdesign/siegel_rot.jpg" alt="TU BRAUNSCHWEIG" />
-		</a>
+		  <a href="http://www.tu-braunschweig.de" title="TU Start">
+			<img 
+			  src="{{ STATIC_PREFIX }}icons/tubsdesign/siegel_rot.jpg" 
+			  alt="TU BRAUNSCHWEIG" 
+			/>
+		  </a>
 		</div>
         <div id="logo" class="logo">
-        <a href="/../../.." title="WiReLib Home">
-		  <img src="{{ STATIC_PREFIX }}icons/tubsdesign/sclogo3D_t.gif" alt="WiReLib" />
-		</a>
+		  <a href="{% url 'index' %}" title="WiReLib Home">
+			<img src="{{ STATIC_PREFIX }}icons/tubsdesign/sclogo3D_t.gif" alt="WiReLib" />
+		  </a>
 		</div>
 		<div id="symbolpic">
-		  <a href ="{% url index %}"><img src="{{ STATIC_PREFIX }}Medien-DB/symbolfotos/buecher_wire_01.jpg" 
-		alt="" width="960" height="170" title="" /> </a>
+		  <a href ="{% url 'index' %}">
+			<img 
+			src="{{ STATIC_PREFIX }}Medien-DB/symbolfotos/buecher_wire_01.jpg" 
+			alt="" 
+			width="960" 
+			height="170" 
+			title="" 
+			/>
+		  </a>
 		</div>
 
 		{% include 'navigation.html' %}
@@ -86,11 +96,11 @@ function spoilIt(elem, idname) {
 		{# ein Item besteht aus <div class="snippet"><h1>Headline</h1><p>text</p></div> #}
 		{% if miss %}
 		<div class="snippet">
-		  <h1><a href="/miss">Vermisst:</a></h1>
+		  <h1><a href="{% url 'docs_missed' %}">Vermisst:</a></h1>
 		  <p>
 		  <ul>
 		  {% for m in miss %}
-		    <li> <a href="/doc/{{ m.bib_no }}">{{ m }}</a></li>
+		  <li> <a href="{% url 'doc' m.bib_no %}">{{ m }}</a></li>
 		  {% endfor %}
 		  </ul>
 		  </p>
