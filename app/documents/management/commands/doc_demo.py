@@ -12,7 +12,7 @@ class Command(BaseCommand):
     args = ""
 
     def handle(self, *args, **options):
-        #Command.__base_init()
+        Command.__base_init()
         for file in os.listdir('olddb'):
             print 'handling', file
             if file.__str__().endswith('.bib'):
@@ -32,40 +32,53 @@ class Command(BaseCommand):
         from documents.models import user_profile
         import datetime
 
+        #Mussfelder(name, group)
+        m_auth = need(name='author')
+        m_auth.save()
+        m_edit = need(name='editor')
+        m_edit.save()
+        m_title = need(name='title')
+        m_title.save()
+        m_pub = need(name='publisher')
+        m_pub.save()
+        m_year = need(name='year')
+        m_year.save()
+        m_school = need(name='school')
+        m_school.save()
+        m_note = need(name='note')
+        m_note.save()
+    
         #Mussfeldergruppen(name)
         mg_au_ed = need_groups(name='author_v_editor')
-        mg_title = need_groups(name='title')
-        mg_publisher = need_groups(name='publisher')
-        mg_year = need_groups(name='year')
-        mg_author = need_groups(name='author')
-        mg_school = need_groups(name='school')
-        mg_note = need_groups(name='note')
         mg_au_ed.save()
+        mg_au_ed.needs.add(m_auth)
+        mg_au_ed.needs.add(m_edit)
+        mg_au_ed.save()
+        mg_title = need_groups(name='title')
         mg_title.save()
+        mg_title.needs.add(m_title)
+        mg_title.save()
+        mg_publisher = need_groups(name='publisher')
         mg_publisher.save()
+        mg_publisher.needs.add(m_pub)
+        mg_publisher.save()
+        mg_year = need_groups(name='year')
         mg_year.save()
+        mg_year.needs.add(m_year)
+        mg_year.save()
+        mg_author = need_groups(name='author')
         mg_author.save()
+        mg_author.needs.add(m_auth)
+        mg_author.save()
+        mg_school = need_groups(name='school')
         mg_school.save()
+        mg_school.needs.add(m_school)
+        mg_school.save()
+        mg_note = need_groups(name='note')
+        mg_note.save()
+        mg_note.needs.add(m_note)
         mg_note.save()
         
-        #Mussfelder(name, group)
-        m = need(name='author', group=mg_au_ed)
-        m.save()
-        m = need(name='author', group=mg_author)
-        m.save()
-        m = need(name='editor', group=mg_au_ed)
-        m.save()
-        m = need(name='title', group=mg_title)
-        m.save()
-        m = need(name='publisher', group=mg_publisher)
-        m.save()
-        m = need(name='year', group=mg_year)
-        m.save()
-        m = need(name='school', group=mg_school)
-        m.save()
-        m = need(name='note', group=mg_note)
-        m.save()
-    
         #Kategorien
         c_book = category(name='book')
         c_book.save()
@@ -73,12 +86,14 @@ class Command(BaseCommand):
         c_book.needs.add(mg_title)
         c_book.needs.add(mg_publisher)
         c_book.needs.add(mg_year)
+        c_book.save()
         
         c_unpub = category(name='unpublished')
         c_unpub.save()
         c_unpub.needs.add(mg_author)
         c_unpub.needs.add(mg_title)
         c_unpub.needs.add(mg_note)
+        c_unpub.save()
         
         c_proj = category(name='projectwork')
         c_proj.save()
@@ -89,6 +104,7 @@ class Command(BaseCommand):
         c_phdt.needs.add(mg_title)
         c_phdt.needs.add(mg_school)
         c_phdt.needs.add(mg_year)
+        c_phdt.save()
         
         c_bach = category(name='bachelorthesis')
         c_bach.save()
@@ -96,6 +112,7 @@ class Command(BaseCommand):
         c_bach.needs.add(mg_title)
         c_bach.needs.add(mg_school)
         c_bach.needs.add(mg_year)
+        c_bach.save()
         
         c_mast = category(name='mastersthesis')
         c_mast.save()
@@ -103,6 +120,8 @@ class Command(BaseCommand):
         c_mast.needs.add(mg_title)
         c_mast.needs.add(mg_school)
         c_mast.needs.add(mg_year)
+        c_mast.needs.add(mg_author)
+        c_mast.save()
         
         #User
         user1 = User(username="User1", first_name="Jörn", last_name="Hameyer", 

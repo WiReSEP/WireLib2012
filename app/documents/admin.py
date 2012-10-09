@@ -42,8 +42,7 @@ class need_inline(admin.StackedInline):
     extra = 1
 
 class need_groups_admin(admin.ModelAdmin):
-    fields = ['name']
-    inlines = [need_inline]
+    fields = ['name', 'needs']
 
 class category_admin(admin.ModelAdmin):
     fields = ['name', 'needs']

@@ -64,7 +64,7 @@ urlpatterns += patterns('',
 
 #Links zum Emailaendern 
 urlpatterns += patterns('', 
-        url(r'^email/validation/$', email_validation, name='profile.edit.mail'), 
+        url(r'^email/validation/$', email_validation, name='profile.edit.email'), 
         url(r'^email/validation/processed/$', direct_to_template,  
             {'template': 'account/email_validation_processed.html'}),
         url(r'^email/validation/(?P<key>.{70})/$', email_validation_process, name='email_validation_process'),

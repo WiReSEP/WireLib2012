@@ -23,121 +23,15 @@ def is_valid(dict_data): #TODO
         if not re.match(inv_no_r, dict_data[u"inv_no"]):
             return False, u"Inventar-Nummer hat falsches Format"
         # Überprüfung auf Vollständigkeit für entsprechende Kategorien
-        if dict_data[u"category"] == u"book": #checking book
-            auths = dict_data.get(u"author", [])
-            editors = dict_data.get(u"editor", [])
-            if __lst_is_empty(auths) and __lst_is_empty(editors):
-                return False, u"Autor und Editor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"publisher"] == u"":
-                return False, u"Publisher"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"artictle": #checking article
-            if __lst_is_empty(dict_data[u"author"]):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"journal"] == u"":
-                return False, u"Journal"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"booklet": #checking booklet
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-        elif dict_data[u"category"] == u"conference": #checking conference
-            if __lst_is_empty(dict_data[u"author"]):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"booktitle"] == u"":
-                return False, u"Booktitle"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"inbook": #checking inbook
-            auths = dict_data.get(u"author", [])
-            editors = dict_data.get(u"editor", [])
-            if __lst_is_empty(auths + editors):
-                return False, u"Autor und Editor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"booktitle"] == u"":
-                return False, u"Booktitle"
-            chapter = dict_data.get(u"chapter", u"")
-            pages = dict_data.get(u"pages", u"")
-            if (chapter + pages) == u"":
-                return False, u"Chapter und Pages"
-            if dict_data[u"publisher"] == u"":
-                return False, u"Publisher"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"incollection": #checking incollection
-            if __lst_is_empty(dict_data.get(u"author", [])):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"booktitle"] == u"":
-                return False, u"Booktitle"
-            if dict_data[u"publisher"] == u"":
-                return False, u"Publisher"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"inproceedings": #checking inproceedings
-            if __lst_is_empty(dict_data.get(u"author", [])):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"booktitle"] == u"":
-                return False, u"Booktitle"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"manual": #checking manual
-            if dict_data[u"address"] == u"":
-                return False, u"Address"
-            if dict_data["title"] == u"":
-                return False, u"Title"
-        elif dict_data[u"category"] == u"masterthesis": #checking masterthesis
-            if __lst_is_empty(dict_data.get(u"author", [])):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"school"] == u"":
-                return False, u"School"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"misc": #checking misc
-            return True, u""
-        elif dict_data[u"category"] == u"phdthesis": #checking phdthesis
-            if __lst_is_empty(dict_data.get(u"author", [])):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"school"] == u"":
-                return False, u"School"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"proceedings": #checking proceedings
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"techreport": #checking techreport
-            if __lst_is_empty(dict_data.get(u"author", [])):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"institution"] == u"":
-                return False, u"Institution"
-            if dict_data[u"year"] == u"":
-                return False, u"Year"
-        elif dict_data[u"category"] == u"unpublished": #checking unpublished
-            if __lst_is_empty(dict_data.get(u"author", [])):
-                return False, u"Autor"
-            if dict_data[u"title"] == u"":
-                return False, u"Title"
-            if dict_data[u"note"] == u"":
-                return False, u"Note"
+        cat = category.objects.select_related().filter(pk=dict_data[u"category"])
+        if len(cat) == 1:
+            for group in cat[0].needs.all():
+                group_satisfied = False
+                for need in group.needs.all():
+                    if not _var_is_empty(dict_data.get(need.name, [])):
+                        group_satisfied = True
+                if not group_satisfied:
+                    return False, group.name
     except KeyError, e:
         return False, e.message
     return True, u""
@@ -282,3 +176,27 @@ def __lst_is_empty(list_data):
         if i == "":
             return True
     return False
+
+def _var_is_empty(data):
+    """
+    Überprüfung einer Variablen auf Inhalt. True, falls 
+        - None
+        - leerer String
+        - leere Liste
+        - Liste mit leeren Strings.
+    False sonst.
+    """
+    if data is None:
+        return True
+    elif type(data) == type("") or type(data) == type(u""):
+        if len(data) == 0:
+            return True
+    elif type(data) == type([]):
+        if len(data) == 0:
+            return True
+        for i in data:
+            if len(i) > 0:
+                return False
+        return True
+    else : 
+        return False

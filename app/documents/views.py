@@ -34,6 +34,11 @@ from django import template
 register = template.Library()
 
 def _get_dict_response(request):
+    """ Dict-Response default erstellen
+    Gibt ein Python-Dict zurück mit Werten, die in jedem Template benötigt
+    werden. Eigene Werte für Templates werden in den jeweiligen Methoden
+    eingefügt.
+    """
     v_user = request.user
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
@@ -327,6 +332,10 @@ def doc_detail(request, bib_no_id, searchtext=""):
     return response
 
 def doc_assign(request, bib_no_id):
+    """ Übertragen an andere Benutzer
+    Diese Methode ermöglicht das Übertragen von selbst geliehenen Dokumenten an
+    andere registrierte Benutzer.
+    """
     v_user = request.user
     userform = SelectUser(v_user)
     nonuserform = NonUserForm()
@@ -375,6 +384,9 @@ def doc_assign(request, bib_no_id):
     return response
 
 def index(request): 
+    """Rendert die Index-Seite.
+    Really need a description?
+    """
     context = Context(_get_dict_response(request))
     return render_to_response("index.html",context_instance=context)
 
@@ -452,6 +464,8 @@ def personal(request):
     return render_to_response(template, data, context_instance=RequestContext(request))   
 
 def telpersonal(request): 
+    """Bearbeitung der Mail-Adresse
+    """
 
     #tel, created = tel_user.objects.get_or_create(user=request.user)  
     
@@ -494,6 +508,8 @@ def profile_edit_name(request):
                               context_instance=RequestContext(request))
 
 def email_validation_process(request, key):
+    """Validiert die Mail-Adresse
+    """
 
     if Emaireal-world or knuthlValidation.objects.verify(key=key): 
         successful = True
@@ -686,6 +702,7 @@ def doc_add(request, bib_no_id=None):
 #        needs[u"" + c.category.name].append(c.need)
     cat = category.objects.filter()
     dict_response = _get_dict_response(request)
+    dict_response["bib_no"] = bib_no_id
     dict_response["is_importform"] = is_importform
     dict_response["category"] = cat
     dict_response["form_doc"] = form_doc
@@ -895,6 +912,10 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
             context_instance=RequestContext(request))
 
 def _truncate_get(request, *var):
+    """Entfernt GET-Parameter
+    Diese Methode entfernt die angegebenen GET-Parameter und gibt die neu
+    geformten Parameter als String zurück
+    """
     params = request.GET.copy()
     test = False
     for arg in var:

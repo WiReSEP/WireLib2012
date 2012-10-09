@@ -16,8 +16,17 @@ class ManyToManyField_NoSyncdb(models.ManyToManyField):
         super(ManyToManyField_NoSyncdb,self).__init__(*args, **kwargs)
         self.creates_table = False
 """
+class need(models.Model):
+    name = models.CharField(max_length=30, primary_key=True)
+    class Meta:
+        verbose_name = "Mussfeld"
+        verbose_name_plural = "Mussfelder"
+    def __unicode__(self):
+        return self.name
+    
 class need_groups(models.Model):
     name = models.CharField(max_length=100)
+    needs = models.ManyToManyField(need, verbose_name="Mussfelder")
     class Meta:
         verbose_name = "Mussfeldgruppe"
         verbose_name_plural = "Mussfeldgruppen"
@@ -35,14 +44,6 @@ class category(models.Model):
     def __unicode__(self):
         return self.name
         
-class need(models.Model):
-    name = models.CharField(max_length=30)
-    group = models.ForeignKey(need_groups)
-    class Meta:
-        unique_together= ('name', 'group')
-        verbose_name = "Mussfeld"
-        verbose_name_plural = "Mussfelder"
-    
 class publisher(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
     
