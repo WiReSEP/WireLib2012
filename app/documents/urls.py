@@ -6,13 +6,15 @@ urlpatterns = patterns('documents.views',
         url(r'^$', 'index', name='index'), 
 
 #lists
-        url(r'^doc_list/$', 'doc_list', name='docs'),
+#        url(r'^doc_list/$', 'doc_list', name='docs'),
+#        url(r'^doc_list/$', 'search', name='docs'),
+        url(r'^doc/$', 'search', name='docs'),
         #url(r'^account/rent/$', 'doc_rent', name='doc_rent'), # Ausleihliste
-        url(r'^miss/$', 'docs_miss', name='docs.missed'),
+        url(r'^doc/missed/$', 'docs_miss', name='docs.missed'),
 
 #search
-        url(r'^search/$', 'search', name='search'),
-        url(r'^search_pro/$', 'search_pro', name='search.pro'),
+#        url(r'^search/$', 'search', name='search'),
+        url(r'^search/$', 'search_pro', name='search.pro'),
 
 #docs
         url(r'^doc/(?P<bib_no_id>\w\d+)/$', 'doc_detail', name='doc'),

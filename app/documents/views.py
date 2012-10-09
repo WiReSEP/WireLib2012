@@ -143,10 +143,11 @@ def search(request):
         return _list(request, document_query)
     #Falls noch keine Suche gestartet wurde
     else:
-        dict_response = _get_dict_response(request)
-        context = Context(dict_response)
-        template = loader.get_template("search.html")
-        return HttpResponse(template.render(context))
+        return doc_list(request)
+#        dict_response = _get_dict_response(request)
+#        context = Context(dict_response)
+#        template = loader.get_template("search.html")
+#        return HttpResponse(template.render(context))
 
 def search_pro(request):
     """ Erweiterte Suche nach Dokumeten.
@@ -229,7 +230,7 @@ def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
     """
     documents = document.objects.all()
-    return _list(request, documents)
+    return _list(request, documents, searchtext=[""])
 
 def doc_detail(request, bib_no_id, searchtext=""):
     """
