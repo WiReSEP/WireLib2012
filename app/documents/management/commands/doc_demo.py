@@ -8,121 +8,136 @@ import os
 #Für die 
 
 class Command(BaseCommand):
-    help = "Hier kann der documents-App eine Demo-Session hinzugefügt werden"
+    """ Dieses Commando erfordert einen Ordner 'olddb' im Projekt-Verzeichnis,
+    welches Bibtex-Dateien enthält.
+    """
+
+    help = """Hier kann der documents-App eine Demo-Session hinzugefügt werden.
+
+    Das Commando setzt einen Ordner 'olddb' im Projekt-Verzeichnis vorraus,
+    welcher Bibtex-Dateien enthält."""
     args = ""
 
     def handle(self, *args, **options):
+        self.default_import_rules()
+        self.bibtex_categories()
         Command.__base_init()
+
         for file in os.listdir('olddb'):
             print 'handling', file
             if file.__str__().endswith('.bib'):
                 print 'importing', file
                 UglyBibtex('olddb/%s'%file).do_import()
 
+    def default_import_rules(self):
+        """ Erzeugt Importregeln für Dokumente.
+        """
+        from documents.models import need
+        from documents.models import need_groups
+
+        #Mussfelder(name, group)
+        needed_fields = ('author',
+                'editor',
+                'title',
+                'publisher',
+                'year',
+                'school',
+                'note'
+                )
+        for field in needed_fields:
+            m_auth = need(name=field)
+            m_auth.save()
+    
+        #Mussfeldergruppen(name)
+        self.g_author_editor= need_groups(name='author_v_editor')
+        self.g_author_editor.save()
+        self.g_author_editor.needs.add('author')
+        self.g_author_editor.needs.add('editor')
+        self.g_author_editor.save()
+        self.g_title = need_groups(name='title')
+        self.g_title.save()
+        self.g_title.needs.add('title')
+        self.g_title.save()
+        self.g_publisher = need_groups(name='publisher')
+        self.g_publisher.save()
+        self.g_publisher.needs.add('publisher')
+        self.g_publisher.save()
+        self.g_year = need_groups(name='year')
+        self.g_year.save()
+        self.g_year.needs.add('year')
+        self.g_year.save()
+        self.g_author = need_groups(name='author')
+        self.g_author.save()
+        self.g_author.needs.add('auth')
+        self.g_author.save()
+        self.g_school = need_groups(name='school')
+        self.g_school.save()
+        self.g_school.needs.add('school')
+        self.g_school.save()
+        self.g_note = need_groups(name='note')
+        self.g_note.save()
+        self.g_note.needs.add('note')
+        self.g_note.save()
+
+    def bibtex_categories(self):
+        """ Erzeugt die meist genutzten BibTeX Kategorien die für eine
+        Bibliothek benötigt werden.
+        """
+        from documents.models import category
+
+        book = category(name='book')
+        book.save()
+        book.needs.add(self.g_author_editor)
+        book.needs.add(self.g_title)
+        book.needs.add(self.g_publisher)
+        book.needs.add(self.g_year)
+        book.save()
+        
+        unpub = category(name='unpublished')
+        unpub.save()
+        unpub.needs.add(self.g_author)
+        unpub.needs.add(self.g_title)
+        unpub.needs.add(self.g_note)
+        unpub.save()
+        
+        proj = category(name='projectwork')
+        proj.save()
+        
+        phdt = category(name='phdthesis')
+        phdt.save()
+        phdt.needs.add(self.g_author)
+        phdt.needs.add(self.g_title)
+        phdt.needs.add(self.g_school)
+        phdt.needs.add(self.g_year)
+        phdt.save()
+        
+        bach = category(name='bachelorthesis')
+        bach.save()
+        bach.needs.add(self.g_author)
+        bach.needs.add(self.g_title)
+        bach.needs.add(self.g_school)
+        bach.needs.add(self.g_year)
+        bach.save()
+        
+        mast = category(name='mastersthesis')
+        mast.save()
+        mast.needs.add(self.g_author)
+        mast.needs.add(self.g_title)
+        mast.needs.add(self.g_school)
+        mast.needs.add(self.g_year)
+        mast.needs.add(self.g_author)
+        mast.save()
+
     @staticmethod
     def __base_init():
         from django.contrib.auth.models import Group
         from django.contrib.auth.models import Permission
         from django.contrib.auth.models import User
-        from documents.models import category
         from documents.models import emails
-        from documents.models import need
-        from documents.models import need_groups
         from documents.models import tel_user
         from documents.models import user_profile
         import datetime
 
-        #Mussfelder(name, group)
-        m_auth = need(name='author')
-        m_auth.save()
-        m_edit = need(name='editor')
-        m_edit.save()
-        m_title = need(name='title')
-        m_title.save()
-        m_pub = need(name='publisher')
-        m_pub.save()
-        m_year = need(name='year')
-        m_year.save()
-        m_school = need(name='school')
-        m_school.save()
-        m_note = need(name='note')
-        m_note.save()
-    
-        #Mussfeldergruppen(name)
-        mg_au_ed = need_groups(name='author_v_editor')
-        mg_au_ed.save()
-        mg_au_ed.needs.add(m_auth)
-        mg_au_ed.needs.add(m_edit)
-        mg_au_ed.save()
-        mg_title = need_groups(name='title')
-        mg_title.save()
-        mg_title.needs.add(m_title)
-        mg_title.save()
-        mg_publisher = need_groups(name='publisher')
-        mg_publisher.save()
-        mg_publisher.needs.add(m_pub)
-        mg_publisher.save()
-        mg_year = need_groups(name='year')
-        mg_year.save()
-        mg_year.needs.add(m_year)
-        mg_year.save()
-        mg_author = need_groups(name='author')
-        mg_author.save()
-        mg_author.needs.add(m_auth)
-        mg_author.save()
-        mg_school = need_groups(name='school')
-        mg_school.save()
-        mg_school.needs.add(m_school)
-        mg_school.save()
-        mg_note = need_groups(name='note')
-        mg_note.save()
-        mg_note.needs.add(m_note)
-        mg_note.save()
-        
-        #Kategorien
-        c_book = category(name='book')
-        c_book.save()
-        c_book.needs.add(mg_au_ed)
-        c_book.needs.add(mg_title)
-        c_book.needs.add(mg_publisher)
-        c_book.needs.add(mg_year)
-        c_book.save()
-        
-        c_unpub = category(name='unpublished')
-        c_unpub.save()
-        c_unpub.needs.add(mg_author)
-        c_unpub.needs.add(mg_title)
-        c_unpub.needs.add(mg_note)
-        c_unpub.save()
-        
-        c_proj = category(name='projectwork')
-        c_proj.save()
-        
-        c_phdt = category(name='phdthesis')
-        c_phdt.save()
-        c_phdt.needs.add(mg_author)
-        c_phdt.needs.add(mg_title)
-        c_phdt.needs.add(mg_school)
-        c_phdt.needs.add(mg_year)
-        c_phdt.save()
-        
-        c_bach = category(name='bachelorthesis')
-        c_bach.save()
-        c_bach.needs.add(mg_author)
-        c_bach.needs.add(mg_title)
-        c_bach.needs.add(mg_school)
-        c_bach.needs.add(mg_year)
-        c_bach.save()
-        
-        c_mast = category(name='mastersthesis')
-        c_mast.save()
-        c_mast.needs.add(mg_author)
-        c_mast.needs.add(mg_title)
-        c_mast.needs.add(mg_school)
-        c_mast.needs.add(mg_year)
-        c_mast.needs.add(mg_author)
-        c_mast.save()
-        
         #User
         user1 = User(username="User1", first_name="Jörn", last_name="Hameyer", 
                   email="user1@van-nahl.org", 
