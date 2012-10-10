@@ -13,29 +13,45 @@ class public_pages(unittest.TestCase):
         """
         self.c = Client()
 
-    def test_index(self):
-        response = self.c.get('/')
-        self.assertEqual(response.status_code, 200)
-
-    def test_doclists(self):
-        urls = ('/doc', 
-                '/doc/missed'
+    def test_status_200(self):
+        urls = ('/',
+                '/doc',
+                '/doc/missed',
+                '/search',
+                '/doc/K006001',
+                '/doc/K006002',
+                '/login',
+                '/logout'
                 )
         for url in urls:
-            print "checking",url
+            print "checking", url
             response = self.c.get(url)
             self.assertEqual(response.status_code, 200)
 
-    def test_search(self):
-        response = self.c.get('/search')
-        self.assertEqual(response.status_code, 200)
+    def test_status_403(self):
+        """ was ist /doc/K.../assign?
+        """
+        urls = ('/doc/add',
+                '/doc/import',
+                '/doc/K006001/edit',
+                '/doc/K006002/edit',
+                '/export',
+                '/export/allegro',
+                '/export/bibtex',
+                '/user',
+                '/user/docs',
+                '/user/profile',
+                '/user/profile/edit',
+                '/user/settings',
 
-    def test_docs(self):
-        pass
+                )
+        for url in urls:
+            print "checking", url
+            response = self.c.get(url)
+            self.assertEqual(response.status_code, 403)
 
 
 class private_pages(unittest.TestCase):
     """ Tests für alle Seiten aus der Sicht von angemelden Benutzern
     """
-
     pass

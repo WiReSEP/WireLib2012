@@ -8,4 +8,4 @@ from documents.lib.bibtex import Bibtex
 class test_importer(unittest.TestCase):
     """ Testet den Import einiger Datensätze
     """
-
+    pass
