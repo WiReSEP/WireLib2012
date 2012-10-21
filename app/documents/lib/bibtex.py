@@ -249,30 +249,6 @@ class Bibtex(threading.Thread):
     ausgeführt werden.
     """
 
-    bibtex_lock = threading.Lock()
-    """ Stellt sicher, dass nur ein Bibtex-Thread läuft
-    """
-    def export_data(self, documents, export_path):
-        """ Zum setzen der für den Export notwendigen Daten.
-        """
-        self.documents = documents
-        self.export_path = export_path
-        return self
-
-    def run(self):
-        if Bibtex.bibtex_lock.locked():
-            return
-        if not (self.documents and self.export_path):
-            return
-        Bibtex.bibtex_lock.acquire()
-        self.__export_docs(self.documents, self.export_path)
-        Bibtex.bibtex_lock.release()
-
-    def do_import(self, file):
-        """Diese Methode importiert die Dokumente einer Bibtex-Datei.
-        """
-        UglyBibtex(file).do_import()
-
     @staticmethod
     def export_doc(document):
         """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
@@ -386,3 +362,49 @@ class Bibtex(threading.Thread):
         lock.acquire()
         Bibtex.active = False
         lock.release()
+
+
+#
+# PLY Code for parsing Bibtex-Files
+# =================================
+#
+
+import ply.yacc as yacc
+
+tokens = (
+        'ENTRY_TYPE',
+        'ID',
+        'FIELD_NAME', 'EQUALS', 'FIELD_CONTENT',
+        'LPARENT', 'RPARENT', 'QUOTATION_MARK',
+        )
+
+#   Tokens
+t_ENTRY_TYPE = r'[aAbBcCiImMpPtTuU]\w*'
+t_ID = r'\w*'
+t_FIELD_NAME = r'\w*'
+t_EQUALS = r'='
+t_FIELD_CONTENT = r'.*'
+t_LPARENT = r'{'
+t_RPARENT = r'}'
+t_QUOTATION_MARK = r'"'
+
+#   Ignored characters
+t_ignore = " \t"
+
+def t_error(t):
+    raise TypeError("Invalid Format in %s" % (t.value))
+
+# Build the lexer
+import ply.lex as lex
+lex.lex()
+
+class BibtexEntry(object):
+    def __init__(self, field, content):
+        self.field = field
+        self.content = content
+
+    def __rep__(self):
+        return "Entry: %s = %s" % (self.field, self.content)
+
+# Die Produktionen
+
