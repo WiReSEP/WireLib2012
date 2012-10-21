@@ -83,10 +83,12 @@ class Allegro(threading.Thread):
         authors = list(document.authors.all())
         line_end = u"\n"
         #speichern aller benötigten Feldinhalte in den Rückgabestring
+        bib_no = document.bib_no
         isbn = document.isbn
         if isbn == None:
             isbn = u""
-        doc_str = u"" + allegro_dict[u"isbn"] + u" " + isbn + line_end
+        doc_str = u"" + allegro_dict[u"isbn"] + u" " + bib_no + line_end
+        doc_str += allegro_dict[u"isbn"] + u" " + isbn + line_end
         doc_str += allegro_dict[u"publisher"] + u" "
         doc_str += document.publisher.name + line_end
         try:

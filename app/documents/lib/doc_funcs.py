@@ -107,40 +107,12 @@ def insert_doc(dict_insert, user):
         document_db.save(user)
         document_db.set_status(user, document.AVAILABLE)
         for auth in author_f:
-            au = auth.split(", ", 2)
-            if len(au) > 1:
-                last_name_f = au[0]
-                first_name_f = au[1]
-            else :
-                name_f = au[0].split(" ")
-                last_name_f = name_f[-1]
-                first_name_f = " ".join(name_f[:-1])
-            try :
-                auth_db = author.objects.get(last_name=last_name_f, 
-                        first_name=first_name_f)
-            except author.DoesNotExist:
-                auth_db = author(last_name=last_name_f,
-                        first_name=first_name_f)
-            auth_db.save()
+            auth_db = _extract_author(auth)
             document_db.add_author(auth_db)
             document_db.save(user)
 
         for auth in editor_f:
-            au = auth.split(", ", 2)
-            if len(au) > 1:
-                last_name_f = au[0]
-                first_name_f = au[1]
-            else :
-                name_f = au[0].split(" ")
-                last_name_f = name_f[-1]
-                first_name_f = " ".join(name_f[:-1])
-            try :
-                auth_db = author.objects.get(last_name=last_name_f, 
-                        first_name=first_name_f)
-            except author.DoesNotExist:
-                auth_db = author(last_name=last_name_f,
-                        first_name=first_name_f)
-            auth_db.save()
+            auth_db = _extract_author(auth)
             document_db.add_editor(auth_db)
             document_db.save(user)
         keywords_db = []
@@ -200,3 +172,21 @@ def _var_is_empty(data):
         return True
     else : 
         return False
+
+def _extract_author(auth):
+    au = auth.split(", ", 2)
+    if len(au) > 1:
+        last_name_f = au[0]
+        first_name_f = au[1]
+    else :
+        name_f = au[0].split(" ")
+        last_name_f = name_f[-1]
+        first_name_f = " ".join(name_f[:-1])
+    try :
+        auth_db = author.objects.get(last_name=last_name_f, 
+            first_name=first_name_f)
+    except author.DoesNotExist:
+        auth_db = author(last_name=last_name_f,
+            first_name=first_name_f)
+    auth_db.save()
+    return auth_db

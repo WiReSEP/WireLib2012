@@ -34,18 +34,19 @@ urlpatterns = patterns('documents.views',
         #url(r'^user/$', 'user', name='user'),
         url(r'^user/$', 'profile', name='user'), 
         url(r'^user/docs/$', 'doc_rent', name='doc.rent'),
-        url(r'^user/profile/$', 'profile', name='profile'), 
-        url(r'^user/settings/$', 'profile_settings', name='profile.settings'),
+#        url(r'^user/profile/$', 'profile', name='profile'), 
+        url(r'^user/settings/$', 'profile_settings', name='user.settings'),
         url(r'^user/settings/(?P<user_id>\d+)/$', 'profile_settings',
-            name='profile.settings.other'),
+            name='user.settings.other'),
         url(r'^user/(?P<user_id>\d+)/$', 'profile', name='user.profile'),
         url(r'^user/profile/edit/personal/done/$', direct_to_template,
-            {'template': 'profile/personal_done.html'}, name='profile_edit_personal_done'), 
+            {'template': 'profile/personal_done.html'},
+            name='user.edit.personal.done'), 
 
 #profile
-        url(r'^profile/edit/personal/$', personal, name='profile.edit.personal'), 
-        url(r'^profile/edit/tel/$', telpersonal, name='profile.edit.tel'),
-        url(r'^profile/edit/name/$', 'profile_edit_name', name='profile.edit.name'), 
+        url(r'^profile/edit/personal/$', personal, name='user.edit.personal'), 
+        url(r'^profile/edit/phone/$', telpersonal, name='user.edit.phone'),
+        url(r'^profile/edit/name/$', 'profile_edit_name', name='user.edit.name'), 
 )
 
 ###############PROFIL#############################
@@ -59,14 +60,14 @@ urlpatterns += patterns('',
              'email_template_name': 'email/password_reset_email.txt'}),
         url(r'^accounts/password/change/$', 'django.contrib.auth.views.password_change',
             {'template_name': 'account/password_change.html'},
-            name='profile.edit.passwd'),
+            name='user.edit.passwd'),
         url(r'^accounts/password/change/done/$', 'django.contrib.auth.views.password_change_done',
             {'template_name': 'account/password_change_done.html'}),  
 ) 
 
 #Links zum Emailaendern 
 urlpatterns += patterns('', 
-        url(r'^email/validation/$', email_validation, name='profile.edit.email'), 
+        url(r'^email/validation/$', email_validation, name='user.edit.email'), 
         url(r'^email/validation/processed/$', direct_to_template,  
             {'template': 'account/email_validation_processed.html'}),
         url(r'^email/validation/(?P<key>.{70})/$', email_validation_process, name='email_validation_process'),
