@@ -3,9 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
-from documents.models import document, doc_status, doc_extra, category,\
-    EmailValidation, emails, user_profile, tel_user, \
-    tel_non_user
+from documents.models import Document, DocStatus, DocExtra, Category,\
+    EmailValidation, Emails, UserProfile, TelUser, \
+    TelNonUser
 from django.contrib.auth.models import User
 from django.forms.models import modelformset_factory
 from documents.lib.bibtex import Bibtex
@@ -43,9 +43,9 @@ def _get_dict_response(request):
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
     perms =  v_user.has_perm('documents.can_see_admin')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                             doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
+    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
+                                             DocStatus__return_lend = False)
+    miss_query = miss_query.order_by('-DocStatus__date')
     return {"user" : v_user, 
             "perm" : perms,
             "miss" : miss_query[0:10],
@@ -77,7 +77,7 @@ def search(request):
             if first_for:
                 first_for = False
                 #Statt Filtern QuerySet erstellen
-                document_query = document.objects.filter(
+                document_query = Document.objects.filter(
                                 lib_views._get_searchset(i)).distinct()
             #Falls nicht erste Schleife
             else:
@@ -111,13 +111,13 @@ def search(request):
                     if next_action == "or":
                         #"or" wenn "not" aktiv
                         if not_active:
-                            search_query = document.objects.exclude(
+                            search_query = Document.objects.exclude(
                                             lib_views._get_searchset(i)).distinct()
                             document_query = document_query | search_query
                             not_active = False
                         #"or" wenn "not" nicht aktiv
                         else:
-                            search_query = document.objects.filter(
+                            search_query = Document.objects.filter(
                                         lib_views._get_searchset(i)).distinct()
                             document_query = document_query | search_query
                         document_query = document_query.distinct()
@@ -175,7 +175,7 @@ def search_pro(request):
                 s_doc_status]
         #Aufeinanderfolgendes Filtern nach Suchbegriffen
         #Aufgrund des Verfahrens eine UND-Suche
-        s_documents = document.objects.filter(year__icontains = s_year)
+        s_documents = Document.objects.filter(year__icontains = s_year)
         if s_title != "":
             title_query = s_title.split(" ")
             for i in title_query:
@@ -219,17 +219,17 @@ def search_pro(request):
     #Laden der Suchseite, falls noch keine Suche gestartet worden ist.
     else:
         dict_response = _get_dict_response(request)
-        dict_response['AVAILABLE'] = document.AVAILABLE
-        dict_response[ "LEND"] = document.LEND
-        dict_response["MISSING"] = document.MISSING
-        dict_response["ORDERED"] = document.ORDERED
-        dict_response["LOST"] = document.LOST
+        dict_response['AVAILABLE'] = Document.AVAILABLE
+        dict_response[ "LEND"] = Document.LEND
+        dict_response["MISSING"] = Document.MISSING
+        dict_response["ORDERED"] = Document.ORDERED
+        dict_response["LOST"] = Document.LOST
         return render_to_response("search_pro.html", context_instance=Context(dict_response))
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
     """
-    documents = document.objects.all()
+    documents = Document.objects.all()
     return _list(request, documents, searchtext=[""])
 
 def doc_detail(request, bib_no_id, searchtext=""):
@@ -239,7 +239,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     v_user = request.user
     #ist das Dokument wirklich vorhanden, wenn ja wird es geladen
     try:
-        document_query = document.objects.get(bib_no=bib_no_id)
+        document_query = Document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
     #selbst ausleihen, wenn Status vorhanden
@@ -265,15 +265,15 @@ def doc_detail(request, bib_no_id, searchtext=""):
         document_query.lend(v_user)
     #aktualisieren des Datensatzes
     try:
-        document_query = document.objects.get(bib_no=bib_no_id)
+        document_query = Document.objects.get(bib_no=bib_no_id)
     except document.DoesNotExist:
         raise Http404
     #lädt den aktuellsten Statussatz - wenn keiner vorhanden: None
     try:
-        lending_query = document_query.doc_status_set.latest('date')
+        lending_query = document_query.DocStatus_set.latest('date')
     except doc_status.DoesNotExist:
         lending_query = None
-    doc_extra_query = doc_extra.objects.filter(doc_id__bib_no__exact=bib_no_id)
+    doc_extra_query = DocExtra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
     template = loader.get_template("doc_detail.html")
     #auslesen der für die doc_detail.html benötigten Rechte
@@ -295,7 +295,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     autoren = lib_views._diff_authors(document_query)
     miss_query = document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
+    miss_query = miss_query.order_by('-DocStatus__date')
     #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
     if len(searchtext) == 1:
         searchmode = 1
@@ -343,12 +343,12 @@ def doc_assign(request, bib_no_id):
     telnonuserform = TelNonUserForm()
     user_lend = ""
     try:
-        document_query = document.objects.get(bib_no=bib_no_id)
-    except document.DoesNotExist:
+        document_query = Document.objects.get(bib_no=bib_no_id)
+    except Document.DoesNotExist:
         raise Http404
     try:
         lending_query = document_query.doc_status_set.latest('date')
-    except doc_status.DoesNotExist:
+    except DocStatus.DoesNotExist:
         lending_query = None
     if 'assign' in request.POST and v_user.is_authenticated(): 
         userform = SelectUser(v_user, request.POST)
@@ -363,14 +363,14 @@ def doc_assign(request, bib_no_id):
         telnonuserform = TelNonUserForm(request.POST)
         if nonuserform.is_valid() and telnonuserform.is_valid():
             non_user_lend = nonuserform.save()
-            telnonuser, created = tel_non_user.objects.get_or_create(non_user=non_user_lend)
+            telnonuser, created = TelNonUser.objects.get_or_create(non_user=non_user_lend)
             telnonuserform = TelNonUserForm(request.POST, instance=telnonuser)
             telnonuserform.save()
             if non_user_lend and not non_user_lend == "":
                 document_query.lend(user=v_user, non_user=non_user_lend)
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
 
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
+    miss_query = Document.objects.filter(doc_status__status = document.MISSING,
                                          doc_status__return_lend = False)
     miss_query = miss_query.order_by('-doc_status__date')
     template = loader.get_template("doc_assign.html")
@@ -395,9 +395,9 @@ def docs_miss(request):
     """
     Vermisste Dokumente anzeigen
     """
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,        
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')  
+    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,        
+                                         DocStatus__return_lend = False)
+    miss_query = miss_query.order_by('-DocStatus__date')  
     return _list(request, miss_query, form=2)
                               
 @login_required
@@ -415,9 +415,9 @@ def profile(request, user_id=None):
     else :
         p_user = v_user
     see_groups = v_user.has_perm('documents.can_see_others_groups')
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-doc_status__date')
+    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
+                                         DocStatus__return_lend = False)
+    miss_query = miss_query.order_by('-DocStatus__date')
     dict_response = _get_dict_response(request)
     if p_user.id == v_user.id :
         context = Context(dict_response)
@@ -449,7 +449,7 @@ def profile_settings(request, user_id=None):
 def personal(request):
     """Zum Editieren von Anschrift
     """
-    profile, created = user_profile.objects.get_or_create(user_id=request.user)
+    profile, created = UserProfile.objects.get_or_create(user_id=request.user)
     
     if request.method == "POST": 
         form = ProfileForm(request.POST, instance=profile)
@@ -471,10 +471,10 @@ def telpersonal(request):
     #tel, created = tel_user.objects.get_or_create(user=request.user)  
     
     if request.method == "POST": 
-        telformset = modelformset_factory(tel_user, extra=3, max_num=3,\
+        telformset = modelformset_factory(TelUser, extra=3, max_num=3,\
                 can_delete=True, exclude='user')
         formset = telformset(request.POST,\
-                queryset=tel_user.objects.filter(user=request.user))
+                queryset=TelUser.objects.filter(user=request.user))
         if formset.is_valid():
             instances = formset.save(commit= False)
             for instance in instances:
@@ -483,9 +483,9 @@ def telpersonal(request):
                 instance.save()
             return HttpResponseRedirect(reverse("profile_edit_personal_done"))
     else: 
-        telformset = modelformset_factory(tel_user, extra=3, max_num=3,\
+        telformset = modelformset_factory(TelUser, extra=3, max_num=3,\
                 can_delete=True, exclude='user')
-        formset = telformset(queryset=tel_user.objects.filter(user=request.user))
+        formset = telformset(queryset=TelUser.objects.filter(user=request.user))
     template = "profile/tel.html"
     data = { 'formset': formset, }
     
@@ -610,21 +610,21 @@ def doc_add(request, bib_no_id=None):
             form_doc = DocForm(request.POST)
             extras_formset = modelformset_factory(doc_extra, extra=4,\
                 can_delete=True, exclude='doc_id')
-            form_extras = extras_formset(request.POST, queryset=doc_extra.objects.none())
+            form_extras = extras_formset(request.POST, queryset=DocExtra.objects.none())
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         else :
             try :
-                doc = document.objects.get(bib_no=bib_no_id)
+                doc = Document.objects.get(bib_no=bib_no_id)
             except document.DoesNotExist:
                 raise Http404
             is_importform = False
             form_doc = DocForm(request.POST, instance=doc)
-            extras_formset = modelformset_factory(doc_extra, extra=4,\
+            extras_formset = modelformset_factory(DocExtra, extra=4,\
                 can_delete=True, exclude='doc_id')
             form_extras = extras_formset(
                                     request.POST,
-                                    queryset=doc_extra.objects.filter(doc_id=doc))
+                                    queryset=DocExtra.objects.filter(doc_id=doc))
             form_author = AuthorAddForm(request.POST)
             form_publisher = PublisherAddForm(request.POST)
         success = False
@@ -653,7 +653,7 @@ def doc_add(request, bib_no_id=None):
                 doc.add_author(author)
             doc.save()
             form_extras = extras_formset(
-                                    queryset=doc_extra.objects.filter(doc_id=doc))
+                                    queryset=DocExtra.objects.filter(doc_id=doc))
             if bib_no_id is None:
                 form_doc = DocForm()
             else :
@@ -676,22 +676,22 @@ def doc_add(request, bib_no_id=None):
         is_importform = True
         message = ''
         form_doc = DocForm()
-        extras_formset = modelformset_factory(doc_extra, extra=4,\
+        extras_formset = modelformset_factory(DocExtra, extra=4,\
                 can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=doc_extra.objects.none())
+        form_extras = extras_formset(queryset=DocExtra.objects.none())
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
     else :
         message = ''
         try :
-            doc = document.objects.get(bib_no=bib_no_id)
-        except document.DoesNotExist:
+            doc = Document.objects.get(bib_no=bib_no_id)
+        except Document.DoesNotExist:
             raise Http404
         is_importform = False
         form_doc = DocForm(instance=doc)
-        extras_formset = modelformset_factory(doc_extra, extra=4,\
+        extras_formset = modelformset_factory(DocExtra, extra=4,\
                 can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=doc_extra.objects.filter(doc_id=doc))
+        form_extras = extras_formset(queryset=DocExtra.objects.filter(doc_id=doc))
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
 # TODO
@@ -701,7 +701,7 @@ def doc_add(request, bib_no_id=None):
 #        if (u""+c.category.name) not in needs:
 #            needs[u"" + c.category.name] = []
 #        needs[u"" + c.category.name].append(c.need)
-    cat = category.objects.filter()
+    cat = Category.objects.filter()
     dict_response = _get_dict_response(request)
     dict_response["bib_no"] = bib_no_id
     dict_response["is_importform"] = is_importform
@@ -723,13 +723,13 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-    documents = document.objects.filter(doc_status__user_lend=v_user,
-                                        doc_status__non_user_lend__isnull=True,
-                                        doc_status__return_lend=False)
-    documents_non_user = document.objects.filter(
-                                        doc_status__user_lend=v_user,
-                                        doc_status__non_user_lend__isnull=False,
-                                        doc_status__return_lend=False)
+    documents = Document.objects.filter(DocStatus__user_lend=v_user,
+                                        DocStatus__non_user_lend__isnull=True,
+                                        DocStatus__return_lend=False)
+    documents_non_user = Document.objects.filter(
+                                        DocStatus__user_lend=v_user,
+                                        DocStatus__non_user_lend__isnull=False,
+                                        DocStatus__return_lend=False)
     return _list(request, documents, documents_non_user, 1)
 
 @login_required
@@ -786,7 +786,7 @@ def bibtex_export(request):
     if Bibtex.bibtex_lock.locked():
         hint = "Der Export läuft. Bitte besuchen sie uns in ein paar Minuten wieder."
     elif "bibtex_export" in request.POST:
-        export_documents = document.objects.filter(
+        export_documents = Document.objects.filter(
                 bib_date__isnull=True,
                 )
         Bibtex().export_data(
@@ -814,10 +814,10 @@ def bibtex_export(request):
 
 @login_required
 def user(request):
-    lend_documents = document.objects.filter(
-            doc_status__return_lend__exact = False,
-            doc_status__user_lend__exact = request.user,
-            doc_status__non_user_lend__exact = None)
+    lend_documents = Document.objects.filter(
+            DocStatus__return_lend__exact = False,
+            DocStatus__user_lend__exact = request.user,
+            DocStatus__non_user_lend__exact = None)
     return _list(request, lend_documents)
 
 def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
@@ -854,9 +854,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
 
     if sort is not None:
         if sort == "date":
-            documents = documents.order_by("-doc_status__date")
+            documents = documents.order_by("-DocStatus__date")
         elif sort == "-date":
-            documents = documents.order_by("doc_status__date")
+            documents = documents.order_by("DocStatus__date")
         else:
             documents = documents.order_by(sort)
     miss_query = None 
@@ -877,9 +877,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     selected_filter = request.GET.get('starts', default='all')
     startswith_filter[selected_filter][0] += ' selected=selected'
     if form != 2:
-        miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                             doc_status__return_lend = False)
-        miss_query = miss_query.order_by('-doc_status__date')
+        miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
+                                             DocStatus__return_lend = False)
+        miss_query = miss_query.order_by('-DocStatus__date')
     params_starts = _truncate_get(request, 'starts', 'page')
     dict_response = _get_dict_response(request)
     dict_response["documents"] = documents

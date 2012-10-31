@@ -15,7 +15,7 @@ def _send_mail(receiver, subject, emailcontent, **context):
         final_mail.send()
 
 def _document_missing_email(document, user):
-    email = emails.objects.get(name="Vermisst Gemeldet")
+    email = Emails.objects.get(name="Vermisst Gemeldet")
     plaintext = Template(email.text)
     member = User.objects.values_list('email' flat=True)
     receiver = user.email
@@ -30,8 +30,8 @@ def _document_expired_email(day_amount):
     current_day = datetime.date.today()
     expired_docs = doc_status.objects.filter(return_lend=False,
             date_term_lend__exact=current_day + datetime.timedelta(day_amount))
-    user_email = emails.objects.get(name="Frist Erinerungsmail(B)")
-    nonuser_email = emails.objects.get(name="Frist Erinnerungsmail(E)")
+    user_email = Emails.objects.get(name="Frist Erinerungsmail(B)")
+    nonuser_email = Emails.objects.get(name="Frist Erinnerungsmail(E)")
     plaintext_user = Template(user_email.text)
     plaintext_nonuser = Template(nonuser_email.text)
 

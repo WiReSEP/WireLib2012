@@ -8,15 +8,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms.formsets import formset_factory
 from django.utils.translation import ugettext as _
-from documents.models import author
-from documents.models import document
+from documents.models import Author
+from documents.models import Document
 from documents.models import EmailValidation
-from documents.models import non_user
-from documents.models import publisher
-from documents.models import tel_non_user
-from documents.models import tel_user
-from documents.models import user_profile
-from documents.models import doc_extra
+from documents.models import NonUser
+from documents.models import Publisher
+from documents.models import TelNonUser
+from documents.models import TelUser
+from documents.models import UserProfile
+from documents.models import DocExtra
 import mimetypes
 import urllib
 
@@ -44,7 +44,7 @@ class EmailValidationForm(forms.Form):
         
 class ProfileForm(ModelForm): 
     class Meta: 
-        model = user_profile
+        model = UserProfile
         exclude = ('user_id')
  
 class NameForm(ModelForm):
@@ -54,7 +54,7 @@ class NameForm(ModelForm):
 
 class TelNonUserForm(ModelForm):
     class Meta:
-        model = tel_non_user
+        model = TelNonUser
         exclude = ('non_user')
 
 class UploadFileForm(forms.Form):
@@ -62,23 +62,23 @@ class UploadFileForm(forms.Form):
 
 class DocForm(ModelForm):
     authors = forms.ModelMultipleChoiceField(
-            queryset=author.objects.all().order_by('last_name'),
+            queryset=Author.objects.all().order_by('last_name'),
             label='Autoren')
     editors = forms.ModelMultipleChoiceField(
-            queryset=author.objects.all().order_by('last_name'), 
+            queryset=Author.objects.all().order_by('last_name'), 
             label='Editoren',
             required=False)
     class Meta:
-        model = document
+        model = Document
         exclude = ('date_of_purchase', 'ub_date', 'bib_date', 'last_edit_by')
 
 class AuthorAddForm(ModelForm):
     class Meta:
-        model = author
+        model = Author
        
 class PublisherAddForm(ModelForm):
     class Meta:
-        model = publisher
+        model = Publisher
 
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -94,4 +94,4 @@ class SelectUser(forms.Form):
 
 class NonUserForm(ModelForm):
     class Meta:
-        model = non_user
+        model = NonUser

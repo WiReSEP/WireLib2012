@@ -10,13 +10,7 @@ from django.template import loader
 from documents.lib.exceptions import LendingError
 
 
-"""
-class ManyToManyField_NoSyncdb(models.ManyToManyField):
-    def __init__(self, *args, **kwargs):
-        super(ManyToManyField_NoSyncdb,self).__init__(*args, **kwargs)
-        self.creates_table = False
-"""
-class need(models.Model):
+class Need(models.Model):
     name = models.CharField(max_length=30, primary_key=True)
     class Meta:
         verbose_name = "Mussfeld"
@@ -24,9 +18,9 @@ class need(models.Model):
     def __unicode__(self):
         return self.name
     
-class need_groups(models.Model):
+class NeedGroups(models.Model):
     name = models.CharField(max_length=100)
-    needs = models.ManyToManyField(need, verbose_name="Mussfelder")
+    needs = models.ManyToManyField(Need, verbose_name="Mussfelder")
     class Meta:
         verbose_name = "Mussfeldgruppe"
         verbose_name_plural = "Mussfeldgruppen"
@@ -34,9 +28,9 @@ class need_groups(models.Model):
     def __unicode__(self):
         return self.name
 
-class category(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
-    needs = models.ManyToManyField(need_groups, verbose_name="Mussfelder")
+    needs = models.ManyToManyField(NeedGroups, verbose_name="Mussfelder")
     class Meta:
         verbose_name = "Kategorie"
         verbose_name_plural = "Kategorien"
@@ -44,7 +38,7 @@ class category(models.Model):
     def __unicode__(self):
         return self.name
         
-class publisher(models.Model):
+class Publisher(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
     
     def __unicode__(self):
@@ -55,7 +49,7 @@ class publisher(models.Model):
         verbose_name_plural = "Publisher"
 
 
-class author(models.Model):
+class Author(models.Model):
     first_name = models.CharField("vorname",max_length=30, null=True)
     last_name = models.CharField("nachname",max_length=30)
     class Meta:
@@ -67,7 +61,7 @@ class author(models.Model):
     def __unicode__(self):
         return (self.first_name + ' ' + self.last_name)
 
-class document(models.Model):
+class Document(models.Model):
     bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
     inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
@@ -75,10 +69,10 @@ class document(models.Model):
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=200)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
-    category = models.ForeignKey(category,verbose_name="Kategorie")
+    category = models.ForeignKey(Category,verbose_name="Kategorie")
     last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
     last_edit_by = models.ForeignKey(User,verbose_name="Zuletzt geändert von")
-    publisher = models.ForeignKey(publisher, blank=True, null=True)
+    publisher = models.ForeignKey(Publisher, blank=True, null=True)
     year = models.IntegerField("Jahr",blank=True, null=True)
     address = models.CharField("Adresse",max_length=100, blank=True, null=True)
     price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
@@ -89,8 +83,8 @@ class document(models.Model):
     bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
-    authors = models.ManyToManyField(author,
-            through='document_authors',verbose_name="Autoren")
+    authors = models.ManyToManyField(Author,
+            through='DocumentAuthors',verbose_name="Autoren")
     class Meta:
         permissions = (("can_see_price", "Can see price"),
                        ("can_see_locn", "Can see library of congress number"),
@@ -116,7 +110,7 @@ class document(models.Model):
         if user == None:
             user = User.objects.get(id=1)
         self.last_edit_by = user
-        super(document, self).save(*args, **kwargs)
+        super(Document, self).save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
         """
@@ -127,7 +121,7 @@ class document(models.Model):
                 aut.delete()
         if len(self.publisher.document_set.all())==1:
             self.publisher.delete()
-        super(document, self).delete(*args, **kwargs)
+        super(Document, self).delete(*args, **kwargs)
     
     def __status(self):
         """ 
@@ -173,7 +167,7 @@ class document(models.Model):
             else:
                 old.return_lend=True
                 old.save()
-                l = doc_status(
+                l = DocStatus(
                         recent_user = editor,
                         doc_id = self,
                         status = stat,
@@ -183,7 +177,7 @@ class document(models.Model):
                     )
                 l.save()
         except:
-            l = doc_status(
+            l = DocStatus(
                         recent_user = editor,
                         doc_id = self,
                         status = stat,
@@ -203,73 +197,74 @@ class document(models.Model):
             terminate - date_term_lend
         """
         # fürs Übertragen
-        if self.status == document.LEND:
+        if self.status == Document.LEND:
             dstat = self.doc_status_set.latest('date')
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
                 return
         # zum Ausleihen oder Wiederfinden
-        elif self.status == document.ORDERED:
+        elif self.status == Document.ORDERED:
             raise LendingError()
         if editor == None:
             editor = user
-        self.set_status(editor, document.LEND, terminate, user, non_user)
+        self.set_status(editor, Document.LEND, terminate, user, non_user)
 
     def unlend(self, user):
         """ 
         Methode zum zurückgeben 
         """
-        self.set_status(user, document.AVAILABLE)
+        self.set_status(user, Document.AVAILABLE)
 
     def lost(self, user):
         """ 
         Methode zum "Verloren" setzen
         """
-        self.set_status(user, document.LOST)
+        self.set_status(user, Document.LOST)
         
     def missing(self, user):
         """ 
         Methode für Vermisstmeldungen
         """
-        self.set_status(user, document.MISSING)
+        self.set_status(user, Document.MISSING)
 
     def get_editors(self):
         """
         Methode um alle Editoren anzuzeigen
         """
-        auths = self.authors.filter(document_authors__editor=True)
+        auths = self.authors.filter(DocumentAuthors__editor=True)
         return auths
 
     def get_authors(self):
         """
         Methode um alle Autoren anzuzeigen
         """
-        auths = self.authors.filter(document_authors__editor=False)
+        auths = self.authors.filter(DocumentAuthors__editor=False)
         return auths
     def add_author(self, author):
         """
         Methode um dem Dokument einen Autoren zuzuweisen
         """
-        d, dummy = document_authors.objects.get_or_create(document=self, author=author, editor=False)
+        d, dummy = DocumentAuthors.objects.get_or_create(document=self, author=author, editor=False)
         d.save()
 
     def add_editor(self, editor):
         """
         Methode um dem Dokument einen Autoren als Editor zuzuweisen
         """
-        d, dummy = document_authors.objects.get_or_create(document=self, author=editor, editor=True)
+        d, dummy = DocumentAuthors.objects.get_or_create(document=self, author=editor, editor=True)
         d.save()
 
-class document_authors(models.Model):
-    document = models.ForeignKey(document)
-    author = models.ForeignKey(author,verbose_name="autor")
+class DocumentAuthors(models.Model):
+    document = models.ForeignKey(Document)
+    author = models.ForeignKey(Author,verbose_name="autor")
     editor = models.BooleanField(default=False)
+    position = models.IntegerField()
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
         unique_together = ('document', 'author')
 
-class keywords(models.Model):
-    document = models.ForeignKey(document)
+class Keywords(models.Model):
+    document = models.ForeignKey(Document)
     keyword = models.CharField("Schlüsselwort",max_length=200)
     class Meta:
         unique_together = ('document', 'keyword')
@@ -288,13 +283,13 @@ class keywords(models.Model):
         """
         #TODO nach Datenbankerstellung testen, ob user None sein muss
         self.document.save(user)
-        super(keywords, self).save(*args, **kwargs)   
+        super(Keywords, self).save(*args, **kwargs)   
 
-class doc_extra(models.Model):
+class DocExtra(models.Model):
     """
     Bietet die Möglichkeit für mehrere extra Felder für ein Dokument
     """
-    doc_id = models.ForeignKey(document)
+    doc_id = models.ForeignKey(Document)
     bib_field = models.CharField(max_length=40)
     content = models.CharField(max_length=200)
     class Meta:
@@ -311,9 +306,9 @@ class doc_extra(models.Model):
         """
         #TODO nach Datenbankerstellung testen, ob user None sein muss
         self.doc_id.save(user)
-        super(doc_extra, self).save(*args, **kwargs)
+        super(DocExtra, self).save(*args, **kwargs)
 
-class user_profile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     street = models.CharField("Straße",max_length=30)
     number = models.CharField("Nummer",max_length=5)
@@ -335,11 +330,11 @@ class user_profile(models.Model):
     """
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        user_profile.objects.get_or_create(user=instance)
+        UserProfile.objects.get_or_create(user=instance)
  
 post_save.connect(create_user_profile, sender=User)
 
-class tel_user(models.Model):
+class TelUser(models.Model):
     user = models.ForeignKey(User)
     tel_type = models.CharField("Typ", max_length=20)
     tel_nr = models.CharField("Telefonnummer", max_length=20)
@@ -349,7 +344,7 @@ class tel_user(models.Model):
         verbose_name = "Benutzer Tel. Nr."
         verbose_name_plural = "Benutzer Tel. Nr."
 
-class non_user(models.Model):
+class NonUser(models.Model):
     first_name = models.CharField("vorname",max_length=30)
     last_name = models.CharField("nachname",max_length=30)
     email = models.EmailField("e-mail",max_length=50)
@@ -364,9 +359,9 @@ class non_user(models.Model):
     def __unicode__(self):
         return (self.last_name + ', ' + self.first_name)
 
-class tel_non_user(models.Model):
+class TelNonUser(models.Model):
 
-    non_user = models.ForeignKey(non_user, verbose_name="externer")
+    non_user = models.ForeignKey(NonUser, verbose_name="externer")
     tel_type = models.CharField("tel Typ ( Privat,Büro,Mobil ... )",max_length=20)
     tel_nr = models.CharField("tel Nr.",max_length=20)
     # TODO eigene Telefonnummerklasser
@@ -375,10 +370,10 @@ class tel_non_user(models.Model):
         verbose_name = "Externer Tel. Nr."
         verbose_name_plural = "Externer Tel. Nr."
 
-class doc_status(models.Model):
+class DocStatus(models.Model):
     recent_user = models.ForeignKey(User, related_name='recent_user') 
         #auftraggebender User
-    doc_id = models.ForeignKey(document) 
+    doc_id = models.ForeignKey(Document) 
     status = models.IntegerField() 
         #in welchen Status wurde geändert?
     date = models.DateTimeField(auto_now_add=True) 
@@ -389,7 +384,7 @@ class doc_status(models.Model):
         #Ende der Rückgabefrist
     user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender User
-    non_user_lend = models.ForeignKey(non_user, blank=True, null=True) 
+    non_user_lend = models.ForeignKey(NonUser, blank=True, null=True) 
         #ausleihender non_User
     class Meta:
         permissions = (("can_lend", "Can lend documents"),
@@ -483,7 +478,7 @@ class EmailValidation(models.Model):
         return True
         
 
-class emails(models.Model):
+class Emails(models.Model):
     name = models.CharField(max_length=30)
     subject = models.CharField("Betreff", max_length=50)
     text = models.TextField()

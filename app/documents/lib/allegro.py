@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8
 import threading
-from documents.models import document
-from documents.models import doc_extra
+from documents.models import Document
+from documents.models import DocExtra
 from documents.lib.exceptions import ExportError
 from datetime import datetime
 from django.conf import settings
@@ -39,7 +39,7 @@ class Allegro(threading.Thread):
         Allegro-Format zurück.
         """
         Allegro.docs_to_export = True
-        allegro_query = document.objects.select_related().filter(
+        allegro_query = Document.objects.select_related().filter(
                 ub_date__isnull=True, 
                 category__name__iexact='book')
         if 0 == allegro_query.count():
@@ -78,8 +78,8 @@ class Allegro(threading.Thread):
         Diese Methode übernimmt die Erstellung des richtigen Export-Formates der
         einzelnen Dokumente
         """
-        extra_fields = document.doc_extra_set.all()
-        keywords_db = document.keywords_set.all()
+        extra_fields = document.DocExtra_set.all()
+        keywords_db = document.Keywords_set.all()
         authors = list(document.authors.all())
         line_end = u"\n"
         #speichern aller benötigten Feldinhalte in den Rückgabestring
@@ -94,13 +94,13 @@ class Allegro(threading.Thread):
         try:
             vol = extra_fields.get(bib_field__iexact="volume")
             vol = vol.content
-        except doc_extra.DoesNotExist:
+        except DocExtra.DoesNotExist:
             vol = u""
         doc_str += u"" + allegro_dict[u"volume"] + u" " + vol + line_end
         try:
             series = extra_fields.get(bib_field__iexact="series")
             series = series.content
-        except doc_extra.DoesNotExist:
+        except DocExtra.DoesNotExist:
             series = u""
         doc_str += allegro_dict[u"series"] + u" " + series + line_end
         auth = allegro_dict[u"author"]

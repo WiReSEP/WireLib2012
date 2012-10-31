@@ -39,18 +39,18 @@ def _gen_sec_link(path):
     return '%s%s/%s%s' % (uri_prefix, token, hextime, path)
 
 def _filter_history(doc):
-    new_history = doc.doc_status_set.order_by('-date')[0:10]
+    new_history = doc.DocStatus_set.order_by('-date')[0:10]
     return new_history
 
 def _show_keywords(doc):
-    keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="")
+    keywords = doc.Keywords_set.order_by('-keyword').exclude(keyword__iexact="")
     return keywords
 
 def _diff_authors(doc):
-    autors = doc.document_authors_set.order_by('-author').exclude(editor=True)
-    return autors
+    authors = doc.DocumentAuthors_set.order_by('-author').exclude(editor=True)
+    return authors
 
 def _diff_editors(doc):
-    editors = doc.document_authors_set
+    editors = doc.DocumentAuthors_set
     editors = editors.order_by('-author').exclude(editor=False)
     return editors

@@ -2,19 +2,19 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from documents.models import author
-from documents.models import category
-from documents.models import document
-from documents.models import document_authors
-from documents.models import emails
-from documents.models import keywords
-from documents.models import need
-from documents.models import need_groups
-from documents.models import non_user
-from documents.models import publisher
-from documents.models import tel_non_user
-from documents.models import tel_user
-from documents.models import user_profile
+from documents.models import Author
+from documents.models import Category
+from documents.models import Document
+from documents.models import DocumentAuthors
+from documents.models import Emails
+from documents.models import Keywords
+from documents.models import Need
+from documents.models import NeedGroups
+from documents.models import NonUser
+from documents.models import Publisher
+from documents.models import TelNonUser
+from documents.models import TelUser
+from documents.models import UserProfile
 
 """
 Definition der Adminseiten der Models.
@@ -30,15 +30,15 @@ nur eine Auswahl an Attributen des Models an.
  
  #TODO Massenfunktionen einfügen á la https://docs.djangoproject.com/en/dev/ref/contrib/admin/actions/
 class keywords_inline(admin.StackedInline):
-    model = keywords
+    model = Keywords
 
 class tel_user_inline(admin.StackedInline):
-    model = tel_user
+    model = TelUser
     fk_name = 'user'
     extra = 1
 
 class need_inline(admin.StackedInline):
-    model = need
+    model = Need
     extra = 1
 
 class need_groups_admin(admin.ModelAdmin):
@@ -56,7 +56,7 @@ class author_admin(admin.ModelAdmin):
     search_fields = ('first_name', 'last_name')
 
 class document_authors_inline(admin.StackedInline):
-    model = document_authors
+    model = DocumentAuthors
 
 class document_admin(admin.ModelAdmin):
     list_display = ('bib_no', 'inv_no', 'title', 
@@ -74,14 +74,14 @@ class document_admin(admin.ModelAdmin):
     inlines = [document_authors_inline, keywords_inline]
     
 class tel_non_user_inline(admin.TabularInline):
-    model = tel_non_user
+    model = TelNonUser
     
 class non_user_admin(admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'email')
     inlines = [tel_non_user_inline,]
 
 class user_profile_inline(admin.StackedInline):
-    model = user_profile
+    model = UserProfile
     fk_name = 'user'
     max_num = 1
 
@@ -96,14 +96,14 @@ class emails_admin(admin.ModelAdmin):
                                                         
 
 #Registrierung aller anzuzeigenden Tabellen.
-admin.site.register(publisher, publisher_admin)
-admin.site.register(author, author_admin)
-admin.site.register(category, category_admin)
-admin.site.register(document, document_admin)
-admin.site.register(need_groups, need_groups_admin)
+admin.site.register(Publisher, publisher_admin)
+admin.site.register(Author, author_admin)
+admin.site.register(Category, category_admin)
+admin.site.register(Document, document_admin)
+admin.site.register(NeedGroups, need_groups_admin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(non_user, non_user_admin)
-admin.site.register(emails, emails_admin)
+admin.site.register(NonUser, non_user_admin)
+admin.site.register(Emails, emails_admin)
 #admin.site.register(keywords, keywords_admin)
 # TODO: evtl. wieder ein Statusfeld in document_admin einfügen
