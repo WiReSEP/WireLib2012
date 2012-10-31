@@ -249,6 +249,45 @@ class Bibtex(threading.Thread):
     ausgeführt werden.
     """
 
+    def lex(input_str):
+        """ Die Analyse der Lexik
+        """
+        self.tokens = (
+                'ENTRY_BEGIN',
+                'ENTRY_TYPE',
+                'ID',
+                'FIELD_NAME', 'EQUALS', 'FIELD_CONTENT', 'COMMA',
+                'LPARENT', 'RPARENT', 'QUOTATION_MARK',
+                )
+        
+        #   Tokens
+        t_ENTRY_BEGIN = r'@'
+        t_ENTRY_TYPE = r'[aAbBcCiImMpPtTuU]\w*'
+        t_ID = r'\w*'
+        t_FIELD_NAME = r'\w*'
+        t_EQUALS = r'='
+        
+        t_FIELD_CONTENT = r'(\{(.|\n)*\} | "(.|\n)*" )'
+        
+        t_COMMA = r','
+        t_LPARENT = r'\{'
+        t_RPARENT = r'\}'
+        t_QUOTATION_MARK = r'"'
+        
+        #   Ignored characters
+        t_ignore = " \t"
+        
+        def t_error(t):
+            raise TypeError("Invalid Format in %s" % (t.value))
+        
+        # Build the lexer
+        import ply.lex as lex
+        lex.lex()
+
+        lex.input(input_str)
+        for tok in iter(lex.token, None):
+            print repr(token.value), repr(token.type)
+
     @staticmethod
     def export_doc(document):
         """Diese Methode wandelt ein Dokument in einen BibTeX-kompatiblen
@@ -369,42 +408,16 @@ class Bibtex(threading.Thread):
 # =================================
 #
 
-import ply.yacc as yacc
 
-tokens = (
-        'ENTRY_TYPE',
-        'ID',
-        'FIELD_NAME', 'EQUALS', 'FIELD_CONTENT',
-        'LPARENT', 'RPARENT', 'QUOTATION_MARK',
-        )
-
-#   Tokens
-t_ENTRY_TYPE = r'[aAbBcCiImMpPtTuU]\w*'
-t_ID = r'\w*'
-t_FIELD_NAME = r'\w*'
-t_EQUALS = r'='
-t_FIELD_CONTENT = r'.*'
-t_LPARENT = r'{'
-t_RPARENT = r'}'
-t_QUOTATION_MARK = r'"'
-
-#   Ignored characters
-t_ignore = " \t"
-
-def t_error(t):
-    raise TypeError("Invalid Format in %s" % (t.value))
-
-# Build the lexer
-import ply.lex as lex
-lex.lex()
-
-class BibtexEntry(object):
-    def __init__(self, field, content):
-        self.field = field
-        self.content = content
-
-    def __rep__(self):
-        return "Entry: %s = %s" % (self.field, self.content)
+#class BibtexEntry(object):
+#    def __init__(self, field, content):
+#        self.field = field
+#        self.content = content
+#
+#    def __rep__(self):
+#        return "Entry: %s = %s" % (self.field, self.content)
 
 # Die Produktionen
+""" TODO Zu testen sind geschweifte Klammern im Content, um das Handling sicher
+zu stellen. Weiter fehlen noch die Produktionen für die Concatenation mit # """
 
