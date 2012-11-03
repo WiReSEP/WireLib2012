@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.template import Context
 from django.template import loader
 from documents.lib.exceptions import LendingError
+from sortedm2m.fields import SortedManyToManyField
 
 
 class Need(models.Model):
@@ -83,7 +84,7 @@ class Document(models.Model):
     bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
-    authors = models.ManyToManyField(Author,
+    authors = SortedManyToManyField(Author,
             through='DocumentAuthors',verbose_name="Autoren")
     class Meta:
         permissions = (("can_see_price", "Can see price"),
