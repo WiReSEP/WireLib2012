@@ -249,6 +249,30 @@ class Bibtex(threading.Thread):
     ausgeführt werden.
     """
 
+    bibtex_lock = threading.Lock()
+    """ Stellt sicher, dass nur ein Bibtex-Thread läuft
+    """
+    def export_data(self, documents, export_path):
+        """ Zum setzen der für den Export notwendigen Daten.
+        """
+        self.documents = documents
+        self.export_path = export_path
+        return self
+
+    def run(self):
+        if Bibtex.bibtex_lock.locked():
+            return
+        if not (self.documents and self.export_path):
+            return
+        Bibtex.bibtex_lock.acquire()
+        self.__export_docs(self.documents, self.export_path)
+        Bibtex.bibtex_lock.release()
+
+    def do_import(self, file):
+        """Diese Methode importiert die Dokumente einer Bibtex-Datei.
+        """
+        UglyBibtex(file).do_import()
+
     def lex(input_str):
         """ Die Analyse der Lexik
         """
