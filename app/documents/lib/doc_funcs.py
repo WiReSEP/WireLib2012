@@ -173,7 +173,7 @@ def _extract_author(author):
     try :
         auth_db = Author.objects.get(last_name=last_name, 
             first_name=first_name)
-    except author.DoesNotExist:
+    except Author.DoesNotExist:
         auth_db = Author(last_name=last_name,
             first_name=first_name)
     auth_db.save()
