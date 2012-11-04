@@ -168,8 +168,8 @@ def _extract_author(author):
         first_name = au[1]
     else :
         name = au[0].split(" ")
-        last_name = name_f[-1]
-        first_name = " ".join(name_f[:-1])
+        last_name = name[-1]
+        first_name = " ".join(name[:-1])
     try :
         auth_db = Author.objects.get(last_name=last_name, 
             first_name=first_name)
