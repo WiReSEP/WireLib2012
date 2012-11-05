@@ -197,10 +197,6 @@ class UglyBibtex(object):
             except DuplicateKeyError, e:
                 self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
-            except BaseException, e:
-                self.errout.write("Unexpected Error\n")
-                print e
-                self.__log_error()
 
     def __insert_field(self, key_val):
         if key_val[0] == u'author' or key_val[0] == u'editor':
