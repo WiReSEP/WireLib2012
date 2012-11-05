@@ -231,34 +231,48 @@ class Document(models.Model):
         """
         Methode um alle Editoren anzuzeigen
         """
-        auths = self.authors.filter(DocumentAuthors__editor=True)
+        auths = self.authors.filter(DocumentAuthors__editor=True).order_by("position")
         return auths
 
     def get_authors(self):
         """
         Methode um alle Autoren anzuzeigen
         """
-        auths = self.authors.filter(DocumentAuthors__editor=False)
+        auths = self.authors.filter(DocumentAuthors__editor=False).order_by("position")
         return auths
+
     def add_author(self, author):
         """
         Methode um dem Dokument einen Autoren zuzuweisen
         """
-        d, dummy = DocumentAuthors.objects.get_or_create(document=self, author=author, editor=False)
-        d.save()
+        self._add_author_or_editor(author, False)
 
     def add_editor(self, editor):
         """
         Methode um dem Dokument einen Autoren als Editor zuzuweisen
         """
-        d, dummy = DocumentAuthors.objects.get_or_create(document=self, author=editor, editor=True)
+        self._add_author_or_editor(editor, True)
+
+    def _add_author_or_editor(self, obj, is_editor):
+        from django.db.models import Max
+        params = dict()
+        connections = DocumentAuthors.objects.filter(document=self,editor=is_editor)
+        max_val = connections.aggregate(Max('sort_value'))["sort_value__max"]
+        if max_val is None:
+            max_val = 0
+        else :
+            max_val = max_val + 1
+        params["sort_value"] = max_val + 1
+        d, dummy = DocumentAuthors.objects.get_or_create(document=self,
+                author=obj, editor=is_editor, sort_value=max_val)
         d.save()
 
 class DocumentAuthors(models.Model):
     document = models.ForeignKey(Document)
     author = models.ForeignKey(Author,verbose_name="autor")
     editor = models.BooleanField(default=False)
-    position = models.IntegerField()
+    sort_value = models.IntegerField()
+    _sort_field_name = "sort_value"
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"

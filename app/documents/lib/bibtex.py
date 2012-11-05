@@ -318,13 +318,13 @@ class Bibtex(threading.Thread):
         String um.
         """
          # init der Variablen
-        extra_fields = list(document.doc_extra_set.all())
+        extra_fields = list(document.docextra_set.all())
         authors = list(document.authors.filter(
-            document_authors__editor = False
-            ))
+            documentauthors__editor = False
+            ).order_by("documentauthors__sort_value"))
         editors = list(document.authors.filter(
-            document_authors__editor = True
-            ))
+            documentauthors__editor = True
+            ).order_by("documentauthors__sort_value"))
         category = document.category.name
         bib_no = document.bib_no
         inv_no = document.inv_no

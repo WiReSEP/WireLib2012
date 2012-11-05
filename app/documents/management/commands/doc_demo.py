@@ -3,6 +3,8 @@ from django.core.management.base import BaseCommand
 #from optparse import make_option
 
 from documents.lib.bibtex import UglyBibtex
+from django.db.utils import IntegrityError
+from optparse import make_option
 import os
 
 #Für die 
@@ -11,17 +13,25 @@ class Command(BaseCommand):
     """ Dieses Commando erfordert einen Ordner 'olddb' im Projekt-Verzeichnis,
     welches Bibtex-Dateien enthält.
     """
+    option_list = BaseCommand.option_list + (
+            make_option('--bibtex',
+                action='store_true',
+                dest='bibtex_only',
+                default=False,
+                help="Importiert nur die Bibtex-Dateien"),
+            )
 
     help = """Hier kann der documents-App eine Demo-Session hinzugefügt werden.
 
     Das Commando setzt einen Ordner 'olddb' im Projekt-Verzeichnis vorraus,
     welcher Bibtex-Dateien enthält."""
-    args = ""
+    args = "<bibtex_only>"
 
     def handle(self, *args, **options):
-        self.default_import_rules()
-        self.bibtex_categories()
-        Command.__base_init()
+        if not options.get("bibtex_only"):
+            self.default_import_rules()
+            self.bibtex_categories()
+            Command.__base_init()
 
         for file in os.listdir('olddb'):
             print 'handling', file
@@ -50,34 +60,76 @@ class Command(BaseCommand):
     
         #Mussfeldergruppen(name)
         self.g_author_editor= NeedGroups(name='author_v_editor')
-        self.g_author_editor.save()
         self.g_author_editor.needs.add('author')
         self.g_author_editor.needs.add('editor')
-        self.g_author_editor.save()
         self.g_title = NeedGroups(name='title')
-        self.g_title.save()
         self.g_title.needs.add('title')
-        self.g_title.save()
         self.g_publisher = NeedGroups(name='publisher')
-        self.g_publisher.save()
         self.g_publisher.needs.add('publisher')
-        self.g_publisher.save()
         self.g_year = NeedGroups(name='year')
-        self.g_year.save()
         self.g_year.needs.add('year')
-        self.g_year.save()
         self.g_author = NeedGroups(name='author')
-        self.g_author.save()
         self.g_author.needs.add('auth')
-        self.g_author.save()
         self.g_school = NeedGroups(name='school')
-        self.g_school.save()
         self.g_school.needs.add('school')
-        self.g_school.save()
         self.g_note = NeedGroups(name='note')
-        self.g_note.save()
         self.g_note.needs.add('note')
-        self.g_note.save()
+        try :
+            self.g_author_editor.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_author_editor.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_title.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_title.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_publisher.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_publisher.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_year.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_year.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_author.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_author.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_school.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_school.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_note.save()
+        except IntegrityError:
+            pass
+        try :
+            self.g_note.save()
+        except IntegrityError:
+            pass
 
     def bibtex_categories(self):
         """ Erzeugt die meist genutzten BibTeX Kategorien die für eine
@@ -85,48 +137,66 @@ class Command(BaseCommand):
         """
         from documents.models import Category
 
-        book = Category(name='book')
-        book.save()
-        book.needs.add(self.g_author_editor)
-        book.needs.add(self.g_title)
-        book.needs.add(self.g_publisher)
-        book.needs.add(self.g_year)
-        book.save()
+        try :
+            book = Category(name='book')
+            book.save()
+            book.needs.add(self.g_author_editor)
+            book.needs.add(self.g_title)
+            book.needs.add(self.g_publisher)
+            book.needs.add(self.g_year)
+            book.save()
+        except IntegrityError:
+            pass
         
-        unpub = Category(name='unpublished')
-        unpub.save()
-        unpub.needs.add(self.g_author)
-        unpub.needs.add(self.g_title)
-        unpub.needs.add(self.g_note)
-        unpub.save()
+        try :
+            unpub = Category(name='unpublished')
+            unpub.save()
+            unpub.needs.add(self.g_author)
+            unpub.needs.add(self.g_title)
+            unpub.needs.add(self.g_note)
+            unpub.save()
+        except IntegrityError:
+            pass
         
-        proj = Category(name='projectwork')
-        proj.save()
+        try :
+            proj = Category(name='projectwork')
+            proj.save()
+        except IntegrityError:
+            pass
         
-        phdt = Category(name='phdthesis')
-        phdt.save()
-        phdt.needs.add(self.g_author)
-        phdt.needs.add(self.g_title)
-        phdt.needs.add(self.g_school)
-        phdt.needs.add(self.g_year)
-        phdt.save()
+        try :
+            phdt = Category(name='phdthesis')
+            phdt.save()
+            phdt.needs.add(self.g_author)
+            phdt.needs.add(self.g_title)
+            phdt.needs.add(self.g_school)
+            phdt.needs.add(self.g_year)
+            phdt.save()
+        except IntegrityError:
+            pass
         
-        bach = Category(name='bachelorthesis')
-        bach.save()
-        bach.needs.add(self.g_author)
-        bach.needs.add(self.g_title)
-        bach.needs.add(self.g_school)
-        bach.needs.add(self.g_year)
-        bach.save()
+        try :
+            bach = Category(name='bachelorthesis')
+            bach.save()
+            bach.needs.add(self.g_author)
+            bach.needs.add(self.g_title)
+            bach.needs.add(self.g_school)
+            bach.needs.add(self.g_year)
+            bach.save()
+        except IntegrityError:
+            pass
         
-        mast = Category(name='mastersthesis')
-        mast.save()
-        mast.needs.add(self.g_author)
-        mast.needs.add(self.g_title)
-        mast.needs.add(self.g_school)
-        mast.needs.add(self.g_year)
-        mast.needs.add(self.g_author)
-        mast.save()
+        try :
+            mast = Category(name='mastersthesis')
+            mast.save()
+            mast.needs.add(self.g_author)
+            mast.needs.add(self.g_title)
+            mast.needs.add(self.g_school)
+            mast.needs.add(self.g_year)
+            mast.needs.add(self.g_author)
+            mast.save()
+        except IntegrityError:
+            pass
 
     @staticmethod
     def __base_init():
@@ -145,82 +215,130 @@ class Command(BaseCommand):
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user1.set_password('sep2012')
-        user1.save()
+        try :
+            user1.save()
+        except IntegrityError:
+            pass
         user2 = User(username="User2", first_name="Stephan", last_name="Sobol", 
                   email="user2@van-nahl.org", password=hash("sep2012"), 
                   is_staff=False, is_active=True, is_superuser=False, 
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user2.set_password("sep2012")
-        user2.save()
+        try :
+            user2.save()
+        except IntegrityError:
+            pass
         user3 = User(username="User3", first_name="Eric", last_name="Anders", 
                   email="user3@van-nahl.org", password=hash("sep2012"), 
                   is_staff=False, is_active=True, is_superuser=False,
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user3.set_password("sep2012")
-        user3.save()
+        try :
+            user3.save()
+        except IntegrityError:
+            pass
         user4 = User(username="User4", first_name="Johann", last_name="Hong", 
                   email="user4@van-nahl.org", password=hash("sep2012"), 
                   is_staff=False, is_active=True, is_superuser=False,
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user4.set_password("sep2012")
-        user4.save()
+        try :
+            user4.save()
+        except IntegrityError:
+            pass
         user5 = User(username="User5", first_name="Marco", last_name="Melzer", 
                   email="user5@van-nahl.org", password=hash("sep2012"), 
                   is_staff=False, is_active=True, is_superuser=False,
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user5.set_password("sep2012")
-        user5.save()
+        try :
+            user5.save()
+        except IntegrityError:
+            pass
         user6 = User(username="User6", first_name="Markus", last_name="Dietrich", 
                   email="user6@van-nahl.org", password=hash("sep2012"), 
                   is_staff=False, is_active=True, is_superuser=False,
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user6.set_password("sep2012")
-        user6.save()
+        try :
+            user6.save()
+        except IntegrityError:
+            pass
         user7 = User(username="User7", first_name="Philipp", last_name="Offensand", 
                   email="user7@van-nahl.org", password=hash("sep2012"), 
                   is_staff=False, is_active=True, is_superuser=False,
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user7.set_password("sep2012")
-        user7.save()
+        try :
+            user7.save()
+        except IntegrityError:
+            pass
         user8 = User(username="User8", first_name="Theodor van", last_name="Nahl", 
                   email="user8@van-nahl.org", password=hash("sep2012"),
                   is_staff=False, is_active=True, is_superuser=False,
                   last_login=datetime.datetime.today(), 
                   date_joined=datetime.datetime.today())
         user8.set_password("sep2012")
-        user8.save()
+        try :
+            user8.save()
+        except IntegrityError:
+            pass
         
         #adressen
         a1 = UserProfile(user_id=user1, street="Musterstraße", number="1",
                           zipcode="12345", city="Musterhausen")
-        a1.save()
+        try :
+            a1.save()
+        except IntegrityError:
+            pass
         a2 = UserProfile(user_id=user2, street="Musterstraße", number="2",
                           zipcode="12345", city="Musterhausen")
-        a2.save()
+        try :
+            a2.save()
+        except IntegrityError:
+            pass
         a3 = UserProfile(user_id=user3, street="Musterstraße", number="3",
                           zipcode="12345", city="Musterhausen")
-        a3.save()
+        try :
+            a3.save()
+        except IntegrityError:
+            pass
         a4 = UserProfile(user_id=user4, street="Musterstraße", number="4",
                           zipcode="12345", city="Musterhausen")
-        a4.save()
+        try :
+            a4.save()
+        except IntegrityError:
+            pass
         a5 = UserProfile(user_id=user5, street="Musterstraße", number="5",
                           zipcode="12345", city="Musterhausen")
-        a5.save()
+        try :
+            a5.save()
+        except IntegrityError:
+            pass
         a6 = UserProfile(user_id=user6, street="Musterstraße", number="6",
                           zipcode="12345", city="Musterhausen")
-        a6.save()
+        try :
+            a6.save()
+        except IntegrityError:
+            pass
         a7 = UserProfile(user_id=user7, street="Musterstraße", number="7",
                           zipcode="12345", city="Musterhausen")
-        a7.save()
+        try :
+            a7.save()
+        except IntegrityError:
+            pass
         a8 = UserProfile(user_id=user8, street="Musterstraße", number="8",
                           zipcode="12345", city="Musterhausen")
-        a8.save()
+        try :
+            a8.save()
+        except IntegrityError:
+            pass
     
         #Gruppe + user->Gruppe
         g_admin = Group(name='Administrator')
@@ -349,7 +467,10 @@ class Command(BaseCommand):
                         'Informationen erkundigen Sie sich entweder bei dem ' + 
                         '{{ user_name }} oder dem Institut. \n\n Diese E-Mail ' + 
                         'wurde automatisch generiert und muss nicht beantwortet werden.')
-        e.save()
+        try :
+            e.save()
+        except IntegrityError:
+            pass
         e = Emails(name='Frist Erinnerungsmail(B)', subject='Erinnerung_Bürge', 
                    text='Sehr geehrter/e {{ user_name }}, \n\n ' +
                         'es wurde festgestellt, dass sich das Dokument {{ document_name }} noch in ' +
@@ -365,7 +486,10 @@ class Command(BaseCommand):
                         'Fax  +49-531-391-3003 \n' +
                         'Gebäude: Hans-Sommer-Straße 65 (Rechenzentrum) 1. Stock (PLZ 38106) \n\n\n' +
                         'Diese E-Mail wurde automatisch generiert und muss nicht beantwortet werden. ')
-        e.save()
+        try :
+            e.save()
+        except IntegrityError:
+            pass
         e = Emails(name='Frist Erinnerungsmail(E)', subject='Erinnerung_Externer', 
                    text='Sehr geehrter/e {{ nonuser_firstname }} {{ nonuser_lastname }} \n\n'+
                         'es wurde festgestellt, dass sich das Dokument {{ document_name }} noch in ihrem Besitz befindet. \n' +
@@ -381,4 +505,7 @@ class Command(BaseCommand):
                         'Fax  +49-531-391-3003 \n' +
                         'Gebäude: Hans-Sommer-Straße 65 (Rechenzentrum) 1. Stock (PLZ 38106) \n\n\n' +
                         'Diese E-Mail wurde automatisch generiert und muss nicht beantwortet werden.  ')
-        e.save()
+        try :
+            e.save()
+        except IntegrityError:
+            pass

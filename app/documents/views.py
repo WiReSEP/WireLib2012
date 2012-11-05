@@ -43,9 +43,9 @@ def _get_dict_response(request):
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
     perms =  v_user.has_perm('documents.can_see_admin')
-    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
-                                             DocStatus__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                             docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')
     return {"user" : v_user, 
             "perm" : perms,
             "miss" : miss_query[0:10],
@@ -240,7 +240,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     #ist das Dokument wirklich vorhanden, wenn ja wird es geladen
     try:
         document_query = Document.objects.get(bib_no=bib_no_id)
-    except document.DoesNotExist:
+    except Document.DoesNotExist:
         raise Http404
     #selbst ausleihen, wenn Status vorhanden
     if 'lend' in request.POST and request.user.is_authenticated():
@@ -266,12 +266,12 @@ def doc_detail(request, bib_no_id, searchtext=""):
     #aktualisieren des Datensatzes
     try:
         document_query = Document.objects.get(bib_no=bib_no_id)
-    except document.DoesNotExist:
+    except Document.DoesNotExist:
         raise Http404
     #lädt den aktuellsten Statussatz - wenn keiner vorhanden: None
     try:
-        lending_query = document_query.DocStatus_set.latest('date')
-    except doc_status.DoesNotExist:
+        lending_query = document_query.docstatus_set.latest('date')
+    except DocStatus.DoesNotExist:
         lending_query = None
     doc_extra_query = DocExtra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
@@ -293,9 +293,9 @@ def doc_detail(request, bib_no_id, searchtext=""):
     keyword = lib_views._show_keywords(document_query)
     editoren = lib_views._diff_editors(document_query)
     autoren = lib_views._diff_authors(document_query)
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                         docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')
     #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
     if len(searchtext) == 1:
         searchmode = 1
@@ -395,9 +395,9 @@ def docs_miss(request):
     """
     Vermisste Dokumente anzeigen
     """
-    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,        
-                                         DocStatus__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')  
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,        
+                                         docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')  
     return _list(request, miss_query, form=2)
                               
 @login_required
@@ -415,9 +415,9 @@ def profile(request, user_id=None):
     else :
         p_user = v_user
     see_groups = v_user.has_perm('documents.can_see_others_groups')
-    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
-                                         DocStatus__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                         docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')
     dict_response = _get_dict_response(request)
     if p_user.id == v_user.id :
         context = Context(dict_response)
@@ -616,7 +616,7 @@ def doc_add(request, bib_no_id=None):
         else :
             try :
                 doc = Document.objects.get(bib_no=bib_no_id)
-            except document.DoesNotExist:
+            except Document.DoesNotExist:
                 raise Http404
             is_importform = False
             form_doc = DocForm(request.POST, instance=doc)
@@ -723,13 +723,13 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-    documents = Document.objects.filter(DocStatus__user_lend=v_user,
-                                        DocStatus__non_user_lend__isnull=True,
-                                        DocStatus__return_lend=False)
+    documents = Document.objects.filter(docstatus__user_lend=v_user,
+                                        docstatus__non_user_lend__isnull=True,
+                                        docstatus__return_lend=False)
     documents_non_user = Document.objects.filter(
-                                        DocStatus__user_lend=v_user,
-                                        DocStatus__non_user_lend__isnull=False,
-                                        DocStatus__return_lend=False)
+                                        docstatus__user_lend=v_user,
+                                        docstatus__non_user_lend__isnull=False,
+                                        docstatus__return_lend=False)
     return _list(request, documents, documents_non_user, 1)
 
 @login_required
@@ -815,9 +815,9 @@ def bibtex_export(request):
 @login_required
 def user(request):
     lend_documents = Document.objects.filter(
-            DocStatus__return_lend__exact = False,
-            DocStatus__user_lend__exact = request.user,
-            DocStatus__non_user_lend__exact = None)
+            docstatus__return_lend__exact = False,
+            docstatus__user_lend__exact = request.user,
+            docstatus__non_user_lend__exact = None)
     return _list(request, lend_documents)
 
 def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
@@ -854,9 +854,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
 
     if sort is not None:
         if sort == "date":
-            documents = documents.order_by("-DocStatus__date")
+            documents = documents.order_by("-docstatus__date")
         elif sort == "-date":
-            documents = documents.order_by("DocStatus__date")
+            documents = documents.order_by("docstatus__date")
         else:
             documents = documents.order_by(sort)
     miss_query = None 
@@ -877,9 +877,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     selected_filter = request.GET.get('starts', default='all')
     startswith_filter[selected_filter][0] += ' selected=selected'
     if form != 2:
-        miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
-                                             DocStatus__return_lend = False)
-        miss_query = miss_query.order_by('-DocStatus__date')
+        miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                             docstatus__return_lend = False)
+        miss_query = miss_query.order_by('-docstatus__date')
     params_starts = _truncate_get(request, 'starts', 'page')
     dict_response = _get_dict_response(request)
     dict_response["documents"] = documents

@@ -112,7 +112,7 @@ def insert_doc(dict_insert, user):
             document_db.save(user)
 
         for editor in editors:
-            editor_db = _extract_author(auth)
+            editor_db = _extract_author(editor)
             document_db.add_editor(editor_db)
             document_db.save(user)
         keywords_db = []
