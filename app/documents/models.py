@@ -8,7 +8,6 @@ from django.db.models.signals import post_save
 from django.template import Context
 from django.template import loader
 from documents.lib.exceptions import LendingError
-from sortedm2m.fields import SortedManyToManyField
 
 
 class Need(models.Model):
