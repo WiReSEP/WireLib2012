@@ -51,11 +51,11 @@
 	  <tr>
 		  <td><b>Autor:</b></td>
 		  <td>
-			{% for a in autoren %}
-			        {{a.author}}
+			{% for a in authors %}
+			        {{ a }}
 			        {% if not forloop.last %},{% endif %}
 			{% endfor %}
-		    {% if not autoren %}
+		    {% if not authors %}
 	            -
 	        {% endif %}
 		  </td>
@@ -63,11 +63,11 @@
 	<tr>
 	    <td><b>Editor:</b></td>
 	    <td>	
-		{% for e in editoren %}
-			        {{e.author}}
+		{% for e in editors %}
+			        {{ e }}
 			        {% if not forloop.last %},{% endif %}
 	    {% endfor %}
-	    {% if not editoren %}
+	    {% if not editors %}
 	        -
 	    {% endif %}
 		</td>

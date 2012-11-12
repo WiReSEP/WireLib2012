@@ -43,7 +43,11 @@
 		   </div>
 		<div id="extras">
 		<div id="authors">{% spaceless %}
-		{% for au in d.authors.all %} 
+		{% for au in d.get_authors %} 
+		{{ au.first_name }} 
+		{{ au.last_name }}{% if not forloop.last %}, {% endif %}
+		{% endfor %}
+		{% for au in d.get_editors %} 
 		{{ au.first_name }} 
 		{{ au.last_name }}{% if not forloop.last %}, {% endif %}
 		{% endfor %}

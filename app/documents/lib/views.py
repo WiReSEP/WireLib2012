@@ -46,11 +46,16 @@ def _show_keywords(doc):
     keywords = doc.keywords_set.order_by('-keyword').exclude(keyword__iexact="")
     return keywords
 
-def _diff_authors(doc):
-    authors = doc.documentauthors_set.order_by('-author').exclude(editor=True)
-    return authors
+def _clean_errors(form):
+    for item in form.errors:
+        form.errors[item] = ''
 
-def _diff_editors(doc):
-    editors = doc.documentauthors_set
-    editors = editors.order_by('-author').exclude(editor=False)
-    return editors
+def _save_doc_form(form, document, doc_id=False):
+    instances = form.save(commit=False)
+    for instance in instances:
+        if doc_id:
+            instance.doc_id = document
+        else :
+            instance.document = document
+            print 'changing', instance, document, instance.document
+        instance.save()

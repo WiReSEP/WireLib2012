@@ -84,7 +84,7 @@ class Document(models.Model):
     bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
-    authors = SortedManyToManyField(Author,
+    authors = models.ManyToManyField(Author,
             through='DocumentAuthors',verbose_name="Autoren")
     class Meta:
         permissions = (("can_see_price", "Can see price"),
@@ -227,19 +227,22 @@ class Document(models.Model):
         """
         self.set_status(user, Document.MISSING)
 
+    def _order_authors(self, auths):
+        return auths.order_by("documentauthors__sort_value")
+
     def get_editors(self):
         """
         Methode um alle Editoren anzuzeigen
         """
-        auths = self.authors.filter(DocumentAuthors__editor=True).order_by("position")
-        return auths
+        auths = self.authors.exclude(documentauthors__editor=False)
+        return self._order_authors(auths)
 
     def get_authors(self):
         """
         Methode um alle Autoren anzuzeigen
         """
-        auths = self.authors.filter(DocumentAuthors__editor=False).order_by("position")
-        return auths
+        auths = self.authors.exclude(documentauthors__editor=True)
+        return self._order_authors(auths)
 
     def add_author(self, author):
         """
@@ -269,14 +272,18 @@ class Document(models.Model):
 
 class DocumentAuthors(models.Model):
     document = models.ForeignKey(Document)
-    author = models.ForeignKey(Author,verbose_name="autor")
+    author = models.ForeignKey(Author,verbose_name="Autor")
     editor = models.BooleanField(default=False)
-    sort_value = models.IntegerField()
+    sort_value = models.IntegerField("Reihenfolge")
     _sort_field_name = "sort_value"
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
         unique_together = ('document', 'author')
+
+    def __unicode__(self):
+        return unicode({"Dokument": self.document, "Autor":self.author, "Editor": self.editor,
+                "Position": self.sort_value})
 
 class Keywords(models.Model):
     document = models.ForeignKey(Document)

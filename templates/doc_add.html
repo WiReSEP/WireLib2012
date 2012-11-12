@@ -73,6 +73,10 @@ function changeCategory(elem) {
 		  <table>
 			{{ form_doc.as_table }}
 			<fieldset class="doc_add">
+			  <tr><td><b><u>Autoren</u></b></td></tr>
+			  {{ form_authors.as_table }}
+			</fieldset>
+			<fieldset class="doc_add">
 			  <tr><td><b><u>Weitere Einträge</u></b></td></tr>
 			  {{ form_extras.as_table }}
 			</fieldset>

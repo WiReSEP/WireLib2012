@@ -5,14 +5,14 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import Document, DocStatus, DocExtra, Category,\
     EmailValidation, Emails, UserProfile, TelUser, \
-    TelNonUser
+    TelNonUser, DocumentAuthors
 from django.contrib.auth.models import User
 from django.forms.models import modelformset_factory
 from documents.lib.bibtex import Bibtex
 from documents.lib.allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, \
-    TelNonUserForm, NameForm, PublisherAddForm
+    TelNonUserForm, NameForm, PublisherAddForm, AuthorSelectForm, DocExtraForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -291,8 +291,8 @@ def doc_detail(request, bib_no_id, searchtext=""):
     change_document = v_user.has_perm('documents.change_document')
     history = lib_views._filter_history(document_query)
     keyword = lib_views._show_keywords(document_query)
-    editoren = lib_views._diff_editors(document_query)
-    autoren = lib_views._diff_authors(document_query)
+    editors = document_query.get_editors()
+    authors = document_query.get_authors()
     miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
                                          docstatus__return_lend = False)
     miss_query = miss_query.order_by('-docstatus__date')
@@ -323,8 +323,8 @@ def doc_detail(request, bib_no_id, searchtext=""):
     dict_response["change_document"] = change_document
     dict_response["history"] = history
     dict_response["keyword"] = keyword
-    dict_response["editoren"] = editoren
-    dict_response["autoren"] = autoren
+    dict_response["editors"] = editors
+    dict_response["authors"] = authors
     dict_response["searchmode"] = searchmode
     dict_response["searchtext"] = searchtext
     context = Context(dict_response)
@@ -600,100 +600,81 @@ def doc_add(request, bib_no_id=None):
     Datenbank hinzufügen. Dies wird durch Formeingabe ermöglicht.
     """
     success = True
+    message = u''
     v_user = request.user
     if (not v_user.has_perm('documents.add_document') and not v_user.has_perm('documents.change_document') and not v_user.has_perm('documents.can_import')):
         raise PermissionDenied
-    #Web-Interface-Import
-    if 'title' in request.POST:
-        if bib_no_id is None:
-            is_importform = True
-            form_doc = DocForm(request.POST)
-            extras_formset = modelformset_factory(doc_extra, extra=4,\
-                can_delete=True, exclude='doc_id')
-            form_extras = extras_formset(request.POST, queryset=DocExtra.objects.none())
-            form_author = AuthorAddForm(request.POST)
-            form_publisher = PublisherAddForm(request.POST)
-        else :
-            try :
-                doc = Document.objects.get(bib_no=bib_no_id)
-            except Document.DoesNotExist:
-                raise Http404
-            is_importform = False
-            form_doc = DocForm(request.POST, instance=doc)
-            extras_formset = modelformset_factory(DocExtra, extra=4,\
-                can_delete=True, exclude='doc_id')
-            form_extras = extras_formset(
-                                    request.POST,
-                                    queryset=DocExtra.objects.filter(doc_id=doc))
-            form_author = AuthorAddForm(request.POST)
-            form_publisher = PublisherAddForm(request.POST)
-        success = False
-        message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
-        if u'sub_author' in request.POST and form_author.is_valid():
-            form_author.save()
-            message = 'Autor erfolgreich hinzugefügt'
-            for item in form_doc.errors:
-                form_doc.errors[item] = ''
-            success = True
-            form_author = AuthorAddForm()
-        elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
-            doc = form_doc.save(commit=False)
-            doc.save()
-            if form_extras.is_valid():
-                instances = form_extras.save(commit=False)
-                for instance in instances:
-                    instance.doc_id=doc
-                    instance.save()
-                message = 'Daten erfolgreich übernommen'
-            else :
-                message = "Extra-Felder nicht valide"
-            for editor in form_doc.cleaned_data['editors']:
-                doc.add_editor(editor)
-            for author in form_doc.cleaned_data['authors']:
-                doc.add_author(author)
-            doc.save()
-            form_extras = extras_formset(
-                                    queryset=DocExtra.objects.filter(doc_id=doc))
-            if bib_no_id is None:
-                form_doc = DocForm()
-            else :
-                return HttpResponseRedirect("/doc/%s/"%bib_no_id)
-            form_author.errors['first_name'] = ''
-            form_author.errors['last_name'] = ''
-            success = True
-        elif u'sub_publisher' in request.POST and form_publisher.is_valid():
-            form_publisher.save()
-            message = 'Publisher erfolgreich hinzugefügt'
-            for item in form_publisher.errors:
-                form_publisher.errors[item] = ''
-            success = True
-            form_publisher = PublisherAddForm()
-            form_author.errors['first_name'] = ''
-            form_author.errors['last_name'] = ''
-            for item in form_doc.errors:
-                form_doc.errors[item] = ''
-    elif bib_no_id is None:
+
+    if bib_no_id is None:
         is_importform = True
-        message = ''
-        form_doc = DocForm()
-        extras_formset = modelformset_factory(DocExtra, extra=4,\
-                can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=DocExtra.objects.none())
-        form_author = AuthorAddForm()
-        form_publisher = PublisherAddForm()
+        document = Document()
+        query_authors = DocumentAuthors.objects.none()
+        query_editors = DocumentAuthors.objects.none()
+        query_extras = DocExtra.objects.none()
     else :
-        message = ''
+        is_importform = False
         try :
-            doc = Document.objects.get(bib_no=bib_no_id)
+            document = Document.objects.get(bib_no=bib_no_id)
+            query_authors = DocumentAuthors.objects.order_by('sort_value')
+            query_editors = query_authors.filter(editor=True,
+                    document=document)
+            query_authors = query_authors.filter(editor=False,
+                    document=document)
+            query_extras = DocExtra.objects.filter(doc_id=document)
         except Document.DoesNotExist:
             raise Http404
-        is_importform = False
-        form_doc = DocForm(instance=doc)
-        extras_formset = modelformset_factory(DocExtra, extra=4,\
-                can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=DocExtra.objects.filter(doc_id=doc))
+
+    if request.method == 'POST':
+        form_doc = DocForm(request.POST, instance=document)
+        form_authors = AuthorSelectForm(request.POST, instance=document)
+        form_extras = DocExtraForm(request.POST, queryset=query_extras)
+        form_author = AuthorAddForm(request.POST)
+        form_publisher = PublisherAddForm(request.POST)
+
+        if u'sub_author' in request.POST and form_author.is_valid():
+            form_author.save()
+            message = u'Autor erfolgreich hinzugefügt'
+            lib_views._clean_errors(form_doc)
+            lib_views._clean_errors(form_publisher)
+            form_author = AuthorAddForm()
+        elif u'sub_publisher' in request.POST and form_publisher.is_valid():
+            form_publisher.save()
+            message = u'Publisher erfolgreich hinzugefügt'
+            lib_views._clean_errors(form_doc)
+            lib_views._clean_errors(form_author)
+            form_publisher = PublisherAddForm()
+        elif u'submit' in request.POST and form_doc.is_valid():
+            if form_authors.is_valid() and form_extras.is_valid():
+                document = form_doc.save()
+                if form_authors.is_valid():
+                    lib_views._save_doc_form(form_authors, document)
+                else :
+                    success = False
+                if form_extras.is_valid():
+                    lib_views._save_doc_form(form_extras, document, True)
+                else :
+                    success = False
+                document.save()
+                if not bib_no_id is None and success:
+                    return HttpResponseRedirect(reverse('doc', args=(bib_no_id,)))
+                query_extras = DocExtra.objects.filter(doc_id=document)
+                form_extras = DocExtraForm(queryset=query_extras)
+                lib_views._clean_errors(form_author)
+                lib_views._clean_errors(form_publisher)
+            else :
+                success = False
+                message = u'Eingabe nicht vollständig korrekt'
+        else :
+            success = False
+            message = u'Keine Valide Eingabe vorhanden'
+    else :
+        form_doc = DocForm(instance=document)
+        form_authors = AuthorSelectForm(instance=document)
+#        form_editors = AuthorSelectForm(instance=query_editors)
+        form_extras = DocExtraForm(queryset=query_extras)
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
+
 # TODO
 #    category_needs = category_need.objects.all()
     needs = dict()
@@ -707,6 +688,7 @@ def doc_add(request, bib_no_id=None):
     dict_response["is_importform"] = is_importform
     dict_response["category"] = cat
     dict_response["form_doc"] = form_doc
+    dict_response["form_authors"] = form_authors
     dict_response["form_extras"] = form_extras
     dict_response["form_author"] = form_author
     dict_response["form_publisher"] = form_publisher
