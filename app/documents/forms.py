@@ -99,7 +99,18 @@ class SelectUser(forms.Form):
         
     users = UserModelChoiceField(queryset=User.objects.all(), label="", empty_label="")
    
-
 class NonUserForm(ModelForm):
     class Meta:
         model = NonUser
+
+class SearchForm(forms.Form):
+    query = forms.CharField()
+    regex = forms.BooleanField()
+
+class SearchProForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    title = forms.CharField()
+
+#    class media:
+#        js = (,)

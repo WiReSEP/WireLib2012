@@ -19,7 +19,7 @@ class Need(models.Model):
         return self.name
     
 class NeedGroups(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     needs = models.ManyToManyField(Need, verbose_name="Mussfelder")
     class Meta:
         verbose_name = "Mussfeldgruppe"
