@@ -174,5 +174,9 @@ except IOError:
 
 AUTH_PROFILE_MODULE = 'wire.user_profile'
 
+# Diese Option muss angepasst werden, wenn das Projekt in einem Unterordner
+# läuft. Der entsprechende Ordner wäre dann die Eingabe.
+FORCE_SCRIPT_NAME=""
+
 LOGIN_REDIRECT_URL='/'
 LOGIN_URL = '/login'
