@@ -1,3 +1,4 @@
+# vim: set fileencoding=utf-8
 # Django settings for wirelib project.
 
 import sys
