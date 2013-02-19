@@ -44,8 +44,8 @@ urlpatterns = patterns('documents.views',
             name='user.edit.personal.done'), 
 
 #profile
-        url(r'^profile/edit/personal/$', personal, name='user.edit.personal'), 
-        url(r'^profile/edit/phone/$', telpersonal, name='user.edit.phone'),
+        url(r'^profile/edit/personal/$', 'personal', name='user.edit.personal'), 
+        url(r'^profile/edit/phone/$', 'telpersonal', name='user.edit.phone'),
         url(r'^profile/edit/name/$', 'profile_edit_name', name='user.edit.name'), 
 )
 
@@ -67,11 +67,11 @@ urlpatterns += patterns('',
 
 #Links zum Emailaendern 
 urlpatterns += patterns('', 
-        url(r'^email/validation/$', email_validation, name='user.edit.email'), 
-        url(r'^email/validation/processed/$', direct_to_template,  
+        url(r'^email/validation/$', 'email_validation', name='user.edit.email'), 
+        url(r'^email/validation/processed/$', 'direct_to_template',  
             {'template': 'account/email_validation_processed.html'}),
-        url(r'^email/validation/(?P<key>.{70})/$', email_validation_process, name='email_validation_process'),
-        url(r'^email/validation/reset/$', email_validation_reset),
+        url(r'^email/validation/(?P<key>.{70})/$', 'email_validation_process', name='email_validation_process'),
+        url(r'^email/validation/reset/$', 'email_validation_reset'),
 ) 
 
 ###################################

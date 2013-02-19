@@ -15,6 +15,7 @@ from documents.models import Publisher
 from documents.models import TelNonUser
 from documents.models import TelUser
 from documents.models import UserProfile
+from documents.models import DocExtra
 
 """
 Definition der Adminseiten der Models.
@@ -29,36 +30,39 @@ nur eine Auswahl an Attributen des Models an.
  
  
  #TODO Massenfunktionen einfügen á la https://docs.djangoproject.com/en/dev/ref/contrib/admin/actions/
-class keywords_inline(admin.StackedInline):
+class KeywordsInline(admin.StackedInline):
     model = Keywords
 
-class tel_user_inline(admin.StackedInline):
+class ExtrasInline(admin.StackedInline):
+    model = DocExtra
+
+class TelUserInline(admin.StackedInline):
     model = TelUser
     fk_name = 'user'
     extra = 1
 
-class need_inline(admin.StackedInline):
+class NeedInline(admin.StackedInline):
     model = Need
     extra = 1
 
-class need_groups_admin(admin.ModelAdmin):
+class NeedGroupsAdmin(admin.ModelAdmin):
     fields = ['name', 'needs']
 
-class category_admin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     fields = ['name', 'needs']
 
-class publisher_admin(admin.ModelAdmin):
+class PublisherAdmin(admin.ModelAdmin):
     fields = ['name']
 
-class author_admin(admin.ModelAdmin):
+class AuthorAdmin(admin.ModelAdmin):
     fields = ['first_name', 'last_name']
     list_display = ('first_name', 'last_name')
     search_fields = ('first_name', 'last_name')
 
-class document_authors_inline(admin.StackedInline):
+class DocumentAuthorsInline(admin.StackedInline):
     model = DocumentAuthors
 
-class document_admin(admin.ModelAdmin):
+class DocumentAdmin(admin.ModelAdmin):
     list_display = ('bib_no', 'inv_no', 'title', 
                     'publisher', 'ub_date', 'bib_date', 'last_updated', )
     #TODO Filter für Daten (Plural Datum) anpassen, sodass man nicht nach den 
@@ -71,24 +75,24 @@ class document_admin(admin.ModelAdmin):
               'year', 'address', 'price', 'currency', 'date_of_purchase', 
               'ub_date', 'bib_date', 'comment']
     readonly_fields = ('last_edit_by', 'last_updated', 'date_of_purchase')
-    inlines = [document_authors_inline, keywords_inline]
+    inlines = [DocumentAuthorsInline, KeywordsInline, ExtrasInline]
     
-class tel_non_user_inline(admin.TabularInline):
+class TelNonUserInline(admin.TabularInline):
     model = TelNonUser
     
-class non_user_admin(admin.ModelAdmin):
+class NonUserAdmin(admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'email')
-    inlines = [tel_non_user_inline,]
+    inlines = [TelNonUserInline,]
 
-class user_profile_inline(admin.StackedInline):
+class UserProfileInline(admin.StackedInline):
     model = UserProfile
     fk_name = 'user'
     max_num = 1
 
 class CustomUserAdmin(UserAdmin):
-    inlines = [user_profile_inline, tel_user_inline]
+    inlines = [UserProfileInline, TelUserInline]
     
-class emails_admin(admin.ModelAdmin):
+class EmailsAdmin(admin.ModelAdmin):
     pass
     list_display = ('name', 'subject')
    # sollte man, nachdem alle Emails eingefügt worden, entkommentieren TODO
@@ -96,14 +100,14 @@ class emails_admin(admin.ModelAdmin):
                                                         
 
 #Registrierung aller anzuzeigenden Tabellen.
-admin.site.register(Publisher, publisher_admin)
-admin.site.register(Author, author_admin)
-admin.site.register(Category, category_admin)
-admin.site.register(Document, document_admin)
-admin.site.register(NeedGroups, need_groups_admin)
+admin.site.register(Publisher, PublisherAdmin)
+admin.site.register(Author, AuthorAdmin)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Document, DocumentAdmin)
+admin.site.register(NeedGroups, NeedGroupsAdmin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(NonUser, non_user_admin)
-admin.site.register(Emails, emails_admin)
+admin.site.register(NonUser, NonUserAdmin)
+admin.site.register(Emails, EmailsAdmin)
 #admin.site.register(keywords, keywords_admin)
 # TODO: evtl. wieder ein Statusfeld in document_admin einfügen

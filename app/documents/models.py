@@ -8,7 +8,6 @@ from django.db.models.signals import post_save
 from django.template import Context
 from django.template import loader
 from documents.lib.exceptions import LendingError
-from sortedm2m.fields import SortedManyToManyField
 
 
 class Need(models.Model):
@@ -20,7 +19,7 @@ class Need(models.Model):
         return self.name
     
 class NeedGroups(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     needs = models.ManyToManyField(Need, verbose_name="Mussfelder")
     class Meta:
         verbose_name = "Mussfeldgruppe"
@@ -84,7 +83,7 @@ class Document(models.Model):
     bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
-    authors = SortedManyToManyField(Author,
+    authors = models.ManyToManyField(Author,
             through='DocumentAuthors',verbose_name="Autoren")
     class Meta:
         permissions = (("can_see_price", "Can see price"),
@@ -227,42 +226,63 @@ class Document(models.Model):
         """
         self.set_status(user, Document.MISSING)
 
+    def _order_authors(self, auths):
+        return auths.order_by("documentauthors__sort_value")
+
     def get_editors(self):
         """
         Methode um alle Editoren anzuzeigen
         """
-        auths = self.authors.filter(DocumentAuthors__editor=True)
-        return auths
+        auths = self.authors.exclude(documentauthors__editor=False)
+        return self._order_authors(auths)
 
     def get_authors(self):
         """
         Methode um alle Autoren anzuzeigen
         """
-        auths = self.authors.filter(DocumentAuthors__editor=False)
-        return auths
+        auths = self.authors.exclude(documentauthors__editor=True)
+        return self._order_authors(auths)
+
     def add_author(self, author):
         """
         Methode um dem Dokument einen Autoren zuzuweisen
         """
-        d, dummy = DocumentAuthors.objects.get_or_create(document=self, author=author, editor=False)
-        d.save()
+        self._add_author_or_editor(author, False)
 
     def add_editor(self, editor):
         """
         Methode um dem Dokument einen Autoren als Editor zuzuweisen
         """
-        d, dummy = DocumentAuthors.objects.get_or_create(document=self, author=editor, editor=True)
+        self._add_author_or_editor(editor, True)
+
+    def _add_author_or_editor(self, obj, is_editor):
+        from django.db.models import Max
+        params = dict()
+        connections = DocumentAuthors.objects.filter(document=self,editor=is_editor)
+        max_val = connections.aggregate(Max('sort_value'))["sort_value__max"]
+        if max_val is None:
+            max_val = 0
+        else :
+            max_val = max_val + 1
+        params["sort_value"] = max_val + 1
+        d, dummy = DocumentAuthors.objects.get_or_create(document=self,
+                author=obj, editor=is_editor, sort_value=max_val)
         d.save()
 
 class DocumentAuthors(models.Model):
     document = models.ForeignKey(Document)
-    author = models.ForeignKey(Author,verbose_name="autor")
+    author = models.ForeignKey(Author,verbose_name="Autor")
     editor = models.BooleanField(default=False)
-    position = models.IntegerField()
+    sort_value = models.IntegerField("Reihenfolge")
+    _sort_field_name = "sort_value"
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
         unique_together = ('document', 'author')
+
+    def __unicode__(self):
+        return unicode({"Dokument": self.document, "Autor":self.author, "Editor": self.editor,
+                "Position": self.sort_value})
 
 class Keywords(models.Model):
     document = models.ForeignKey(Document)

@@ -1,38 +1,11 @@
 {% extends "index.html" %}
+{% block head %}
+  <script
+    type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+  </script>
+{% endblock head %}
 {% block script %}
-function addAuthor(div_id, elem, edau) {
-	var auths = document.getElementsByName(edau+'_last_name');
-	var last_auth = auths[auths.length-2];
-	if(last_auth.value == '')
-	  return;
-	var new_div = document.createElement('tr');
-    new_div.innerHTML = '<td><input type=text name='+edau+'"_first_name" maxlength=30 /></td> <td><input onFocus="addAuthor(\'' + div_id + '\', this, '+edau+')" type=text name='+edau+'"_last_name" maxlength=30 /></td>';
-    elem.removeAttribute('onFocus');
-    document.getElementById(div_id).appendChild(new_div);
-}
-
-function addExtra(div_id, elem) {
-  var extras = document.getElementsByName('doc_extra_name');
-  var last_extra = extras[extras.length-1];
-  if(last_extra.value == '')
-	return;
-  var new_div = document.createElement('tr');
-  new_div.innerHTML = '<td><input type=text name="doc_extra_name" /></td> <td><input onFocus="addExtra(\'' + div_id + '\', this)" type=text name="doc_extra_content" /></td>'
-    elem.removeAttribute('onFocus');
-    document.getElementById(div_id).appendChild(new_div);
-}
-
-function addKeyword(div_id, elem) {
-  var keys = document.getElementsByName('keyword');
-  var last_key = keys[keys.length-2];
-  if(last_key.value == '')
-	return;
-  var new_div = document.createElement('tr');
-  new_div.innerHTML = '<td><input onFocus="addKeyword(\'' + div_id + '\', this)" type=text name="keyword" /></td>'
-    elem.removeAttribute('onFocus');
-    document.getElementById(div_id).appendChild(new_div);
-}
-
 var needs = new Array();
 {% for c, value in category_needs.items %}
   needs = new Object();
@@ -54,6 +27,47 @@ function changeCategory(elem) {
 	field.innerHTML = '*';
   }
 }
+
+function updateElementIndex(el, prefix, ndx) {
+  var id_regex = new RegExp('(' + prefix + '-\\d+)');
+  var replacement = prefix + '-' + ndx;
+  if ($(el).attr("for")) 
+    $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+  if (el.id) 
+    el.id = el.id.replace(id_regex, replacement);
+  if (el.name) 
+	el.name = el.name.replace(id_regex, replacement);
+}
+
+function addForm(btn, prefix) {
+  var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+  var row = $('.dynamic-form:first').clone(true).get(0);
+  $(row)./*removeAttr('id').*/insertAfter($('.dynamic-form:last')).children('.hidden').removeClass('hidden');
+  $(row).children()/*.not(':last')*/.children().each(function() {
+    updateElementIndex(this, prefix, formCount);
+    $(this).val('');
+  });
+  $(row).find('.delete-row').click(function() {
+    deleteForm(this, prefix);
+  });
+  $('#id_' + prefix + '-TOTAL_FORMS').val(formCount + 1);
+  $(row).attr("id", prefix + '-' + formCount + '-row');
+  return false;
+}
+
+function deleteForm(btn, prefix) {
+  $(btn).parents('.dynamic-form').remove();
+  var forms = $('.dynamic-form');
+  $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+  for (var i=0, formCount=forms.length; i</*>*/formCount; i++) {
+    $(forms.get(i)).children().not(':last').children().each(function() {
+      updateElementIndex(this,  prefix, i);
+    });
+  }
+  return  false;
+}
+
+
 {% endblock script %}
 {% block content %}
 
@@ -73,10 +87,52 @@ function changeCategory(elem) {
 		  <table>
 			{{ form_doc.as_table }}
 			<fieldset class="doc_add">
-			  <tr><td><b><u>Weitere Einträge</u></b></td></tr>
-			  {{ form_extras.as_table }}
+			  <tr><td><b><u>Autoren</u></b></td></tr>
+			  {{ form_authors.as_table }}
 			</fieldset>
-			<tr><td><input type="submit" name="submit" value="Dokument speichern" /> <br /><br /> </td></tr>
+		  </table>
+			<fieldset class="doc_add">
+			  <tr><td><b><u>Weitere Einträge</u></b></td></tr>
+			  <script type="text/javascript">
+               <!--
+                $(function () {
+                  $('.add-row').click(function() {
+                    return addForm(this, 'form');
+                  });
+                  $('.delete-row').click(function() {
+                    return deleteForm(this, 'form');
+                  })
+                })
+                //-->
+			  </script>
+              {% for form in form_extras.forms %}
+			  <div id="{{ form.prefix }}-row" class="dynamic-form">
+				{{ form.as_p }}
+			  </div>
+			  {% endfor %}
+			  <a
+				href="javascript:void(0)"
+				class="add-row"
+			  >
+			    add property
+			  </a>
+			  {{ form_extras.management_form }}
+			</fieldset>
+			<table>
+			<tr>
+			  <td>
+				<input 
+				  type="submit" 
+				  name="submit" 
+				  value="Dokument speichern" 
+				/> 
+				<br />
+				<br /> 
+			  </td>
+			  <td>
+				<input type="button" value="Add More" id="add_more">
+			  </td>
+		    </tr>
 			<tr><td><b><u>Autoren und Editoren</u></b></td></tr>
 			<tr><td style="color:#ff0000;" colspan="2">ACHTUNG! Der erstellte Autor oder Editor wird noch nicht dem Dokument zugewiesen. Dieses sollten Sie noch selbst erledigen!</td></tr>
 			{{ form_author.as_table }}

@@ -5,14 +5,14 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, Template 
 from documents.models import Document, DocStatus, DocExtra, Category,\
     EmailValidation, Emails, UserProfile, TelUser, \
-    TelNonUser
+    TelNonUser, DocumentAuthors
 from django.contrib.auth.models import User
 from django.forms.models import modelformset_factory
 from documents.lib.bibtex import Bibtex
 from documents.lib.allegro import Allegro
 from documents.forms import EmailValidationForm, UploadFileForm, DocForm, \
     AuthorAddForm, SelectUser, NonUserForm, ProfileForm, \
-    TelNonUserForm, NameForm, PublisherAddForm
+    TelNonUserForm, NameForm, PublisherAddForm, AuthorSelectForm, DocExtraForm
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.core import mail
@@ -26,7 +26,7 @@ import datetime
 import os
 import settings
 import thread
-import lib.views as lib_views
+import lib_views as lib_views
 #import lib.mails as lib_mails
 
 # Für Filter von dict
@@ -43,9 +43,9 @@ def _get_dict_response(request):
     import_perm = v_user.has_perm('documents.can_import')
     export_perm = v_user.has_perm('documents.can_export')
     perms =  v_user.has_perm('documents.can_see_admin')
-    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
-                                             DocStatus__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                             docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')
     return {"user" : v_user, 
             "perm" : perms,
             "miss" : miss_query[0:10],
@@ -240,7 +240,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     #ist das Dokument wirklich vorhanden, wenn ja wird es geladen
     try:
         document_query = Document.objects.get(bib_no=bib_no_id)
-    except document.DoesNotExist:
+    except Document.DoesNotExist:
         raise Http404
     #selbst ausleihen, wenn Status vorhanden
     if 'lend' in request.POST and request.user.is_authenticated():
@@ -266,12 +266,12 @@ def doc_detail(request, bib_no_id, searchtext=""):
     #aktualisieren des Datensatzes
     try:
         document_query = Document.objects.get(bib_no=bib_no_id)
-    except document.DoesNotExist:
+    except Document.DoesNotExist:
         raise Http404
     #lädt den aktuellsten Statussatz - wenn keiner vorhanden: None
     try:
-        lending_query = document_query.DocStatus_set.latest('date')
-    except doc_status.DoesNotExist:
+        lending_query = document_query.docstatus_set.latest('date')
+    except DocStatus.DoesNotExist:
         lending_query = None
     doc_extra_query = DocExtra.objects.filter(doc_id__bib_no__exact=bib_no_id)
     bibtex_string = Bibtex.export_doc(document_query)
@@ -291,11 +291,11 @@ def doc_detail(request, bib_no_id, searchtext=""):
     change_document = v_user.has_perm('documents.change_document')
     history = lib_views._filter_history(document_query)
     keyword = lib_views._show_keywords(document_query)
-    editoren = lib_views._diff_editors(document_query)
-    autoren = lib_views._diff_authors(document_query)
-    miss_query = document.objects.filter(doc_status__status = document.MISSING,
-                                         doc_status__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')
+    editors = document_query.get_editors()
+    authors = document_query.get_authors()
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                         docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')
     #Finde heraus ob von einer Suche weitergeleitet wurde bzw. von welcher
     if len(searchtext) == 1:
         searchmode = 1
@@ -323,8 +323,8 @@ def doc_detail(request, bib_no_id, searchtext=""):
     dict_response["change_document"] = change_document
     dict_response["history"] = history
     dict_response["keyword"] = keyword
-    dict_response["editoren"] = editoren
-    dict_response["autoren"] = autoren
+    dict_response["editors"] = editors
+    dict_response["authors"] = authors
     dict_response["searchmode"] = searchmode
     dict_response["searchtext"] = searchtext
     context = Context(dict_response)
@@ -395,9 +395,9 @@ def docs_miss(request):
     """
     Vermisste Dokumente anzeigen
     """
-    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,        
-                                         DocStatus__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')  
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,        
+                                         docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')  
     return _list(request, miss_query, form=2)
                               
 @login_required
@@ -415,9 +415,9 @@ def profile(request, user_id=None):
     else :
         p_user = v_user
     see_groups = v_user.has_perm('documents.can_see_others_groups')
-    miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
-                                         DocStatus__return_lend = False)
-    miss_query = miss_query.order_by('-DocStatus__date')
+    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                         docstatus__return_lend = False)
+    miss_query = miss_query.order_by('-docstatus__date')
     dict_response = _get_dict_response(request)
     if p_user.id == v_user.id :
         context = Context(dict_response)
@@ -600,100 +600,81 @@ def doc_add(request, bib_no_id=None):
     Datenbank hinzufügen. Dies wird durch Formeingabe ermöglicht.
     """
     success = True
+    message = u''
     v_user = request.user
     if (not v_user.has_perm('documents.add_document') and not v_user.has_perm('documents.change_document') and not v_user.has_perm('documents.can_import')):
         raise PermissionDenied
-    #Web-Interface-Import
-    if 'title' in request.POST:
-        if bib_no_id is None:
-            is_importform = True
-            form_doc = DocForm(request.POST)
-            extras_formset = modelformset_factory(doc_extra, extra=4,\
-                can_delete=True, exclude='doc_id')
-            form_extras = extras_formset(request.POST, queryset=DocExtra.objects.none())
-            form_author = AuthorAddForm(request.POST)
-            form_publisher = PublisherAddForm(request.POST)
-        else :
-            try :
-                doc = Document.objects.get(bib_no=bib_no_id)
-            except document.DoesNotExist:
-                raise Http404
-            is_importform = False
-            form_doc = DocForm(request.POST, instance=doc)
-            extras_formset = modelformset_factory(DocExtra, extra=4,\
-                can_delete=True, exclude='doc_id')
-            form_extras = extras_formset(
-                                    request.POST,
-                                    queryset=DocExtra.objects.filter(doc_id=doc))
-            form_author = AuthorAddForm(request.POST)
-            form_publisher = PublisherAddForm(request.POST)
-        success = False
-        message = 'Fehler beim Import festgestellt: Daten sind im falschen Format'
-        if u'sub_author' in request.POST and form_author.is_valid():
-            form_author.save()
-            message = 'Autor erfolgreich hinzugefügt'
-            for item in form_doc.errors:
-                form_doc.errors[item] = ''
-            success = True
-            form_author = AuthorAddForm()
-        elif u'submit' in request.POST and request.POST[u'submit'] == u'Dokument speichern' and form_doc.is_valid():
-            doc = form_doc.save(commit=False)
-            doc.save()
-            if form_extras.is_valid():
-                instances = form_extras.save(commit=False)
-                for instance in instances:
-                    instance.doc_id=doc
-                    instance.save()
-                message = 'Daten erfolgreich übernommen'
-            else :
-                message = "Extra-Felder nicht valide"
-            for editor in form_doc.cleaned_data['editors']:
-                doc.add_editor(editor)
-            for author in form_doc.cleaned_data['authors']:
-                doc.add_author(author)
-            doc.save()
-            form_extras = extras_formset(
-                                    queryset=DocExtra.objects.filter(doc_id=doc))
-            if bib_no_id is None:
-                form_doc = DocForm()
-            else :
-                return HttpResponseRedirect("/doc/%s/"%bib_no_id)
-            form_author.errors['first_name'] = ''
-            form_author.errors['last_name'] = ''
-            success = True
-        elif u'sub_publisher' in request.POST and form_publisher.is_valid():
-            form_publisher.save()
-            message = 'Publisher erfolgreich hinzugefügt'
-            for item in form_publisher.errors:
-                form_publisher.errors[item] = ''
-            success = True
-            form_publisher = PublisherAddForm()
-            form_author.errors['first_name'] = ''
-            form_author.errors['last_name'] = ''
-            for item in form_doc.errors:
-                form_doc.errors[item] = ''
-    elif bib_no_id is None:
+
+    if bib_no_id is None:
         is_importform = True
-        message = ''
-        form_doc = DocForm()
-        extras_formset = modelformset_factory(DocExtra, extra=4,\
-                can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=DocExtra.objects.none())
-        form_author = AuthorAddForm()
-        form_publisher = PublisherAddForm()
+        document = Document()
+        query_authors = DocumentAuthors.objects.none()
+        query_editors = DocumentAuthors.objects.none()
+        query_extras = DocExtra.objects.none()
     else :
-        message = ''
+        is_importform = False
         try :
-            doc = Document.objects.get(bib_no=bib_no_id)
+            document = Document.objects.get(bib_no=bib_no_id)
+            query_authors = DocumentAuthors.objects.order_by('sort_value')
+            query_editors = query_authors.filter(editor=True,
+                    document=document)
+            query_authors = query_authors.filter(editor=False,
+                    document=document)
+            query_extras = DocExtra.objects.filter(doc_id=document)
         except Document.DoesNotExist:
             raise Http404
-        is_importform = False
-        form_doc = DocForm(instance=doc)
-        extras_formset = modelformset_factory(DocExtra, extra=4,\
-                can_delete=True, exclude='doc_id')
-        form_extras = extras_formset(queryset=DocExtra.objects.filter(doc_id=doc))
+
+    if request.method == 'POST':
+        form_doc = DocForm(request.POST, instance=document)
+        form_authors = AuthorSelectForm(request.POST, instance=document)
+        form_extras = DocExtraForm(request.POST, queryset=query_extras)
+        form_author = AuthorAddForm(request.POST)
+        form_publisher = PublisherAddForm(request.POST)
+
+        if u'sub_author' in request.POST and form_author.is_valid():
+            form_author.save()
+            message = u'Autor erfolgreich hinzugefügt'
+            lib_views._clean_errors(form_doc)
+            lib_views._clean_errors(form_publisher)
+            form_author = AuthorAddForm()
+        elif u'sub_publisher' in request.POST and form_publisher.is_valid():
+            form_publisher.save()
+            message = u'Publisher erfolgreich hinzugefügt'
+            lib_views._clean_errors(form_doc)
+            lib_views._clean_errors(form_author)
+            form_publisher = PublisherAddForm()
+        elif u'submit' in request.POST and form_doc.is_valid():
+            if form_authors.is_valid() and form_extras.is_valid():
+                document = form_doc.save()
+                if form_authors.is_valid():
+                    lib_views._save_doc_form(form_authors, document)
+                else :
+                    success = False
+                if form_extras.is_valid():
+                    lib_views._save_doc_form(form_extras, document, True)
+                else :
+                    success = False
+                document.save()
+                if not bib_no_id is None and success:
+                    return HttpResponseRedirect(reverse('doc', args=(bib_no_id,)))
+                query_extras = DocExtra.objects.filter(doc_id=document)
+                form_extras = DocExtraForm(queryset=query_extras)
+                lib_views._clean_errors(form_author)
+                lib_views._clean_errors(form_publisher)
+            else :
+                success = False
+                message = u'Eingabe nicht vollständig korrekt'
+        else :
+            success = False
+            message = u'Keine Valide Eingabe vorhanden'
+    else :
+        form_doc = DocForm(instance=document)
+        form_authors = AuthorSelectForm(instance=document)
+#        form_editors = AuthorSelectForm(instance=query_editors)
+        form_extras = DocExtraForm(queryset=query_extras)
         form_author = AuthorAddForm()
         form_publisher = PublisherAddForm()
+
 # TODO
 #    category_needs = category_need.objects.all()
     needs = dict()
@@ -707,6 +688,7 @@ def doc_add(request, bib_no_id=None):
     dict_response["is_importform"] = is_importform
     dict_response["category"] = cat
     dict_response["form_doc"] = form_doc
+    dict_response["form_authors"] = form_authors
     dict_response["form_extras"] = form_extras
     dict_response["form_author"] = form_author
     dict_response["form_publisher"] = form_publisher
@@ -723,13 +705,13 @@ def doc_rent(request):
     der Benutzer für andere Bürgt.
     """
     v_user = request.user
-    documents = Document.objects.filter(DocStatus__user_lend=v_user,
-                                        DocStatus__non_user_lend__isnull=True,
-                                        DocStatus__return_lend=False)
+    documents = Document.objects.filter(docstatus__user_lend=v_user,
+                                        docstatus__non_user_lend__isnull=True,
+                                        docstatus__return_lend=False)
     documents_non_user = Document.objects.filter(
-                                        DocStatus__user_lend=v_user,
-                                        DocStatus__non_user_lend__isnull=False,
-                                        DocStatus__return_lend=False)
+                                        docstatus__user_lend=v_user,
+                                        docstatus__non_user_lend__isnull=False,
+                                        docstatus__return_lend=False)
     return _list(request, documents, documents_non_user, 1)
 
 @login_required
@@ -815,9 +797,9 @@ def bibtex_export(request):
 @login_required
 def user(request):
     lend_documents = Document.objects.filter(
-            DocStatus__return_lend__exact = False,
-            DocStatus__user_lend__exact = request.user,
-            DocStatus__non_user_lend__exact = None)
+            docstatus__return_lend__exact = False,
+            docstatus__user_lend__exact = request.user,
+            docstatus__non_user_lend__exact = None)
     return _list(request, lend_documents)
 
 def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
@@ -854,9 +836,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
 
     if sort is not None:
         if sort == "date":
-            documents = documents.order_by("-DocStatus__date")
+            documents = documents.order_by("-docstatus__date")
         elif sort == "-date":
-            documents = documents.order_by("DocStatus__date")
+            documents = documents.order_by("docstatus__date")
         else:
             documents = documents.order_by(sort)
     miss_query = None 
@@ -877,9 +859,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     selected_filter = request.GET.get('starts', default='all')
     startswith_filter[selected_filter][0] += ' selected=selected'
     if form != 2:
-        miss_query = Document.objects.filter(DocStatus__status = Document.MISSING,
-                                             DocStatus__return_lend = False)
-        miss_query = miss_query.order_by('-DocStatus__date')
+        miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
+                                             docstatus__return_lend = False)
+        miss_query = miss_query.order_by('-docstatus__date')
     params_starts = _truncate_get(request, 'starts', 'page')
     dict_response = _get_dict_response(request)
     dict_response["documents"] = documents

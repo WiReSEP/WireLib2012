@@ -2,12 +2,15 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+from django.forms.widgets import HiddenInput
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms.formsets import formset_factory
 from django.utils.translation import ugettext as _
+from django.forms.models import inlineformset_factory
+from django.forms.models import modelformset_factory
 from documents.models import Author
 from documents.models import Document
 from documents.models import EmailValidation
@@ -17,6 +20,7 @@ from documents.models import TelNonUser
 from documents.models import TelUser
 from documents.models import UserProfile
 from documents.models import DocExtra
+from documents.models import DocumentAuthors
 import mimetypes
 import urllib
 
@@ -60,17 +64,21 @@ class TelNonUserForm(ModelForm):
 class UploadFileForm(forms.Form):
     file  = forms.FileField()
 
+class DocumentAuthorForm(ModelForm):
+    class Meta:
+        model = DocumentAuthors
+
+AuthorSelectForm = inlineformset_factory(Document, DocumentAuthors, extra=4,
+        form=DocumentAuthorForm)
+
+DocExtraForm = modelformset_factory(DocExtra, extra=4, can_delete=True,
+        exclude=('doc_id',))
+
 class DocForm(ModelForm):
-    authors = forms.ModelMultipleChoiceField(
-            queryset=Author.objects.all().order_by('last_name'),
-            label='Autoren')
-    editors = forms.ModelMultipleChoiceField(
-            queryset=Author.objects.all().order_by('last_name'), 
-            label='Editoren',
-            required=False)
     class Meta:
         model = Document
-        exclude = ('date_of_purchase', 'ub_date', 'bib_date', 'last_edit_by')
+        exclude = ('date_of_purchase', 'ub_date', 'bib_date', 'last_edit_by',
+        'authors')
 
 class AuthorAddForm(ModelForm):
     class Meta:
@@ -91,7 +99,18 @@ class SelectUser(forms.Form):
         
     users = UserModelChoiceField(queryset=User.objects.all(), label="", empty_label="")
    
-
 class NonUserForm(ModelForm):
     class Meta:
         model = NonUser
+
+class SearchForm(forms.Form):
+    query = forms.CharField()
+    regex = forms.BooleanField()
+
+class SearchProForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    title = forms.CharField()
+
+#    class media:
+#        js = (,)
