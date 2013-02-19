@@ -1,4 +1,77 @@
 {% extends "index.html" %}
+{% block head %}
+  {{ extended_form.media }}
+{% endblock head %}
 {% block content %}
-  {% include 'search_pro_template.html' %}
-{% endblock %}
+<h1>Erweiterte Suche</h1>
+<!-- Beginn des Forms, dass bei einer Suchanfrage gesendet wird -->
+  <script type="text/javascript">
+	<!--
+	$(function() {
+		$('.add-row').click(function() {
+		  return addForm(this, 'addform');
+		});
+		$('.delete-row').click(function() {
+		  return deleteForm(this, 'addform');
+		});
+	})
+	//-->
+  </script>
+<form method="POST" action="">
+  {{ extended_form.management_form }}
+  <table id="formset">
+	{% for form in extended_form %}
+	  {% if forloop.first %}
+	    <thead>
+		  <tr>
+			{% for field in form.visible_fields %}
+			  <th>
+				{{ field.label|capfirst }}
+			  </th>
+			{% endfor %}
+		  </tr>
+		</thead>
+		<tr>
+		  {% for field in base_form.visible_fields %}
+			<td>
+			  {% if forloop.first %}
+				{% for hidden in base_form.hidden_fields %}
+				  {{ hidden }}
+				{% endfor %}
+			  {% endif %}
+			  {{ field.errors.as_ul }}
+			  {{ field }}
+			</td>
+		  {% endfor %}
+		</tr>
+	  {% endif %}
+	  <tr id="{{ form.prefix }}-row" class="dynamic-form">
+		{% for field in form.visible_fields %}
+		  <td>
+			{% if forloop.first %}
+			  {% for hidden in form.hidden_fields %}
+			    {{ hidden }}
+			  {% endfor %}
+		    {% endif %}
+		    {{ field.errors.as_ul }}
+			{{ field }}
+		  </td>
+		{% endfor %}
+	  </tr>
+	{% endfor %}
+	<tr>
+	  <td>
+		<input type="submit" value="Suchanfrage starten" />
+	  </td>
+	  <td>
+		<a href="javascript:void(0)" class="add-row nolink">
+		  <input 
+			type="button"
+			value="Weiteres Suchfeld"
+		  >
+		</a>
+	  </td>
+	</tr>
+  </table>
+</form>
+{% endblock content %}

@@ -1,3 +1,4 @@
+#vim: set fileencoding=utf-8
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -107,10 +108,35 @@ class SearchForm(forms.Form):
     query = forms.CharField()
     regex = forms.BooleanField()
 
-class SearchProForm(forms.Form):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    title = forms.CharField()
+class SearchProBaseForm(forms.Form):
+    CHOICES = (("author", "Autor"),
+               ("title", "Titel"),
+               ("editor", "Editor"),
+               ("keword", u"Schlüsselwort"),
+               ("year", "Jahr"),
+               ("publisher", "Herausgeber"),
+               ("bib_no", "Bibliotheks-Nummer"),
+               ("isbn", "ISBN"),
+               ("status", "Buchstatus"),
+        )
+    STATI = ((Document.AVAILABLE, "Vorhanden"),
+             (Document.LEND, "Ausgeliehen"),
+             (Document.ORDERED, "Bestellt"),
+             (Document.MISSING, "Vermisst"),
+             (Document.LOST, "Verloren"),
+        )
+    searchtext = forms.CharField(label="Suchtext")
+    regex = forms.BooleanField()
+    category = forms.ChoiceField(choices=CHOICES)
 
-#    class media:
-#        js = (,)
+    class Media:
+        js = ('js/dynamic-formset.js','js/jquery-1.9.1.min.js')
+
+class SearchProForm(SearchProBaseForm):
+    LOGIC_CHOICES = (
+            ('and', 'und'),
+            ('and not', 'und nicht'),
+            ('or', 'oder'),)
+    bind = forms.ChoiceField(choices=LOGIC_CHOICES, label=u"Verknüpfung")
+
+SearchProExtendedForm = formset_factory(SearchProForm)

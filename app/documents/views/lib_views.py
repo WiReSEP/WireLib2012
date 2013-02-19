@@ -4,6 +4,26 @@ from django.conf import settings
 import datetime
 import time
 import hashlib
+from documents.models import Document
+
+def _get_dict_response(request):
+    """ Dict-response default erstellen
+    Gibt ein Python-Dict zurück mit Werten, die in jedem Template benötigt
+    werden. Eigene Werte für Templates werden in den jeweiligen Methoden
+    eingefügt.
+    """
+    v_user = request.user
+    import_perm = v_user.has_perm('documents.can_import')
+    export_perm = v_user.has_perm('documents.can_export')
+    perms = v_user.has_perm('documents.can_see_admin')
+    miss_query = Document.objects.filter(docstatus__status=Document.MISSING,
+            docstatus__return_lend=False)
+    miss_query = miss_query.order_by('-docstatus__date')
+    return {"user": v_user,
+            "perm": perms,
+            "miss": miss_query[0:10],
+            "import_perm": import_perm,
+            "export_perm": export_perm}
 
 def _get_searchset(searchvalue, regex=False):
     if not regex:
