@@ -184,6 +184,7 @@ class UglyBibtex(object):
             try:
                 doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
                 if getattr(settings, "BIBTEX_DEBUG", False):
+
                     self.errout.write("Erfolgreich\n")
                     self.__log_error()
             except ValueError, e:
@@ -197,6 +198,7 @@ class UglyBibtex(object):
             except DuplicateKeyError, e:
                 self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
+
 
     def __insert_field(self, key_val):
         if key_val[0] == u'author' or key_val[0] == u'editor':
@@ -212,6 +214,15 @@ class UglyBibtex(object):
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'price':
+            currency = {
+                    "€" : "Euro",
+                    "$" : "Dollar",
+                    "euro" : "Euro",
+                    "DM" : "DM",
+                    "Pounds" : "Pfund",
+                    }
+            # regex für währungen:
+            value = key_val[1].strip().split(" ")
             pass    # TODO: Price interpretieren und schreiben
 
         elif key_val[0] == u'dateofpurchase':
