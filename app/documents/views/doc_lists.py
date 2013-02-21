@@ -4,6 +4,7 @@ import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.http import QueryDict
 from lib_views import _get_dict_response
 import lib_views as lib_views
 from documents.models import Document

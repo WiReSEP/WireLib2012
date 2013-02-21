@@ -1,4 +1,6 @@
 #vim: set fileencoding=utf-8
+from documents.models import *
+
 def doc_detail(request, bib_no_id, searchtext=""):
     """
     Gibt alle Informationen für doe Detailansicht eines Dokumentes zurück
