@@ -123,19 +123,20 @@ class Document(models.Model):
             self.publisher.delete()
         super(Document, self).delete(*args, **kwargs)
     
-    def __status(self):
+    def _status(self):
         """ 
         Ausgeben des aktuellen Status'
         """
         try:
-            retVal = self.doc_status_set.latest('date').status
-        except:
+            retVal = self.docstatus_set.latest('date').status
+        except BaseException, e:
+            print e
             retVal = 0
         return retVal
         
     def __init__(self, *args, **kwargs):
         models.Model.__init__(self, *args, **kwargs)
-        self.status = self.__status()
+        self.status = self._status()
 
     def __unicode__(self):
         return self.title

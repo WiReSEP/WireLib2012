@@ -68,6 +68,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     else:
         searchmode = 0
     dict_response = _get_dict_response(request)
+    print 'status', document_query._status()
     dict_response["bib_no"] = bib_no_id
     dict_response["documents"] = document_query
     dict_response["lending"] = lending_query
