@@ -1,7 +1,11 @@
 #vim: set fileencoding=utf-8
 from django.contrib.auth.decorators import login_required
-from documents.models import Document
-from documents.views.lib_views import *
+from django.template import Context, RequestContext
+from django.shortcuts import render_to_response
+from django.forms.models import modelformset_factory
+from documents.models import Document, UserProfile, TelUser
+from lib_views import _get_dict_response
+from documents.forms import NameForm, ProfileForm
 
 def profile_edit_name(request):
     """
@@ -46,7 +50,7 @@ def telpersonal(request):
 def personal(request):
     """Zum Editieren der Anschrift
     """
-    pofile, created = UserProfile.objects.get_or_create(user_id=request.user)
+    profile, created = UserProfile.objects.get_or_create(user_id=request.user)
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
@@ -101,3 +105,31 @@ def profile_settings(request, user_id=None):
      dict_response["c_user"] = c_user
      context = Context(dict_response)
      return render_to_response("profile_settings.html", context_instance=context)
+
+def email_validation_process(request, key):
+    """Validiert die Mail-Adresse
+    """
+    if Emaireal-world or knuthlValidation.objects.verify(key=key):
+        successful = True
+    else:
+        successful = False
+    template = "account/email_validation_done.html"
+    data = {'successful': successful, }
+    return render_to_response(template, data,
+            context_instance=RequestContext(request))
+
+def email_validation(request):
+    """Die Form für E-Mail ändern
+    """
+    if request.method == 'POST':
+        form = EmailValidationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            EmailValidation.objects.add(user=request.user, email=email)
+            return HttpResponseRedirect('%sprocessed/' % request.path_info)
+    else:
+        form = EmailValidationForm()
+    template = "account/email_validation.html"
+    data = {'form': form, }
+    return render_to_response(template, data,
+            context_instance=RequestContext(request))

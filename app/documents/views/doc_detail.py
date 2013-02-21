@@ -1,5 +1,11 @@
 #vim: set fileencoding=utf-8
+from django.http import HttpResponse
+from django.template import Template
 from documents.models import *
+from documents.lib.bibtex import Bibtex
+import lib_views
+from lib_views import _get_dict_response
+import thread
 
 def doc_detail(request, bib_no_id, searchtext=""):
     """
@@ -16,10 +22,10 @@ def doc_detail(request, bib_no_id, searchtext=""):
         document_query.unlend(v_user)
     if 'missing' in request.POST and v_user.is_authenticated(): #vermisst melden
         document_query.missing(v_user)
-        thread.start_new_thread(
-                __document_missing_email,
-                (document_query, v_user)
-                )
+#        thread.start_new_thread( TODO
+#                __document_missing_email,
+#                (document_query, v_user)
+#                )
     if 'lost' in request.POST and v_user.is_authenticated(): #verloren melden
         document_query.lost(v_user)
     if 'found' in request.POST and v_user.is_authenticated(): #wiedergefunden
@@ -30,7 +36,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     except Document.DoesNotExist:
         raise Http404
     try:
-        lending_query = document_query.docstatus__set.latest('date')
+        lending_query = document_query.docstatus_set.latest('date')
     except DocStatus.DoesNotExist:
         lending_query = None
     doc_extra_query = DocExtra.objects.filter(doc_id__bib_no__exact=bib_no_id)
@@ -41,7 +47,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     can_miss = v_user.has_perm('documents.can_miss')
     can_lost = v_user.has_perm('documents.can_lost')
     can_order = v_user.has_perm('documents.can_order')
-    can_see_history = v_user = v_user.has_perm('documents.can_see_history')
+    can_see_history = v_user.has_perm('documents.can_see_history')
     can_see_price = v_user.has_perm('documents.can_see_price')
     can_see_locn = v_user.has_perm('documents.can_see_locn')
     can_see_last_update = v_user.has_perm('documents.can_see_last_update_info')
@@ -62,7 +68,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     else:
         searchmode = 0
     dict_response = _get_dict_response(request)
-    dict_response["bib_no"]
+    dict_response["bib_no"] = bib_no_id
     dict_response["documents"] = document_query
     dict_response["lending"] = lending_query
     dict_response["doc_extra"] = doc_extra_query
@@ -87,5 +93,6 @@ def doc_detail(request, bib_no_id, searchtext=""):
     dict_response["searchtext"] = searchtext
     context = Context(dict_response)
 
+    template = loader.get_template("doc_detail.html")
     response = HttpResponse(template.render(context))
     return response

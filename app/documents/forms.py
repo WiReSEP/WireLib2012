@@ -109,7 +109,7 @@ class SearchForm(forms.Form):
     regex = forms.BooleanField()
 
 class SearchProBaseForm(forms.Form):
-    CHOICES = (("author", "Autor"),
+    CHOICES = (("authors", "Autor"),
                ("title", "Titel"),
                ("editor", "Editor"),
                ("keword", u"Schlüsselwort"),
@@ -125,9 +125,9 @@ class SearchProBaseForm(forms.Form):
              (Document.MISSING, "Vermisst"),
              (Document.LOST, "Verloren"),
         )
-    searchtext = forms.CharField(label="Suchtext")
-    regex = forms.BooleanField()
-    category = forms.ChoiceField(choices=CHOICES)
+    searchtext = forms.CharField(label="Suchtext", required=False)
+    regex = forms.BooleanField(required=False)
+    category = forms.ChoiceField(choices=CHOICES, required=False)
 
     class Media:
         js = ('js/dynamic-formset.js','js/jquery-1.9.1.min.js')

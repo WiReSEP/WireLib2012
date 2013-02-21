@@ -47,20 +47,19 @@ def allegro_export(request):
             Allegro.docs_to_export_lock.acquire()
             Allegro.docs_to_export = True
             Allegro.docs_to_export_lock.release()
-        files = {}
-        for file in os.listdir(DOCUMENTS_SECDIR+DOCUMENTS_ALLEGRO_FILES):
-            if str(file).lower().endswith(".adt"):
-                files[file] = lib_views._gen_sec_link(
-                        "/"
-                        +DOCUMENTS_ALLEGRO_FILES
-                        +file
-                        )
-        dict_response = _get_dict_response(request)
-        dict_response["files"] = files
-        dict_response["hint"] = hint
-        context = Context(dict_response)
-        return render_to_response("allegro_export.html",
-                context_instance=context)
+    files = {}
+    for file in os.listdir(DOCUMENTS_SECDIR+"/"+DOCUMENTS_ALLEGRO_FILES):
+        if str(file).lower().endswith(".adt"):
+            files[file] = lib_views._gen_sec_link(
+                    "/"
+                    +DOCUMENTS_ALLEGRO_FILES
+                    +file
+                    )
+    dict_response = _get_dict_response(request)
+    dict_response["files"] = files
+    dict_response["hint"] = hint
+    context = Context(dict_response)
+    return render_to_response("allegro_export.html", context_instance=context)
 
 @login_required
 def bibtex_export(request):

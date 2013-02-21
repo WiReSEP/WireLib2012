@@ -1,8 +1,10 @@
 from django.template import Context
 from django.shortcuts import render_to_response
 from lib_views import _get_dict_response
-from doc_lists import doc_list
+from doc_lists import doc_list, _list
 from documents.forms import SearchProBaseForm, SearchProExtendedForm
+from django.db.models import Q
+from documents.models import Document
 
 def search(request):
   if "query" not in request.GET:
@@ -40,19 +42,19 @@ def search_pro(request):
     if searchset.count() == 1:
       return doc_detail(request, searchset[0].bib_no)
     return _list(request, searchset)
-  if not request.method == "POST":
-    dict_response = _get_dict_response(request)
-    dict_response['base_form'] = search_base_form
-    dict_response['extended_form'] = search_form
-    context = Context(dict_response)
-    return render_to_response("search_pro.html", context_instance=context)
+  dict_response = _get_dict_response(request)
+  dict_response['base_form'] = search_base_form
+  dict_response['extended_form'] = search_form
+  context = Context(dict_response)
+  return render_to_response("search_pro.html", context_instance=context)
 
 def _combine_querys(searchset, category, query, regex, bind):
   new_searchset = _get_advanced_searchset(category, query, regex)
+  ids = new_searchset.values('bib_no')
   if bind == "and":
-    searchset = searchset.filter(document__in=new_searchset)
+    searchset = searchset.filter(bib_no__in=ids)
   elif bind == "and not":
-    searchset = searchset.exclude(document__in=new_searchset)
+    searchset = searchset.exclude(bib_no__in=ids)
   elif bind == "or":
     searchset = searchset | new_searchset
   else:
@@ -65,4 +67,4 @@ def _get_advanced_searchset(category, query, regex):
   else:
     q = Q(**{"%s__iregex" % category: query})
   searchset = Document.objects.filter(q)
-  return q
+  return searchset
