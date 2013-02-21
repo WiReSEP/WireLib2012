@@ -67,7 +67,7 @@ class Document(models.Model):
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
     lib_of_con_nr = models.CharField("Library Of Congress No", max_length=60, blank=True, null=True) 
         #LibraryOfCongressN
-    title = models.CharField("Titel",max_length=200)
+    title = models.CharField("Titel",max_length=400)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
     category = models.ForeignKey(Category,verbose_name="Kategorie")
     last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
