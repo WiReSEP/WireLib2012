@@ -1,7 +1,10 @@
 #vim: set fileencoding=utf-8
 import os
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.template import Context
+from django.template import loader
 from documents.lib.bibtex import Bibtex
 from documents.lib.allegro import Allegro
 # Dependencies for doc/add
@@ -17,6 +20,15 @@ from documents.forms import PublisherAddForm
 
 # Dependencies for doc/import
 from documents.forms import UploadFileForm
+
+# Dependencies for doc/<?>/assign
+from documents.forms import SelectUser
+from documents.forms import NonUserForm
+from documents.forms import TelNonUserForm
+from documents.models import DocStatus
+
+# Dependencies for doc/missed
+from documents.views.doc_lists import _list
 
 from settings import *
 from lib_views import _get_dict_response
@@ -250,7 +262,7 @@ def doc_assign(request, bib_no_id):
     except Document.DoesNotExist:
         raise Http404
     try:
-        lending_query = document_query.doc_status.latest('date')
+        lending_query = document_query.docstatus_set.latest('date')
     except DocStatus.DoesNotExist:
         lending_query = None
     if 'assign' in request.POST and v_user.is_authenticated():
@@ -271,9 +283,9 @@ def doc_assign(request, bib_no_id):
             if non_user_lend and not non_user_lend == "":
                 document_query.lend(user=v_user, non_user=non_user_lend)
                 return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
-    miss_query = Document.objects.filter(doc_status__status=Document.MISSING,
-            doc_status__return_lend=False)
-    miss_query = miss_query.order_by('-doc_status__date')
+    miss_query = Document.objects.filter(docstatus__status=Document.MISSING,
+            docstatus__return_lend=False)
+    miss_query = miss_query.order_by('-docstatus__date')
     template = loader.get_template("doc_assign.html")
     dict_response = _get_dict_response(request)
     dict_response["documents"] = document_query

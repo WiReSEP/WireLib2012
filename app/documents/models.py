@@ -131,7 +131,7 @@ class Document(models.Model):
             retVal = self.docstatus_set.latest('date').status
         except BaseException, e:
             print e
-            retVal = 0
+            retVal = AVAILABLE
         return retVal
         
     def __init__(self, *args, **kwargs):
@@ -199,7 +199,7 @@ class Document(models.Model):
         """
         # fürs Übertragen
         if self.status == Document.LEND:
-            dstat = self.doc_status_set.latest('date')
+            dstat = self.docstatus_set.latest('date')
             if dstat.user_lend == user and dstat.non_user_lend == non_user:
                 return
         # zum Ausleihen oder Wiederfinden

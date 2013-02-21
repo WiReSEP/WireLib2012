@@ -29,7 +29,7 @@ def doc_rent(request):
                                         docstatus__user_lend=v_user,
                                         docstatus__non_user_lend__isnull=False,
                                         docstatus__return_lend=False)
-    return _list(request, documents, documents_non_user, 1)
+    return _list(request, documents, documents_non_user, Document.LEND)
 
 def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     """ Erzeugt eine Liste vom Typ "form".

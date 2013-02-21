@@ -1,5 +1,6 @@
 #vim: set fileencoding=utf-8
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 from django.forms.models import modelformset_factory
