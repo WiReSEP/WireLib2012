@@ -8,6 +8,7 @@ from django.http import QueryDict
 from lib_views import _get_dict_response
 import lib_views as lib_views
 from documents.models import Document
+from documents.forms import SearchForm
 
 def doc_list(request):
     """ Übersicht über alle enthaltenen Dokumente
@@ -62,7 +63,6 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
         params_sort[u'Veröffentlichung'] += u'-'
     params_sort[u'Veröffentlichung'] += u'year'
 
-
     if sort is not None:
         if sort == "date":
             documents = documents.order_by("-docstatus__date")
@@ -92,7 +92,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
                                              docstatus__return_lend = False)
         miss_query = miss_query.order_by('-docstatus__date')
     params_starts = _truncate_get(request, 'starts', 'page')
+    searchform = SearchForm(request.GET or None)
     dict_response = _get_dict_response(request)
+    dict_response["searchform"] = searchform
     dict_response["documents"] = documents
     dict_response["settings"] = settings
     dict_response["path_sort"] = params_sort

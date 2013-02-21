@@ -2,19 +2,22 @@ from django.template import Context
 from django.shortcuts import render_to_response
 from lib_views import _get_dict_response
 from doc_lists import doc_list, _list
-from documents.forms import SearchProBaseForm, SearchProExtendedForm
+from documents.forms import SearchForm, SearchProBaseForm, SearchProExtendedForm
 from django.db.models import Q
 from documents.models import Document
+from doc_detail import doc_detail
+import lib_views
 
 def search(request):
-  if "query" not in request.GET:
-    return doc_list(request)
+#  if not request.method == "GET":
+#    return doc_list(request)
   documents = Document.objects.all()
   form = SearchForm(request.GET)
   if not form.is_valid():
     return doc_list(request)
   query = form.cleaned_data['query']
   regex = form.cleaned_data['regex']
+  print query
   searchtext = [query[:],]
   searchset = lib_views._get_searchset(query, regex)
   documents = Document.objects.filter(searchset).distinct()

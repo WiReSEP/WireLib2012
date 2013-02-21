@@ -1,5 +1,25 @@
-{% extends "index.html" %}
 {% block content %}
-{% include 'search_template.html' %}
+<form method="GET">
+  <table>
+	<tr class="suchanfrage">
+	  <td class="such_wort">
+		Suche:
+	  </td>
+	  {% for field in searchform %}
+	    {% if field.label %}
+	      <td>
+			{{ field.label }}
+		  </td>
+		{% endif %}
+		<td>
+		  {{ field }}
+		</td>
+	  {% endfor %}
+	  <td>
+		<input type="submit" value="Suchen" />
+	  </td>
+	</tr>
+  </table>
+</form>
 {% endblock %}
 

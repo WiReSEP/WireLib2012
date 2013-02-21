@@ -105,12 +105,13 @@ class NonUserForm(ModelForm):
         model = NonUser
 
 class SearchForm(forms.Form):
-    query = forms.CharField()
-    regex = forms.BooleanField()
+    query = forms.CharField(label="")
+    regex = forms.BooleanField(required=False)
 
 class SearchProBaseForm(forms.Form):
-    CHOICES = (("authors", "Autor"),
-               ("title", "Titel"),
+    CHOICES = (("title", "Titel"),
+               ("authors__last_name", "Autor Nachname"),
+               ("authors__first_name", "Autor Vorname"),
                ("editor", "Editor"),
                ("keword", u"Schlüsselwort"),
                ("year", "Jahr"),

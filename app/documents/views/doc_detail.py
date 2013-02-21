@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import Template
 from documents.models import *
 from documents.lib.bibtex import Bibtex
+from documents.forms import SearchForm
 import lib_views
 from lib_views import _get_dict_response
 import thread
@@ -67,8 +68,9 @@ def doc_detail(request, bib_no_id, searchtext=""):
         searchmode = 2
     else:
         searchmode = 0
+    searchform = SearchForm(request.GET or None)
     dict_response = _get_dict_response(request)
-    print 'status', document_query._status()
+    dict_response["searchform"] = searchform
     dict_response["bib_no"] = bib_no_id
     dict_response["documents"] = document_query
     dict_response["lending"] = lending_query
