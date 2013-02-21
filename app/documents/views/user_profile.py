@@ -1,5 +1,7 @@
 #vim: set fileencoding=utf-8
 from django.contrib.auth.decorators import login_required
+from documents.models import Document
+from documents.views.lib_views import *
 
 def profile_edit_name(request):
     """

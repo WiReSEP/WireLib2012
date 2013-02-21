@@ -1,6 +1,24 @@
 #vim: set fileencoding=utf-8
+import os
 from django.contrib.auth.decorators import login_required
 from django.template import Context
+from documents.lib.bibtex import Bibtex
+from documents.lib.allegro import Allegro
+# Dependencies for doc/add
+from documents.models import Document
+from documents.models import DocumentAuthors
+from documents.models import DocExtra
+from documents.models import Category
+from documents.forms import DocForm
+from documents.forms import AuthorSelectForm
+from documents.forms import DocExtraForm
+from documents.forms import AuthorAddForm
+from documents.forms import PublisherAddForm
+
+# Dependencies for doc/import
+from documents.forms import UploadFileForm
+
+from settings import *
 from lib_views import _get_dict_response
 from django.shortcuts import render_to_response
 
@@ -30,11 +48,11 @@ def allegro_export(request):
             Allegro.docs_to_export = True
             Allegro.docs_to_export_lock.release()
         files = {}
-        for file in os.listdir(settings.DOCUMENTS_SECDIR+settings.DOCUMENTS_ALLEGRO_FILES):
+        for file in os.listdir(DOCUMENTS_SECDIR+DOCUMENTS_ALLEGRO_FILES):
             if str(file).lower().endswith(".adt"):
                 files[file] = lib_views._gen_sec_link(
                         "/"
-                        +settings.DOCUMENTS_ALLEGRO_FILES
+                        +DOCUMENTS_ALLEGRO_FILES
                         +file
                         )
         dict_response = _get_dict_response(request)
@@ -58,16 +76,16 @@ def bibtex_export(request):
         export_documents = Document.objects.filter(bib_date__isnull=True)
         Bibtex.export_data(
                 export_documents,
-                settings.DOCUMENTS_SECDIR+settings.DOCUMENTS_BIBTEX_FILES
+                normpath(join(DOCUMENTS_SECDIR, DOCUMENTS_BIBTEX))
                 ).start()
         hint = "Der Export läuft. Bitte besuchen Sie uns in ein paar Minuten wieder."
 
     files = {}
-    for file in os.listdir(settingsDOCUMENTS_SECDIR+settings.DOCUMENTS_BIBTEX_FILES):
+    for file in os.listdir(normpath(join(DOCUMENTS_SECDIR, DOCUMENTS_BIBTEX))):
         if str(file).lower().endswith(".bib"):
             files[file] = lib_views._gen_sec_link(
                     "/"
-                    +settings.DOCUMENTS_BIBTEX_FILES
+                    +DOCUMENTS_BIBTEX
                     +file
                     )
     dict_response = _get_dict_response(request)
@@ -92,7 +110,7 @@ def doc_import(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             date = datetime.datetime.today()
-            filename = settings.DOCUMENTS_IMPORT_FILES + \
+            filename = DOCUMENTS_IMPORT_FILES + \
                 datetime.datetime.strftime(date, '%s') + '.bib'
             destination = open(filename, 'wb+')
             for chunk in request.FILES['file'].chunks():
