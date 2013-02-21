@@ -131,7 +131,7 @@ class Document(models.Model):
             retVal = self.docstatus_set.latest('date').status
         except BaseException, e:
             print e
-            retVal = AVAILABLE
+            retVal = Document.AVAILABLE
         return retVal
         
     def __init__(self, *args, **kwargs):
@@ -157,15 +157,13 @@ class Document(models.Model):
             non_user - non_user_lend
         """
         try: # Wenn es was zum updaten gibt:
-            old = self.doc_status_set.latest('date')
+            old = self.docstatus_set.latest('date')
             # bei F5-Benutzung eines Buttons wurden zwei Einträge eingefügt und 
             # beide waren so gekennzeichnet, dass es keinen Nachfolgeeintrag gäbe
-            if (old.status == stat \
-                and old.recent_user == editor \
-                and old.user_lend == user \
-                and old.non_user_lend == non_user):
-                pass
-            else:
+            if not (old.status == stat \
+                    and old.recent_user == editor \
+                    and old.user_lend == user \
+                    and old.non_user_lend == non_user):
                 old.return_lend=True
                 old.save()
                 l = DocStatus(
@@ -393,21 +391,21 @@ class TelNonUser(models.Model):
         verbose_name_plural = "Externer Tel. Nr."
 
 class DocStatus(models.Model):
-    recent_user = models.ForeignKey(User, related_name='recent_user') 
         #auftraggebender User
+    recent_user = models.ForeignKey(User, related_name='recent_user') 
     doc_id = models.ForeignKey(Document) 
-    status = models.IntegerField() 
         #in welchen Status wurde geändert?
-    date = models.DateTimeField(auto_now_add=True) 
+    status = models.IntegerField() 
         #Datum an dem es geschah
-    return_lend = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True) 
         # Aktueller Eintrag vorhanden
-    date_term_lend = models.DateTimeField(blank=True, null=True) 
+    return_lend = models.BooleanField(default=False)
         #Ende der Rückgabefrist
-    user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
+    date_term_lend = models.DateTimeField(blank=True, null=True) 
         #ausleihender User
-    non_user_lend = models.ForeignKey(NonUser, blank=True, null=True) 
+    user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender non_User
+    non_user_lend = models.ForeignKey(NonUser, blank=True, null=True) 
     class Meta:
         permissions = (("can_lend", "Can lend documents"),
                        ("can_unlend", "Can unlend documents"),

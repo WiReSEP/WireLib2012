@@ -22,10 +22,11 @@ from documents.forms import PublisherAddForm
 from documents.forms import UploadFileForm
 
 # Dependencies for doc/<?>/assign
+from documents.models import DocStatus
+from documents.models import TelNonUser
 from documents.forms import SelectUser
 from documents.forms import NonUserForm
 from documents.forms import TelNonUserForm
-from documents.models import DocStatus
 
 # Dependencies for doc/missed
 from documents.views.doc_lists import _list
