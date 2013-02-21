@@ -298,49 +298,49 @@ class Command(BaseCommand):
             pass
         
         #adressen
-        a1 = UserProfile(user_id=user1, street="Musterstraße", number="1",
+        a1 = UserProfile(user=user1, street="Musterstraße", number="1",
                           zipcode="12345", city="Musterhausen")
         try :
             a1.save()
         except IntegrityError:
             pass
-        a2 = UserProfile(user_id=user2, street="Musterstraße", number="2",
+        a2 = UserProfile(user=user2, street="Musterstraße", number="2",
                           zipcode="12345", city="Musterhausen")
         try :
             a2.save()
         except IntegrityError:
             pass
-        a3 = UserProfile(user_id=user3, street="Musterstraße", number="3",
+        a3 = UserProfile(user=user3, street="Musterstraße", number="3",
                           zipcode="12345", city="Musterhausen")
         try :
             a3.save()
         except IntegrityError:
             pass
-        a4 = UserProfile(user_id=user4, street="Musterstraße", number="4",
+        a4 = UserProfile(user=user4, street="Musterstraße", number="4",
                           zipcode="12345", city="Musterhausen")
         try :
             a4.save()
         except IntegrityError:
             pass
-        a5 = UserProfile(user_id=user5, street="Musterstraße", number="5",
+        a5 = UserProfile(user=user5, street="Musterstraße", number="5",
                           zipcode="12345", city="Musterhausen")
         try :
             a5.save()
         except IntegrityError:
             pass
-        a6 = UserProfile(user_id=user6, street="Musterstraße", number="6",
+        a6 = UserProfile(user=user6, street="Musterstraße", number="6",
                           zipcode="12345", city="Musterhausen")
         try :
             a6.save()
         except IntegrityError:
             pass
-        a7 = UserProfile(user_id=user7, street="Musterstraße", number="7",
+        a7 = UserProfile(user=user7, street="Musterstraße", number="7",
                           zipcode="12345", city="Musterhausen")
         try :
             a7.save()
         except IntegrityError:
             pass
-        a8 = UserProfile(user_id=user8, street="Musterstraße", number="8",
+        a8 = UserProfile(user=user8, street="Musterstraße", number="8",
                           zipcode="12345", city="Musterhausen")
         try :
             a8.save()
