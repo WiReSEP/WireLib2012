@@ -27,7 +27,6 @@ class UglyBibtex(object):
             u"publisher" : u"publisher",
             u"year" : u"year",
             u"address" : u"address",
-            u"price" : u"price",
             u"dateofpurchase" : u"date_of_purchase",
             u"author" : u"author",
             u"editor" : u"editor",
@@ -223,7 +222,30 @@ class UglyBibtex(object):
                     }
             # regex für währungen:
             value = key_val[1].strip().split(" ")
-            pass    # TODO: Price interpretieren und schreiben
+            current_currency = re.findall(r'[^0-9.\, ]*', key_val[1])
+            # catch first match
+            for i in current_currency:
+                if i != '':
+                    current_currency = i
+                    break
+            else:
+                current_currency = None
+            # replace unified short forms
+            if current_currency in currency:
+                current_currency = currency[current_currency]
+            price = re.findall(r'''(\d* # price begin
+                    [,|\.]?  # seperator
+                    \d?\d?)? # last optional digits''',
+                    key_val[1],
+                    re.X)
+            for i in price:
+                if i != '':
+                    price = i.replace(",",".")
+                    break
+            else:
+                price = None
+            self.entry['price'] = price
+            self.entry['currency'] = current_currency
 
         elif key_val[0] == u'dateofpurchase':
             if len(key_val) > 2:

@@ -29,7 +29,13 @@ class Command(BaseCommand):
                 action='store_true',
                 dest='demo',
                 default=False,
-                help=u"Erzeugt eine vollständige Demo Umgebung"),
+                help=u"Erzeugt die Benutzer für eine Demo Umgebung"),
+            make_option('--all',
+                action='store_true',
+                dest='all',
+                default=False,
+                help=u"""Erzeugt alles was für ein Demo-System benötigt wird bis
+                auf den Datenbank-Tabellen"""),
             )
 
     help = u"""Mit diesem Kommando kann folgendes erreicht werden:
@@ -40,15 +46,15 @@ class Command(BaseCommand):
     args = "<bibtex_dir>"
 
     def handle(self, *args, **options):
-        if options["basic-setup"] or options["demo"]:
+        if options["basic-setup"] or options["all"]:
             print "Basic configuration"
             self.default_import_rules()
             self.default_settings()
             self.bibtex_categories()
-        if options["demo"]:
+        if options["demo"] or options["all"]:
             print "creating demo users"
             self.demo_users()
-        if options["bibtex"]:
+        if options["bibtex"] or options["all"]:
             print "BibTeX import"
             for file in os.listdir('olddb'):
                 print 'handling', file
@@ -108,7 +114,7 @@ class Command(BaseCommand):
         self.g_admin = Group(name='Administrator')
         self.g_uadmin = Group(name='UserAdmin')
         self.g_biblio = Group(name='Bibliothekar')
-        self.g_user = Group(name='Mitglieder')
+        self.g_user = Group(name='Benutzer')
         self.g_admin.save()
         self.g_uadmin.save()
         self.g_biblio.save()
@@ -412,17 +418,21 @@ class Command(BaseCommand):
             UserProfile(user=user1, street="Musterstraße", number=profile,
                     zipcode="12345", city="Musterhausen").save()
         # user -> group
-        self.g_admin.user_set.add(user1)
-        self.g_uadmin.user_set.add(user1)
-        self.g_uadmin.user_set.add(user3)
-        self.g_biblio.user_set.add(user1)
-        self.g_biblio.user_set.add(user4)
-        self.g_user.user_set.add(user1)
-        self.g_user.user_set.add(user2)
-        self.g_user.user_set.add(user3)
-        self.g_user.user_set.add(user4)
-        self.g_user.user_set.add(user5)
-        self.g_user.user_set.add(user6)
+        groups = {}
+        for i in Group.objects.all():
+            groups[i.name] = i
+
+        groups["Administrator"].user_set.add(user1)
+        groups["Administrator"].user_set.add(user1)
+        groups["Administrator"].user_set.add(user3)
+        groups["Bibliothekar"].user_set.add(user1)
+        groups["Bibliothekar"].user_set.add(user4)
+        groups["Benutzer"].user_set.add(user1)
+        groups["Benutzer"].user_set.add(user2)
+        groups["Benutzer"].user_set.add(user3)
+        groups["Benutzer"].user_set.add(user4)
+        groups["Benutzer"].user_set.add(user5)
+        groups["Benutzer"].user_set.add(user6)
         # ohne Gruppe user7(Rechte einfügen) und user8(ohne Rechte)            
         #user7 Rechte geben
         Permission.objects.get(codename="can_see_price").user_set.add(user7)

@@ -66,6 +66,8 @@ class Document(models.Model):
     inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
     lib_of_con_nr = models.CharField("Library Of Congress No", max_length=60, blank=True, null=True) 
+    price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
+    currency = models.CharField("Währung",max_length=10, blank=True, null=True)
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=400)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
@@ -75,8 +77,6 @@ class Document(models.Model):
     publisher = models.ForeignKey(Publisher, blank=True, null=True)
     year = models.IntegerField("Jahr",blank=True, null=True)
     address = models.CharField("Adresse",max_length=100, blank=True, null=True)
-    price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
-    currency = models.CharField("Währung",max_length=3, blank=True, null=True)
     date_of_purchase = models.DateField("Kaufdatum", auto_now_add=True)
     ub_date = models.DateField("UB-Export", blank=True, null=True) 
         #Datum des Allegro-Exports
@@ -267,6 +267,9 @@ class Document(models.Model):
                 author=obj, editor=is_editor, sort_value=max_val)
         d.save()
 
+#class Price(models.Model):
+#    document = models.ForeignKey(Document, primary_key=True)
+#
 class DocumentAuthors(models.Model):
     document = models.ForeignKey(Document)
     author = models.ForeignKey(Author,verbose_name="Autor")
