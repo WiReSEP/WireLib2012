@@ -130,7 +130,6 @@ class Document(models.Model):
         try:
             retVal = self.docstatus_set.latest('date').status
         except BaseException, e:
-            print e
             retVal = Document.AVAILABLE
         return retVal
         
