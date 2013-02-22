@@ -49,15 +49,14 @@ def _filter_names(documents, request):
     beliebigem Anfangsbuchstaben wählen. Jedes Dokument muss selbstständig
     abgeholt werden, wir haften nicht für den Reiseweg!
     """
-    sw = request.GET.get('starts', '')
-
+    sw = request.GET.get('starts', 'all')
     if sw == "special_sign":
-        documents = documents.exclude(title__iregex='[A-Za-z]')
+        documents = documents.exclude(title__iregex='^[A-Za-z]')
     elif sw == "all" or sw is None or sw == "":
         documents = documents.all()
     else :
-        sw_reg = '[' + sw + ']'
-        documents = documents.filter(title__iregex=sw)
+        sw_reg = '^[' + sw + ']'
+        documents = documents.filter(title__iregex=sw_reg)
     return documents
 
 def _gen_sec_link(path):
