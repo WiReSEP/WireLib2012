@@ -72,21 +72,24 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
             documents = documents.order_by(sort)
     miss_query = None 
     # options für Filter-Dropdown
-    startswith_filter = {
-        'all': ['value=all', 'Alle'],
-        '0-9': ['value=0-9', '0-9'],
-        'a-c': ['value=a-c', 'A-C'],
-        'd-f': ['value=d-f', 'D-F'],
-        'g-i': ['value=g-i', 'G-I'],
-        'j-k': ['value=j-k', 'J-K'],
-        'm-o': ['value=m-o', 'M-O'],
-        'p-s': ['value=p-s', 'P-S'],
-        't-v': ['value=t-v', 'T-V'],
-        'w-z': ['value=w-z', 'W-Z'],
-        'special_sign': ['value=special_sign', 'Sonderzeichen'],
-        }
+    startswith_filter = (
+        ['value=all', 'Alle'],
+        ['value=0-9', '0-9'],
+        ['value=a-c', 'A-C'],
+        ['value=d-f', 'D-F'],
+        ['value=g-i', 'G-I'],
+        ['value=j-k', 'J-K'],
+        ['value=m-o', 'M-O'],
+        ['value=p-s', 'P-S'],
+        ['value=t-v', 'T-V'],
+        ['value=w-z', 'W-Z'],
+        ['value=special_sign', 'Sonderzeichen'],
+        )
     selected_filter = request.GET.get('starts', default='all')
-    startswith_filter[selected_filter][0] += ' selected=selected'
+    for start in startswith_filter:
+        compare = 'value=' + selected_filter
+        if start[0] == compare:
+            start[0] += ' selected=selected'
     if form != 2:
         miss_query = Document.objects.filter(docstatus__status = Document.MISSING,
                                              docstatus__return_lend = False)

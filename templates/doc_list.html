@@ -17,7 +17,7 @@
 		</label>
 		<select id="filter_id" name="starts"
 		  onchange="insertParam('starts', this.form.starts.value)">
-		  {% for key,val in filter.items %}
+		  {% for val in filter %}
 		  <option {{ val.0 }}>{{ val.1 }}</option>
 		  {% endfor %}
         </select>
