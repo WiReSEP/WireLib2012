@@ -22,6 +22,10 @@
         </select>
       </form>
 	</div>
+	<div>
+	  Zeige Dokumente {{ doc_num_start }} - {{ doc_num_end }} von {{ doc_num }}
+	  Dokumenten.
+	</div>
 	</div>
 	<ul id="list_body">
 	{% for d in documents.object_list %}
@@ -114,11 +118,22 @@
 	</div>
 	<input type="hidden" name="page" value="{{ active_page }}" id="newpage"/>
 	{% if active_page > 1 %}
+	  <button
+		type="button"
+		onclick="insertParam('page', 1)"
+	  >
+		1
+	  </button>
 	  <button 
-		>
+		type="button"
+		onclick="insertParam('page', {{ active_page|add:"-1" }})"
+	  >
 		  prev
 	  </button>
 	{% else %}
+	  <button class="inactive" type="button">
+		1
+	  </button>
 	  <button class="inactive" type="button">
 		prev
 	  </button>
@@ -129,16 +144,23 @@
 	{% if active_page < max_page %}
 	  <button
 		type="button"
-		onclick="function() {% templatetag openbrace %}
-		  alert("bla");
-		  $("#newpage").val({{ active_page|add:"1" }});
-		  {% templatetag closebrace %}"
-		>
+		onclick="insertParam('page', {{ active_page|add:"1" }})"
+	  >
 		next
+	  </button>
+	  <button
+		type="button"
+		onclick="insertParam('page', {{ max_page }})"
+	  >
+		{{ max_page }}
 	  </button>
 	{% else %}
 	  <button class="inactive" type="button">
 		next
+	  </button>
+	  <button class="inactive" type="button"
+	  >
+		{{ max_page }}
 	  </button>
 	  {% endif %}
   </form>

@@ -34,6 +34,8 @@ def _get_searchset(searchvalue, regex=False):
                 Q(bib_no__icontains=searchvalue) |
                 Q(publisher__name__icontains=searchvalue) |
                 Q(keywords__keyword__icontains=searchvalue))
+    if searchvalue.endswith("\\"):
+        searchvalue = searchvalue + " "
     return (Q(title__iregex=searchvalue) |
             Q(authors__first_name__iregex=searchvalue) |
             Q(authors__last_name__iregex=searchvalue) |

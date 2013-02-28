@@ -100,7 +100,7 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     searchform = SearchForm(request.GET or None)
     paginator = Paginator(documents, 10)
     try:
-        page = int(request.POST.get('page', '1'))
+        page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
     try:
@@ -122,11 +122,20 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     dict_response["documents"] = fp
     dict_response["active_page"] = page
     dict_response["max_page"] = paginator.num_pages
+    dict_response["doc_num"] = len(documents)
     dict_response["settings"] = settings
     dict_response["path_sort"] = params_sort
     dict_response["path_starts"] = params_starts
     dict_response["form"] = form
     dict_response["filter"] = startswith_filter
+    if len(documents) == 0:
+        dict_response["doc_num_start"] = 0
+    else:
+        dict_response["doc_num_start"] = page * 10 - 9
+    if page == paginator.num_pages:
+        dict_response["doc_num_end"] = len(documents)
+    else:
+        dict_response["doc_num_end"] = page * 10
     if search_pro_baseform.is_valid() and search_pro_form.is_valid():
         dict_response["search_pro_baseform"] = search_pro_baseform
         dict_response["search_pro_form"] = search_pro_form
