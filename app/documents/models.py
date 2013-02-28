@@ -165,25 +165,19 @@ class Document(models.Model):
                     and old.non_user_lend == non_user):
                 old.return_lend=True
                 old.save()
-                l = DocStatus(
-                        recent_user = editor,
-                        doc_id = self,
-                        status = stat,
-                        date_term_lend = terminate,
-                        user_lend = user,
-                        non_user_lend = non_user
-                    )
-                l.save()
-        except:
-            l = DocStatus(
-                        recent_user = editor,
-                        doc_id = self,
-                        status = stat,
-                        date_term_lend = terminate,
-                        user_lend = user,
-                        non_user_lend = non_user
-                    )
-            l.save()
+        except DocStatus.DoesNotExist:
+            #There is no DocStatus. Maybe the Document has just been imported.
+            #So there is no need to do anything right now, new status is coming
+            #now.
+            pass
+        l = DocStatus(
+                recent_user = editor,
+                doc_id = self,
+                status = stat,
+                date_term_lend = terminate,
+                user_lend = user,
+                non_user_lend = non_user)
+        l.save()
 
     def lend(self, user, editor=None, non_user=None, terminate=None):
         """ 
@@ -400,7 +394,7 @@ class DocStatus(models.Model):
     status = models.IntegerField() 
         #Datum an dem es geschah
     date = models.DateTimeField(auto_now_add=True) 
-        # Aktueller Eintrag vorhanden
+        #False markiert den aktuellsten Eintrag für den Status eines Dokumentes
     return_lend = models.BooleanField(default=False)
         #Ende der Rückgabefrist
     date_term_lend = models.DateTimeField(blank=True, null=True) 

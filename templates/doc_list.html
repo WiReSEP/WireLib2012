@@ -1,4 +1,3 @@
-{% load pagination_tags %}
 <p>
 	<div id="nav">
 	<div id="sort_list">
@@ -24,9 +23,8 @@
       </form>
 	</div>
 	</div>
-	{% autopaginate documents 10 %}
 	<ul id="list_body">
-	{% for d in documents %}
+	{% for d in documents.object_list %}
 	  <li id="{% spaceless %}
 		  {% if form == 0 %}
 			status_{{ d.status }} 
@@ -106,5 +104,42 @@
 	</li>
 	{% endfor %}
 	</ul>
+  <form method="POST" id="query_form">
+	<div style="visibility:hidden; display:none">
+	  {% if search_pro_form %}
+		{{ search_pro_baseform.as_p }}
+		{{ search_pro_form.management_form }}
+		{{ search_pro_form.as_p }}
+	  {% endif %}
+	</div>
+	<input type="hidden" name="page" value="{{ active_page }}" id="newpage"/>
+	{% if active_page > 1 %}
+	  <button 
+		>
+		  prev
+	  </button>
+	{% else %}
+	  <button class="inactive" type="button">
+		prev
+	  </button>
+	{% endif %}
+	{% for button in page_buttons %}
+	  {{ button }}
+	{% endfor %}
+	{% if active_page < max_page %}
+	  <button
+		type="button"
+		onclick="function() {% templatetag openbrace %}
+		  alert("bla");
+		  $("#newpage").val({{ active_page|add:"1" }});
+		  {% templatetag closebrace %}"
+		>
+		next
+	  </button>
+	{% else %}
+	  <button class="inactive" type="button">
+		next
+	  </button>
+	  {% endif %}
+  </form>
 </p>
-	{% paginate %}

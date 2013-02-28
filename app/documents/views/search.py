@@ -17,7 +17,6 @@ def search(request):
     return doc_list(request)
   query = form.cleaned_data['query']
   regex = form.cleaned_data['regex']
-  print query
   searchtext = [query[:],]
   searchset = lib_views._get_searchset(query, regex)
   documents = Document.objects.filter(searchset).distinct()
@@ -52,6 +51,8 @@ def search_pro(request):
   return render_to_response("search_pro.html", context_instance=context)
 
 def _combine_querys(searchset, category, query, regex, bind):
+  if not query or query == "":
+      return searchset
   new_searchset = _get_advanced_searchset(category, query, regex)
   ids = new_searchset.values('bib_no')
   if bind == "and":
