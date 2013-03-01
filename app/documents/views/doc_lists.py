@@ -1,6 +1,7 @@
 #vim: set fileencoding=utf-8
 
 import settings
+import re
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -99,8 +100,11 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     params_starts = _truncate_get(request, 'starts', 'page')
     searchform = SearchForm(request.GET or None)
     paginator = Paginator(documents, 10)
+    get_page = request.GET.get('page', '1')
+    if re.match(r'\d+#$', get_page):
+        get_page = get_page.rstrip("#")
     try:
-        page = int(request.GET.get('page', '1'))
+        page = int(get_page)
     except ValueError:
         page = 1
     try:
@@ -116,12 +120,13 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     except ValidationError:
         search_pro_form = SearchProExtendedForm()
 
+    num_pages = paginator.num_pages
     dict_response = _get_dict_response(request)
     dict_response["searchform"] = searchform
 #    dict_response["documents"] = documents
     dict_response["documents"] = fp
     dict_response["active_page"] = page
-    dict_response["max_page"] = paginator.num_pages
+    dict_response["max_page"] = num_pages
     dict_response["doc_num"] = len(documents)
     dict_response["settings"] = settings
     dict_response["path_sort"] = params_sort
@@ -132,13 +137,38 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
         dict_response["doc_num_start"] = 0
     else:
         dict_response["doc_num_start"] = page * 10 - 9
-    if page == paginator.num_pages:
+    if page == num_pages:
         dict_response["doc_num_end"] = len(documents)
     else:
         dict_response["doc_num_end"] = page * 10
     if search_pro_baseform.is_valid() and search_pro_form.is_valid():
         dict_response["search_pro_baseform"] = search_pro_baseform
         dict_response["search_pro_form"] = search_pro_form
+    page_buttons = []
+    button_range = 5
+    start = page - button_range
+    i = start
+    end = page + button_range
+    if page == 1:
+        button = _generate_pagination_link(1, active=True)
+    else:
+        button = _generate_pagination_link(1)
+    page_buttons.append(button)
+    while i < end and (i < num_pages):
+        if i > 1:
+            if not i == page:
+                button = _generate_pagination_link(i)
+            else:
+                button = _generate_pagination_link(i, active=True)
+            page_buttons.append(button)
+        i = i + 1
+    if not num_pages == 1:
+        if page == num_pages:
+            button = _generate_pagination_link(num_pages, active=True)
+        else:
+            button = _generate_pagination_link(num_pages)
+        page_buttons.append(button)
+    dict_response["page_buttons"] = page_buttons
     if form == 1:
         return render_to_response(
                 "doc_rent.html", 
@@ -162,6 +192,30 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
             "doc_list_wrapper.html", 
             dict_response,
             context_instance=RequestContext(request))
+
+def _generate_pagination_link(page_number, active=False, enabled=True):
+    if enabled == False:
+        button = """<li class="disabled">
+                        <a href="#">
+                            %i
+                        </a>
+                    </li>""" % (page_number)
+    elif active == True:
+        button = """<li class="active">
+                        <a href="#">
+                            %i
+                        </a>
+                    </li>""" % (page_number)
+    else:
+        button = """<li>
+                        <a href="#"
+                           onclick="insertParam('page', %i, false);
+                                $('form#query_form').submit();"
+                        >
+                            %i
+                        </a>
+                    </li>""" % (page_number, page_number)
+    return button
 
 def _truncate_get(request, *var):
     """Entfernt GET-Parameter

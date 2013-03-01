@@ -3,6 +3,7 @@ import os
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.template import Context
 from django.template import loader
 from documents.lib.bibtex import Bibtex
@@ -34,6 +35,8 @@ from documents.views.doc_lists import _list
 from settings import *
 from lib_views import _get_dict_response
 from django.shortcuts import render_to_response
+
+import lib_views
 
 @login_required
 def export(request):
@@ -182,7 +185,7 @@ def doc_add(request, bib_no_id=None):
             raise Http404
 
     if request.method == 'POST':
-        form_doc = DocForm(reuqest.POST, instance=document)
+        form_doc = DocForm(request.POST, instance=document)
         form_authors = AuthorSelectForm(request.POST, instance=document)
         form_extras = DocExtraForm(request.POST, queryset=query_extras)
         form_author = AuthorAddForm(request.POST)

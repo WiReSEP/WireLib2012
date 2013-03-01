@@ -1682,3 +1682,7 @@ div.logo a {
     background-color: transparent;
     
 }
+
+.inactive {
+  background-color: lightgray;
+}

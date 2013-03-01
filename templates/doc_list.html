@@ -9,21 +9,23 @@
 	  {% endfor %}
 	</div>
 
-	<div id="list_filter">
-	  <form action="" method="GET">
-		<label for="filter_id" >
-		  Beginnt mit:
-		</label>
-		<select id="filter_id" name="starts"
-		  onchange="insertParam('starts', this.form.starts.value)">
-		  {% for val in filter %}
-		  <option {{ val.0 }}>{{ val.1 }}</option>
-		  {% endfor %}
-        </select>
-      </form>
-	</div>
+	{% if not search_pro_form %}
+	  <div id="list_filter">
+		<form action="" method="GET">
+		  <label for="filter_id" >
+			Beginnt mit:
+		  </label>
+		  <select id="filter_id" name="starts"
+			onchange="insertParam('starts', this.form.starts.value)">
+			{% for val in filter %}
+			<option {{ val.0 }}>{{ val.1 }}</option>
+			{% endfor %}
+		  </select>
+		</form>
+	  </div>
+	{% endif %}
 	<div>
-	  Zeige Dokumente {{ doc_num_start }} - {{ doc_num_end }} von {{ doc_num }}
+	  <br />Zeige Dokumente {{ doc_num_start }} - {{ doc_num_end }} von {{ doc_num }}
 	  Dokumenten.
 	</div>
 	</div>
@@ -116,52 +118,11 @@
 		{{ search_pro_form.as_p }}
 	  {% endif %}
 	</div>
-	<input type="hidden" name="page" value="{{ active_page }}" id="newpage"/>
-	{% if active_page > 1 %}
-	  <button
-		type="button"
-		onclick="insertParam('page', 1)"
-	  >
-		1
-	  </button>
-	  <button 
-		type="button"
-		onclick="insertParam('page', {{ active_page|add:"-1" }})"
-	  >
-		  prev
-	  </button>
-	{% else %}
-	  <button class="inactive" type="button">
-		1
-	  </button>
-	  <button class="inactive" type="button">
-		prev
-	  </button>
-	{% endif %}
-	{% for button in page_buttons %}
-	  {{ button }}
-	{% endfor %}
-	{% if active_page < max_page %}
-	  <button
-		type="button"
-		onclick="insertParam('page', {{ active_page|add:"1" }})"
-	  >
-		next
-	  </button>
-	  <button
-		type="button"
-		onclick="insertParam('page', {{ max_page }})"
-	  >
-		{{ max_page }}
-	  </button>
-	{% else %}
-	  <button class="inactive" type="button">
-		next
-	  </button>
-	  <button class="inactive" type="button"
-	  >
-		{{ max_page }}
-	  </button>
-	  {% endif %}
+	<div class="pagination">
+	  <ul>
+		{% for button in page_buttons %}
+		  {{ button|safe }}
+		{% endfor %}
+	</ul></div>
   </form>
 </p>
