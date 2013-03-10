@@ -22,8 +22,21 @@
     <!-- Die Stylesheets die für alle Seiten gelten -->
     {% load static %}
     {% get_static_prefix as STATIC_PREFIX %}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}tubs.css" media="all" title="Layout für alle Seiten" />
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}tubs_print.css" media="print" title="Layout für alle Seiten" />
+	<link 
+	  rel="stylesheet" 
+	  type="text/css" 
+	  href="{{ STATIC_PREFIX }}tubs.css" 
+	  media="all" />
+	<link
+	  rel="stylesheet"
+	  type="text/css"
+	  href="{{ STATIC_PREFIX }}bootstrap_emulation.css" />
+	<link 
+	  rel="stylesheet" 
+	  type="text/css" 
+	  href="{{ STATIC_PREFIX }}tubs_print.css" 
+	  media="print" 
+	  title="Layout für alle Seiten" />
       
 {% block head %}
 {% endblock head %}

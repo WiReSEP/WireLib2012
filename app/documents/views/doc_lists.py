@@ -154,6 +154,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
     else:
         button = _generate_pagination_link(1)
     page_buttons.append(button)
+    if start > 2:
+        button = "<li><span>...</span></li>"
+        page_buttons.append(button)
     while i < end and (i < num_pages):
         if i > 1:
             if not i == page:
@@ -163,6 +166,9 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
             page_buttons.append(button)
         i = i + 1
     if not num_pages == 1:
+        if end < (num_pages - 1):
+            button = "<li><span>...</span></li>"
+            page_buttons.append(button)
         if page == num_pages:
             button = _generate_pagination_link(num_pages, active=True)
         else:
@@ -196,19 +202,19 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
 def _generate_pagination_link(page_number, active=False, enabled=True):
     if enabled == False:
         button = """<li class="disabled">
-                        <a href="#">
+                        <a href="javascript:void(0)">
                             %i
                         </a>
                     </li>""" % (page_number)
     elif active == True:
         button = """<li class="active">
-                        <a href="#">
+                        <a href="javascript:void(0)">
                             %i
                         </a>
                     </li>""" % (page_number)
     else:
         button = """<li>
-                        <a href="#"
+                        <a href="javascript:void(0)"
                            onclick="insertParam('page', %i, false);
                                 $('form#query_form').submit();"
                         >

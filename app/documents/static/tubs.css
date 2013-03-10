@@ -417,7 +417,17 @@ div.linke_spalte A {
 
 UL.navi {
 
-	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; LIST-STYLE-POSITION: inside; PADDING-BOTTOM: 0px; MARGIN:0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none; POSITION:fixed: 230px; FLOAT:left;
+	PADDING-RIGHT: 0px; 
+	PADDING-LEFT: 0px; 
+	LIST-STYLE-POSITION: inside; 
+	PADDING-BOTTOM: 0px; 
+	MARGIN:0px; 
+	PADDING-TOP: 0px; 
+	LIST-STYLE-TYPE: 
+	none; 
+	POSITION:fixed; 
+	top: 230px; 
+	FLOAT:left;
 }
 
 /*Werte für alle Navigationsebenen*/
@@ -691,7 +701,7 @@ div.metas {
 }
 
 .inhalt ul#list_body li div#authors{
-  float: clear;
+  clear: both;
   font-style: italic;
 }
 
@@ -1239,7 +1249,7 @@ a:active{
 	text-decoration: none;
 }
 
-a: focus {
+a:focus {
         color: #ffffff;
 	background-color:  #be1e3c; 
 	text-decoration: none;
@@ -1397,8 +1407,9 @@ img {
 
 hr { 
 	color: #DCDCDC;
-        background-color:#DCDCDC;
-        noshade:noshade;
+    background-color:#DCDCDC;
+    border: none;
+	height: 1px;
  }
 
 .accessKey {
@@ -1605,13 +1616,13 @@ border:none;
 
 
 
-+++++++++++
+/*+++++++++++
 Die Leisten mit den Social Bookmarks
-++++++++++++
+++++++++++++*/
 
 ul#sb_leiste1 {
 	
-        margin: 0;
+    margin: 0;
 	display: block;
 	list-style-type: none;
 	
@@ -1623,7 +1634,7 @@ ul#sb_leiste1 li {
 
 	display: block;
 	margin-left: -40px;
-        margin-right:5px;
+    margin-right:5px;
 	float: left;
 	
 }
@@ -1681,8 +1692,4 @@ ul#sb_leiste2 li {
 div.logo a {
     background-color: transparent;
     
-}
-
-.inactive {
-  background-color: lightgray;
 }
