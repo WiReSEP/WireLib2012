@@ -67,7 +67,7 @@ from .deploy import *" > ${WORKING_PATH}/settings/__init__.py
 #
 
 cd ${WORKING_PATH}
-virtualenv -p python2 virtualenv
+virtualenv -p python2 --system-site-packages virtualenv
 . virtualenv/bin/activate
 pip install django==${DJANGO_VERSION}
 pip install flup
