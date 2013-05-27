@@ -145,7 +145,7 @@ def _list(request, documents, documents_non_user=None, form=0, searchtext=""):
         dict_response["search_pro_baseform"] = search_pro_baseform
         dict_response["search_pro_form"] = search_pro_form
     page_buttons = []
-    button_range = 5
+    button_range = 4
     start = page - button_range
     i = start
     end = page + button_range

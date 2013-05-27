@@ -1,4 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    {% load static %}
+    {% get_static_prefix as STATIC_PREFIX %}
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang='de' lang='de'>
 <head>
     <meta name="generator" 
@@ -14,14 +16,12 @@
 	<meta name="audience" content="Alle" />
 	<meta name="robots" content="INDEX, FOLLOW" />
 	<meta http-equiv="pragma" content="no-cache" />
-	<link rel="SHORTCUT ICON" href="/icons/tubsdesign/favicon.ico" title="favicon" />
+	<link rel="SHORTCUT ICON" href="{{ STATIC_PREFIX }}icons/tubsdesign/favicon.ico" title="favicon" />
 	<link rel="index" href="/suchoptionen/a-z-index" title="Stichwortverzeichnis" />
 	<link rel="glossary" href="/service/glossar" title="Begriffs-Glossar" />
 	<link rel="help" href="/presse/web" title="Hilfekontext" />
 
     <!-- Die Stylesheets die für alle Seiten gelten -->
-    {% load static %}
-    {% get_static_prefix as STATIC_PREFIX %}
 	<link 
 	  rel="stylesheet" 
 	  type="text/css" 
@@ -40,6 +40,10 @@
       
 {% block head %}
 {% endblock head %}
+  <script type="text/javascript" src="{{ STATIC_PREFIX }}js/menupopup.js">
+  </script>
+  <script type="text/javascript" src="{{ STATIC_PREFIX }}js/windowopen.js">
+  </script>
 	<script type="text/javascript">
 	  function spoiler(elem, idname, showMessage, hideMessage) {
 		try {
@@ -131,7 +135,7 @@ function spoilIt(elem, idname) {
 			   19.07.2012
 			<hr noshade="noshade" />
 			<a style="float: right;" href="#pagetop" title="irgendein Link">
-				<img title="hoch zum Seitenanfang" src="/icons/tubsdesign/top.gif" 
+			  <img title="hoch zum Seitenanfang" src="{{ STATIC_PREFIX }}icons/tubsdesign/top.gif" 
 				class="noborder" height="8" width="9" alt="hoch zum Seitenanfang" />
 			</a>
 

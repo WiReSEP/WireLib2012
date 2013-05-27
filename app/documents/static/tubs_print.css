@@ -1,0 +1,173 @@
+@page { size:landscape; }
+
+.rechte_spalte{
+display:none;
+width:0px;
+height:0px;
+overflow:hidden;
+}
+
+#bewerbenlink {
+display:none }
+
+div#symbolpic {
+         
+        position:absolute;
+        top:85px;
+        left:20px;
+        width: 720px;
+        height:128px;
+        }
+
+#symbolpic img{
+         width: 720px;
+        height:128px;
+}
+
+div#logo {
+     position:absolute;
+     left:315px;
+     top: 6px; 
+     width: 350px;
+     height: 74px;
+     }
+
+div#tu_navcontainer {
+display:none
+}
+
+
+ul#tu_navlist {
+display:none
+}
+
+table#aktuell {
+position: asolute;
+left:20px;
+}
+
+body {
+	color : black; 
+        font-family:Arial;
+	background : #ffffff; 
+	margin : 0; 
+        font-size:10pt;
+} 
+
+#bewerbenlink {
+        display:none;
+}
+
+table {
+       margin-left:10px;
+       width:810px;
+}
+
+td {
+	font-family:arial;
+        font-size: 7.pt;
+	text-decoration: none;
+	font-weight: normal;
+	vertical-align:top;
+}
+
+#bewerben {
+        padding-left:10px; 
+        position:absolute; 
+        top: 435px;
+}
+
+
+tt {
+       font-family:Arial;
+}
+
+p , dt , dd , li {
+	font-size : 7.5pt; 
+	font-family : Arial; 
+	line-height : 1.5em; 
+	color : #000000; 
+	background-color : transparent; 
+	background-color : white; 
+} 
+
+blockquote, q {
+	font-style: italic;
+	font-size: 12pt;
+	line-height: 1.5em;
+	margin-bottom: 18pt;
+}
+
+blockquote {
+ 	margin-left: 80px; 
+	background-color: #fafafa; 
+}
+
+cite { 
+/*	2005-01-14me: passend zum blockquote-Einzug: 
+	margin-left: 80px; */
+	font-size: 12pt;
+	background-color: #fff;
+}
+
+
+code { 
+	font-weight: bold;
+	background-color: #fafafa;
+}
+
+strong {
+	font-size : 12pt; 
+	font-family :Arial; 
+	font-weight : bold; 
+	font-style : normal; 
+	line-height : 1.5em; 
+} 
+
+/*	2005-01-26me: aus strong herausgeschnitten +  zu eigener Klasse gemacht, weil Eonpro3 alle <b> zu <strong> wandelt */
+.rot {
+	color : #cc3333; 
+	background-color : white; 
+	font-family : Arial; 
+}
+
+hr {
+	color : silver; 
+	background-color : silver; 
+	height : 1px; 
+} 
+
+a {
+	font-weight : normal; 
+	text-decoration : underline; 
+} 
+
+.bu , .fusszeile {
+	font-size : 10pt; 
+	font-family : Arial; 
+	text-decoration : none; 
+	font-weight : normal; 
+	color : #666666; 
+	line-height : 1.5em; 
+	text-decoration : none; 
+} 
+
+.bu {
+	text-align : right; 
+} 
+
+.geisterschrift {
+	color : silver; 
+} 
+
+img {
+	border : 0 ; 
+} 
+
+
+*/
+
+
+
+
+

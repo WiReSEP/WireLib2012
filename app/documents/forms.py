@@ -78,6 +78,8 @@ DocExtraForm = modelformset_factory(DocExtra, extra=4, can_delete=True,
 class DocForm(ModelForm):
     class Meta:
         model = Document
+        fields = ('title', 'bib_no', 'inv_no', 'isbn', 'bibtex_id', 'category',
+                'publisher', 'year', 'address', 'price', 'currency', 'comment')
         exclude = ('date_of_purchase', 'ub_date', 'bib_date', 'last_edit_by',
         'authors')
 
@@ -127,7 +129,8 @@ class SearchProBaseForm(forms.Form):
              (Document.LOST, "Verloren"),
         )
     searchtext = forms.CharField(label="Suchtext", required=False)
-    regex = forms.BooleanField(required=False)
+    regex = forms.BooleanField(required=False, 
+        label=u'<a href="http://perldoc.perl.org/perlrequick.html">Regex</a>')
     category = forms.ChoiceField(choices=CHOICES, required=False)
 
     class Media:

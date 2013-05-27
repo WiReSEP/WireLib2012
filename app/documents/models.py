@@ -9,7 +9,6 @@ from django.template import Context
 from django.template import loader
 from documents.lib.exceptions import LendingError
 
-
 class Need(models.Model):
     name = models.CharField(max_length=30, primary_key=True)
     class Meta:
@@ -62,6 +61,19 @@ class Author(models.Model):
         return (self.first_name + ' ' + self.last_name)
 
 class Document(models.Model):
+    AVAILABLE= 0  #vorhanden
+    LEND = 1      #ausgeliehen
+    ORDERED = 2   #bestellt
+    MISSING = 3   #vermisst
+    LOST = 4      #verloren
+
+    STATUS_CHOICES = (
+            (AVAILABLE, "Verfügbar"),
+            (LEND, "Verliehen"),
+            (ORDERED, "Bestellt"),
+            (MISSING, "Vermisst"),
+            (LOST, "Verloren"),)
+
     bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
     inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
@@ -70,6 +82,8 @@ class Document(models.Model):
     currency = models.CharField("Währung",max_length=10, blank=True, null=True)
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=400)
+    status = models.IntegerField("Status", null=True, choices=STATUS_CHOICES,
+            default=AVAILABLE)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
     category = models.ForeignKey(Category,verbose_name="Kategorie")
     last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
@@ -94,15 +108,7 @@ class Document(models.Model):
         ordering = ['title']
         verbose_name = "Dokument"
         verbose_name_plural = "Dokumente"
-    
-        
 
-    AVAILABLE= 0  #vorhanden
-    LEND = 1      #ausgeliehen
-    ORDERED = 2   #bestellt
-    MISSING = 3   #vermisst
-    LOST = 4      #verloren
-    
     def save(self, user=None, *args, **kwargs):
         """
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
@@ -111,6 +117,8 @@ class Document(models.Model):
             user = User.objects.get(id=1)
         self.last_edit_by = user
         super(Document, self).save(*args, **kwargs)
+        if not self.status == self._status():
+            self.set_status(user, self.status)
     
     def delete(self, *args, **kwargs):
         """
@@ -135,7 +143,7 @@ class Document(models.Model):
         
     def __init__(self, *args, **kwargs):
         models.Model.__init__(self, *args, **kwargs)
-        self.status = self._status()
+#        self.status = self._status()
 
     def __unicode__(self):
         return self.title
@@ -170,6 +178,8 @@ class Document(models.Model):
             #So there is no need to do anything right now, new status is coming
             #now.
             pass
+        if stat == Document.LEND and user is None:
+            user = editor
         l = DocStatus(
                 recent_user = editor,
                 doc_id = self,
@@ -178,6 +188,9 @@ class Document(models.Model):
                 user_lend = user,
                 non_user_lend = non_user)
         l.save()
+        if not self.status == stat:
+            self.status = stat
+            self.save()
 
     def lend(self, user, editor=None, non_user=None, terminate=None):
         """ 
@@ -281,12 +294,12 @@ class DocumentAuthors(models.Model):
 
 class Keywords(models.Model):
     document = models.ForeignKey(Document)
-    keyword = models.CharField("Schlüsselwort",max_length=200)
+    keyword = models.CharField(u"Schlüsselwort",max_length=200)
     class Meta:
         unique_together = ('document', 'keyword')
     #primary_key(document, keyword)
-        verbose_name = "Schlüsselwort"
-        verbose_name_plural = "Schlüsselwörter"
+        verbose_name = u"Schlüsselwort"
+        verbose_name_plural = u"Schlüsselwörter"
         
     
     def __unicode__(self):
@@ -391,7 +404,8 @@ class DocStatus(models.Model):
     recent_user = models.ForeignKey(User, related_name='recent_user') 
     doc_id = models.ForeignKey(Document) 
         #in welchen Status wurde geändert?
-    status = models.IntegerField() 
+    status = models.IntegerField(choices=Document.STATUS_CHOICES,
+            default=Document.AVAILABLE) 
         #Datum an dem es geschah
     date = models.DateTimeField(auto_now_add=True) 
         #False markiert den aktuellsten Eintrag für den Status eines Dokumentes
@@ -402,6 +416,7 @@ class DocStatus(models.Model):
     user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
         #ausleihender non_User
     non_user_lend = models.ForeignKey(NonUser, blank=True, null=True) 
+
     class Meta:
         permissions = (("can_lend", "Can lend documents"),
                        ("can_unlend", "Can unlend documents"),

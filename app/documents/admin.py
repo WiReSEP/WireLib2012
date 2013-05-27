@@ -16,6 +16,7 @@ from documents.models import TelNonUser
 from documents.models import TelUser
 from documents.models import UserProfile
 from documents.models import DocExtra
+from documents.models import DocStatus
 
 """
 Definition der Adminseiten der Models.
@@ -64,16 +65,17 @@ class DocumentAuthorsInline(admin.StackedInline):
 
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ('bib_no', 'inv_no', 'title', 
-                    'publisher', 'ub_date', 'bib_date', 'last_updated', )
+                    'publisher', 'ub_date', 'bib_date', 'last_updated',
+                    'status',)
     #TODO Filter für Daten (Plural Datum) anpassen, sodass man nicht nach den 
     #entsprechenden Datum filtern kann und nicht mehr nur nach letzten Tag, Woche, Monat, Jahr
-    list_filter = ('category', )
-    ordering = ['bib_no'] 
+    list_filter = ('category','status')
+    ordering = ['status', 'bib_no'] 
     search_fields = ['bib_no', 'title', 'publisher__name' ,'isbn', 'inv_no', 'bibtex_id', ]
-    fields = ['bib_no',  'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title', 
-              'isbn', 'category', 'last_updated', 'last_edit_by', 'publisher',
-              'year', 'address', 'price', 'currency', 'date_of_purchase', 
-              'ub_date', 'bib_date', 'comment']
+    fields = ['bib_no',  'inv_no', 'bibtex_id', 'lib_of_con_nr', 'title',
+              'status', 'isbn', 'category', 'last_updated', 'last_edit_by', 
+              'publisher', 'year', 'address', 'price', 'currency', 
+              'date_of_purchase', 'ub_date', 'bib_date', 'comment']
     readonly_fields = ('last_edit_by', 'last_updated', 'date_of_purchase')
     inlines = [DocumentAuthorsInline, KeywordsInline, ExtrasInline]
     

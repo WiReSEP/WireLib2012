@@ -12,12 +12,15 @@ def search(request):
 #  if not request.method == "GET":
 #    return doc_list(request)
   documents = Document.objects.all()
+#  request.encoding = 'Latin1'
   form = SearchForm(request.GET)
   if not form.is_valid():
     return doc_list(request)
   query = form.cleaned_data['query']
   regex = form.cleaned_data['regex']
   searchtext = [query[:],]
+  print request.GET
+  print searchtext
   searchset = lib_views._get_searchset(query, regex)
   documents = Document.objects.filter(searchset).distinct()
   if documents.count() == 1:
