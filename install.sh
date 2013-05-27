@@ -18,13 +18,13 @@ USE_MYSQL=${USE_MYSQL:-y}
 if [[ $USE_MYSQL == 'y' ]];then
   ENGINE=mysql
   echo "Using MySQL"
-  while [[ -z USERNAME ]]; do
+  while [[ $USERNAME ]]; do
 	read -p "Please enter the MySQL Username:" USERNAME
   done
-  while [[ -z PASSWORD ]]; do
+  while [[ $PASSWORD ]]; do
 	read -p "Please enter the MySQL Username passwort:" PASSWORD
   done
-  while [[ -z DATABASE ]]; do
+  while [[ $DATABASE ]]; do
 	read -p "Please enter the MySQL Database:" DATABASE
   done
   read -p "Please enter the MySQL Host (default: localhost):" HOST
