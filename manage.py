@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2
 from django.core.management import execute_manager
 import imp
 try:
