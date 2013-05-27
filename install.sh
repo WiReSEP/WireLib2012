@@ -43,32 +43,25 @@ echo "from settings.default import *
 DATABASES = {
     'default': {
 	        'ENGINE': 'django.db.backends.${ENGINE}',
-			# Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or
-			# 'oracle'.
-			        'NAME': '${NAME}'
-					# Or path to database file if using sqlite3.
-					#        'USER': '${USER}',
-					# Not used with sqlite3.
-					#        'PASSWORD': '${PASSWORD}',
-					# Not used with sqlite3.
-					#        'HOST': '${HOST}',
-					# Set to empty string for localhost. Not used with sqlite3.
-					#        'PORT': '${PORT}',
-					# Set to empty string for default. Not used with sqlite3.
-					    }
-					  }
+			'NAME': '${DATABASE}',
+			'USER': '${USER}',
+			'PASSWORD': '${PASSWORD}',
+			'HOST': '${HOST}',
+			'PORT': '${PORT}',
+			}
+		}
 
-					  DEBUG = False
+DEBUG = False
 
-					  DOCUMENTS_SECDIR = normpath(join(DJANGO_ROOT, 'private'))
-					  DOCUMENTS_SECDIR = '${WORKING_PATH}/private/'
-					  DOCUMENTS_BIBTEX = 'bibtex/'
-					  DOCUMENTS_ALLEGRO_FILES = 'allegro/'
+DOCUMENTS_SECDIR = normpath(join(DJANGO_ROOT, 'private'))
+DOCUMENTS_SECDIR = '${WORKING_PATH}/private/'
+DOCUMENTS_BIBTEX = 'bibtex/'
+DOCUMENTS_ALLEGRO_FILES = 'allegro/'
 
-					  BIBTEX_DEBUG = False
-" >> ${WORKING_PATH}/settings/deploy.py
+BIBTEX_DEBUG = False
+" > ${WORKING_PATH}/settings/deploy.py
 echo "from .default import *
-from .deploy import *" >> ${WORKING_PATH}/settings/__init__.py
+from .deploy import *" > ${WORKING_PATH}/settings/__init__.py
 
 # Virtualenv
 #
