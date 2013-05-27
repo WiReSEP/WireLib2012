@@ -15,7 +15,7 @@ echo
 echo
 read -p "Do you wish to use MySQL as database?(Y/n):" USE_MYSQL
 USE_MYSQL=${USE_MYSQL:-y}
-if [ USE_MYSQL == 'y' ];then
+if [[ $USE_MYSQL == 'y' ]];then
   ENGINE=mysql
   echo "Using MySQL"
   while [[ -z USERNAME ]]; do
