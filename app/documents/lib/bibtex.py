@@ -4,7 +4,7 @@ from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
 from django.contrib.auth.models import User
 from django.conf import settings
-import _mysql_exceptions.Warning
+import _mysql_exceptions
 
 import datetime
 import threading
