@@ -4,6 +4,7 @@ from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
 from django.contrib.auth.models import User
 from django.conf import settings
+import _mysql_exceptions.Warning
 
 import datetime
 import threading
@@ -197,7 +198,9 @@ class UglyBibtex(object):
             except DuplicateKeyError, e:
                 self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
-
+            except _mysql_exceptions.Warning, e:
+                self.errout.write("Unkown error with mysql %s" %e)
+                self.__log_error()
 
     def __insert_field(self, key_val):
         if key_val[0] == u'author' or key_val[0] == u'editor':

@@ -2,6 +2,7 @@
 # vim set fileencoding=utf-8
 import datetime
 import re
+import _mysql_exceptions.Warning
 from django.db import IntegrityError
 from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
