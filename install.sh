@@ -71,3 +71,4 @@ virtualenv -p python2 --system-site-packages virtualenv
 . virtualenv/bin/activate
 pip install django==${DJANGO_VERSION}
 pip install flup
+pip install gunicorn
