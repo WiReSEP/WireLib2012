@@ -111,6 +111,7 @@
 	{% endfor %}
 	</ul>
   <form method="POST" id="query_form">
+  	{% csrf_token %}
 	<div style="visibility:hidden; display:none">
 	  {% if search_pro_form %}
 		{{ search_pro_baseform.as_p }}
