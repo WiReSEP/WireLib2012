@@ -1,7 +1,7 @@
 #!/bin/bash
 
 USE_MYSQL=y
-DJANGO_VERSION=1.3
+DJANGO_VERSION=1.4
 ENGINE=
 USERNAME=
 PASSWORD=
@@ -33,7 +33,7 @@ if [[ $USE_MYSQL == 'y' ]];then
 else
   ENGINE=sqlite3
   echo "Using sqlite3 instead"
-  read -p "Please enter the path to the sqlite-file:" USERNAME
+  read -p "Please enter the path to the sqlite-file:" DATABASE
 fi
 
 mkdir -p ${WORKING_PATH}/private/allegro
