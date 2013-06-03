@@ -1,4 +1,4 @@
-from django.template import Context
+from django.template import RequestContext
 from django.shortcuts import render_to_response
 from lib_views import _get_dict_response
 from doc_lists import doc_list, _list
@@ -50,7 +50,7 @@ def search_pro(request):
   dict_response = _get_dict_response(request)
   dict_response['base_form'] = search_base_form
   dict_response['extended_form'] = search_form
-  context = Context(dict_response)
+  context = RequestContext(request, dict_response)
   return render_to_response("search_pro.html", context_instance=context)
 
 def _combine_querys(searchset, category, query, regex, bind):

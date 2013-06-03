@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.template import Context
+from django.template import RequestContext
 from django.template import loader
 from documents.lib.bibtex import Bibtex
 from documents.lib.allegro import Allegro
@@ -43,7 +43,7 @@ def export(request):
     """Oberseite der Exporte. Die View lädt einfach das entsprechende Template
     unter Abfrage der für Navileiste benötigten Rechte
     """
-    context = Context(_get_dict_response(request))
+    context = RequestContext(request, _get_dict_response(request))
     return render_to_response("export.html", context_instance=context)
 
 @login_required
@@ -74,7 +74,7 @@ def allegro_export(request):
     dict_response = _get_dict_response(request)
     dict_response["files"] = files
     dict_response["hint"] = hint
-    context = Context(dict_response)
+    context = RequestContext(request, dict_response)
     return render_to_response("allegro_export.html", context_instance=context)
 
 @login_required
@@ -89,7 +89,7 @@ def bibtex_export(request):
         hint = "Der Export läuft. Bitte besuchen Sie uns in ein paar Minuten wieder."
     elif "bibtex_export" in request.POST:
         export_documents = Document.objects.filter(bib_date__isnull=True)
-        Bibtex.export_data(
+        Bibtex().export_data(
                 export_documents,
                 normpath(join(DOCUMENTS_SECDIR, DOCUMENTS_BIBTEX))
                 ).start()
@@ -106,7 +106,7 @@ def bibtex_export(request):
     dict_response = _get_dict_response(request)
     dict_response["files"] = files
     dict_response["hint"] = hint
-    context = Context(dict_response)
+    context = RequestContext(request, dict_response)
     return render_to_response("bibtex_export.html", context_instance=context)
 
 def doc_import(request):
@@ -150,7 +150,7 @@ def doc_import(request):
     dict_response["form"] = form
     dict_response["message"] = message
     dict_response["success"] = success
-    context = Context(dict_response)
+    context = RequestContext(request, dict_response)
     return render_to_response("file_import.html", context_instance=context)
 
 def doc_add(request, bib_no_id=None):
@@ -248,7 +248,7 @@ def doc_add(request, bib_no_id=None):
     dict_response["message"] = message
     dict_response["success"] = success
     dict_response["category_needs"] = needs
-    context = Context(dict_response)
+    context = RequestContext(request, dict_response)
     return render_to_response("doc_add.html", context_instance=context)
 
 def doc_assign(request, bib_no_id):
@@ -297,7 +297,7 @@ def doc_assign(request, bib_no_id):
     dict_response["userform"] = userform
     dict_response["nonuserform"] = nonuserform
     dict_response["telnonuserform"] = telnonuserform
-    context = Context(dict_response)
+    context = RequestContext(request, dict_response)
     response = HttpResponse(template.render(context))
     return response
 
@@ -314,5 +314,5 @@ def index(request):
     """Rendert die Index-Seite.
     Really need a description?
     """
-    context = Context(_get_dict_response(request))
+    context = RequestContext(request, _get_dict_response(request))
     return render_to_response("index.html",context_instance=context)

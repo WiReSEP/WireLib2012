@@ -7,6 +7,7 @@
 
 {% block content %}
 	<form action="" method="post" accept-charset="utf-8">
+	  {% csrf_token %}
 	<fieldset>
 		<legend>{% if user.email %}{% trans "E-Mail verändern" %}{% else %}{% trans "E-mail hinzufügen" %}{% endif %}</legend>
 		<label for="id_email">{% trans 'Neue E-Mail Addresse' %}</label>

@@ -86,7 +86,7 @@ def profile(request, user_id=None):
         return render_to_response("profile.html", context_instance=context)
     dict_response["p_user"] = p_user
     dict_response["see_groups"] = see_groups
-    context = Context(dict_response)
+    context = RequestContext(request, dict_response)
     return render_to_response("stranger_profile.html",
             context_instance=context)
 
@@ -104,7 +104,7 @@ def profile_settings(request, user_id=None):
          c_user = v_user
      dict_response = _get_dict_response(request)
      dict_response["c_user"] = c_user
-     context = Context(dict_response)
+     context = RequestContext(request, dict_response)
      return render_to_response("profile_settings.html", context_instance=context)
 
 def email_validation_process(request, key):

@@ -1,5 +1,6 @@
 {% block content %}
 <form method="GET">
+  {% csrf_token %}
   <table>
 	<tr class="suchanfrage">
 	  <td class="such_wort">

@@ -12,6 +12,7 @@
 	{% if not search_pro_form %}
 	  <div id="list_filter">
 		<form action="" method="GET">
+		  {% csrf_token %}
 		  <label for="filter_id" >
 			Beginnt mit:
 		  </label>

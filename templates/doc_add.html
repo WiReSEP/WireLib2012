@@ -79,6 +79,7 @@ function deleteForm(btn, prefix) {
 	{% endif %}
 	<div id="spoiler" name="spoiler">
 	  <form method="post" action="">
+		{% csrf_token %}
   {% if not success %}
     <font color="#FF0000"> {{ message|linebreaksbr }}</font>
   {% else %}
@@ -155,15 +156,4 @@ function deleteForm(btn, prefix) {
 		  </table>
 	  </form>
 	</div>
-	{% if form %}
-	<!---
-	<br />
-	<hr />
-	<br />
-	<form method="post" action="" enctype="multipart/form-data">
-  	  {{ form.as_p }}
-  	  <p><input type="submit" value="Start" /></p>
-	</form> 
-	-->
-	{% endif %}
 {% endblock content %}

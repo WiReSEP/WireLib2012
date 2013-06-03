@@ -1,6 +1,6 @@
 #vim: set fileencoding=utf-8
 from django.http import HttpResponse
-from django.template import Template
+from django.template import Template, RequestContext
 from documents.models import *
 from documents.lib.bibtex import Bibtex
 from documents.forms import SearchForm
@@ -94,7 +94,7 @@ def doc_detail(request, bib_no_id, searchtext=""):
     dict_response["authors"] = authors
     dict_response["searchmode"] = searchmode
     dict_response["searchtext"] = searchtext
-    context = Context(dict_response)
+    context = RequestContext(request, dict_response)
 
     template = loader.get_template("doc_detail.html")
     response = HttpResponse(template.render(context))

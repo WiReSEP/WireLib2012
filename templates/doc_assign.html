@@ -21,6 +21,7 @@
 		    </tr>
 			{% else %}
 			<form action="" method="post">
+			  {% csrf_token %}
 			  <tr>
 			  	  <td><b>Neuer Entleiher:</b></td>
 				  <td>{{userform.as_p}}</td>

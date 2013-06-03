@@ -7,6 +7,7 @@
     <font color="#00FF00"> {{ message|linebreaksbr }} </font>
   {% endif %} 
   <form method="post" action="" enctype="multipart/form-data">
+	{% csrf_token %}
     {{ form.as_p }}
     <p>
       <input type="submit" value="Start" />

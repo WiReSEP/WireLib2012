@@ -18,6 +18,7 @@
 	//-->
   </script>
 <form method="POST" action="">
+  {% csrf_token %}
   {{ extended_form.management_form }}
   <table id="formset">
 	{% for form in extended_form %}

@@ -206,6 +206,7 @@
 	<td>
 	{% if user.is_authenticated %}
 	  <form action="" method="post">
+		{% csrf_token %}
 	  {% if documents.status == 0 %}
 	    {% if can_lend %}
 		      <input type="submit" name="lend" value="Ausleihen" /> 
