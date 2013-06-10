@@ -1,5 +1,6 @@
 # vim: set fileencoding=utf-8
-sender_mail = "info@wirelib.sc.cs.tu-bs.de"
+from django.conf import settings
+sender_mail = settings.DOCUMENTS_SENDER_MAIL
 
 def _send_mail(receiver, subject, emailcontent, **context):
     connection = mail.get_conection()
@@ -17,7 +18,7 @@ def _send_mail(receiver, subject, emailcontent, **context):
 def _document_missing_email(document, user):
     email = Emails.objects.get(name="Vermisst Gemeldet")
     plaintext = Template(email.text)
-    member = User.objects.values_list('email' flat=True)
+    member = User.objects.values_list('email', flat=True)
     receiver = user.email
     c = Context({"document_name": document.title,
                  "user_name": user.first_name,

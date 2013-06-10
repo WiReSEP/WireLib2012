@@ -28,5 +28,8 @@ DOCUMENTS_SECDIR = normpath(join(DJANGO_ROOT, 'private'))
 #DOCUMENTS_SECDIR = '/var/www/django/privat/'
 DOCUMENTS_BIBTEX = 'bibtex/'
 DOCUMENTS_ALLEGRO_FILES = 'allegro/'
+DOCUMENTS_SENDER_MAIL = 'info@wirelib.sc.cs.tu-bs.de'
 
 BIBTEX_DEBUG = False
+
+

@@ -7,6 +7,7 @@ USERNAME=
 PASSWORD=
 DATABASE=
 WORKING_PATH=${0%/*}
+SENDER_MAIL=
 
 
 echo Welcome to the WireLib installation script
@@ -35,6 +36,9 @@ else
   echo "Using sqlite3 instead"
   read -p "Please enter the path to the sqlite-file:" DATABASE
 fi
+while [ -z $SENDER_MAIL ]; do
+  read -p "Please enter the mail address for user notifications:" SENDER_MAIL
+done
 
 mkdir -p ${WORKING_PATH}/private/allegro
 mkdir -p ${WORKING_PATH}/private/bibtex
@@ -57,6 +61,7 @@ DOCUMENTS_SECDIR = normpath(join(DJANGO_ROOT, 'private'))
 DOCUMENTS_SECDIR = '${WORKING_PATH}/private/'
 DOCUMENTS_BIBTEX = 'bibtex/'
 DOCUMENTS_ALLEGRO_FILES = 'allegro/'
+DOCUMENTS_SENDER_MAIL = '${SENDER_MAIL}'
 
 BIBTEX_DEBUG = False
 " > ${WORKING_PATH}/settings/deploy.py
