@@ -81,7 +81,7 @@ class Document(models.Model):
     price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
     currency = models.CharField("Währung",max_length=10, blank=True, null=True)
         #LibraryOfCongressN
-    title = models.CharField("Titel",max_length=400)
+    title = models.CharField("Titel",max_length=255)
     status = models.IntegerField("Status", null=True, choices=STATUS_CHOICES,
             default=AVAILABLE)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
@@ -274,9 +274,6 @@ class Document(models.Model):
                 author=obj, editor=is_editor, sort_value=max_val)
         d.save()
 
-#class Price(models.Model):
-#    document = models.ForeignKey(Document, primary_key=True)
-#
 class DocumentAuthors(models.Model):
     document = models.ForeignKey(Document)
     author = models.ForeignKey(Author,verbose_name="Autor")
@@ -289,8 +286,7 @@ class DocumentAuthors(models.Model):
         unique_together = ('document', 'author')
 
     def __unicode__(self):
-        return unicode({"Dokument": self.document, "Autor":self.author, "Editor": self.editor,
-                "Position": self.sort_value})
+        return u'%s/%s' % (self.document, self.author)
 
 class Keywords(models.Model):
     document = models.ForeignKey(Document)
