@@ -46,7 +46,7 @@ urlpatterns = patterns('documents.views',
         url(r'^profile/edit/name/$', 'profile_edit_name', name='user.edit.name'), 
         url(r'^profile/edit/personal/done/$', direct_to_template,
             {'template': 'profile/personal_done.html'},
-            name='user.edit.personal.done'), 
+            name='profile.edit.personal.done'), 
 
 )
 
