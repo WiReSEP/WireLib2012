@@ -40,14 +40,14 @@ urlpatterns = patterns('documents.views',
         url(r'^user/settings/(?P<user_id>\d+)/$', 'profile_settings',
             name='user.settings.other'),
         url(r'^user/(?P<user_id>\d+)/$', 'profile', name='user.profile'),
-        url(r'^user/profile/edit/personal/done/$', direct_to_template,
-            {'template': 'profile/personal_done.html'},
-            name='user.edit.personal.done'), 
-
 #profile
         url(r'^profile/edit/personal/$', 'personal', name='user.edit.personal'), 
         url(r'^profile/edit/phone/$', 'telpersonal', name='user.edit.phone'),
         url(r'^profile/edit/name/$', 'profile_edit_name', name='user.edit.name'), 
+        url(r'^profile/edit/personal/done/$', direct_to_template,
+            {'template': 'profile/personal_done.html'},
+            name='user.edit.personal.done'), 
+
 )
 
 ###############PROFIL#############################

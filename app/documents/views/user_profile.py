@@ -19,7 +19,7 @@ def profile_edit_name(request):
         form = NameForm(request.POST, instance=v_user)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+            return HttpResponseRedirect(reverse("profile.edit.personal.done"))
     else:
         form = NameForm(instance=v_user)
         template = "profile/name.html"
@@ -41,7 +41,7 @@ def telpersonal(request):
             for instance in instances:
                 instance.user = request.user
                 instance.save()
-            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+            return HttpResponseRedirect(reverse("profile.edit.personal.done"))
     else:
         formset = telformset(queryset=query)
     template = "profile/tel.html"
@@ -58,7 +58,7 @@ def personal(request):
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("profile_edit_personal_done"))
+            return HttpResponseRedirect(reverse("profile.edit.personal.done"))
     else:
         form = ProfileForm(instance=profile)
     template = "profile/personal.html"
