@@ -160,9 +160,10 @@ class UglyBibtex(object):
             else:
                 self.current_keyval = key_val
         elif len(key_val) == 1 and self.current_keyval:#Nur noch Value Ergänzung
-            key_val[0] =re.sub(r'(^\s*)|(["}\s]*,\s*$)','',key_val[0])
+            key_val[0] = re.sub(r'(^\s*)|(["}\s]*,\s*$)','',key_val[0])
             key_val.insert(0,self.current_keyval[0])
-            key_val[1] += " "+self.current_keyval[1]
+            key_val[1] = self.current_keyval[1].strip() + " " \
+                    + key_val[1].strip()
             field_end = re.match('.*,$',self.line.strip())
             if field_end and not self.go_further:
                 try:
