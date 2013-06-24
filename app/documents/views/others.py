@@ -275,18 +275,19 @@ def doc_assign(request, bib_no_id):
             user_lend = userform.cleaned_data["users"]
             if user_lend and not user_lend == "":
                 document_query.lend(user=user_lend, editor=v_user)
-                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+                return HttpResponseRedirect("/doc/%s/" % document_query.bib_no)
     elif 'assign-ex' in request.POST:
         nonuserform = NonUserForm(request.POST)
         telnonuserform = TelNonUserForm(request.POST)
         if nonuserform.is_valid() and telnonuserform.is_valid():
             non_user_lend = nonuserform.save()
-            telnonuser, created = TelNonUser.objects.get_or_create(non_user=non_user_lend)
+            telnonuser, created = TelNonUser.objects.get_or_create(
+                    non_user=non_user_lend)
             telnonuserform = TelNonUserForm(request.POST, instance=telnonuser)
             telnonuserform.save()
             if non_user_lend and not non_user_lend == "":
                 document_query.lend(user=v_user, non_user=non_user_lend)
-                return HttpResponseRedirect("/doc/"+document_query.bib_no+"/")
+                return HttpResponseRedirect("/doc/%s/" % document_query.bib_no)
     miss_query = Document.objects.filter(docstatus__status=Document.MISSING,
             docstatus__return_lend=False)
     miss_query = miss_query.order_by('-docstatus__date')
@@ -301,18 +302,20 @@ def doc_assign(request, bib_no_id):
     response = HttpResponse(template.render(context))
     return response
 
+
 def docs_miss(request):
     """
     Vermisste Dokumente anzeigen
     """
-    miss_query = Document.objects.filter(docstatus__status = Document.MISSING,        
-                                         docstatus__return_lend = False)
-    miss_query = miss_query.order_by('-docstatus__date')  
+    miss_query = Document.objects.filter(docstatus__status=Document.MISSING,
+            docstatus__return_lend=False)
+    miss_query = miss_query.order_by('-docstatus__date')
     return _list(request, miss_query, form=2)
 
-def index(request): 
+
+def index(request):
     """Rendert die Index-Seite.
     Really need a description?
     """
     context = RequestContext(request, _get_dict_response(request))
-    return render_to_response("index.html",context_instance=context)
+    return render_to_response("base.html",context_instance=context)

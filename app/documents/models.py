@@ -1,5 +1,4 @@
 # vim: set fileencoding=utf-8
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
@@ -9,17 +8,22 @@ from django.template import Context
 from django.template import loader
 from documents.lib.exceptions import LendingError
 
+
 class Need(models.Model):
     name = models.CharField(max_length=30, primary_key=True)
+
     class Meta:
         verbose_name = "Mussfeld"
         verbose_name_plural = "Mussfelder"
+
     def __unicode__(self):
         return self.name
-    
+
+
 class NeedGroups(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
     needs = models.ManyToManyField(Need, verbose_name="Mussfelder")
+
     class Meta:
         verbose_name = "Mussfeldgruppe"
         verbose_name_plural = "Mussfeldgruppen"
@@ -27,45 +31,50 @@ class NeedGroups(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
     needs = models.ManyToManyField(NeedGroups, verbose_name="Mussfelder")
+
     class Meta:
         verbose_name = "Kategorie"
         verbose_name_plural = "Kategorien"
 
     def __unicode__(self):
         return self.name
-        
+
+
 class Publisher(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
-    
+
     def __unicode__(self):
         return self.name
-        
+
     class Meta:
         verbose_name = "Publisher"
         verbose_name_plural = "Publisher"
 
 
 class Author(models.Model):
-    first_name = models.CharField("vorname",max_length=30, null=True)
-    last_name = models.CharField("nachname",max_length=30)
+    first_name = models.CharField("vorname", max_length=30, null=True)
+    last_name = models.CharField("nachname", max_length=30)
+
     class Meta:
         unique_together = ('first_name', 'last_name')
     #primary ('name', 'surname')
         verbose_name = "Autor"
         verbose_name_plural = "Autoren"
-    
+
     def __unicode__(self):
         return (self.first_name + ' ' + self.last_name)
 
+
 class Document(models.Model):
-    AVAILABLE= 0  #vorhanden
-    LEND = 1      #ausgeliehen
-    ORDERED = 2   #bestellt
-    MISSING = 3   #vermisst
-    LOST = 4      #verloren
+    AVAILABLE = 0   # vorhanden
+    LEND = 1        # ausgeliehen
+    ORDERED = 2     # bestellt
+    MISSING = 3     # vermisst
+    LOST = 4        # verloren
 
     STATUS_CHOICES = (
             (AVAILABLE, "Verfügbar"),
@@ -74,12 +83,24 @@ class Document(models.Model):
             (MISSING, "Vermisst"),
             (LOST, "Verloren"),)
 
-    bib_no = models.CharField("Bibliotheks-Nr.", max_length=15, primary_key=True)
+    bib_no = models.CharField("Bibliotheks-Nr.",
+            max_length=15,
+            primary_key=True)
     inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
-    lib_of_con_nr = models.CharField("Library Of Congress No", max_length=60, blank=True, null=True) 
-    price = models.DecimalField("Preis",max_digits=6, decimal_places=2, blank=True, null=True)
-    currency = models.CharField("Währung",max_length=10, blank=True, null=True)
+    lib_of_con_nr = models.CharField("Library Of Congress No",
+            max_length=60,
+            blank=True,
+            null=True)
+    price = models.DecimalField("Preis",
+            max_digits=6,
+            decimal_places=2,
+            blank=True,
+            null=True)
+    currency = models.CharField("Währung",
+            max_length=10,
+            blank=True,
+            null=True)
         #LibraryOfCongressN
     title = models.CharField("Titel",max_length=255)
     status = models.IntegerField("Status", null=True, choices=STATUS_CHOICES,
@@ -92,9 +113,9 @@ class Document(models.Model):
     year = models.IntegerField("Jahr",blank=True, null=True)
     address = models.CharField("Adresse",max_length=100, blank=True, null=True)
     date_of_purchase = models.DateField("Kaufdatum", auto_now_add=True)
-    ub_date = models.DateField("UB-Export", blank=True, null=True) 
+    ub_date = models.DateField("UB-Export", blank=True, null=True)
         #Datum des Allegro-Exports
-    bib_date = models.DateField("BibTeX-Export", blank=True, null=True) 
+    bib_date = models.DateField("BibTeX-Export", blank=True, null=True)
         #Datum des BibTeX-Exports
     comment = models.TextField("Kommentar",blank=True, null=True)
     authors = models.ManyToManyField(Author,
@@ -119,7 +140,7 @@ class Document(models.Model):
         super(Document, self).save(*args, **kwargs)
         if not self.status == self._status():
             self.set_status(user, self.status)
-    
+
     def delete(self, *args, **kwargs):
         """
         Methode zum Löschen nun überflüssiger Schriftsteller
@@ -130,9 +151,9 @@ class Document(models.Model):
         if len(self.publisher.document_set.all())==1:
             self.publisher.delete()
         super(Document, self).delete(*args, **kwargs)
-    
+
     def _status(self):
-        """ 
+        """
         Ausgeben des aktuellen Status'
         """
         try:
@@ -140,21 +161,21 @@ class Document(models.Model):
         except BaseException, e:
             retVal = Document.AVAILABLE
         return retVal
-        
+
     def __init__(self, *args, **kwargs):
         models.Model.__init__(self, *args, **kwargs)
 #        self.status = self._status()
 
     def __unicode__(self):
         return self.title
-    
-    def set_status(self, 
-                     editor, 
-                     stat, 
-                     terminate=None, 
-                     user=None, 
+
+    def set_status(self,
+                     editor,
+                     stat,
+                     terminate=None,
+                     user=None,
                      non_user=None):
-        """ 
+        """
         Methode zum Ändern des Status'
         Paramenter:
             editor - recent_user
@@ -165,7 +186,7 @@ class Document(models.Model):
         """
         try: # Wenn es was zum updaten gibt:
             old = self.docstatus_set.latest('date')
-            # bei F5-Benutzung eines Buttons wurden zwei Einträge eingefügt und 
+            # bei F5-Benutzung eines Buttons wurden zwei Einträge eingefügt und
             # beide waren so gekennzeichnet, dass es keinen Nachfolgeeintrag gäbe
             if not (old.status == stat \
                     and old.recent_user == editor \
@@ -193,7 +214,7 @@ class Document(models.Model):
             self.save()
 
     def lend(self, user, editor=None, non_user=None, terminate=None):
-        """ 
+        """
         Methode zum Ausleihen, Übertragen und beim Wiederfinden
         Parameter:
             user - user_lend (evtl recent_user)
@@ -214,19 +235,19 @@ class Document(models.Model):
         self.set_status(editor, Document.LEND, terminate, user, non_user)
 
     def unlend(self, user):
-        """ 
-        Methode zum zurückgeben 
+        """
+        Methode zum zurückgeben
         """
         self.set_status(user, Document.AVAILABLE)
 
     def lost(self, user):
-        """ 
+        """
         Methode zum "Verloren" setzen
         """
         self.set_status(user, Document.LOST)
-        
+
     def missing(self, user):
-        """ 
+        """
         Methode für Vermisstmeldungen
         """
         self.set_status(user, Document.MISSING)
@@ -274,12 +295,14 @@ class Document(models.Model):
                 author=obj, editor=is_editor, sort_value=max_val)
         d.save()
 
+
 class DocumentAuthors(models.Model):
     document = models.ForeignKey(Document)
-    author = models.ForeignKey(Author,verbose_name="Autor")
+    author = models.ForeignKey(Author, verbose_name="Autor")
     editor = models.BooleanField(default=False)
     sort_value = models.IntegerField("Reihenfolge")
     _sort_field_name = "sort_value"
+
     class Meta:
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
@@ -288,27 +311,28 @@ class DocumentAuthors(models.Model):
     def __unicode__(self):
         return u'%s/%s' % (self.document, self.author)
 
+
 class Keywords(models.Model):
     document = models.ForeignKey(Document)
-    keyword = models.CharField(u"Schlüsselwort",max_length=200)
+    keyword = models.CharField(u"Schlüsselwort", max_length=200)
+
     class Meta:
         unique_together = ('document', 'keyword')
     #primary_key(document, keyword)
         verbose_name = u"Schlüsselwort"
         verbose_name_plural = u"Schlüsselwörter"
-        
-    
+
     def __unicode__(self):
         return self.keyword
-        
+
     def save(self, user=None, *args, **kwargs):
         """
-        Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
+        Methode, damit in der Tabelle 'document' der letzte Bearbeiter
         aktualisiert werden kann
         """
         #TODO nach Datenbankerstellung testen, ob user None sein muss
         self.document.save(user)
-        super(Keywords, self).save(*args, **kwargs)   
+        super(Keywords, self).save(*args, **kwargs)
 
 class DocExtra(models.Model):
     """
@@ -320,13 +344,13 @@ class DocExtra(models.Model):
     class Meta:
         unique_together = ('doc_id', 'bib_field')
     #primary_key(docId, bibField)
-    
+
     def __unicode__(self):
-        return unicode(self.content) 
+        return unicode(self.content)
 
     def save(self, user=None, *args, **kwargs):
         """
-        Methode, damit in der Tabelle 'document' der letzte Bearbeiter 
+        Methode, damit in der Tabelle 'document' der letzte Bearbeiter
         aktualisiert werden kann
         """
         #TODO nach Datenbankerstellung testen, ob user None sein muss
@@ -356,7 +380,7 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.get_or_create(user=instance)
- 
+
 post_save.connect(create_user_profile, sender=User)
 
 class TelUser(models.Model):
@@ -397,21 +421,21 @@ class TelNonUser(models.Model):
 
 class DocStatus(models.Model):
         #auftraggebender User
-    recent_user = models.ForeignKey(User, related_name='recent_user') 
-    doc_id = models.ForeignKey(Document) 
+    recent_user = models.ForeignKey(User, related_name='recent_user')
+    doc_id = models.ForeignKey(Document)
         #in welchen Status wurde geändert?
     status = models.IntegerField(choices=Document.STATUS_CHOICES,
-            default=Document.AVAILABLE) 
+            default=Document.AVAILABLE)
         #Datum an dem es geschah
-    date = models.DateTimeField(auto_now_add=True) 
+    date = models.DateTimeField(auto_now_add=True)
         #False markiert den aktuellsten Eintrag für den Status eines Dokumentes
     return_lend = models.BooleanField(default=False)
         #Ende der Rückgabefrist
-    date_term_lend = models.DateTimeField(blank=True, null=True) 
+    date_term_lend = models.DateTimeField(blank=True, null=True)
         #ausleihender User
-    user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend') 
+    user_lend = models.ForeignKey(User, blank=True, null=True, related_name='user_lend')
         #ausleihender non_User
-    non_user_lend = models.ForeignKey(NonUser, blank=True, null=True) 
+    non_user_lend = models.ForeignKey(NonUser, blank=True, null=True)
 
     class Meta:
         permissions = (("can_lend", "Can lend documents"),
@@ -426,8 +450,8 @@ class EmailValidationManager(models.Manager):
     Email Validation Manager
     """
     def verify(self, key):
-    #Methode zum Abgleichen der Keys 
-    
+    #Methode zum Abgleichen der Keys
+
         try:
             verify = self.get(key=key)
             if not verify.is_expired():
@@ -463,7 +487,7 @@ class EmailValidationManager(models.Manager):
 
         #Einbindung des Mailformulares für die E-Mail Verifizierung
         template_body = "email/validation.txt"
-        #Einbindung des Betreffs 
+        #Einbindung des Betreffs
         template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         body = loader.get_template(template_body).render(Context(locals()))
@@ -482,10 +506,10 @@ class EmailValidation(models.Model):
     key = models.CharField(max_length=70, unique=True, db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     objects = EmailValidationManager()
-    
-    def __unicode__(self): 
+
+    def __unicode__(self):
         return _("Emailverifikationsprozess für %(user)s") % { 'user': self.user }
-    
+
     def is_expired(self):
         return (datetime.datetime.today() - self.created).days > 0
 
@@ -493,7 +517,7 @@ class EmailValidation(models.Model):
         """
         Senden der Verifierungsmail
         """
-        template_body = "email/validation.txt"  
+        template_body = "email/validation.txt"
         template_subject = "email/validation_subject.txt"
         site_name, domain = Site.objects.get_current().name, Site.objects.get_current().domain
         key = self.key
@@ -503,16 +527,17 @@ class EmailValidation(models.Model):
         self.created = datetime.datetime.now()
         self.save()
         return True
-        
+
 
 class Emails(models.Model):
     name = models.CharField(max_length=30)
     subject = models.CharField("Betreff", max_length=50)
     text = models.TextField()
+
     class Meta:
         permissions = (("can_send_mails", "Can send Emails"),)
         verbose_name = "E-Mail"
         verbose_name_plural = "E-Mails"
-        
+
     def __unicode__(self):
         return (self.name)
