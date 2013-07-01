@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
   <head>
     <title>{% block title %}TU Braunschweig{% endblock title %}</title>
@@ -6,11 +7,32 @@
     {% block html_head %}{% endblock html_head %}
   </head>
   <body>
+    {% block header %}
+    <div id="header">
+      <div id="tu-signet">
+        <img src="{% static "images/siegel_rot.jpg" %}" alt="TU BRAUNSCHWEIG">
+      </div>
+      <div "sc-signet">
+        <img src="{% static "images/sclogo3D_t.gif" %}" alt="WiReLib">
+      </div>
+      <div id="symbolpic">
+        <img src="{% static "images/buecher_wire_01.jpg" %}" alt="Logo">
+      </div>
+    </div>
+    {% endblock header %}
+    {% block navigation %}
+    <div id="navcontainer" class="navbar">
+      <a class="brand" href="{% url 'index' %}">Home</a>
+      <ul id="navlist" class="nav">
+        {% for li in menu_top %}
+        {{ li.html }}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endblock navigation %}
+    {% block menu %}{% endblock menu %}
+    {% block snippet %}{% endblock snippet %}
     {% block content %}{% endblock content %}
     {% block footer %}{% endblock footer %}
-    {% block header %}{% endblock header %}
-    {% block menu %}{% endblock menu %}
-    {% block navigation %}{% endblock navigation %}
-    {% block snippet %}{% endblock snippet %}
   </body>
 </html>
