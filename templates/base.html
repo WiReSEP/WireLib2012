@@ -20,17 +20,24 @@
       </div>
     </div>
     {% endblock header %}
-    {% block navigation %}
-    <div id="navcontainer" class="navbar">
-      <a class="brand" href="{% url 'index' %}">Home</a>
-      <ul id="navlist" class="nav">
+    {% block menu %}
+    <div id="menubar" class="navbar">
+      <ul id="menu" class="nav">
         {% for li in menu_top %}
         {{ li.html }}
         {% endfor %}
       </ul>
     </div>
+    {% endblock menu %}
+    {% block navigation %}
+    <div id="navbar" class="">
+      <ul id="navlist" class="">
+        {% for li in menu_left %}
+        {{ li.html|safe }}
+        {% endfor %}
+      </ul>
+    </div>
     {% endblock navigation %}
-    {% block menu %}{% endblock menu %}
     {% block snippet %}{% endblock snippet %}
     {% block content %}{% endblock content %}
     {% block footer %}{% endblock footer %}
