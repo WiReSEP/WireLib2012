@@ -1,43 +1,45 @@
 #!/usr/bin/env python
 # vim set fileencoding=utf-8
-from exceptions import UnknownCategoryError
-from exceptions import DuplicateKeyError
-from django.contrib.auth.models import User
 from django.conf import settings
-import _mysql_exceptions
+from django.contrib.auth.models import User
+from .exceptions import DuplicateKeyError
+from .exceptions import UnknownCategoryError
 
-import datetime
-import threading
-import doc_funcs
-import re
 import codecs
+import datetime
+from . import doc_funcs
+import re
+import threading
+
 
 class UglyBibtex(object):
+
     """ BibTeX-Parser zur Befüllung des Prototypen.
     Dieser BibTeX-Parser ist in der aktuellen Entwicklung nur zur Unterstützung
     der Prototyp-Entwicklung gedacht und sollte weiter nicht verwendet werden.
     """
 
-    BIB_FIELDS = {
-            u"informatikbibno" : u"bib_no",
-            u"inventarno" : u"inv_no",
-            # theoreticaly here: BibTeX-Id
-            u"libraryofcongressno" : u"lib_of_con_nr",
-            u"title" : u"title",
-            u"isbn" : u"isbn",
-            u"publisher" : u"publisher",
-            u"year" : u"year",
-            u"address" : u"address",
-            u"dateofpurchase" : u"date_of_purchase",
-            u"author" : u"author",
-            u"editor" : u"editor",
-            u"keywords" : u"keywords",
-            }
-    BIBTEX_SPLIT= r'[{}@,="\n]'
+    BIB_FIELDS = {u"informatikbibno": u"bib_no",
+                  u"inventarno": u"inv_no",
+                  # theoreticaly here: BibTeX-Id
+                  u"libraryofcongressno": u"lib_of_con_nr",
+                  u"title": u"title",
+                  u"isbn": u"isbn",
+                  u"publisher": u"publisher",
+                  u"year": u"year",
+                  u"address": u"address",
+                  u"dateofpurchase": u"date_of_purchase",
+                  u"author": u"author",
+                  u"editor": u"editor",
+                  u"keywords": u"keywords",
+                  }
+    BIBTEX_SPLIT = r'[{}@,="\n]'
 
     def __init__(self, bibtex_file):
+        import pdb
+        pdb.set_trace()  # XXX BREAKPOINT
         self.bibtex_file = bibtex_file
-        self.errout_file = bibtex_file+'.err'
+        self.errout_file = bibtex_file + '.err'
         self.line = None
         self.line_no = 0
         self.worker = None                      # Aktuelle Arbeitsfunktion
@@ -46,7 +48,7 @@ class UglyBibtex(object):
 
         self.quotation_mark_stack = 0
         self.bracket_stack = 0
-        self.current_keyval = [] 
+        self.current_keyval = []
 
         self.entry = {}
         self.extra_entry = {}
@@ -61,34 +63,34 @@ class UglyBibtex(object):
         neben der Ursprungsdatei.
         """
         self.worker = self.do_import
-        with codecs.open(self.bibtex_file,mode='r',encoding='utf-8') as bib:
-            with codecs.open(self.errout_file,mode='w', encoding='utf-8') as self.errout:
+        with codecs.open(self.bibtex_file, mode='r', encoding='utf-8') as bib:
+            with codecs.open(self.errout_file, mode='w', encoding='utf-8') as self.errout:
                 for self.line in bib:
                     self.line_no += 1
-                    if re.match(r'^\s*@',self.line): 
+                    if re.match(r'^\s*@', self.line):
                         # Neuer Eintrag
                         self.worker = self.__get_entry
 
-                    if self.worker != self.do_import: 
+                    if self.worker != self.do_import:
                         # Eintrag abarbeiten.
                         try:
                             self.worker()
-                        except ValueError: 
+                        except ValueError:
                             if self.worker == self.__get_entry:
                                 self.errout.write("Fehler in Eintrag\n")
-                            else :
+                            else:
                                 self.errout.write("Fehler in Feld\n")
                             self.__log_error()
                             self.worker = self.do_import
-                    else: 
+                    else:
                         # Eintragende, reset
                         self.go_further = False
                         self.stack = 0
-                
+
                         self.quotation_mark_stack = 0
                         self.bracket_stack = 0
-                        self.current_keyval = [] 
-                
+                        self.current_keyval = []
+
                         self.entry = {}
                         self.extra_entry = {}
 
@@ -107,12 +109,12 @@ class UglyBibtex(object):
             raise ValueError()
 
         # Clean key_vals
-        key_val[0] = re.sub(r'(^\s*@\s*)|(\s*$)','',key_val[0]).lower()
-        key_val[1] = re.sub(r'(^\s*)|(\s*,\s*$)','',key_val[1])
+        key_val[0] = re.sub(r'(^\s*@\s*)|(\s*$)', '', key_val[0]).lower()
+        key_val[1] = re.sub(r'(^\s*)|(\s*,\s*$)', '', key_val[1])
 
         self.entry[u'category'] = key_val[0]
         self.entry[u'bibtex_id'] = key_val[1]
-        head_end = re.match(r'.*,$',self.line.strip())
+        head_end = re.match(r'.*,$', self.line.strip())
         if head_end:
             self.worker = self.__get_field
         else:
@@ -149,22 +151,23 @@ class UglyBibtex(object):
         key_val = self.line.split('=')
         if len(key_val) == 2:   # Einfacher Key = Value
             key_val[0] = key_val[0].lower().strip()
-            key_val[1] = re.sub(r'(^[\s"{]*)|(["}\s]*(,|})\s*\n)','',key_val[1])
-            field_end = re.match('.*,$',self.line.strip())
+            key_val[1] = re.sub(
+                r'(^[\s"{]*)|(["}\s]*(,|})\s*\n)', '', key_val[1])
+            field_end = re.match('.*,$', self.line.strip())
             if (field_end and not self.go_further)  \
-                  or self.worker == self.do_import: 
+                    or self.worker == self.do_import:
                 try:
                     self.__insert_field(key_val)
                 except ValueError:
                     raise
             else:
                 self.current_keyval = key_val
-        elif len(key_val) == 1 and self.current_keyval:#Nur noch Value Ergänzung
-            key_val[0] = re.sub(r'(^\s*)|(["}\s]*,\s*$)','',key_val[0])
-            key_val.insert(0,self.current_keyval[0])
+        elif len(key_val) == 1 and self.current_keyval:  # Nur noch Value Ergänzung
+            key_val[0] = re.sub(r'(^\s*)|(["}\s]*,\s*$)', '', key_val[0])
+            key_val.insert(0, self.current_keyval[0])
             key_val[1] = self.current_keyval[1].strip() + " " \
-                    + key_val[1].strip()
-            field_end = re.match('.*,$',self.line.strip())
+                + key_val[1].strip()
+            field_end = re.match('.*,$', self.line.strip())
             if field_end and not self.go_further:
                 try:
                     self.__insert_field(key_val)
@@ -175,7 +178,7 @@ class UglyBibtex(object):
                 raise ValueError()
             else:
                 self.current_keyval = key_val
-        else :
+        else:
             self.errout.write("Fehler im Format:\n")
             self.__log_error()
             raise ValueError()
@@ -188,42 +191,44 @@ class UglyBibtex(object):
 
                     self.errout.write("Erfolgreich\n")
                     self.__log_error()
-            except ValueError, e:
+            except ValueError as e:
                 self.errout.write("Eintrag kein valides Format\n")
                 self.errout.write(u"Begründung: %s\n" % e.message)
                 self.__log_error()
             except UnknownCategoryError:
-                errmsg = "Kategorie %s nicht bekannt\n" % self.entry[u'category']
+                errmsg = "Kategorie %s nicht bekannt\n" % self.entry[
+                    u'category']
                 self.errout.write(errmsg)
                 self.__log_error()
-            except DuplicateKeyError, e:
-                self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
+            except DuplicateKeyError as e:
+                self.errout.write(
+                    "Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
-            except _mysql_exceptions.Warning, e:
-                self.errout.write("Unkown error with mysql %s" %e)
+            except Warning as e:
+                self.errout.write("Unkown error with mysql %s" % e)
                 self.__log_error()
 
     def __insert_field(self, key_val):
         if key_val[0] == u'author' or key_val[0] == u'editor':
             key_val[1] = key_val[1].split(',')
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
-            key_val[1] = [ s.strip() for s in key_val[1] ]
+            key_val[1] = [s.strip() for s in key_val[1]]
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'keywords':
             key_val[1] = re.split('[,;/]', key_val[1])
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
-            key_val[1] = [ s.strip() for s in key_val[1] ]
+            key_val[1] = [s.strip() for s in key_val[1]]
             self.entry[key_val[0]] = key_val[1]
 
         elif key_val[0] == u'price':
             currency = {
-                    "€" : "Euro",
-                    "$" : "Dollar",
-                    "euro" : "Euro",
-                    "DM" : "DM",
-                    "Pounds" : "Pfund",
-                    }
+                "€": "Euro",
+                "$": "Dollar",
+                "euro": "Euro",
+                "DM": "DM",
+                "Pounds": "Pfund",
+            }
             # regex für währungen:
             value = key_val[1].strip().split(" ")
             current_currency = re.findall(r'[^0-9.\, ]*', key_val[1])
@@ -240,11 +245,11 @@ class UglyBibtex(object):
             price = re.findall(r'''(\d* # price begin
                     [,|\.]?  # seperator
                     \d?\d?)? # last optional digits''',
-                    key_val[1],
-                    re.X)
+                               key_val[1],
+                               re.X)
             for i in price:
                 if i != '':
-                    price = i.replace(",",".")
+                    price = i.replace(",", ".")
                     break
             else:
                 price = None
@@ -256,7 +261,7 @@ class UglyBibtex(object):
                 raise ValueError()
             try:
                 mydatetime = datetime.datetime.strptime(
-                        key_val[1],'%d.%m.%Y')
+                    key_val[1], '%d.%m.%Y')
             except ValueError:
                 return           # Mal wieder das falsche Format
             key_val[0] = UglyBibtex.BIB_FIELDS[key_val[0]]
@@ -270,12 +275,13 @@ class UglyBibtex(object):
 
     def __log_error(self):
         self.errout.write("Zeile %d: " % self.line_no)
-        self.errout.write("Fehler bei: %s" % self.line) # loglvl 1
-        self.errout.write("Bisher gelesen: %r\n" % self.entry) #lvl 2
+        self.errout.write("Fehler bei: %s" % self.line)  # loglvl 1
+        self.errout.write("Bisher gelesen: %r\n" % self.entry)  # lvl 2
         self.errout.write('\n')
 
 
 class Bibtex(threading.Thread):
+
     """ Threadfähiger Bibtex-Parser für den Import von Bibtex-Dateien in die
     Datenbank und für einen Export. Export sollte aus Sicherheitsgründen immer
     über einen Thread laufen, vorher muss jedoch die Funktion export_data()
@@ -306,44 +312,44 @@ class Bibtex(threading.Thread):
         """
         UglyBibtex(file).do_import()
 
-    def lex(input_str):
-        """ Die Analyse der Lexik
-        """
-        self.tokens = (
-                'ENTRY_BEGIN',
-                'ENTRY_TYPE',
-                'ID',
-                'FIELD_NAME', 'EQUALS', 'FIELD_CONTENT', 'COMMA',
-                'LPARENT', 'RPARENT', 'QUOTATION_MARK',
-                )
-        
-        #   Tokens
-        t_ENTRY_BEGIN = r'@'
-        t_ENTRY_TYPE = r'[aAbBcCiImMpPtTuU]\w*'
-        t_ID = r'\w*'
-        t_FIELD_NAME = r'\w*'
-        t_EQUALS = r'='
-        
-        t_FIELD_CONTENT = r'(\{(.|\n)*\} | "(.|\n)*" )'
-        
-        t_COMMA = r','
-        t_LPARENT = r'\{'
-        t_RPARENT = r'\}'
-        t_QUOTATION_MARK = r'"'
-        
-        #   Ignored characters
-        t_ignore = " \t"
-        
-        def t_error(t):
-            raise TypeError("Invalid Format in %s" % (t.value))
-        
-        # Build the lexer
-        import ply.lex as lex
-        lex.lex()
+    # def lex(input_str):
+        #""" Die Analyse der Lexik
+        #"""
+        # self.tokens = (
+            #'ENTRY_BEGIN',
+            #'ENTRY_TYPE',
+            #'ID',
+            #'FIELD_NAME', 'EQUALS', 'FIELD_CONTENT', 'COMMA',
+            #'LPARENT', 'RPARENT', 'QUOTATION_MARK',
+        #)
 
-        lex.input(input_str)
-        for tok in iter(lex.token, None):
-            print repr(token.value), repr(token.type)
+        #   Tokens
+        # t_ENTRY_BEGIN = r'@'
+        # t_ENTRY_TYPE = r'[aAbBcCiImMpPtTuU]\w*'
+        # t_ID = r'\w*'
+        # t_FIELD_NAME = r'\w*'
+        # t_EQUALS = r'='
+
+        # t_FIELD_CONTENT = r'(\{(.|\n)*\} | "(.|\n)*" )'
+
+        # t_COMMA = r','
+        # t_LPARENT = r'\{'
+        # t_RPARENT = r'\}'
+        # t_QUOTATION_MARK = r'"'
+
+        # Ignored characters
+        # t_ignore = " \t"
+
+        # def t_error(t):
+            # raise TypeError("Invalid Format in %s" % (t.value))
+
+        # Build the lexer
+        # from . import ply.lex as lex
+        # lex.lex()
+
+        # lex.input(input_str)
+        # for tok in iter(lex.token, None):
+            # print repr(token.value), repr(token.type)
 
     @staticmethod
     def export_doc(document):
@@ -353,11 +359,11 @@ class Bibtex(threading.Thread):
          # init der Variablen
         extra_fields = list(document.docextra_set.all())
         authors = list(document.authors.filter(
-            documentauthors__editor = False
-            ).order_by("documentauthors__sort_value"))
+            documentauthors__editor=False
+        ).order_by("documentauthors__sort_value"))
         editors = list(document.authors.filter(
-            documentauthors__editor = True
-            ).order_by("documentauthors__sort_value"))
+            documentauthors__editor=True
+        ).order_by("documentauthors__sort_value"))
         category = document.category.name
         bib_no = document.bib_no
         inv_no = document.inv_no
@@ -384,33 +390,33 @@ class Bibtex(threading.Thread):
             doc_str += auth.last_name + u", " + auth.first_name
             if counter == last_element:
                 doc_str += u"},\n"
-            else :
+            else:
                 doc_str += u" AND "
             counter += 1
         last_element = len(editors) - 1
         doc_str += u"  editor = {"
         if -1 == last_element:
             doc_str += u"},\n"
-        for edit in editors: 
+        for edit in editors:
             doc_str += edit.last_name + u", " + edit.first_name
             if counter == last_element:
                 doc_str += u"},\n"
-            else :
+            else:
                 doc_str += u" AND "
             counter += 1
         doc_str += u"  title = {" + title + u"},\n"
-        if publisher != None:
+        if publisher is None:
             doc_str += u"  publisher = {" + publisher + u"},\n"
-        if year != None:
+        if year is None:
             doc_str += u"  year = {" + str(year) + u"},\n"
-        if address != None:
+        if address is None:
             doc_str += u"  address = {" + address + u"},\n"
-        if  isbn != None:
+        if isbn is None:
             doc_str += u"  isbn = {" + isbn + u"},\n"
         doc_str += u"  dateofpurchase = {" + datePurchase + u"},\n"
         doc_str += u"  inventarno = {" + inv_no + u"},\n"
         doc_str += u"  informatikbibno = {" + bib_no + u"},\n"
-        if locn != None:
+        if locn is None:
             doc_str += u"  libraryofcongressno = {" + locn + u"},\n"
         doc_str += u"  keywords = {"
         counter = 0
@@ -421,10 +427,10 @@ class Bibtex(threading.Thread):
             doc_str += key.keyword
             if counter == last_element:
                 doc_str += u"},\n"
-            else :
+            else:
                 doc_str += u" AND "
             counter += 1
-        if comment != None:
+        if comment is None:
             doc_str += u"  comment = {" + comment + u"},\n"
         for extra in extra_fields:
             doc_str += u"  " + extra.bib_field + u" = {"
@@ -439,7 +445,7 @@ class Bibtex(threading.Thread):
         """
         lock = threading.Lock()
         lock.acquire()
-        if Bibtex.active == True:
+        if Bibtex.active is True:
             return
         lock.release()
 
@@ -447,9 +453,9 @@ class Bibtex(threading.Thread):
             doc_year = doc.date_of_purchase.year
 #            TODO: einen "schönen" Namen für die Dateien setzen.
             bib_filename = export_path + "/lib_%i_%s.bib" % (
-                    doc_year,
-                    datetime.date.today()
-                    )
+                doc_year,
+                datetime.date.today()
+            )
             with codecs.open(bib_filename, mode='a', encoding='utf-8') \
                     as bib_file:
                 bib_file.write(Bibtex.export_doc(doc))
@@ -466,7 +472,7 @@ class Bibtex(threading.Thread):
 #
 
 
-#class BibtexEntry(object):
+# class BibtexEntry(object):
 #    def __init__(self, field, content):
 #        self.field = field
 #        self.content = content
@@ -477,4 +483,3 @@ class Bibtex(threading.Thread):
 # Die Produktionen
 """ TODO Zu testen sind geschweifte Klammern im Content, um das Handling sicher
 zu stellen. Weiter fehlen noch die Produktionen für die Concatenation mit # """
-

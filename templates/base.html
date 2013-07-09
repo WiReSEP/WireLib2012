@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-  <head>
-    <title>{% block title %}TU Braunschweig{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% block html_head %}{% endblock html_head %}
-  </head>
-  <body>
-    {% block header %}
+<head>
+<title>{% block title %}TU Braunschweig{% endblock title %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet" media="screen" />
+<link href="{% static "css/base.css" %}" rel="stylesheet" media="screen" />
+<script href="{% static "bootstrap/js/bootstrap.js" %}"></script>
+<script href="{% static "js/jquery-2.0.2.js" %}"></script> 
+{% block html_head %}{% endblock html_head %}
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row-fluid">
     <div id="header">
-      <div id="tu-signet">
-        <img src="{% static "images/siegel_rot.jpg" %}" alt="TU BRAUNSCHWEIG">
-      </div>
-      <div "sc-signet">
-        <img src="{% static "images/sclogo3D_t.gif" %}" alt="WiReLib">
-      </div>
-      <div id="symbolpic">
-        <img src="{% static "images/buecher_wire_01.jpg" %}" alt="Logo">
-      </div>
+      {% block header %}
+      <div id="banner" class="row-fluid"><img src="{% static "images/banner.png" %}" alt="" height="170" width="960"/></div>
+      <div id="tu-signet" class="span2"><img src="{% static "images/siegel_rot.jpg" %}" alt="TU BRAUNSCHWEIG" height="74" width="198"></div>
+      <div id="institute-logo" class="span2 offset8"><img src="{% static "images/institute.png" %}" alt="WiReLib" height="86" width="137"></div>
+      {% endblock header %}
     </div>
-    {% endblock header %}
-    {% block menu %}
-    <div id="menubar" class="navbar">
+  </div>
+  <div class="row-fluid">
+    <div id="menu" class="navbar">
+      {% block menu %}
       <ul id="menu" class="nav">
         {% for li in menu_top %}
         {{ li.html }}
         {% endfor %}
       </ul>
+      {% endblock menu %}
     </div>
-    {% endblock menu %}
-    {% block navigation %}
-    <div id="navbar" class="">
+  </div>
+  <div class="row-fluid">
+    <div id="navigation" class="span2">
+      {% block navigation %}
       <ul id="navlist" class="">
         {% for li in menu_left %}
         {{ li.html|safe }}
         {% endfor %}
       </ul>
+      {% endblock navigation %}
     </div>
-    {% endblock navigation %}
-    {% block snippet %}{% endblock snippet %}
-    {% block content %}{% endblock content %}
-    {% block footer %}{% endblock footer %}
-  </body>
+    <div id="content" class="span8">{% block content %}{% endblock content %}</div>
+    <div id="snippet" class="span2">{% block snippet %}{% endblock snippet %}</div>
+  </div>
+  <div class="row-fluid">
+    <div id="footer">{% block footer %}{% endblock footer %}</div>
+  </div>
+</div>
+</body> 
 </html>
