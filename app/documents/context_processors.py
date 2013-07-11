@@ -2,6 +2,7 @@
 from documents.models import *
 from django.core.urlresolvers import reverse
 
+
 def wire(request):
     """ Modifying the context of the request to ensure the required variables
     are passed on to the templates
@@ -11,7 +12,7 @@ def wire(request):
     export_perm = user.has_perm('documents.can_export')
     perms = user.has_perm('documents.can_see_admin')
     query_miss = Document.objects.filter(docstatus__status=Document.MISSING,
-            docstatus__return_lend=False)
+                                         docstatus__return_lend=False)
     query_mis = query_miss.order_by('-docstatus__date')
     return {'user': user,
             'perm': perms,
@@ -19,7 +20,9 @@ def wire(request):
             'import_perm': import_perm,
             'export_perm': export_perm,
             'menu_top': _create_menu(request),
-            'menu_left': _create_navlist(request),}
+            'menu_left': _create_navlist(request),
+            }
+
 
 def _create_navlist(request):
     navlist = []
@@ -28,8 +31,10 @@ def _create_navlist(request):
 
     for url in nav_urls:
         html = u'<li class="%s"><a href="%s">%s</a></li>' % url
-        navlist.append({u'html':html,})
+        navlist.append({u'html': html,
+                        })
     return navlist
+
 
 def _create_menu(request):
     return []
