@@ -4,7 +4,6 @@ from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
 from django.contrib.auth.models import User
 from django.conf import settings
-import _mysql_exceptions
 
 import datetime
 import threading
@@ -46,7 +45,7 @@ class UglyBibtex(object):
 
         self.quotation_mark_stack = 0
         self.bracket_stack = 0
-        self.current_keyval = [] 
+        self.current_keyval = []
 
         self.entry = {}
         self.extra_entry = {}
@@ -65,30 +64,30 @@ class UglyBibtex(object):
             with codecs.open(self.errout_file,mode='w', encoding='utf-8') as self.errout:
                 for self.line in bib:
                     self.line_no += 1
-                    if re.match(r'^\s*@',self.line): 
+                    if re.match(r'^\s*@',self.line):
                         # Neuer Eintrag
                         self.worker = self.__get_entry
 
-                    if self.worker != self.do_import: 
+                    if self.worker != self.do_import:
                         # Eintrag abarbeiten.
                         try:
                             self.worker()
-                        except ValueError: 
+                        except ValueError:
                             if self.worker == self.__get_entry:
                                 self.errout.write("Fehler in Eintrag\n")
                             else :
                                 self.errout.write("Fehler in Feld\n")
                             self.__log_error()
                             self.worker = self.do_import
-                    else: 
+                    else:
                         # Eintragende, reset
                         self.go_further = False
                         self.stack = 0
-                
+
                         self.quotation_mark_stack = 0
                         self.bracket_stack = 0
-                        self.current_keyval = [] 
-                
+                        self.current_keyval = []
+
                         self.entry = {}
                         self.extra_entry = {}
 
@@ -152,7 +151,7 @@ class UglyBibtex(object):
             key_val[1] = re.sub(r'(^[\s"{]*)|(["}\s]*(,|})\s*\n)','',key_val[1])
             field_end = re.match('.*,$',self.line.strip())
             if (field_end and not self.go_further)  \
-                  or self.worker == self.do_import: 
+                  or self.worker == self.do_import:
                 try:
                     self.__insert_field(key_val)
                 except ValueError:
@@ -199,7 +198,7 @@ class UglyBibtex(object):
             except DuplicateKeyError, e:
                 self.errout.write("Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
-            except _mysql_exceptions.Warning, e:
+            except Warning as e:
                 self.errout.write("Unkown error with mysql %s" %e)
                 self.__log_error()
 
@@ -316,27 +315,27 @@ class Bibtex(threading.Thread):
                 'FIELD_NAME', 'EQUALS', 'FIELD_CONTENT', 'COMMA',
                 'LPARENT', 'RPARENT', 'QUOTATION_MARK',
                 )
-        
+
         #   Tokens
         t_ENTRY_BEGIN = r'@'
         t_ENTRY_TYPE = r'[aAbBcCiImMpPtTuU]\w*'
         t_ID = r'\w*'
         t_FIELD_NAME = r'\w*'
         t_EQUALS = r'='
-        
+
         t_FIELD_CONTENT = r'(\{(.|\n)*\} | "(.|\n)*" )'
-        
+
         t_COMMA = r','
         t_LPARENT = r'\{'
         t_RPARENT = r'\}'
         t_QUOTATION_MARK = r'"'
-        
+
         #   Ignored characters
         t_ignore = " \t"
-        
+
         def t_error(t):
             raise TypeError("Invalid Format in %s" % (t.value))
-        
+
         # Build the lexer
         import ply.lex as lex
         lex.lex()
@@ -391,7 +390,7 @@ class Bibtex(threading.Thread):
         doc_str += u"  editor = {"
         if -1 == last_element:
             doc_str += u"},\n"
-        for edit in editors: 
+        for edit in editors:
             doc_str += edit.last_name + u", " + edit.first_name
             if counter == last_element:
                 doc_str += u"},\n"
