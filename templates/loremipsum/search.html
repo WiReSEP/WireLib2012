@@ -1,0 +1,42 @@
+{% extends 'documents/search.html' %}
+{% load webdesign %}
+{% block navigation %}
+  <li><a href="/lorem/">Home</a></li>
+  <li><a href="/lorem/documents">Literatur</a></li>
+  <li class="active"><a href="/lorem/documents/search">Erweiterte Suche</a></li>
+  <li><a href="/lorem/new_documents">Dokumente hinzufügen</a></li>
+  <li><a href="/lorem/export">Export</a></li>
+{% endblock navigation %}
+{% block content %}
+<p>
+{% lorem 15w %}
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Verknüfung</th>
+      <th>Nicht</th>
+      <th>Suchfeld</th>
+      <th>Suchtext</th>
+      <th>Regex</th>
+    </tr>
+  </thead>
+  <tr>
+    <td></td>
+    <td></td>
+    <td>Suchfeld</td>
+    <td>Suche</td>
+    <td>checkbox</td>
+  </tr>
+  <tr>
+    <td>UND</td>
+    <td>checkbox</td>
+    <td>suchfeld</td>
+    <td>Suche</td>
+    <td>checkbox</td>
+  </tr>
+</table>
+<p>
+{% lorem 12w %}
+</p>
+{% endblock content %}
