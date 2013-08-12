@@ -135,23 +135,19 @@
       </tr>
     </tbody>
   </table>
-  <div id="bibtex">
-    <a data-toggle="modal" href="#myModal" class="btn">BibTeX</a>
-    <div class="modal fade" id="myModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden=true">&times;</button>
-            <h4 class="modal-title">BibTeX</h4>
-          </div>
-          <div class="modal-body">
-            Here goes the BibTeX
-          </div>
-          <div class="modal-footer">
-            <a href="#" class="btn">Close</a>
-        </div>{# modal-content #}
-      </div>{# modal-dialog #}
-    </div>{# modal #}
+  <div id="bibtex" class="accordion">
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="bibtex" href="#bibtexCollapse">
+          BibTeX-Code
+        </a>
+      </div>
+      <div id="bibtexCollapse" class="accordion-body collapse">
+        <div class="accrdion-inner">
+          Here goes the BibTeX
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock content %}

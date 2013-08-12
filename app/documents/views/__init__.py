@@ -4,4 +4,3 @@ from doc_lists import *
 from others import *
 from user_profile import *
 from search import *
-#from views import *

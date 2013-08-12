@@ -4,4 +4,5 @@ from loremipsum.views import *
 
 urlpatterns = patterns('loremipsum.views',
                        url(r'^$', 'index'),
+                       url(r'^docdetail$', 'detaildummy'),
                        )
