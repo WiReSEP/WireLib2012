@@ -2,37 +2,55 @@
 {% load webdesign %}
 {% block content %}
 {# Controls TODO: Fix Layout & make main div a stable container for float:left,right childs. #}
-<div class="" style="height:45px;">
-<form class="navbar-search pull-left">
-  <input type="text" class="search-query" placeholder="Search">
+<form class="document-head">
+  <div>
+    <input type="text" placeholder="Search">
+    <div>
+      <select id="" name="">
+        <option value="">Alle Titel</option>
+        <option value="">Titel mit A-C beginnend</option>
+        <option value="">Titel mit D-F beginnend</option>
+        <option value="">Titel mit G-I beginnend</option>
+        <option value="">Titel mit J-L beginnend</option>
+        <option value="">Titel mit M-O beginnend</option>
+        <option value="">Titel mit P-R beginnend</option>
+        <option value="">Titel mit S-U beginnend</option>
+        <option value="">Titel mit V-Z beginnend</option>
+        <option value="">Titel mit Sonderzeichen</option>
+      </select>
+      <select id="" name="">
+        <option value="">Alle Authoren</option>
+        <option value="">Authoren mit A-C beginnend</option>
+        <option value="">Authoren mit D-F beginnend</option>
+        <option value="">Authoren mit G-I beginnend</option>
+        <option value="">Authoren mit J-L beginnend</option>
+        <option value="">Authoren mit M-O beginnend</option>
+        <option value="">Authoren mit P-R beginnend</option>
+        <option value="">Authoren mit S-U beginnend</option>
+        <option value="">Authoren mit V-Z beginnend</option>
+        <option value="">Authoren mit Sonderzeichen</option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <div class="sortby">
+      <span>Sortieren nach:</span>
+      <div class="sortby-down"><a href="#">↓ Titel</a></div> {# ↑ ↓ #}
+      <div><a href="#">Author</a></div>
+      <div><a href="#">Jahr</a></div>
+    </div>
+    <div>
+      <span>Treffer pro Seite:</span>
+      <select id="" name="">
+        <option value="">10</option>
+        <option value="">25</option>
+        <option value="">50</option>
+        <option value="">75</option>
+        <option value="">100</option>
+      </select>
+    </div>
+  </div>
 </form>
-<ul class="nav nav-pills pull-left">
-  <li class="disabled"><a href="#">Sortieren nach:</a></li>
-  <li class="active sort-up"><a href="#">↓ Titel</a></li> {# ↑ ↓ #}
-  <li><a href="#">Author</a></li>
-  <li><a href="#">Jahr</a></li>
-  <li><a href="#">Publisher</a></li>
-</ul>
-Treffer pro Seite:
-<script>
-     $(document).ready(function(){
-        $('.dropdown-toggle').dropdown()
-    });
-</script>
-<div class="btn-group">
-  <div class="dropdown">
-  <a class="btn dropdown-toggle" data-toggle="dropdown" data-target="#">
-    10
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="dLabel">
-    <li><a href="#">10</a></li>
-    <li><a href="#">10</a></li>
-    <li><a href="#">10</a></li>
-    <li><a href="#">10</a></li>
-  </ul>
-</div></div>
-</div>
 
 <p>   {# Items #}
 <ul class="list_body">

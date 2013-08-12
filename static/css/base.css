@@ -124,7 +124,8 @@ p{
   margin-bottom: 5px;
 }
 
-.tablelist{
+.document-head div{
+  display: inline-block;
 }
 
 .snippet {
