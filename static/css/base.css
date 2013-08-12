@@ -6,7 +6,7 @@
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 10px;
-    padding-left: 2px;
+    padding-left: 10px;
     padding-right: 2px;
     box-shadow: 0 0 10px #cacaca;
     -moz-box-shadow: 0 0 10px #cacaca;
@@ -109,7 +109,7 @@ p{
   padding-top: 4px;
   padding-bottom: 4px;
   border: 1px solid #848484;
-  box-shadow: -2px -3px #cacaca; /* equals padding left*/
+  box-shadow: -1px -3px 10px #cacaca; /* equals padding left*/
 }
 /**********************
  * Feature Container
@@ -122,6 +122,9 @@ p{
   border-color: #808080;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.tablelist{
 }
 
 .snippet {

@@ -1,0 +1,163 @@
+{% extends 'documents/doc_list.html' %}
+{% load webdesign %}
+{% block content %}
+{# Controls TODO: Fix Layout & make main div a stable container for float:left,right childs. #}
+<div class="" style="height:45px;">
+<form class="navbar-search pull-left">
+  <input type="text" class="search-query" placeholder="Search">
+</form>
+<ul class="nav nav-pills pull-left">
+  <li class="disabled"><a href="#">Sortieren nach:</a></li>
+  <li class="active sort-up"><a href="#">↓ Titel</a></li> {# ↑ ↓ #}
+  <li><a href="#">Author</a></li>
+  <li><a href="#">Jahr</a></li>
+  <li><a href="#">Publisher</a></li>
+</ul>
+<div class="btn-toolbar pull-right">
+  <div class="btn-group">
+    <button class="btn dropdown-toggle" data-toggle="dropdown">
+      Treffer pro Seite
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#">10</a></li>
+      <li><a href="#">25</a></li>
+      <li><a href="#">50</a></li>
+      <li><a href="#">75</a></li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<p>   {# Items #}
+<ul class="list_body">
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">3 D Computer Graphics</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Alan Watt</div>
+    <div class="year">1995</div>
+    <div class="volume"></div>
+    <div class="publisher">Addison-Wesley</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">350 Jahre Rechenmaschinen</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Martin Graef</div>
+    <div class="year">1973</div>
+    <div class="volume"></div>
+    <div class="publisher">Carl Hanser Verlag</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">3D-Computation of Incompressible Internal Flows</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Gabriel Sottas, Inge L. Ryhming</div>
+    <div class="year">1993</div>
+    <div class="volume"></div>
+    <div class="publisher">vieweg</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">5. Deutsche Windenergiekonferenz 2000, Tagungsband</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Deutsches Windenergie-Institut DEWI</div>
+    <div class="year">2000</div>
+    <div class="volume"></div>
+    <div class="publisher">Deutsches Windenergie-Institut GmbH</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">A Beginner&#39;s Book of TEX</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Raymond Seroul, Silvio Levy</div>
+    <div class="year">1991</div>
+    <div class="volume"></div>
+    <div class="publisher">Springer Verlag</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">A Calculus of Distributed and Parallel Processes</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Clemens H. Cap</div>
+    <div class="year">2000</div>
+    <div class="volume"></div>
+    <div class="publisher">Teubner</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">A Concrete Approach to Mathematical Modelling</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Michael Mesterton-Gibbons</div>
+    <div class="year">1995</div>
+    <div class="volume"></div>
+    <div class="publisher">John Wiley &amp; Sons</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">A Course in Functional Analysis</a>
+  </div>
+  <div class="extras">
+    <div class="authors">John B. Conway</div>
+    <div class="year">2005</div>
+    <div class="volume"></div>
+    <div class="publisher">Springer</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">A Finite Calculus Formulation of the Level Set Equation</a>
+  </div>
+  <div class="extras">
+    <div class="authors">S. R. Idelsohn, E. Onate, S. R. Ransau, Sergio R. Idelsohn, Eugenio Onate</div>
+    <div class="year">2003</div>
+    <div class="volume"></div>
+    <div class="publisher">CIMNE</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+  <li class="status_0">
+  <div class="title">
+    <a href="/lorem/documents/K198442">A First Course in Combinatorial Mathematics</a>
+  </div>
+  <div class="extras">
+    <div class="authors">Ian Anderson</div>
+    <div class="year">1989</div>
+    <div class="volume"></div>
+    <div class="publisher">Oxford University Press</div>
+    <div class="Umfang"></div>
+  </div>
+  </li>
+</ul>
+</p>
+{% endblock content %}
+{% block navigation %}
+  <li><a href="/lorem/">Home</a></li>
+  <li class="active"><a href="/lorem/documents">Literatur</a></li>
+  <li><a href="/lorem/documents/search">Erweiterte Suche</a></li>
+  <li class="inactive"><a href="/lorem/new_documents">Dokumente hinzufügen</a></li>
+  <li><a href="/lorem/export">Export</a></li>
+{% endblock navigation %}
