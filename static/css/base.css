@@ -179,7 +179,7 @@ p{
   float: right;
 }
 
-#detailHeading .inline{
+#detailHeading>*{
   display: inline-block;
 }
 
