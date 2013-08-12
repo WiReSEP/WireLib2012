@@ -13,20 +13,25 @@
   <li><a href="#">Jahr</a></li>
   <li><a href="#">Publisher</a></li>
 </ul>
-<div class="btn-toolbar pull-right">
-  <div class="btn-group">
-    <button class="btn dropdown-toggle" data-toggle="dropdown">
-      Treffer pro Seite
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-      <li><a href="#">10</a></li>
-      <li><a href="#">25</a></li>
-      <li><a href="#">50</a></li>
-      <li><a href="#">75</a></li>
-    </ul>
-  </div>
-</div>
+Treffer pro Seite:
+<script>
+     $(document).ready(function(){
+        $('.dropdown-toggle').dropdown()
+    });
+</script>
+<div class="btn-group">
+  <div class="dropdown">
+  <a class="btn dropdown-toggle" data-toggle="dropdown" data-target="#">
+    10
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="dLabel">
+    <li><a href="#">10</a></li>
+    <li><a href="#">10</a></li>
+    <li><a href="#">10</a></li>
+    <li><a href="#">10</a></li>
+  </ul>
+</div></div>
 </div>
 
 <p>   {# Items #}
