@@ -4,7 +4,9 @@
 {# Controls TODO: Fix Layout & make main div a stable container for float:left,right childs. #}
 <form class="document-head">
   <div>
-    <input type="text" placeholder="Search">
+    <div>
+      <input type="text" placeholder="Search">
+    </div>
     <div>
       <select id="" name="">
         <option value="">Alle Titel</option>
@@ -35,26 +37,28 @@
   <div>
     <div class="sortby">
       <span>Sortieren nach:</span>
-      <div class="sortby-down"><a href="#">↓ Titel</a></div> {# ↑ ↓ #}
-      <div><a href="#">Author</a></div>
-      <div><a href="#">Jahr</a></div>
+      <div>
+        <div class="sortby sortby-down"><a href="#">Titel</a></div>
+        <div class="sortby"><a href="#">Author</a></div>
+        <div class="sortby"><a href="#">Jahr</a></div>
+      </div>
     </div>
     <div>
       <span>Treffer pro Seite:</span>
-      <select id="" name="">
-        <option value="">10</option>
-        <option value="">25</option>
-        <option value="">50</option>
-        <option value="">75</option>
-        <option value="">100</option>
+      <select id="resultsOnPage" name="">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="75">75</option>
+        <option value="100">100</option>
       </select>
     </div>
   </div>
 </form>
 
-<p>   {# Items #}
-<ul class="list_body">
-  <li class="status_0">
+{# Items #}
+<ul class="document-list">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">3 D Computer Graphics</a>
   </div>
@@ -66,7 +70,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-miss">
   <div class="title">
     <a href="/lorem/documents/K198442">350 Jahre Rechenmaschinen</a>
   </div>
@@ -78,7 +82,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">3D-Computation of Incompressible Internal Flows</a>
   </div>
@@ -90,7 +94,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-lend">
   <div class="title">
     <a href="/lorem/documents/K198442">5. Deutsche Windenergiekonferenz 2000, Tagungsband</a>
   </div>
@@ -102,7 +106,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">A Beginner&#39;s Book of TEX</a>
   </div>
@@ -114,7 +118,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">A Calculus of Distributed and Parallel Processes</a>
   </div>
@@ -126,7 +130,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">A Concrete Approach to Mathematical Modelling</a>
   </div>
@@ -138,7 +142,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">A Course in Functional Analysis</a>
   </div>
@@ -150,7 +154,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">A Finite Calculus Formulation of the Level Set Equation</a>
   </div>
@@ -162,7 +166,7 @@
     <div class="Umfang"></div>
   </div>
   </li>
-  <li class="status_0">
+  <li class="status-avail">
   <div class="title">
     <a href="/lorem/documents/K198442">A First Course in Combinatorial Mathematics</a>
   </div>
@@ -175,7 +179,17 @@
   </div>
   </li>
 </ul>
-</p>
+<form id="pagination">
+  <div class="btn-group">
+    <button class="btn">1</button>
+    <button class="btn">2</button>
+    <button class="btn">3</button>
+    <button class="btn">4</button>
+    <button class="btn disabled">…</button>
+    <button class="btn">17</button>
+    <button class="btn">18</button>
+  </div>
+</form>
 {% endblock content %}
 {% block navigation %}
   <li><a href="/lorem/">Home</a></li>
