@@ -179,17 +179,19 @@
   </div>
   </li>
 </ul>
-<form id="pagination">
-  <div class="btn-group">
-    <button class="btn">1</button>
-    <button class="btn">2</button>
-    <button class="btn">3</button>
-    <button class="btn">4</button>
-    <button class="btn disabled">…</button>
-    <button class="btn">17</button>
-    <button class="btn">18</button>
-  </div>
-</form>
+
+<div class="pagination pagination-centered">
+  <ul>
+    <li class="disabled"><a href="#">«</a></li>
+    <li class="active"><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">6</a></li>
+    <li><a href="#">»</a></li>
+  </ul>
+</div>
 {% endblock content %}
 {% block navigation %}
   <li><a href="/lorem/">Home</a></li>

@@ -272,9 +272,3 @@ ul.document-list li{
 	content: "✗";
 	color: #880000;
 }
-
-/* pagination */
-#pagination{
-	display: block;
-	text-align: center;
-}
