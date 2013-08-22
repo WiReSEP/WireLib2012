@@ -47,7 +47,7 @@
       </ul>
     </div>
     <div class="span8">
-      <div id="content">{% block content %}{% endblock content %}
+      <div id="content" class="row-fluid">{% block content %}{% endblock content %}
       </div>
       <div id="footer">
         <div class="hr-line"></div>
@@ -62,5 +62,6 @@
 </div>
 <script src="{% static "js/jquery-2.0.2.js" %}"></script> 
 <script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
+{% block scripts %}{% endblock scripts %}
 </body> 
 </html>

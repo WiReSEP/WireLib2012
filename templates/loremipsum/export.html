@@ -1,9 +1,85 @@
 {% extends 'documents/export.html' %}
+{% load static %}
 {% load webdesign %}
+{% block scripts %}
+<script src="{% static "js/export.js" %}" type="text/javascript"></script>
+{% endblock scripts %}
 {% block navigation %}
-  <li><a href="/lorem/">Home</a></li>
-  <li><a href="/lorem/documents">Literatur</a></li>
-  <li><a href="/lorem/documents/search">Erweiterte Suche</a></li>
-  <li><a href="/lorem/documents/new">Dokumente hinzufügen</a></li>
-  <li class="active"><a href="/lorem/export">Export</a></li>
+<li><a href="/lorem/">Home</a></li>
+<li><a href="/lorem/documents">Literatur</a></li>
+<li><a href="/lorem/documents/search">Erweiterte Suche</a></li>
+<li><a href="/lorem/documents/new">Dokumente hinzufügen</a></li>
+  <li><a href="/lorem/duplicates">Duplikate entfernen</a></li>
+<li class="active"><a href="/lorem/export">Export</a></li>
 {% endblock navigation %}
+{% block content %}
+<p>{% lorem 45 w %}</p>
+<hr />
+<div>
+  <h1>BibTeX Export</h1>
+  <p>{% lorem 30 w %}</p>
+  <div class="spoiler">
+    <span>BibTeX Exporte</span>
+    <div class="spoiler-pre">
+      {% lorem 5 w %}
+      <a href="#" class="spoiler-open">[mehr…]</a>
+    </div>
+    <div class="spoiler-post">
+      <form>
+        <button class="btn">Exportiere</button>
+      </form>
+      <div class="progress">
+        <div class="bar" style="width: 40%"></div>
+      </div>
+      <ul class="export-list">
+        <li><i class="icon-list-alt"></i><a href="#">2013-06-25</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2012-05-17</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2011-07-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2011-06-08</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2010-11-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2010-10-18</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2010-04-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2009-06-26</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2009-02-14</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2008-10-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2008-09-13</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2007-05-15</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<hr />
+<div>
+  <h1>TU Bibliotheks Export</h1>
+  <p>{% lorem 30 w %}</p>
+  <div class="spoiler">
+    <span>Allegro Exporte</span>
+    <div class="spoiler-pre">
+      {% lorem 5 w %}
+      <a href="#">[mehr…]</a>
+    </div>
+    <div class="spoiler-post">
+      <form>
+        <button class="btn">Exportiere</button>
+      </form>
+      <div class="progress">
+        <div class="bar" style="width: 40%"></div>
+      </div>
+      <ul class="export-list">
+        <li><i class="icon-list-alt"></i><a href="#">2013-06-25</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2012-05-17</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2011-07-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2011-06-08</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2010-11-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2010-10-18</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2010-04-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2009-06-26</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2009-02-14</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2008-10-15</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2008-09-13</a></li>
+        <li><i class="icon-list-alt"></i><a href="#">2007-05-15</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}

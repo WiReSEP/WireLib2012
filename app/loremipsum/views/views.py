@@ -18,6 +18,10 @@ def new_documents(request):
     return render(request, 'loremipsum/doc_add_modify.html', None)
 
 
+def duplicates(request):
+    return render(request, 'loremipsum/duplicates.html', None)
+
+
 def export(request):
     return render(request, 'loremipsum/export.html', None)
 
