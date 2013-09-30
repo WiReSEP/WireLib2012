@@ -1,0 +1,17 @@
+{% extends "documents/base.html" %}
+{% block content %}
+<h1>{% block content-header %}{{ document.bib_no }}<small>(Bearbeiten)</small>{% endblock content-header %}</h1>
+{% block content-form %}
+<form class="form-horizontal">
+  {% for field in document_form %}
+  <div class="control-group">
+    <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+    <div class="controls">
+      {{ field }}
+    </div>
+  </div>
+  {% endfor %}
+  <input type="submit" name="submitTyped" value="Speichern" class="btn btn-primary" />
+</form>
+{% endblock content-form %}
+{% endblock content %}

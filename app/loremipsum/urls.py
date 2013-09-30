@@ -11,4 +11,5 @@ urlpatterns = patterns('loremipsum.views',
                        url(r'^documents/new$', 'new_documents'),
                        url(r'^export$', 'export'),
                        url(r'^documents/K198442$', 'doc_detail'),
+                       url(r'^user/profile/(?P<pk>\d+)/$', UserProfileView.as_view()),
                        )

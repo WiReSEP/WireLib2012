@@ -56,6 +56,10 @@ h1{
   margin-bottom: 14px;
 }
 
+h1 small{
+  font-size: 20px;
+}
+
 h2{
   font-size: 22px;
   text-decoration: none;
@@ -280,6 +284,17 @@ ul.document-list li{
 .document-list .volume{
 }
 .document-list .publisher{
+}
+
+.controls div.import-inputgroup{
+	display: block;
+	padding-bottom: 10px;
+}
+
+#importAuthors .drag-n-drop{
+	background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.04) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.04) 50%, rgba(0, 0, 0, 0.04) 75%, transparent 75%, transparent);
+	content: "::";
+	color: transparent;
 }
 
 /* general status definitions */
