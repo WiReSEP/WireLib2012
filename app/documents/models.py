@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.template import Context
 from django.template import loader
+from documents.lib.bibtex import Bibtex
 from documents.lib.exceptions import LendingError
 
 
@@ -76,12 +77,19 @@ class Document(models.Model):
     MISSING = 3     # vermisst
     LOST = 4        # verloren
 
-    STATUS_CHOICES = (
-            (AVAILABLE, "Verfügbar"),
-            (LEND, "Verliehen"),
-            (ORDERED, "Bestellt"),
-            (MISSING, "Vermisst"),
-            (LOST, "Verloren"),)
+    CSS_CLASSES = {AVAILABLE: 'status_avail',
+                   LEND: 'status-lend',
+                   ORDERED: 'status-ordered',
+                   MISSING: 'status-miss',
+                   LOST: 'status-lost',
+            }
+
+    STATUS_CHOICES = {AVAILABLE, "Verfügbar",
+                      LEND, "Verliehen",
+                      ORDERED, "Bestellt",
+                      MISSING, "Vermisst",
+                      LOST, "Verloren",
+            }
 
     bib_no = models.CharField("Bibliotheks-Nr.",
             max_length=15,
@@ -101,10 +109,10 @@ class Document(models.Model):
             max_length=10,
             blank=True,
             null=True)
-        #LibraryOfCongressN
     title = models.CharField("Titel",max_length=255)
-    status = models.IntegerField("Status", null=True, choices=STATUS_CHOICES,
-            default=AVAILABLE)
+    status = models.IntegerField("Status", null=True,
+                                 choices=STATUS_CHOICES.items(), 
+                                 default=AVAILABLE)
     isbn = models.CharField("ISBN",max_length=17, blank=True, null=True)
     category = models.ForeignKey(Category,verbose_name="Kategorie")
     last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
@@ -295,6 +303,15 @@ class Document(models.Model):
                 author=obj, editor=is_editor, sort_value=max_val)
         d.save()
 
+    def get_status_css_class(self):
+        return Document.CSS_CLASSES[self.status]
+
+    def get_status_string(self):
+        return Document.STATUS_CHOICES[self.status]
+
+    def get_bibtex(self):
+        return Bibtex.export_doc(self)
+
 
 class DocumentAuthors(models.Model):
     document = models.ForeignKey(Document)
@@ -424,7 +441,7 @@ class DocStatus(models.Model):
     recent_user = models.ForeignKey(User, related_name='recent_user')
     doc_id = models.ForeignKey(Document)
         #in welchen Status wurde geändert?
-    status = models.IntegerField(choices=Document.STATUS_CHOICES,
+    status = models.IntegerField(choices=Document.STATUS_CHOICES.items(),
             default=Document.AVAILABLE)
         #Datum an dem es geschah
     date = models.DateTimeField(auto_now_add=True)

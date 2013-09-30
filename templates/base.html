@@ -23,15 +23,15 @@
         <ul class="nav">
           <li><a href="">Impressum</a></li>
         </ul>
-        {% block menu %}
-        {% endblock menu %}
         <ul class="nav pull-right">
+          {% block menu %}
           {% for li in menu_top %}
-          {{ li.html }}
+          {{ li.html|safe }}
           {% endfor %}
           <li><form action="" class="navbar-search pull-right">
             <input type="text" placeholder="Suche" class="search-query" />
           </form></li>
+          {% endblock menu %}
         </ul>
       </div>
     </div>
@@ -47,7 +47,12 @@
       </ul>
     </div>
     <div class="span8">
-      <div id="content">{% block content %}{% endblock content %}
+      <div id="content">
+        <h1>
+          {% block content-header %}
+          {% endblock content-header %}
+        </h1>
+        {% block content %}{% endblock content %}
       </div>
       <div id="footer">
         <div class="hr-line"></div>
