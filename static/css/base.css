@@ -417,3 +417,7 @@ ul.export-list{
   margin-left: 4px;
   padding: 3px 0 3px 0;
 }
+
+.spoiler-post .progress{
+  display: none;
+}
