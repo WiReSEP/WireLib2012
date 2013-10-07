@@ -12,9 +12,9 @@ from .document import Publisher
 
 from .mails import Emails
 
-from .users import NonUser
-from .users import TelNonUser
-from .users import TelUser
-from .users import UserProfile
+from .user import NonUser
+from .user import TelNonUser
+from .user import TelUser
+from .user import UserProfile
 
 from .signal_handlers import *

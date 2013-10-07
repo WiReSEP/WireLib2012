@@ -1,3 +1,6 @@
+# vim: set fileencoding=utf-8
+from __future__ import unicode_literals
+
 from .document import Document
 from django.db import models
 
