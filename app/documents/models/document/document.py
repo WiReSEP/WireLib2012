@@ -1,3 +1,12 @@
+from ..bibtex import Category
+from .author import Author
+from .publisher import Publisher
+from .status import DocStatus
+from django.contrib.auth import User
+from django.db import models
+from documents.lib.exceptions import LendingError
+
+
 class Document(models.Model):
     AVAILABLE = 0   # vorhanden
     LEND = 1        # ausgeliehen
@@ -230,3 +239,19 @@ class Document(models.Model):
 
     def get_status_string(self):
         return Document.STATUS_CHOICES[self.status]
+
+
+class DocumentAuthors(models.Model):
+    document = models.ForeignKey(Document)
+    author = models.ForeignKey(Author, verbose_name="Autor")
+    editor = models.BooleanField(default=False)
+    sort_value = models.IntegerField("Reihenfolge")
+    _sort_field_name = "sort_value"
+
+    class Meta:
+        verbose_name = "Dokument Autoren"
+        verbose_name_plural = "Dokument Autoren"
+        unique_together = ('document', 'author')
+
+    def __unicode__(self):
+        return u'%s/%s' % (self.document, self.author)

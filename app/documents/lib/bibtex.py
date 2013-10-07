@@ -36,8 +36,6 @@ class UglyBibtex(object):
     BIBTEX_SPLIT = r'[{}@,="\n]'
 
     def __init__(self, bibtex_file):
-        import pdb
-        pdb.set_trace()  # XXX BREAKPOINT
         self.bibtex_file = bibtex_file
         self.errout_file = bibtex_file + '.err'
         self.line = None

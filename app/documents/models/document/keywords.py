@@ -1,3 +1,7 @@
+from .document import Document
+from django.db import models
+
+
 class Keywords(models.Model):
     document = models.ForeignKey(Document)
     keyword = models.CharField(u"Schlüsselwort", max_length=200)

@@ -1,5 +1,8 @@
-class DocExtra(models.Model):
+from django.db import models
+from .document import Document
 
+
+class DocExtra(models.Model):
     """
     Bietet die Möglichkeit für mehrere extra Felder für ein Dokument
     """

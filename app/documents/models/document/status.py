@@ -1,3 +1,9 @@
+from django.db import models
+from .document import Document
+from django.contrib.auth import User
+from ..user import NonUser
+
+
 class DocStatus(models.Model):
         # auftraggebender User
     recent_user = models.ForeignKey(User, related_name='recent_user')
