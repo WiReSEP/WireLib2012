@@ -1,3 +1,7 @@
+from django.db import models
+from django.contrib.auth import User
+
+
 class UserProfile(models.Model):
     """
     Zugriff auf unsere Daten auch von außerhalb durch get_profile() möglich
@@ -19,7 +23,8 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return unicode(self.user)
 
-    class TelUser(models.Model):
+
+class TelUser(models.Model):
     user = models.ForeignKey(User)
     tel_type = models.CharField("Typ", max_length=20)
     tel_nr = models.CharField("Telefonnummer", max_length=20)

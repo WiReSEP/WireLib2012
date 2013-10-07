@@ -1,3 +1,6 @@
+from django.db import models
+
+
 class NonUser(models.Model):
     first_name = models.CharField("vorname", max_length=30)
     last_name = models.CharField("nachname", max_length=30)
