@@ -7,7 +7,6 @@ from .exceptions import UnknownCategoryError
 
 import codecs
 import datetime
-from . import doc_funcs
 import re
 import threading
 
@@ -123,6 +122,7 @@ class UglyBibtex(object):
         Diese Methode übernimmt nur einen Eintrag eines Feldes und erkennt
         unstimmigkeiten sowohl in Feld als auch in Einträgen
         """
+        from . import doc_funcs
         if self.line.count("=") > 1:
             raise ValueError()
 
