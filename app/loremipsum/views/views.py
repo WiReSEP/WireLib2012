@@ -32,6 +32,7 @@ def export(request):
 def doc_detail(request):
     return render(request, 'loremipsum/doc_detail.html', None)
 
+
 class UserProfileView(DetailView):
     model = User
     template_name = 'loremipsum/user_profile.html'
