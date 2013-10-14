@@ -1,6 +1,5 @@
 #vim: set fileencoding=utf-8
 from documents.models import *
-from django.core.urlresolvers import reverse
 
 
 def wire(request):
@@ -25,11 +24,10 @@ def wire(request):
 
 
 def _create_navlist(request):
+    from documents.views.navigation import NAV_LIST
     navlist = []
-    nav_urls = []
-    nav_urls.append((u'', reverse('documents.index'), u'Home'))
 
-    for url in nav_urls:
+    for url in NAV_LIST:
         html = u'<li class="%s"><a href="%s">%s</a></li>' % url
         navlist.append({u'html': html,
                         })
@@ -37,4 +35,11 @@ def _create_navlist(request):
 
 
 def _create_menu(request):
-    return []
+    from documents.views.navigation import MENU_TOP
+    menulist = []
+
+    for url in MENU_TOP:
+        html = u'<li class="%s"><a href="%s">%s</a></li>' % url
+        menulist.append({u'html': html,
+                         })
+    return menulist

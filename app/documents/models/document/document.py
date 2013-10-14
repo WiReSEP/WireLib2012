@@ -8,6 +8,7 @@ from .publisher import Publisher
 from django.contrib.auth.models import User
 from django.db import models
 from documents.lib.exceptions import LendingError
+from documents.lib.bibtex import Bibtex
 
 
 class Document(models.Model):
@@ -17,7 +18,7 @@ class Document(models.Model):
     MISSING = 3     # vermisst
     LOST = 4        # verloren
 
-    CSS_CLASSES = {AVAILABLE: 'status_avail',
+    CSS_CLASSES = {AVAILABLE: 'status-avail',
                    LEND: 'status-lend',
                    ORDERED: 'status-ordered',
                    MISSING: 'status-miss',
@@ -242,6 +243,9 @@ class Document(models.Model):
 
     def get_status_string(self):
         return Document.STATUS_CHOICES[self.status]
+
+    def get_bibtex(self):
+        return Bibtex.export_doc(self)
 
 
 class DocumentAuthors(models.Model):
