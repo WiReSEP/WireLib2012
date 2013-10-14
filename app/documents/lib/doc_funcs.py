@@ -5,17 +5,12 @@ import re
 from django.db import IntegrityError
 from exceptions import UnknownCategoryError
 from exceptions import DuplicateKeyError
-from documents.models import Publisher
-from documents.models import Category
-from documents.models import Document
-from documents.models import Author
-from documents.models import Keywords
-from documents.models import DocExtra
 
 
 def is_valid(dict_data):  # TODO
     """Diese Methode überprüft, ob es sich bei dem übergebenen dict um ein
     BibteX-kompatibles Format handelt"""
+    from documents.models import Category
     try:
         bib_no_r = r"[PKDRM]\d+"  # TODO regex im backend zur bearbeitung freigeben
         if not re.match(bib_no_r, dict_data["bib_no"]):
@@ -43,6 +38,11 @@ def insert_doc(dict_insert, user):
     """Fügt ein Dokument aus einem dict in die Datenbank ein, nachdem es auf
     Validität überprüft wurde.
     """
+    from documents.models import Category
+    from documents.models import DocExtra
+    from documents.models import Document
+    from documents.models import Keywords
+    from documents.models import Publisher
     valid, message = is_valid(dict_insert)
     if not valid:
         pattern_und = r"\S* und \S*"
@@ -166,6 +166,7 @@ def _var_is_empty(data):
 
 
 def _extract_author(author):
+    from documents.models import Author
     au = author.split(", ", 2)
     if len(au) > 1:
         last_name = au[0]
