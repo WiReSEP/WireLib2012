@@ -1,3 +1,4 @@
 #vim: set fileencoding=utf-8
 from lists import DocumentList
 from index import index
+from doc_detail import DocumentDetailView

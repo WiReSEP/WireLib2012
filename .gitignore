@@ -24,3 +24,7 @@ doc/Pflichtenheft/TemplatePflichtenheft.pdf
 settings/__init__.py
 wirelib.db
 settings/SECRET
+.ropeproject/
+olddb
+deploy.py
+virtualenv
