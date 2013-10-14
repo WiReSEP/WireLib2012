@@ -13,7 +13,7 @@ def wire(request):
     perms = user.has_perm('documents.can_see_admin')
     query_miss = Document.objects.filter(docstatus__status=Document.MISSING,
                                          docstatus__return_lend=False)
-    query_mis = query_miss.order_by('-docstatus__date')
+    query_miss = query_miss.order_by('-docstatus__date')
     return {'user': user,
             'perm': perms,
             'miss': query_miss[0:10],
@@ -27,7 +27,7 @@ def wire(request):
 def _create_navlist(request):
     navlist = []
     nav_urls = []
-    nav_urls.append((u'', reverse('index'), u'Home'))
+    nav_urls.append((u'', reverse('documents.index'), u'Home'))
 
     for url in nav_urls:
         html = u'<li class="%s"><a href="%s">%s</a></li>' % url
