@@ -403,18 +403,18 @@ class Bibtex(threading.Thread):
                 doc_str += u" AND "
             counter += 1
         doc_str += u"  title = {" + title + u"},\n"
-        if publisher is None:
+        if publisher is not None:
             doc_str += u"  publisher = {" + publisher + u"},\n"
-        if year is None:
+        if year is not None:
             doc_str += u"  year = {" + str(year) + u"},\n"
-        if address is None:
+        if address is not None:
             doc_str += u"  address = {" + address + u"},\n"
-        if isbn is None:
+        if isbn is not None:
             doc_str += u"  isbn = {" + isbn + u"},\n"
         doc_str += u"  dateofpurchase = {" + datePurchase + u"},\n"
         doc_str += u"  inventarno = {" + inv_no + u"},\n"
         doc_str += u"  informatikbibno = {" + bib_no + u"},\n"
-        if locn is None:
+        if locn is not None:
             doc_str += u"  libraryofcongressno = {" + locn + u"},\n"
         doc_str += u"  keywords = {"
         counter = 0
