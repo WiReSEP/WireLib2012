@@ -1,1 +1,29 @@
-{% extends "base.html" %}
+{% extends "documents/base.html" %}
+{% block html_head %}
+{{ searchform.media }}
+{% endblock html_head %}
+{% block content %}
+<form action="" method="POST">
+  <fieldset>
+    <legend>Detaillierte Suche</legend>
+    {% for form in searchform %}
+    {% if forloop.first %}
+    <div class="controls controls-row">
+      {% for field in form %}
+      <span class="{{ field.css_class }}">{{ field.label }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="controls controls-row">
+      {% for field in form %}
+      {{ field }}
+      {% endfor %}
+    </div>
+    {% endfor %}
+    <div class="form-actions">
+      <input type="submit" class="btn brn-primary">Suchen</input>
+      <a href="#" class="btn">Weiteres Feld</a>
+    </div>
+  </fieldset>
+</form>
+{% endblock content %}
