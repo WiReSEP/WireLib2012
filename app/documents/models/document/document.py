@@ -72,6 +72,7 @@ class Document(models.Model):
                                      through='DocumentAuthors', verbose_name="Autoren")
 
     class Meta:
+        app_label = "documents"
         permissions = (("can_see_price", "Can see price"),
                        ("can_see_locn", "Can see library of congress number"),
                        ("can_see_last_update_info",
@@ -256,6 +257,7 @@ class DocumentAuthors(models.Model):
     _sort_field_name = "sort_value"
 
     class Meta:
+        app_label = "documents"
         verbose_name = "Dokument Autoren"
         verbose_name_plural = "Dokument Autoren"
         unique_together = ('document', 'author')
@@ -285,6 +287,7 @@ class DocStatus(models.Model):
     non_user_lend = models.ForeignKey(NonUser, blank=True, null=True)
 
     class Meta:
+        app_label = "documents"
         permissions = (("can_lend", "Can lend documents"),
                        ("can_unlend", "Can unlend documents"),
                        ("can_miss", "Can miss documents"),

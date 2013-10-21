@@ -10,6 +10,7 @@ class Keywords(models.Model):
     keyword = models.CharField(u"Schlüsselwort", max_length=200)
 
     class Meta:
+        app_label = 'documents'
         unique_together = ('document', 'keyword')
     # primary_key(document, keyword)
         verbose_name = u"Schlüsselwort"

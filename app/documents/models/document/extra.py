@@ -14,6 +14,7 @@ class DocExtra(models.Model):
     content = models.CharField(max_length=200)
 
     class Meta:
+        app_label = 'documents'
         unique_together = ('doc_id', 'bib_field')
     # primary_key(docId, bibField)
 

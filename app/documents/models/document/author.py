@@ -8,6 +8,7 @@ class Author(models.Model):
     last_name = models.CharField("nachname", max_length=30)
 
     class Meta:
+        app_label = 'documents'
         unique_together = ('first_name', 'last_name')
     # primary ('name', 'surname')
         verbose_name = "Autor"

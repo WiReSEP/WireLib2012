@@ -17,4 +17,6 @@ from .user import TelNonUser
 from .user import TelUser
 from .user import UserProfile
 
-from .signal_handlers import *
+from .signal_handlers import create_user_profile
+from .signal_handlers import delete_authors
+from .signal_handlers import delete_publisher

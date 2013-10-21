@@ -14,6 +14,7 @@ class NonUser(models.Model):
     city = models.CharField("stadt", max_length=58)
 
     class Meta:
+        app_label = 'documents'
         verbose_name = "Externer"
         verbose_name_plural = "Externe"
 
@@ -30,6 +31,7 @@ class TelNonUser(models.Model):
     # TODO eigene Telefonnummerklasser
 
     class Meta:
+        app_label = 'documents'
         unique_together = ('non_user', 'tel_nr')
         verbose_name = "Externer Tel. Nr."
         verbose_name_plural = "Externer Tel. Nr."

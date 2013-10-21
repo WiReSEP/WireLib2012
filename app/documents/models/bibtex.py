@@ -7,6 +7,7 @@ class Need(models.Model):
     name = models.CharField(max_length=30, primary_key=True)
 
     class Meta:
+        app_label = 'documents'
         verbose_name = "Mussfeld"
         verbose_name_plural = "Mussfelder"
 
@@ -19,6 +20,7 @@ class NeedGroups(models.Model):
     needs = models.ManyToManyField(Need, verbose_name="Mussfelder")
 
     class Meta:
+        app_label = 'documents'
         verbose_name = "Mussfeldgruppe"
         verbose_name_plural = "Mussfeldgruppen"
 
@@ -31,6 +33,7 @@ class Category(models.Model):
     needs = models.ManyToManyField(NeedGroups, verbose_name="Mussfelder")
 
     class Meta:
+        app_label = 'documents'
         verbose_name = "Kategorie"
         verbose_name_plural = "Kategorien"
 

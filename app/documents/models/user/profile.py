@@ -16,6 +16,7 @@ class UserProfile(models.Model):
     city = models.CharField("Stadt", max_length=58)
 
     class Meta:
+        app_label = 'documents'
         permissions = (("can_see_admin", "Can see the adminpanel"),
                        ("can_import", "Can import"),
                        ("can_export", "Can export"),
@@ -34,6 +35,7 @@ class TelUser(models.Model):
     # TODO eigene Telefonnummerklasse
 
     class Meta:
+        app_label = 'documents'
         unique_together = ('user', 'tel_nr')
         verbose_name = "Benutzer Tel. Nr."
         verbose_name_plural = "Benutzer Tel. Nr."

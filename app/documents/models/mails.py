@@ -9,6 +9,7 @@ class Emails(models.Model):
     text = models.TextField()
 
     class Meta:
+        app_label = 'documents'
         permissions = (("can_send_mails", "Can send Emails"),)
         verbose_name = "E-Mail"
         verbose_name_plural = "E-Mails"
