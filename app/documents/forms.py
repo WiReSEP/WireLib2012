@@ -14,6 +14,11 @@ from documents.models import Publisher
 from documents.models import TelNonUser
 
 
+class SimpleSearch(ModelForm):
+    """ This is the search form u.a. used in the documents overview of all documents. """
+    search_text = froms.CharField(max_length=255)
+
+
 class NameForm(ModelForm):
 
     class Meta:

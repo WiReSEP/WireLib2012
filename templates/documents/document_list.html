@@ -53,4 +53,30 @@
     </div>
   </div>
 </form>
+<ul class="document-list">
+  {% for doc in document_list %}
+  <li class="{{ doc.get_status_css_class }}">
+  <div class="title">
+    <a href="{% url "documents.detail" doc.pk %}">{{ doc.title }}</a>
+  </div>
+  <div class="extras">
+    <div class="authors">{% for author in doc.authors.all %}
+      {{ author }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </div>
+    <div class="year">{{ doc.year }}</div>
+    <div class="publisher">{{ doc.publisher }}</div>
+  </div>
+  </li>
+  {% endfor %}
+</ul>
+{% if is_paginated %}
+<div class="pagination pagination-centered">
+  <ul>
+    {% for page in paginator.short_page_range %} 
+    <li class="{{ page.css_classes }}"><a href="{% url "documents.list" %}?page={{ page.page }}">{{ page.label }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 {% endblock content %}
