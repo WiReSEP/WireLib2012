@@ -14,9 +14,52 @@ from documents.models import Publisher
 from documents.models import TelNonUser
 
 
-class SimpleSearch(ModelForm):
+FORM_LABEL = {'search': 'srch',
+              'filter_authors': 'fa',
+              'filter_documents': 'fd',
+              'documents_on_page': 'dop',
+              }
+
+
+class SimpleSearch(forms.Form):
     """ This is the search form u.a. used in the documents overview of all documents. """
-    search_text = froms.CharField(max_length=255)
+    TITLE_CHOICES = (('', 'Alle Titel'),
+                     ('a-c', 'Titel mit A-C beginnend'),
+                     ('d-f', 'Titel mit D-F beginnend'),
+                     ('g-i', 'Titel mit G-I beginnend'),
+                     ('j-l', 'Titel mit J-L beginnend'),
+                     ('m-o', 'Titel mit M-O beginnend'),
+                     ('p-r', 'Titel mit P-R beginnend'),
+                     ('s-u', 'Titel mit S-U beginnend'),
+                     ('v-z', 'Titel mit V-Z beginnend'),
+                     ('^a-z', 'Titel mit Sonderzeichen'),
+                     )
+    AUTHOR_CHOICES = (('', 'Alle Authoren'),
+                      ('a-c', 'Titel mit A-C beginnend'),
+                      ('d-f', 'Titel mit D-F beginnend'),
+                      ('g-i', 'Titel mit G-I beginnend'),
+                      ('j-l', 'Titel mit J-L beginnend'),
+                      ('m-o', 'Titel mit M-O beginnend'),
+                      ('p-r', 'Titel mit P-R beginnend'),
+                      ('s-u', 'Titel mit S-U beginnend'),
+                      ('v-z', 'Titel mit V-Z beginnend'),
+                      ('^a-z', 'Titel mit Sonderzeichen'),
+                      )
+    PAGINATION_CHOICES = ((10, '10'),
+                          (25, '25'),
+                          (50, '50'),
+                          (75, '75'),
+                          (100, '100'),
+                          )
+    search = forms.CharField(max_length=255, required=False, label='',
+                             )
+    filter_title = forms.ChoiceField(choices=TITLE_CHOICES, required=False,
+                                     label='')
+    filter_authors = forms.ChoiceField(choices=AUTHOR_CHOICES, required=False,
+                                       label='', )
+    documents_on_page = forms.ChoiceField(choices=PAGINATION_CHOICES,
+                                          required=False,
+                                          label='Treffer pro Seite')
 
 
 class NameForm(ModelForm):
