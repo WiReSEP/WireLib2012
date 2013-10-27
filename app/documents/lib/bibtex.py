@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # vim set fileencoding=utf-8
+from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib.auth.models import User
 from .exceptions import DuplicateKeyError
@@ -42,6 +43,7 @@ class UglyBibtex(object):
         self.worker = None                      # Aktuelle Arbeitsfunktion
         self.go_further = False
         self.stack = 0
+        self.entry_txt = ''
 
         self.quotation_mark_stack = 0
         self.bracket_stack = 0
@@ -63,6 +65,7 @@ class UglyBibtex(object):
         with codecs.open(self.bibtex_file, mode='r', encoding='utf-8') as bib:
             with codecs.open(self.errout_file, mode='w', encoding='utf-8') as self.errout:
                 for self.line in bib:
+                    self.entry_txt += self.line
                     self.line_no += 1
                     if re.match(r'^\s*@', self.line):
                         # Neuer Eintrag
@@ -74,9 +77,9 @@ class UglyBibtex(object):
                             self.worker()
                         except ValueError:
                             if self.worker == self.__get_entry:
-                                self.errout.write("Fehler in Eintrag\n")
+                                self.errout.write("#Eintrag hat einen Fehler\n")
                             else:
-                                self.errout.write("Fehler in Feld\n")
+                                self.errout.write("#Eintrag hat einen Fehler\n")
                             self.__log_error()
                             self.worker = self.do_import
                     else:
@@ -87,6 +90,7 @@ class UglyBibtex(object):
                         self.quotation_mark_stack = 0
                         self.bracket_stack = 0
                         self.current_keyval = []
+                        self.entry_txt = ""
 
                         self.entry = {}
                         self.extra_entry = {}
@@ -177,7 +181,6 @@ class UglyBibtex(object):
             else:
                 self.current_keyval = key_val
         else:
-            self.errout.write("Fehler im Format:\n")
             self.__log_error()
             raise ValueError()
 
@@ -187,23 +190,19 @@ class UglyBibtex(object):
                 doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
                 if getattr(settings, "BIBTEX_DEBUG", False):
 
-                    self.errout.write("Erfolgreich\n")
                     self.__log_error()
             except ValueError as e:
-                self.errout.write("Eintrag kein valides Format\n")
-                self.errout.write(u"Begründung: %s\n" % e.message)
+                self.errout.write(u"#Eintrag kein valides Format. Grund: %s\n" % e.message)
                 self.__log_error()
             except UnknownCategoryError:
-                errmsg = "Kategorie %s nicht bekannt\n" % self.entry[
-                    u'category']
+                errmsg = "#Eintrag kein valides Format. Grund: Kategorie %s nicht bekannt\n" % self.entry[u'category']
                 self.errout.write(errmsg)
                 self.__log_error()
             except DuplicateKeyError as e:
-                self.errout.write(
-                    "Eintrag bereits in der Datenbank vorhanden\n")
+                self.errout.write("#Eintrag bereits in der Datenbank vorhanden\n")
                 self.__log_error()
             except Warning as e:
-                self.errout.write("Unkown error with mysql %s" % e)
+                self.errout.write("#Eintrag hat unbekannten mysql-Fehler erzeugt. %s" % e)
                 self.__log_error()
 
     def __insert_field(self, key_val):
@@ -272,9 +271,8 @@ class UglyBibtex(object):
             self.extra_entry[key_val[0]] = key_val[1].strip()
 
     def __log_error(self):
-        self.errout.write("Zeile %d: " % self.line_no)
-        self.errout.write("Fehler bei: %s" % self.line)  # loglvl 1
-        self.errout.write("Bisher gelesen: %r\n" % self.entry)  # lvl 2
+        self.errout.write('#Fehler: Konnte folgenden Eintrag nicht übernehmen.\n')
+        self.errout.write(self.entry_txt)
         self.errout.write('\n')
 
 
