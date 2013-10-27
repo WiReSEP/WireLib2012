@@ -314,7 +314,7 @@ class Command(BaseCommand):
                     "projectwork": None,
                     "phdthesis": None,
                     "bachelorthesis": None,
-                    "masterthesis": None
+                    "mastersthesis": None
                     }
         for c in category:
             category[c] = Category(name=c)
@@ -337,11 +337,11 @@ class Command(BaseCommand):
                                              need["year"],
                                              )
         category["bachelorthesis"].save()
-        category["masterthesis"].needs.add(need["school"],
+        category["mastersthesis"].needs.add(need["school"],
                                            need["year"],
                                            need["author"]
                                            )
-        category["masterthesis"].save()
+        category["mastersthesis"].save()
 
     def demo_users(self):
         from django.contrib.auth.models import Group
