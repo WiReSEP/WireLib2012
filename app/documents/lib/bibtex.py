@@ -75,11 +75,11 @@ class UglyBibtex(object):
                         # Eintrag abarbeiten.
                         try:
                             self.worker()
-                        except ValueError:
+                        except ValueError as e:
                             if self.worker == self.__get_entry:
-                                self.errout.write("#Eintrag hat einen Fehler\n")
+                                self.errout.write("#Eintrag hat einen Fehler: %s\n" % str(e).strip())
                             else:
-                                self.errout.write("#Eintrag hat einen Fehler\n")
+                                self.errout.write("#Eintrag hat einen Fehler im Feld %s\n#%s\n" % (self.line.strip(), str(e).strip()))
                             self.__log_error()
                             self.worker = self.do_import
                     else:
@@ -104,10 +104,10 @@ class UglyBibtex(object):
         self.stack = 1
         self.stack -= self.line.count(r'}')
         if self.stack != 1:
-            raise ValueError()
+            raise ValueError('1')
         self.entry_line = False
         if len(key_val) != 2:
-            raise ValueError()
+            raise ValueError('2')
 
         # Clean key_vals
         key_val[0] = re.sub(r'(^\s*@\s*)|(\s*$)', '', key_val[0]).lower()
@@ -119,7 +119,7 @@ class UglyBibtex(object):
         if head_end:
             self.worker = self.__get_field
         else:
-            raise ValueError()
+            raise ValueError('3')
 
     def __get_field(self):
         """ Nimmt das Feld eines Eintrages auf.
@@ -128,12 +128,12 @@ class UglyBibtex(object):
         """
         from . import doc_funcs
         if self.line.count("=") > 1:
-            raise ValueError()
+            raise ValueError('4')
 
         self.stack += self.line.count('{')
         self.stack -= self.line.count('}')
         if self.stack < 0:
-            raise ValueError()
+            raise ValueError('5')
         elif self.stack == 0:   # Nach aktueller Zeile neuen Eintrag suchen
             self.worker = self.do_import
 
@@ -148,7 +148,7 @@ class UglyBibtex(object):
             self.bracket_stack = 0
             self.quotation_mark_stack = 0
         if self.worker == self.do_import and self.go_further:
-            raise ValueError()  # Syntaxfehler
+            raise ValueError('6')  # Syntaxfehler
 
         key_val = self.line.split('=')
         if len(key_val) == 2:   # Einfacher Key = Value
@@ -169,7 +169,7 @@ class UglyBibtex(object):
             key_val.insert(0, self.current_keyval[0])
             key_val[1] = self.current_keyval[1].strip() + " " \
                 + key_val[1].strip()
-            field_end = re.match('.*,$', self.line.strip())
+            field_end = re.match('.*,\s*$', self.line.strip())
             if field_end and not self.go_further:
                 try:
                     self.__insert_field(key_val)
@@ -177,12 +177,12 @@ class UglyBibtex(object):
                     raise
                 self.current_keyval = []
             if not field_end and not self.go_further:
-                raise ValueError()
+                raise ValueError('7')
             else:
                 self.current_keyval = key_val
         else:
             self.__log_error()
-            raise ValueError()
+            raise ValueError('8')
 
         if self.worker == self.do_import:   # Eintrag in DB schreiben
             self.entry[u'extras'] = self.extra_entry
@@ -255,7 +255,7 @@ class UglyBibtex(object):
 
         elif key_val[0] == u'dateofpurchase':
             if len(key_val) > 2:
-                raise ValueError()
+                raise ValueError('9')
             try:
                 mydatetime = datetime.datetime.strptime(
                     key_val[1], '%d.%m.%Y')
