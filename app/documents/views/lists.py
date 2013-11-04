@@ -1,6 +1,7 @@
 #vim: set fileencoding=utf-8
 from django.views.generic import ListView
 from documents.forms import SimpleSearch
+from documents.forms import search
 from documents.lib.paginator import ShortPaginator
 from documents.models import Document
 
@@ -37,34 +38,14 @@ class DocumentList(ListView):
             out += c.lower()
         return out
 
-    def _search_query(self, str):
-        from django.db.models import Q
-        import operator
-        fields = ('bib_no__iexact', 'inv_no__iexact', 'title__icontains',
-                  'isbn__iexact',
-                  'authors__first_name__icontains',
-                  'authors__last_name__icontains',
-                  'publisher__name__icontains',
-                  )
-        strings = (str or "").split()
-        q_set = set()
-        for s in strings:
-            for field in fields:
-                args = (field, s)
-                q_set.add(Q(args))
-
-        q_obj = DocumentList.model.objects.all()
-        if q_set:
-            q_obj = DocumentList.model.objects.filter(reduce(operator.or_,
-                                                             q_set
-                                                             ))
-        return q_obj
+    def _search_query(self, query):
+        return search(query)
 
     def get_queryset(self):
         from django.db.models import Q
         filter_title = self.request.GET.get('filter_title')
         filter_authors = self.request.GET.get('filter_authors')
-        search = self.request.GET.get('search')
+        search = self.request.GET.get('search', '')
         q_obj = self._search_query(search)
         if filter_title:
             q_obj = q_obj.filter(title__iregex='^[%s].*$' % filter_title)

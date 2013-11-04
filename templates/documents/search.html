@@ -1,28 +1,35 @@
 {% extends "documents/base.html" %}
 {% block html_head %}
-{{ searchform.media }}
+{{ form.media.css }}
 {% endblock html_head %}
+{% block scripts %}
+{{ form.media.js }}
+{% endblock scripts %}
 {% block content %}
 <form action="" method="POST">
+  {% csrf_token %}
+  {{ form.management_form }}
   <fieldset>
     <legend>Detaillierte Suche</legend>
-    {% for form in searchform %}
+    {% for form_row in form %}
     {% if forloop.first %}
     <div class="controls controls-row">
-      {% for field in form %}
-      <span class="{{ field.css_class }}">{{ field.label }}</span>
+      {% for field in form_row %}
+      <span class="{{ field.field.widget.attrs.class }}">{{ field.label|safe }}</span>
       {% endfor %}
     </div>
     {% endif %}
-    <div class="controls controls-row">
-      {% for field in form %}
+    <div class="controls controls-row dynamic-form">
+      {% for field in form_row %}
       {{ field }}
       {% endfor %}
+      <a href="javascript:void(0)" class="btn btn-danger delete-row {% if forloop.first %}hidden{% endif %}" 
+         data-toggle="tooltip" title="Eingabe entfernen">✗</a>
     </div>
     {% endfor %}
     <div class="form-actions">
-      <input type="submit" class="btn brn-primary">Suchen</input>
-      <a href="#" class="btn">Weiteres Feld</a>
+      <input type="submit" class="btn btn-primary">Suchen</input>
+      <a href="javascript:void(0)" class="btn add-row">Weiteres Feld</a>
     </div>
   </fieldset>
 </form>

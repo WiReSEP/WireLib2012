@@ -12,6 +12,7 @@ from documents.models import DocumentAuthors
 from documents.models import NonUser
 from documents.models import Publisher
 from documents.models import TelNonUser
+from .search import SearchForm
 
 
 FORM_LABEL = {'search': 'srch',
@@ -21,7 +22,7 @@ FORM_LABEL = {'search': 'srch',
               }
 
 
-class SimpleSearch(forms.Form):
+class SimpleSearch(SearchForm):
     """ This is the search form u.a. used in the documents overview of all documents. """
     TITLE_CHOICES = (('', 'Alle Titel'),
                      ('a-c', 'Titel mit A-C beginnend'),
@@ -51,8 +52,6 @@ class SimpleSearch(forms.Form):
                           (75, '75'),
                           (100, '100'),
                           )
-    search = forms.CharField(max_length=255, required=False, label='',
-                             )
     filter_title = forms.ChoiceField(choices=TITLE_CHOICES, required=False,
                                      label='')
     filter_authors = forms.ChoiceField(choices=AUTHOR_CHOICES, required=False,

@@ -21,8 +21,8 @@ class UserProfile(models.Model):
                        ("can_import", "Can import"),
                        ("can_export", "Can export"),
                        ("can_see_others_groups", "Can see groupmembership of all users"),)
-        verbose_name = "Benutzer Profil"
-        verbose_name_plural = "Benutzer Profile"
+        verbose_name = "Benutzerprofil"
+        verbose_name_plural = "Benutzerprofile"
 
     def __unicode__(self):
         return unicode(self.user)
