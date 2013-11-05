@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.base import TemplateView
+from documents.views import UserEdit
+from documents.views import UserLogin
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -20,6 +22,12 @@ urlpatterns = patterns('',
                        url(r'^$',
                            TemplateView.as_view(template_name='base.html'),
                            name='index'),
+                       url(r'^user/login$',
+                           UserLogin.as_view(),
+                           name='user.login'),
+                       url(r'^user/edit$',
+                           UserEdit.as_view(),
+                           name='user.edit'),
                        url(r'^admin/',
                            include(admin.site.urls)),
                        url(r'^lorem/',
