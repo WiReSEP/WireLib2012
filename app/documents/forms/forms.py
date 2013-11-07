@@ -2,7 +2,6 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from django.forms.formsets import formset_factory
 from django.forms.models import inlineformset_factory
 from django.forms.models import modelformset_factory
 from documents.models import Author
@@ -125,53 +124,11 @@ class SelectUser(forms.Form):
         super(SelectUser, self).__init__(*args, **kwargs)
         self.fields['users'].queryset = User.objects.all().exclude(id=user.id)
 
-    users = UserModelChoiceField(
-        queryset=User.objects.all(), label="", empty_label="")
+    users = UserModelChoiceField(queryset=User.objects.all(), label="",
+                                 empty_label="")
 
 
 class NonUserForm(ModelForm):
 
     class Meta:
         model = NonUser
-
-
-class SearchForm(forms.Form):
-    query = forms.CharField(label="")
-    regex = forms.BooleanField(required=False)
-
-
-class SearchProBaseForm(forms.Form):
-    CHOICES = (("title", "Titel"),
-               ("authors__last_name", "Autor Nachname"),
-               ("authors__first_name", "Autor Vorname"),
-               ("editor", "Editor"),
-               ("keword", u"Schlüsselwort"),
-               ("year", "Jahr"),
-               ("publisher", "Herausgeber"),
-               ("bib_no", "Bibliotheks-Nummer"),
-               ("isbn", "ISBN"),
-               ("status", "Buchstatus"),
-               )
-    STATI = ((Document.AVAILABLE, "Vorhanden"),
-             (Document.LEND, "Ausgeliehen"),
-             (Document.ORDERED, "Bestellt"),
-             (Document.MISSING, "Vermisst"),
-             (Document.LOST, "Verloren"),
-             )
-    searchtext = forms.CharField(label="Suchtext", required=False)
-    regex = forms.BooleanField(required=False,
-                               label=u'<a href="http://perldoc.perl.org/perlrequick.html">Regex</a>')
-    category = forms.ChoiceField(choices=CHOICES, required=False)
-
-    class Media:
-        js = ('js/dynamic-formset.js', 'js/jquery-1.9.1.min.js')
-
-
-class SearchProForm(SearchProBaseForm):
-    LOGIC_CHOICES = (
-        ('and', 'und'),
-        ('and not', 'und nicht'),
-        ('or', 'oder'),)
-    bind = forms.ChoiceField(choices=LOGIC_CHOICES, label=u"Verknüpfung")
-
-SearchProExtendedForm = formset_factory(SearchProForm)

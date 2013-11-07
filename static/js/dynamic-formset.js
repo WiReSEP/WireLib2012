@@ -14,9 +14,11 @@ function addForm(btn, prefix) {
   var row = $('.dynamic-form:first').clone(true).get(0);
   $(row).insertAfter($('.dynamic-form:last')).children('.hidden').removeClass('hidden');
   row.id = prefix + '-' + formCount + '-row';
-  $(row).children().children().each(function() {
+  $(row).children().each(function() {
         updateElementIndex(this, prefix, formCount);
+	if(!$(this).is($('select'))){
         $(this).val('');
+	}
   });
   $(row).find('.delete-row').click(function() {
         deleteForm(this, prefix);
@@ -29,8 +31,9 @@ function deleteForm(btn, prefix) {
   $(btn).parents('.dynamic-form').remove();
   var forms = $('.dynamic-form');
   $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-  for (var i=0, formount=forms.length; i<formCount; ++i) {
-        $(forms.get(i)).children().children().each(function() {
+  for (var i=0, formount=forms.length; i<forms.length; ++i) {
+	forms.get(i).id = prefix + '-' + i + '-row';
+        $(forms.get(i)).children().each(function() {
          updateElementIndex(this, prefix, i);
         });
   }

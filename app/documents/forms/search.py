@@ -53,7 +53,8 @@ class SearchForm(forms.Form):
 
 
 class SearchProForm(forms.Form):
-    bind = forms.ChoiceField(choices=LOGIC_CHOICES, label='Verknüpfung')
+    bind = forms.ChoiceField(choices=LOGIC_CHOICES, label='Verknüpfung',
+                             required=False)
     category = forms.ChoiceField(choices=SEARCH_CATEGORY_CHOICES,
                                  required=False, label='Suchfeld')
     searchtext = forms.CharField(label='Suchfilter', required=False)
@@ -61,7 +62,7 @@ class SearchProForm(forms.Form):
     bind.widget.attrs['class'] = 'hidden span2'
     searchtext.widget.attrs['class'] = 'span5'
     regex.widget.attrs['class'] = 'span1'
-    category.widget.attrs['class'] = 'span4'
+    category.widget.attrs['class'] = 'span3'
     category.css = 'span4'
 
     class Media:
@@ -80,10 +81,16 @@ def normalise_extended_form(searchform):
     query = ''
     for form in searchform:
         cleaned_data = form.cleaned_data
-        bind = cleaned_data['bind']
-        searchtext = cleaned_data['searchtext']
-        regex = cleaned_data['regex']
-        category = cleaned_data['category']
+        print cleaned_data
+        try:
+            bind = cleaned_data['bind']
+            searchtext = cleaned_data['searchtext']
+            regex = cleaned_data['regex']
+            category = cleaned_data['category']
+        except KeyError:
+            searchtext = ''
+            category = 'all'
+            regex = False
         pattern = _create_searchpattern(searchtext, category, regex)
         if pattern:
             if query:

@@ -4,6 +4,17 @@
 {% endblock html_head %}
 {% block scripts %}
 {{ form.media.js }}
+<script type="text/javascript">
+$(function() {
+    $('.add-row').click(function() {
+      return addForm(this, 'form');
+      });
+    $('.delete-row').click(function() {
+      return deleteForm(this, 'form');
+      });
+    $('.add-row').click();
+    })
+</script>
 {% endblock scripts %}
 {% block content %}
 <form action="" method="POST">
@@ -17,13 +28,14 @@
       {% for field in form_row %}
       <span class="{{ field.field.widget.attrs.class }}">{{ field.label|safe }}</span>
       {% endfor %}
+      <span class="span1"></span>
     </div>
     {% endif %}
-    <div class="controls controls-row dynamic-form">
+    <div id="form-{{ forloop.counter0 }}-row" class="controls controls-row dynamic-form">
       {% for field in form_row %}
       {{ field }}
       {% endfor %}
-      <a href="javascript:void(0)" class="btn btn-danger delete-row {% if forloop.first %}hidden{% endif %}" 
+      <a href="javascript:void(0)" class="span1 btn btn-danger delete-row {% if forloop.first %}hidden{% endif %}" 
          data-toggle="tooltip" title="Eingabe entfernen">✗</a>
     </div>
     {% endfor %}

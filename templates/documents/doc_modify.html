@@ -2,8 +2,8 @@
 {% block content %}
 <h1>{% block content-header %}{{ document.bib_no }}<small>(Bearbeiten)</small>{% endblock content-header %}</h1>
 {% block content-form %}
-<form class="form-horizontal">
-  {% for field in document_form %}
+<form class="form-horizontal" method="POST">
+  {% for field in form %}
   <div class="control-group">
     <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
     <div class="controls">
