@@ -13,10 +13,6 @@ from .document import Publisher
 from .mails import Emails
 
 from .user import NonUser
-from .user import TelNonUser
-from .user import TelUser
-from .user import UserProfile
 
-from .signal_handlers import create_user_profile
 from .signal_handlers import delete_authors
 from .signal_handlers import delete_publisher

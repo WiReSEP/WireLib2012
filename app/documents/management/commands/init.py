@@ -135,33 +135,13 @@ class Command(BaseCommand):
         Permission.objects.get(
                 codename="can_see_last_update_info").group_set.add(self.g_uadmin)
         Permission.objects.get(
-                codename="add_userprofile").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="change_userprofile").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="delete_userprofile").group_set.add(self.g_uadmin)
-        Permission.objects.get(
                 codename="can_see_admin").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="can_see_others_groups").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="add_teluser").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="change_teluser").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="delete_teluser").group_set.add(self.g_uadmin)
         Permission.objects.get(
                 codename="add_nonuser").group_set.add(self.g_uadmin)
         Permission.objects.get(
                 codename="change_nonuser").group_set.add(self.g_uadmin)
         Permission.objects.get(
                 codename="delete_nonuser").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="add_telnonuser").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="change_telnonuser").group_set.add(self.g_uadmin)
-        Permission.objects.get(
-                codename="delete_telnonuser").group_set.add(self.g_uadmin)
         Permission.objects.get(
                 codename="add_emails").group_set.add(self.g_uadmin)
         Permission.objects.get(
@@ -177,10 +157,6 @@ class Command(BaseCommand):
                 codename="add_nonuser").group_set.add(self.g_user)
         Permission.objects.get(
                 codename="change_nonuser").group_set.add(self.g_user)
-        Permission.objects.get(
-                codename="add_telnonuser").group_set.add(self.g_user)
-        Permission.objects.get(
-                codename="change_telnonuser").group_set.add(self.g_user)
         Permission.objects.get(
                 codename="add_docstatus").group_set.add(self.g_user)
         Permission.objects.get(
@@ -338,17 +314,18 @@ class Command(BaseCommand):
                                              )
         category["bachelorthesis"].save()
         category["mastersthesis"].needs.add(need["school"],
-                                           need["year"],
-                                           need["author"]
-                                           )
+                                            need["year"],
+                                            need["author"]
+                                            )
         category["mastersthesis"].save()
 
     def demo_users(self):
+        from django.contrib.auth import get_user_model
         from django.contrib.auth.models import Group
         from django.contrib.auth.models import Permission
-        from django.contrib.auth.models import User
-        from documents.models import UserProfile
+        #from django.conf import settings
         import datetime
+        User = get_user_model()
         #User
         user1 = User(username="User1", first_name="Jörn", last_name="Hameyer",
                      email="user1@van-nahl.org",
@@ -408,9 +385,11 @@ class Command(BaseCommand):
         user8.set_password("sep2012")
         user8.save()
         #adressen
-        for profile in range(1, 9):
-            UserProfile(user=user1, street="Musterstraße", number=profile,
-                        zipcode="12345", city="Musterhausen").save()
+        user1.street = "Musterstraße"
+        user1.number = 1
+        user1.zipcode = "12345"
+        user1.city = "Musterhausen"
+        user1.save()
         # user -> group
         groups = {}
         for i in Group.objects.all():

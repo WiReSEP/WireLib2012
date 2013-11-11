@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.forms.models import modelformset_factory
@@ -10,7 +10,6 @@ from documents.models import Document
 from documents.models import DocumentAuthors
 from documents.models import NonUser
 from documents.models import Publisher
-from documents.models import TelNonUser
 from .search import SearchForm
 
 
@@ -58,20 +57,6 @@ class SimpleSearch(SearchForm):
     documents_on_page = forms.ChoiceField(choices=PAGINATION_CHOICES,
                                           required=False,
                                           label='Treffer pro Seite')
-
-
-class NameForm(ModelForm):
-
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name')
-
-
-class TelNonUserForm(ModelForm):
-
-    class Meta:
-        model = TelNonUser
-        exclude = ('non_user')
 
 
 class UploadFileForm(forms.Form):
@@ -122,10 +107,10 @@ class SelectUser(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(SelectUser, self).__init__(*args, **kwargs)
-        self.fields['users'].queryset = User.objects.all().exclude(id=user.id)
+        self.fields['users'].queryset = get_user_model().objects.all().exclude(id=user.id)
 
-    users = UserModelChoiceField(queryset=User.objects.all(), label="",
-                                 empty_label="")
+    users = UserModelChoiceField(queryset=get_user_model().objects.all(),
+                                 label="", empty_label="")
 
 
 class NonUserForm(ModelForm):

@@ -2,7 +2,7 @@
 # vim set fileencoding=utf-8
 from __future__ import unicode_literals
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from .exceptions import DuplicateKeyError
 from .exceptions import UnknownCategoryError
 
@@ -187,7 +187,7 @@ class UglyBibtex(object):
         if self.worker == self.do_import:   # Eintrag in DB schreiben
             self.entry[u'extras'] = self.extra_entry
             try:
-                doc_funcs.insert_doc(self.entry, User.objects.get(id=1))
+                doc_funcs.insert_doc(self.entry, get_user_model().objects.get(id=1))
                 if getattr(settings, "BIBTEX_DEBUG", False):
 
                     self.__log_error()
@@ -426,7 +426,7 @@ class Bibtex(threading.Thread):
             else:
                 doc_str += u" AND "
             counter += 1
-        if comment is None:
+        if comment is not None:
             doc_str += u"  comment = {" + comment + u"},\n"
         for extra in extra_fields:
             doc_str += u"  " + extra.bib_field + u" = {"

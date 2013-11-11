@@ -5,10 +5,10 @@ from ..bibtex import Category
 from ..user import NonUser
 from .author import Author
 from .publisher import Publisher
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
-from documents.lib.exceptions import LendingError
 from documents.lib.bibtex import Bibtex
+from documents.lib.exceptions import LendingError
 
 
 class Document(models.Model):
@@ -57,7 +57,8 @@ class Document(models.Model):
     isbn = models.CharField("ISBN", max_length=17, blank=True, null=True)
     category = models.ForeignKey(Category, verbose_name="Kategorie")
     last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
-    last_edit_by = models.ForeignKey(User, verbose_name="Zuletzt geändert von")
+    last_edit_by = models.ForeignKey(get_user_model(),
+                                     verbose_name="Zuletzt geändert von")
     publisher = models.ForeignKey(Publisher, blank=True, null=True)
     year = models.IntegerField("Jahr", blank=True, null=True)
     address = models.CharField(
@@ -68,8 +69,8 @@ class Document(models.Model):
     bib_date = models.DateField("BibTeX-Export", blank=True, null=True)
         # Datum des BibTeX-Exports
     comment = models.TextField("Kommentar", blank=True, null=True)
-    authors = models.ManyToManyField(Author,
-                                     through='DocumentAuthors', verbose_name="Autoren")
+    authors = models.ManyToManyField(Author, through='DocumentAuthors',
+                                     verbose_name="Autoren")
 
     class Meta:
         app_label = "documents"
@@ -78,7 +79,9 @@ class Document(models.Model):
                        ("can_see_last_update_info",
                         "Can see last update info"),
                        ("can_see_dop", "Can see date of purchase"),
-                       ("can_see_export", "Can see dates of export"),)
+                       ("can_see_export", "Can see dates of export"),
+                       ("can_import", "Can import documents"),
+                       ("can_export", "Can export documents"),)
         ordering = ['title']
         verbose_name = "Dokument"
         verbose_name_plural = "Dokumente"
@@ -88,7 +91,7 @@ class Document(models.Model):
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
         if user is None:
-            user = User.objects.get(id=1)
+            user = get_user_model().objects.get(id=1)
         self.last_edit_by = user
         super(Document, self).save(*args, **kwargs)
         if not self.status == self._status():
@@ -268,7 +271,8 @@ class DocumentAuthors(models.Model):
 
 class DocStatus(models.Model):
         # auftraggebender User
-    recent_user = models.ForeignKey(User, related_name='recent_user')
+    recent_user = models.ForeignKey(get_user_model(),
+                                    related_name='recent_user')
     doc_id = models.ForeignKey(Document)
         # in welchen Status wurde geändert?
     status = models.IntegerField(choices=Document.STATUS_CHOICES.items(),
@@ -281,8 +285,8 @@ class DocStatus(models.Model):
         # Ende der Rückgabefrist
     date_term_lend = models.DateTimeField(blank=True, null=True)
         # ausleihender User
-    user_lend = models.ForeignKey(
-        User, blank=True, null=True, related_name='user_lend')
+    user_lend = models.ForeignKey(get_user_model(), blank=True,
+                                  null=True, related_name='user_lend')
         # ausleihender non_User
     non_user_lend = models.ForeignKey(NonUser, blank=True, null=True)
 

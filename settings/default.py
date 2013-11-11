@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'documents',
+    'users',
     'gunicorn',
 )
 
@@ -160,6 +161,7 @@ except IOError:
         raise Exception('cannot open file `%s` for writing.' % SECRET_FILE)
 
 AUTH_PROFILE_MODULE = 'wire.user_profile'
+AUTH_USER_MODEL = 'users.User'
 
 # Diese Option muss angepasst werden, wenn das Projekt in einem Unterordner
 # läuft. Der entsprechende Ordner wäre dann die Eingabe.

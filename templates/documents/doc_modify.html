@@ -1,16 +1,68 @@
 {% extends "documents/base.html" %}
+{% block content-header %}{{ document.bib_no }}<small>(Bearbeiten)</small>{% endblock content-header %}
 {% block content %}
-<h1>{% block content-header %}{{ document.bib_no }}<small>(Bearbeiten)</small>{% endblock content-header %}</h1>
 {% block content-form %}
 <form class="form-horizontal" method="POST">
+  <div class="control-group">
+    <label for="{{ form.title.id_for_label }}" class="control-label">{{ form.title.label }}</label>
+    <div class="controls">
+      {{ form.title }}
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="importAuthors" class="control-label">Autoren</label>
+    <div class="controls" id="importAuthors">
+      {% for author in form.author_form %}
+      <div class="input-prepend input-append import-inputgroup">
+        <span class="drag-n-drop add-on"></span>
+        {{ author.author }}
+        {{ author.editor }}
+        {{ author.sort_value }}
+        <a class="btn btn-info {% if author.editor.value %}active{% endif %}" href="javascript:void(0);" data-toggle="button" title="Ist Editor">Editor</a>
+        <input type="hidden" id="{{ author.DELETE.id_for_label }}" value=""/>
+        <a class="btn btn-danger" href="javascript:void(0);" data-toggle="button" title="Autor entfernen" data-for="{{ author.DELETE.id_for_label }}">✗</a>
+      </div>
+      {% endfor %}
+      <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiterer Autor</a>
+    </div>
+  </div>
   {% for field in form %}
+  {% if not field.field == form.fields.title %}
   <div class="control-group">
     <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
     <div class="controls">
       {{ field }}
     </div>
   </div>
+  {% endif %}
   {% endfor %}
+  <div class="control-group">
+    <label for="importKeywords" class="control-label">Schlüsselwörter</label>
+    <div class="controls" id="importKeywords">
+      {% for keyword in form.keyword_form %}
+      <div class="input-append import-inputgroup">
+        {{ keyword.keyword }}
+        <input type="hidden" id="{{ keyword.DELETE.id_for_label }}" value="" />
+        <a class="btn btn-danger" href="javascript:void(0);" data-toggle="button" title="Schlüsselwort entfernen" data-for="{{ keyword.DELETE.id_for_label }}">✗</a>
+      </div>
+      {% endfor %}
+      <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiteres Schlüsselwort</a>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="importExtras" class="control-label">Extrafelder</label>
+    <div class="controls" id="importExtras">
+      {% for extra in form.extra_form %}
+      <div class="input-prepend input-append import-inputgroup">
+        {{ extra.bib_field }}
+        {{ extra.content }}
+        <input type="hidden" id="{{ extra.DELETE.id_for_label }}" value="" />
+        <a class="btn btn-danger" href="javascript:void(0);" data-toggle="button" title="Extrafeld entfernen" data-for="{{ extra.DELETE.id_for_label }}">✗</a>
+      </div>
+      {% endfor %}
+      <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiteres Extrafeld</a>
+    </div>
+  </div>
   <input type="submit" name="submitTyped" value="Speichern" class="btn btn-primary" />
 </form>
 {% endblock content-form %}
