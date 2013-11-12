@@ -2,6 +2,7 @@
 from django.conf.urls import patterns, url
 from documents.views import DocumentList
 from documents.views import DocumentDetailView
+from documents.views import DocumentChangeView
 from documents.views import SearchView
 
 
@@ -19,7 +20,7 @@ urlpatterns = patterns('documents.views',
                            DocumentDetailView.as_view(),
                            name='documents.detail'),
                        url(r'^edit/(?P<pk>\w\d+)/$',
-                           'index',
+                           DocumentChangeView.as_view(),
                            name='documents.edit'),
                        url(r'^search/$',
                            SearchView.as_view(),

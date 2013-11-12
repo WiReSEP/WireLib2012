@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from users.models import PhoneNumbers
 
 
 class NonUser(models.Model):
@@ -12,6 +13,7 @@ class NonUser(models.Model):
     number = models.CharField("nummer", max_length=5)
     zipcode = models.CharField("postleitzahl", max_length=5)
     city = models.CharField("stadt", max_length=58)
+    phone_numbers = models.ManyToManyField(PhoneNumbers)
 
     class Meta:
         app_label = 'documents'
@@ -20,18 +22,3 @@ class NonUser(models.Model):
 
     def __unicode__(self):
         return (self.last_name + ', ' + self.first_name)
-
-
-class TelNonUser(models.Model):
-
-    non_user = models.ForeignKey(NonUser, verbose_name="externer")
-    tel_type = models.CharField(
-        "tel Typ ( Privat,Büro,Mobil ... )", max_length=20)
-    tel_nr = models.CharField("tel Nr.", max_length=20)
-    # TODO eigene Telefonnummerklasser
-
-    class Meta:
-        app_label = 'documents'
-        unique_together = ('non_user', 'tel_nr')
-        verbose_name = "Externer Tel. Nr."
-        verbose_name_plural = "Externer Tel. Nr."

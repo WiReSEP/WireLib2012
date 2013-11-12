@@ -1,32 +1,35 @@
 {% extends "documents/base.html" %}
+{% block content-header %}
+<div id="detailHeading">
+  <h1 id="detailTitle">
+    {{ document.title }}
+  </h1>
+  <div class="btn btn-link" id="detailEdit" TODO onclick="self.location.href='{% url documents.edit document.pk %}'">
+    ✎
+  </div>
+</div>
+{% endblock content-header %}
 {% block content %}
 <div>
-  <div id="detailHeading">
-    <h1 id="detailTitle">
-      {{ document.title }}
-    </h1>
-    <div class="btn btn-link" id="detailEdit" {# TODO onclick="" #}>
-      ✎
-    </div>
-  </div>
   <div id="detailStatus" class="{{ document.get_status_css_class }}">
-    {{ document.status }}
+    {{ document.get_status_string }}
   </div>
   <dl class="dl-horizontal">
     <dt id="detailAuthors">
       Autoren
     </dt>
     <dd>
-      {% for author in document.DocumentAuthors_set.all %}
+      {% for author in document.documentauthors_set.all %}
       <div class="author">
         {{ author.author }} {% if author.editor %}(Editor){% endif %}
       </div>
+      {% endfor %}
     </dd>
     <dt id="detailCategory">
       Kategorie
     </dt>
     <dd>
-      {{ document.category }}
+      {{ document.category|default:"-" }}
     </dd>
     <dt id="detailPublisher">
       Publisher
@@ -38,7 +41,7 @@
       Erscheinungsjahr
     </dt>
     <dd>
-      {{ document.year }}
+      {{ document.year|default:"-" }}
     </dd>
     <dt id="detailKeywords">
       Schlüsselwörter
@@ -46,6 +49,8 @@
     <dd>
       {% for keyword in document.keywords_set.all %}
       {{ keyword }}{% if not forloop.last %}, {% endif %}
+      {% empty %}
+      -
       {% endfor %}
     </dd>
     {% if 'documents.can_see_dop' in perms %}
@@ -53,14 +58,14 @@
       In der Bibliothek seit
     </dt>
     <dd>
-      {{ document.date_of_purchase }}
+      {{ document.date_of_purchase|default:"-" }}
     </dd>
     {% endif %}
     <dt id="detailComment">
       Notizen
     </dt>
     <dd>
-      {{ document.comment }}
+      {{ document.comment|default:"-" }}
     </dd>
     {% for extra in document.DocExtra_set.all %}
     <dt class="extra">
@@ -86,7 +91,7 @@
       ISBN
     </dt>
     <dd>
-      {{ document.isbn }}
+      {{ document.isbn|default:"-" }}
     </dd>
     {% if 'documents.can_see_price' in perms %}
     <dt id="detailPrice">
@@ -100,14 +105,14 @@
       Bibtex-ID
     </dt>
     <dd>
-      {{ document.bibtex_id }}
+      {{ document.bibtex_id|default:"-" }}
     </dd>
     {% if 'documents.can_see_locn' in perms %}
     <dt id="detailLOCN">
       Library Of Congress Number
     </dt>
     <dd>
-      {{ document.lib_of_con_nr }}
+      {{ document.lib_of_con_nr|default:"-" }}
     </dd>
     {% endif %}
     {% if 'documents.can_see_last_update_info' in perms %}

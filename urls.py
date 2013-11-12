@@ -34,5 +34,7 @@ urlpatterns = patterns('',
                            include('loremipsum.urls')),
                        url(r'^documents/',
                            include('documents.urls')),
+                       url(r'^users/',
+                           include('users.urls')),
                        )
 urlpatterns += staticfiles_urlpatterns()
