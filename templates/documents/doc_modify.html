@@ -20,7 +20,7 @@
         {{ author.sort_value }}
         <a class="btn btn-info {% if author.editor.value %}active{% endif %}" href="javascript:void(0);" data-toggle="button" title="Ist Editor">Editor</a>
         <input type="hidden" id="{{ author.DELETE.id_for_label }}" value=""/>
-        <a class="btn btn-danger" href="javascript:void(0);" data-toggle="button" title="Autor entfernen" data-for="{{ author.DELETE.id_for_label }}">✗</a>
+        <a class="btn btn-warning" href="javascript:void(0);" data-toggle="button" title="Autor entfernen" data-for="{{ author.DELETE.id_for_label }}">✗</a>
       </div>
       {% endfor %}
       <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiterer Autor</a>
@@ -43,7 +43,7 @@
       <div class="input-append import-inputgroup">
         {{ keyword.keyword }}
         <input type="hidden" id="{{ keyword.DELETE.id_for_label }}" value="" />
-        <a class="btn btn-danger" href="javascript:void(0);" data-toggle="button" title="Schlüsselwort entfernen" data-for="{{ keyword.DELETE.id_for_label }}">✗</a>
+        <a class="btn btn-warning" href="javascript:void(0);" data-toggle="button" title="Schlüsselwort entfernen" data-for="{{ keyword.DELETE.id_for_label }}">✗</a>
       </div>
       {% endfor %}
       <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiteres Schlüsselwort</a>
@@ -57,7 +57,7 @@
         {{ extra.bib_field }}
         {{ extra.content }}
         <input type="hidden" id="{{ extra.DELETE.id_for_label }}" value="" />
-        <a class="btn btn-danger" href="javascript:void(0);" data-toggle="button" title="Extrafeld entfernen" data-for="{{ extra.DELETE.id_for_label }}">✗</a>
+        <a class="btn btn-warning" href="javascript:void(0);" data-toggle="button" title="Extrafeld entfernen" data-for="{{ extra.DELETE.id_for_label }}">✗</a>
       </div>
       {% endfor %}
       <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiteres Extrafeld</a>

@@ -94,7 +94,7 @@ class DocumentForm(forms.ModelForm):
         self.fields['lib_of_con_nr'].widget.attrs.update({'id': 'importLOCN',
                                                           'placeholder': 'Library Of Congress No'})
         self.fields['comment'].widget.attrs.update({'id': 'importComment',
-                                                    'placeholder': 'Comment'})
+                                                    'placeholder': 'Kommentar'})
         self.author_form = AuthorInlineFormset(data=self.data or None,
                                                instance=self.instance or None,
                                                prefix='authors')
