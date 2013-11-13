@@ -4,5 +4,3 @@ from .index import index
 from .document import DocumentDetailView
 from .document import DocumentChangeView
 from .search import SearchView
-from .user import UserEdit
-from .user import UserLogin

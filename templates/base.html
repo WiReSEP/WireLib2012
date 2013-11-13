@@ -28,7 +28,12 @@
           {% for li in menu_top %}
           {{ li.html|safe }}
           {% endfor %}
-          <li><a href="{% url 'user.login' %}">Login</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'users.edit' %}">Profil</a></li>
+          <li><a href="{% url 'users.logout' %}">Logout ({{ user }})</a></li>
+          {% else %}
+          <li><a href="{% url 'users.login' %}?next={{ fullpath }}">Login</a></li>
+          {% endif %}
           <li><form action="" class="navbar-search pull-right">
             <input type="text" placeholder="Suche" class="search-query" />
           </form></li>
