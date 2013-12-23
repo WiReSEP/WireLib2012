@@ -114,6 +114,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.request",
     "documents.context_processors.wire",
+    "users.context_processors.user_context",
 )
 
 INSTALLED_APPS = (
@@ -160,12 +161,11 @@ except IOError:
     except IOError:
         raise Exception('cannot open file `%s` for writing.' % SECRET_FILE)
 
-AUTH_PROFILE_MODULE = 'wire.user_profile'
 AUTH_USER_MODEL = 'users.User'
 
 # Diese Option muss angepasst werden, wenn das Projekt in einem Unterordner
 # läuft. Der entsprechende Ordner wäre dann die Eingabe.
 FORCE_SCRIPT_NAME = ""
 
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login'
+LOGIN_URL = '/users/login/'
+LOGOUT_URL = '/users/logout/'

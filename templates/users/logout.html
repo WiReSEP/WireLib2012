@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<form action="{% url "users.logout" %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Abmelden" />
+</form>
+{% else %}
+<p>Sie wurden erfolgreich abgemeldet. <a href="{% url "users.login" %}">Hier</a> können sie sich anmelden.</p>
+{% endif %}
+{% endblock content %}

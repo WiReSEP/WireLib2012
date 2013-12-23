@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<p>Sie sind bereits eingelogged. Klicken Sie <a href="{% url "users.logout" %}">hier</a> um sich abzumelden.</p>
+{% else %}
+<form method="post" action="">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Anmelden"/>
+</form>
+{% endif %}
+{% endblock content %}
