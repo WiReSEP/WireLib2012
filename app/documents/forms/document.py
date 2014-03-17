@@ -35,12 +35,19 @@ def _get_author_list():
 class AuthorSelectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AuthorSelectForm, self).__init__(*args, **kwargs)
-        self.fields['editor'].widget = forms.HiddenInput()
+        self.fields['editor'].widget.attrs = {'class': 'onoffswitch-checkbox',
+                                              'data-on-text': 'Editor',
+                                              'data-off-text': 'Autor'}
         self.fields['sort_value'].widget = forms.HiddenInput()
 
     author = forms.CharField(widget=forms.TextInput(
         attrs={'data-provide': 'typeahead', 'autocomplete': 'off',
                'data-source': _get_author_list(), 'placeholder': 'Autor'}))
+
+    def clean_author(self):
+        author_name = self.cleaned_data['author']
+        author, created = Author.objects.get_or_create(full_name=author_name)
+        return author
 
     class Meta:
         model = DocumentAuthors
@@ -68,8 +75,18 @@ class ExtraForm(forms.ModelForm):
         fields = ['bib_field', 'content']
 
 
+def _save_author_formset(self, commit=True):
+    for i, form in enumerate(self, 1):
+        if form and form.cleaned_data:
+            form.cleaned_data['sort_value'] = i
+            form.sort_value = i
+            form.save()
+    for form in self.deleted_forms:
+        form.save().delete()
+
 AuthorInlineFormset = inlineformset_factory(Document, DocumentAuthors,
                                             form=AuthorSelectForm)
+AuthorInlineFormset.save = _save_author_formset
 KeywordInlineFormset = inlineformset_factory(Document, Keywords,
                                              form=KeywordForm)
 ExtraInlineFormset = inlineformset_factory(Document, DocExtra, form=ExtraForm)
@@ -109,11 +126,36 @@ class DocumentForm(forms.ModelForm):
         attrs={'data-provide': 'typeahead', 'autocomplete': 'off',
                'data-source': _get_publisher_list(), 'id': 'importPublisher'}))
 
+    def clean_publisher(self):
+        publisher_name = self.cleaned_data['publisher']
+        publisher, created = Publisher.objects.get_or_create(name=publisher_name)
+        return publisher
+
+    def is_valid(self):
+        valid = super(DocumentForm, self).is_valid()
+        if not self.extra_form.is_valid():
+            valid = False
+        if not self.keyword_form.is_valid():
+            valid = False
+        if not self.author_form.is_valid():
+            valid = False
+        return valid
+
     def save(self, commit=True):
-        pass
+        self.extra_form.save()
+        self.keyword_form.save()
+        self.author_form.save()
+        return super(DocumentForm, self).save(commit)
 
     class Meta:
         model = Document
         fields = ['title', 'publisher', 'address', 'bib_no',
                   'inv_no', 'isbn', 'year', 'category', 'bibtex_id', 'price',
                   'currency', 'lib_of_con_nr', 'comment']
+
+    class Media:
+        css = {
+            'all': ('css/bootstrap-switch.css',),
+        }
+        js = ('js/bootstrap-switch.js', 'js/dynamic-formset.js',
+              'js/jquery-ui.js')

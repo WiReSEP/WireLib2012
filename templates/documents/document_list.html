@@ -1,54 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
-<form class="document-head" method="GET">
-  <div>
+<div id="listContent">
+  <form class="document-head" method="GET">
     <div>
-      {{ forms.simple_search.search }}
+      <div>
+        {{ forms.simple_search.search }}
+      </div>
+      <div>
+        {{ forms.simple_search.filter_title }}
+        {{ forms.simple_search.filter_authors }}
+      </div>
     </div>
     <div>
-      {{ forms.simple_search.filter_title }}
-      {{ forms.simple_search.filter_authors }}
-    </div>
-  </div>
-  <div>
-    {#<div class="sortby">#}
-      {#<span>Sortieren nach:</span>#}
-      {#<div>#}
-        {#<div class="sortby sortby-down"><a href="#">Titel</a></div>#}
-        {#<div class="sortby"><a href="#">Author</a></div>#}
-        {#<div class="sortby"><a href="#">Jahr</a></div>#}
+      {#<div class="sortby">#}
+        {#<span>Sortieren nach:</span>#}
+        {#<div>#}
+          {#<div class="sortby sortby-down"><a href="#">Titel</a></div>#}
+          {#<div class="sortby"><a href="#">Author</a></div>#}
+          {#<div class="sortby"><a href="#">Jahr</a></div>#}
+        {#</div>#}
       {#</div>#}
-    {#</div>#}
-    <div>
-      {{ forms.simple_search.documents_on_page }}
+      <div>
+        {{ forms.simple_search.documents_on_page }}
+      </div>
     </div>
+    <noscript><input type="submit" value="Suchen" /></noscript>
+  </form>
+  <div>
+    {{ document_start }} - {{ document_end }} von {{ document_count }} Dokumenten.
   </div>
-  <noscript><input type="submit" value="Suchen" /></noscript>
-</form>
-<ul class="document-list">
-  {% for doc in document_list %}
-  <li class="{{ doc.get_status_css_class }}">
-  <div class="title">
-    <a href="{% url "documents.detail" doc.pk %}">{{ doc.title }}</a>
-  </div>
-  <div class="extras">
-    <div class="authors">{% for author in doc.authors.all %}
-      {{ author }}{% if not forloop.last %}, {% endif %}
-      {% endfor %}
-    </div>
-    <div class="year">{{ doc.year }}</div>
-    <div class="publisher">{{ doc.publisher }}</div>
-  </div>
-  </li>
-  {% endfor %}
-</ul>
-{% if is_paginated %}
-<div class="pagination pagination-centered">
-  <ul>
-    {% for page in paginator.short_page_range %} 
-    <li class="{{ page.css_classes }}"><a href="{% url "documents.list" %}?{{ get_params }};page={{ page.page }}">{{ page.label }}</a></li>
+  <ul class="document-list">
+    {% for doc in document_list %}
+    <li class="{{ doc.get_status_css_class }}">
+      <div class="title">
+        <a href="{% url "documents.detail" doc.pk %}">{{ doc.title }}</a>
+      </div>
+      <div class="extras">
+        <div class="authors">{% for author in doc.get_all_authors %}
+          {{ author }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </div>
+        <div class="year">{{ doc.year }}</div>
+        <div class="publisher">{{ doc.publisher }}</div>
+      </div>
+    </li>
     {% endfor %}
   </ul>
+  {% if is_paginated %}
+  <div class="pagination pagination-centered">
+    <ul>
+      {% for page in paginator.short_page_range %} 
+      <li class="{{ page.css_classes }}"><a href="{% url "documents.list" %}?{{ get_params }};page={{ page.page }}">{{ page.label }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 </div>
-{% endif %}
 {% endblock content %}
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+$('#listContent').on('click', 'div.pagination a', function(event) {
+    event.preventDefault();
+    var url = $(this).attr('href');
+    $('#listContent').load(url + " #listContent");
+    window.history.pushState(null, null, url);
+  });
+</script>
+{% endblock scripts %}

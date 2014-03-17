@@ -2,6 +2,11 @@ from django.core.paginator import Paginator
 
 
 class ShortPaginator(Paginator):
+    """ This paginator was intended to to generate next and previous buttons
+    for the document_list.html. All private button functions are calculating
+    these. The document_list.html expects the buttons representated by the
+    PageButton class.
+    """
     _left_right_bonus = 4
 
     def _in_range_button(self, page_no):

@@ -34,15 +34,15 @@ class SimpleSearch(SearchForm):
                      ('^a-z', 'Titel mit Sonderzeichen'),
                      )
     AUTHOR_CHOICES = (('', 'Alle Authoren'),
-                      ('a-c', 'Titel mit A-C beginnend'),
-                      ('d-f', 'Titel mit D-F beginnend'),
-                      ('g-i', 'Titel mit G-I beginnend'),
-                      ('j-l', 'Titel mit J-L beginnend'),
-                      ('m-o', 'Titel mit M-O beginnend'),
-                      ('p-r', 'Titel mit P-R beginnend'),
-                      ('s-u', 'Titel mit S-U beginnend'),
-                      ('v-z', 'Titel mit V-Z beginnend'),
-                      ('^a-z', 'Titel mit Sonderzeichen'),
+                      ('a-c', 'Autoren mit A-C beginnend'),
+                      ('d-f', 'Autoren mit D-F beginnend'),
+                      ('g-i', 'Autoren mit G-I beginnend'),
+                      ('j-l', 'Autoren mit J-L beginnend'),
+                      ('m-o', 'Autoren mit M-O beginnend'),
+                      ('p-r', 'Autoren mit P-R beginnend'),
+                      ('s-u', 'Autoren mit S-U beginnend'),
+                      ('v-z', 'Autoren mit V-Z beginnend'),
+                      ('^a-z', 'Autoren mit Sonderzeichen'),
                       )
     PAGINATION_CHOICES = ((10, '10'),
                           (25, '25'),
@@ -57,6 +57,9 @@ class SimpleSearch(SearchForm):
     documents_on_page = forms.ChoiceField(choices=PAGINATION_CHOICES,
                                           required=False,
                                           label='Treffer pro Seite')
+    filter_title.widget.attrs['onchange'] = 'this.form.submit()'
+    filter_authors.widget.attrs['onchange'] = 'this.form.submit()'
+    documents_on_page.widget.attrs['onchange'] = 'this.form.submit()'
 
 
 class UploadFileForm(forms.Form):
@@ -103,10 +106,10 @@ class UserModelChoiceField(forms.ModelChoiceField):
         return obj.get_full_name() + u' (' + obj.username + u')'
 
 
-class SelectUser(forms.Form):
+class SelectUserForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
-        super(SelectUser, self).__init__(*args, **kwargs)
+        super(SelectUserForm, self).__init__(*args, **kwargs)
         self.fields['users'].queryset = get_user_model().objects.all().exclude(id=user.id)
 
     users = UserModelChoiceField(queryset=get_user_model().objects.all(),

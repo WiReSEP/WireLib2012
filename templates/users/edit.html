@@ -5,6 +5,7 @@
 <form method="post" action="{% url 'users.edit' %}">
   {% csrf_token %}
   {{ form.as_p }}
-  <input type="submit" value="Absenden" />
+  <input type="submit" value="Absenden" class="btn btn-primary" />
+  <a href="{% url 'users.profile' user.username %}" class="btn">Abbrechen</a>
 </form>
 {% endblock content %}

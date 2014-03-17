@@ -4,25 +4,33 @@
   <h1 id="detailTitle">
     {{ document.title }}
   </h1>
-  <div class="btn btn-link" id="detailEdit" TODO onclick="self.location.href='{% url documents.edit document.pk %}'">
+  <div class="btn btn-link" id="detailEdit" onclick="self.location.href='{% url documents.edit document.pk %}'">
     ✎
   </div>
 </div>
 {% endblock content-header %}
 {% block content %}
-<div>
+<div id="detailContent">
   <div id="detailStatus" class="{{ document.get_status_css_class }}">
     {{ document.get_status_string }}
+    {% if document.is_lend %}
+    an <a href="{{ document.get_user_lend.get_absolute_url }}">{{ document.get_user_lend }}</a>
+    {% if document.get_user_lend.external %}(Extern). 
+    <a href="{{ document.get_user_responsible.get_absolute_url }}">{{ document.get_user_responsible }}</a> 
+    hat für ihn/sie gebürgt.{% endif %}
+    {% endif %}
   </div>
   <dl class="dl-horizontal">
     <dt id="detailAuthors">
       Autoren
     </dt>
     <dd>
-      {% for author in document.documentauthors_set.all %}
+      {% for author in document.get_all_authors %}
       <div class="author">
-        {{ author.author }} {% if author.editor %}(Editor){% endif %}
+        {{ author }} {% if author.editor %}(Editor){% endif %}
       </div>
+      {% empty %}
+      <div class="author">-</div>
       {% endfor %}
     </dd>
     <dt id="detailCategory">
@@ -67,7 +75,7 @@
     <dd>
       {{ document.comment|default:"-" }}
     </dd>
-    {% for extra in document.DocExtra_set.all %}
+    {% for extra in document.docextra_set.all %}
     <dt class="extra">
       {{ extra.bib_field }}
     </dt>
@@ -94,12 +102,14 @@
       {{ document.isbn|default:"-" }}
     </dd>
     {% if 'documents.can_see_price' in perms %}
+    {% if document.price %}
     <dt id="detailPrice">
       Preis
     </dt>
     <dd>
-      {{document.price }} {{ document.currency }}
+      {{ document.price }} {{ document.currency }}
     </dd>
+    {% endif %}
     {% endif %}
     <dt id="detailBibtexID">
       Bibtex-ID
@@ -126,30 +136,129 @@
     {% endif %}
     <div id="detailButtons">
       {% if 'documents.can_lend' in perms %}
-      <div class="btn">
-        Ausleihen
+      {% if document.is_available or document.is_missing %}
+      <div class="btn-group dropup">
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+        {% if document.is_available %}
+          Ausleihen für
+        {% elif document.is_missing %}
+          Gefunden für
+        {% endif %}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="{% url 'documents.lend' document.pk %}" class="status-link">
+              mich
+            </a>
+          </li>
+          <li>
+            <a href="#modalLendInternal" data-toggle="modal">
+              Institutsangehörigen
+            </a>
+          </li>
+          <li>
+            <a href="#modalLendExternal" data-toggle="modal">
+              Institutsfremden
+            </a>
+          </li>
+          {% if document.is_missing %}
+          <li>
+          <a href="{% url 'documents.unlend' document.pk %}" class="status-link">
+              Bibliothek
+            </a>
+          </li>
+          {% endif %}
+        </ul>
       </div>
+      {% endif %}
       {% endif %}
       {% if 'documents.can_miss' in perms %}
-      <div class="btn">
+      {% if document.is_lend and document.get_user_lend == user or document.is_available %}
+      <a class="btn" href="{% url 'documents.miss' document.pk %}" class="status-link">
         Vermisst melden
-      </div>
+      </a>
+      {% endif %}
       {% endif %}
       {% if 'documents.can_lend' in perms %}
-      <div class="btn">
-        Übertragen
+      {% if document.is_lend %}
+      <div class="btn-group dropup">
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+          Übertragen an
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          {% if document.get_user_lend != user %}
+          <li>
+            <a href="{% url 'documents.lend' document.pk %}" class="status-link">
+              mich
+            </a>
+          </li>
+          {% endif %}
+          <li>
+            <a href="#modalLendInternal" data-toggle="modal">
+              Institutsangehörigen
+            </a>
+          </li>
+          <li>
+            <a href="#modalLendExternal" data-toggle="modal">
+              Institutsfremden
+            </a>
+          </li>
+        </ul>
       </div>
+      {% endif %}
       {% endif %}
       {% if 'documents.can_lost' in perms %}
-      <div class="btn">
+      {% if document.is_missing %}
+      <a class="btn" href="{% url 'documents.lost' document.pk %}" class="status-link">
         Verloren melden
-      </div>
+      </a>
+      {% endif %}
       {% endif %}
       {% if 'documents.can_unlend' in perms %}
-      <div class="btn">
+      {% if document.is_lend and document.get_user_lend == user %}
+      <a class="btn" href="{% url 'documents.unlend' document.pk %}" class="status-link">
         Zurückgeben
-      </div>
+      </a>
       {% endif %}
+      {% endif %}
+      <div class="modal hide fade" id="modalLendInternal" role="dialog" data-backdrop="false">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Ausleihe für Institutsangehörigen</h3>
+        </div>
+        <form id="formInternal" action="{% url 'documents.lend' document.pk %}" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          {{ userform }}
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" value="Ausleihen" />
+          <button type="button" data-dismiss="modal">
+            Abbrechen
+          </button>
+        </div>
+        </form>
+      </div>
+      <div class="modal hide fade" id="modalLendExternal" role="dialog" data-backdrop="false">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Ausleihe für Externen</h3>
+        </div>
+        <form id="formExternal" action="{% url 'documents.lend' document.pk %}" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          {{ externalform }}
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" value="Ausleihen" />
+          <button type="button" data-dismiss="modal">
+            Abbrechen
+          </button>
+        </div>
+        </form>
+      </div>
     </div>
     {% if 'documents.can_see_history' in perms %}
     <table id="detailHistory" class="table table-striped table-hover table-condensed">
@@ -172,7 +281,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for doc_status in document.DocStatus_set.all %}
+        {% for doc_status in document.docstatus_set.all %}
         <tr>
           <td>
             {{ doc_status.date }}
@@ -205,3 +314,13 @@
   </dl>
 </div>
 {% endblock content %}
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+  $('#detailContent').on('click', '#detailButtons a.status-link', function(event) {
+    event.preventDefault();
+    var url = $(this).attr('href');
+    $('#detailContent').load(url + " #detailContent")
+  });
+</script>
+{% endblock scripts %}

@@ -22,7 +22,7 @@ def _create_navlist(request):
     navlist = []
 
     for entry in NAV_LIST:
-        if entry[2] and not request.user.has_perm(entry[2]):
+        if entry[2] and not request.user.has_perms(entry[2]):
             continue
         active_entry = ''
         css = ''
@@ -40,7 +40,7 @@ def _create_menu(request):
     menulist = []
 
     for entry in MENU_TOP:
-        if entry[2] and not request.user.has_perm(entry[2]):
+        if entry[2] and not request.user.has_perms(entry[2]):
             continue
         css = ''
         url = (css, entry[0], entry[1])

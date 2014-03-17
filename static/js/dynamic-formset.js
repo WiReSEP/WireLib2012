@@ -7,29 +7,41 @@ function updateElementIndex(el, prefix, ndx) {
         el.id = el.id.replace(id_regex, replacement);
   if (el.name)
         el.name = el.name.replace(id_regex, replacement);
+  if ($(el).attr('class'))
+        $(el).attr('class', $(el).attr('class').replace(id_regex, replacement));
+  if ($(el).children().length > 0) {
+  $(el).children().each(function() {
+	updateElementIndex(this, prefix, ndx);
+	//if(!$(this).is($('select'))){
+	//$(this).val('');
+	//}
+  });
+  }
 }
 
 function addForm(btn, prefix) {
   var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-  var row = $('.dynamic-form:first').clone(true).get(0);
-  $(row).insertAfter($('.dynamic-form:last')).children('.hidden').removeClass('hidden');
+  var last_div = $(btn).parent().prev('.dynamic-formset');
+  var row = last_div.clone().get(0);
   row.id = prefix + '-' + formCount + '-row';
   $(row).children().each(function() {
-        updateElementIndex(this, prefix, formCount);
+	updateElementIndex(this, prefix, formCount);
 	if(!$(this).is($('select'))){
-        $(this).val('');
+	$(this).val('');
 	}
   });
+  $(row).insertAfter(last_div).children('.hidden').removeClass('hidden');
   $(row).find('.delete-row').click(function() {
-        deleteForm(this, prefix);
+	deleteForm(this, prefix);
   });
   $('#id_' + prefix + '-TOTAL_FORMS').val(formCount + 1);
-  return false;
+  return (formCount);
 }
 
 function deleteForm(btn, prefix) {
-  $(btn).parents('.dynamic-form').remove();
-  var forms = $('.dynamic-form');
+  var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+  var forms = $(btn).parents('.dynamic-formset').siblings('.dynamic-formset');
+  $(btn).parents('.dynamic-formset').remove();
   $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
   for (var i=0, formount=forms.length; i<forms.length; ++i) {
 	forms.get(i).id = prefix + '-' + i + '-row';

@@ -18,6 +18,6 @@ class Author(models.Model):
     def __unicode__(self):
         return self.full_name
 
-    def save(self, *args, **kwargs):
-        self.full_name = "%s %s" % (self.first_name, self.last_name)
-        return super(Author, self).save(*args, **kwargs)
+    #def save(self, *args, **kwargs):
+        #self.full_name = "%s %s" % (self.first_name, self.last_name)
+        #return super(Author, self).save(*args, **kwargs)

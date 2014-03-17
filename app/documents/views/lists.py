@@ -16,6 +16,9 @@ class DocumentList(ListView):
     def __init__(self, *args, **kwargs):
         super(DocumentList, self).__init__(*args, **kwargs)
         self.forms = {}
+        self.doc_start = 1
+        self.doc_end = 10
+        self.doc_count = 0
 
     def get(self, request):
         get_params = ""
@@ -55,6 +58,7 @@ class DocumentList(ListView):
                                  Q(authors__last_name__iregex='^[%s].*$'
                                    % filter_authors)
                                  )
+        self.doc_count = q_obj.count()
         return q_obj
 
     def process_forms(self):
@@ -66,11 +70,46 @@ class DocumentList(ListView):
                 eval('self.process_%s()' % context_name)
 
     def get_context_data(self, **kwargs):
+        self.paginate_by = int(self.request.GET.get('documents_on_page') or 10)
+        self.page = int(self.request.GET.get('page') or 1)
+        self.doc_start = (self.page - 1) * self.paginate_by
+        self.doc_end = self.doc_start + self.paginate_by
+        self.doc_start += 1
         self.process_forms()
         context = super(DocumentList, self).get_context_data(**kwargs)
         context['forms'] = self.forms
         context['get_params'] = self.get_params
+        if self.doc_count > self.doc_end:
+            self.doc_end = self.doc_end
+        else:
+            self.doc_end = self.doc_count
+        if self.doc_start > self.doc_end:
+            self.doc_start = self.doc_end
+        context['document_start'] = self.doc_start
+        context['document_end'] = self.doc_end
+        context['document_count'] = self.doc_count
         return context
 
     def process_simple_search(self):
-        self.paginate_by = (self.request.GET.get('documents_on_page') or 10)
+        self.paginate_by = int(self.request.GET.get('documents_on_page') or 10)
+
+
+class MissedDocumentList(DocumentList):
+    def get_queryset(self):
+        queryset = super(MissedDocumentList, self).get_queryset()
+        queryset = queryset.filter(status=Document.MISSING)
+        self.doc_count = queryset.count()
+        return queryset
+
+
+class LendDocumentList(DocumentList):
+    username = None
+
+    def get_queryset(self):
+        queryset = super(LendDocumentList, self).get_queryset()
+        queryset = queryset.filter(status=Document.LEND)
+        user = self.request.user
+        queryset = queryset.filter(docstatus__user_lend=user,
+                                   docstatus__return_lend=False)
+        self.doc_count = queryset.count()
+        return queryset

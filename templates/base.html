@@ -29,8 +29,31 @@
           {{ li.html|safe }}
           {% endfor %}
           {% if user.is_authenticated %}
-          <li><a href="{% url 'users.edit' %}">Profil</a></li>
-          <li><a href="{% url 'users.logout' %}">Logout ({{ user }})</a></li>
+          {% if 'can_see_admin' in perms %}
+          <li>
+            <a href="/admin/">
+              Administration
+            </a>
+          </li>
+          {% endif %}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Profil ({{ user }})
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="{% url 'users.profile' user.username%}">
+                  Profil
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'users.logout' %}">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </li>
           {% else %}
           <li><a href="{% url 'users.login' %}?next={{ fullpath }}">Login</a></li>
           {% endif %}
@@ -71,9 +94,10 @@
     <div id="snippet" class="span2">{% block snippet %}{% endblock snippet %}</div>
   </div>
 </div>
+{% block scripts %}
 <script src="{% static "js/jquery-2.0.2.js" %}"></script> 
 <script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
 <script src="{% static "js/base.js" %}"></script>
-{% block scripts %}{% endblock scripts %}
+{% endblock scripts %}
 </body> 
 </html>

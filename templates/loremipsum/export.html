@@ -2,6 +2,7 @@
 {% load static %}
 {% load webdesign %}
 {% block scripts %}
+{{ block.super }}
 <script src="{% static "js/export.js" %}"></script>
 {% endblock scripts %}
 {% block navigation %}

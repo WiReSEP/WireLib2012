@@ -45,7 +45,7 @@ LOGIC_CHOICES = (('AND', 'und'),
                  ('OR', 'oder'),
                  )
 REGEX_DESCRIPTION_LINK = 'http://perldoc.perl.org/perlrequick.html'
-REGEX_LABEL = '<a href="%s">Regex</a>' % REGEX_DESCRIPTION_LINK
+REGEX_LABEL = '<a href="%s">Regex&nbsp;[?]</a>' % REGEX_DESCRIPTION_LINK
 
 
 class SearchForm(forms.Form):
@@ -66,7 +66,7 @@ class SearchProForm(forms.Form):
     category.css = 'span4'
 
     class Media:
-        js = ('js/dynamic-formset.js', )
+        js = ('/static/js/dynamic-formset.js', )
 
 
 SearchProExtendedForm = formset_factory(SearchProForm)

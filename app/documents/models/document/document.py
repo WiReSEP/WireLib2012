@@ -6,6 +6,7 @@ from ..user import NonUser
 from .author import Author
 from .publisher import Publisher
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
 from django.db import models
 from documents.lib.bibtex import Bibtex
 from documents.lib.exceptions import LendingError
@@ -201,11 +202,23 @@ class Document(models.Model):
     def _order_authors(self, auths):
         return auths.order_by("documentauthors__sort_value")
 
+    def get_all_authors(self):
+        """
+        Methode um alle Autoren und Editoren anzuzeigen
+        """
+        auths = self.authors.all()
+        auths = self._order_authors(auths)
+        editors = self.get_editors()
+        for a in auths:
+            if editors.filter(pk=a.pk):
+                a.editor = True
+        return auths
+
     def get_editors(self):
         """
         Methode um alle Editoren anzuzeigen
         """
-        auths = self.authors.exclude(documentauthors__editor=False)
+        auths = self.authors.filter(documentauthors__editor=True)
         return self._order_authors(auths)
 
     def get_authors(self):
@@ -242,6 +255,44 @@ class Document(models.Model):
                                                          author=obj, editor=is_editor, sort_value=max_val)
         d.save()
 
+    def is_available(self):
+        return self.status == Document.AVAILABLE
+
+    def is_lend(self):
+        return self.status == Document.LEND
+
+    def is_missing(self):
+        return self.status == Document.MISSING
+
+    def is_lost(self):
+        return self.status == Document.LOST
+
+    def get_user_lend(self):
+        if not self.is_lend():
+            return get_user_model.objects.None()
+        latest = self.docstatus_set.latest('date')
+        if latest:
+            retVal = latest.recent_user
+            if latest.user_lend:
+                retVal = latest.user_lend
+            if latest.non_user_lend:
+                retVal = latest.non_user_lend
+        else:
+            retVal = get_user_model().objects.None()
+        return retVal
+
+    def get_user_responsible(self):
+        if not self.is_lend():
+            return get_user_model.objects.None()
+        latest = self.docstatus_set.latest('date')
+        if latest:
+            retVal = latest.recent_user
+            if latest.user_lend:
+                retVal = latest.user_lend
+        else:
+            retVal = get_user_model().objects.None()
+        return retVal
+
     def get_status_css_class(self):
         return Document.CSS_CLASSES[self.status]
 
@@ -250,6 +301,9 @@ class Document(models.Model):
 
     def get_bibtex(self):
         return Bibtex.export_doc(self)
+
+    def get_absolute_url(self):
+        return reverse('documents.detail', args=(self.pk,))
 
 
 class DocumentAuthors(models.Model):

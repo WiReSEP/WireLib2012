@@ -1,29 +1,51 @@
 {% extends "documents/base.html" %}
+{% load static %}
+{% block html_head %}
+{{ form.media.css }}
+{% endblock html_head %}
 {% block content-header %}{{ document.bib_no }}<small>(Bearbeiten)</small>{% endblock content-header %}
 {% block content %}
 {% block content-form %}
-<form class="form-horizontal" method="POST">
+<form class="form-horizontal" method="POST" id="formTyped" onsubmit="doc_mod_authors()">
+  {% csrf_token %}
+  <div class="error">
+    {{ form.non_field_errors }}
+  </div>
   <div class="control-group">
     <label for="{{ form.title.id_for_label }}" class="control-label">{{ form.title.label }}</label>
     <div class="controls">
       {{ form.title }}
+      <span class="error">{{ form.title.errors }}</span>
     </div>
   </div>
   <div class="control-group">
     <label for="importAuthors" class="control-label">Autoren</label>
-    <div class="controls" id="importAuthors">
+    <div class="controls grid" id="importAuthors">
+      {{ form.author_form.management_form }}
       {% for author in form.author_form %}
-      <div class="input-prepend input-append import-inputgroup">
+      <div class="input-prepend input-append import-inputgroup dynamic-formset well">
         <span class="drag-n-drop add-on"></span>
+        {{ author.id }}
         {{ author.author }}
-        {{ author.editor }}
         {{ author.sort_value }}
-        <a class="btn btn-info {% if author.editor.value %}active{% endif %}" href="javascript:void(0);" data-toggle="button" title="Ist Editor">Editor</a>
-        <input type="hidden" id="{{ author.DELETE.id_for_label }}" value=""/>
-        <a class="btn btn-warning" href="javascript:void(0);" data-toggle="button" title="Autor entfernen" data-for="{{ author.DELETE.id_for_label }}">✗</a>
+        {{ author.editor }}
+        <input type="hidden" id="{{ author.DELETE.id_for_label }}" name="{{ author.DELETE.html_name }}" value=""/>
+        <button type="button" class="btn btn-warning delete-row" title="Autor entfernen" data-for="{{ author.DELETE.id_for_label }}">✗</button>
+        {% if author.errors %}
+        <span class="alert alert-error add-on">
+          {% for field in author %}
+          {% if field.errors %}
+          {{ field.name }}:
+            {% for error in field.errors %}
+            {{ error }}
+            {% endfor %}
+          {% endif %}
+          {% endfor %}
+        </span>
+        {% endif %}
       </div>
       {% endfor %}
-      <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiterer Autor</a>
+      <span><a href="javascript:void(0);" class="btn btn-info btn-mini add-row">Weiterer Autor</a></span>
     </div>
   </div>
   {% for field in form %}
@@ -32,6 +54,7 @@
     <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
     <div class="controls">
       {{ field }}
+      <span class="error">{{ field.errors }}</span>
     </div>
   </div>
   {% endif %}
@@ -39,31 +62,97 @@
   <div class="control-group">
     <label for="importKeywords" class="control-label">Schlüsselwörter</label>
     <div class="controls" id="importKeywords">
+      {{ form.keyword_form.management_form }}
       {% for keyword in form.keyword_form %}
-      <div class="input-append import-inputgroup">
+      <div class="input-append import-inputgroup dynamic-formset">
+        {{ keyword.id }}
         {{ keyword.keyword }}
-        <input type="hidden" id="{{ keyword.DELETE.id_for_label }}" value="" />
-        <a class="btn btn-warning" href="javascript:void(0);" data-toggle="button" title="Schlüsselwort entfernen" data-for="{{ keyword.DELETE.id_for_label }}">✗</a>
+        <input type="hidden" id="{{ keyword.DELETE.id_for_label }}" value="" name="{{ keyword.DELETE.html_name }}" />
+        <a class="btn btn-warning delete-row" href="javascript:void(0);" title="Schlüsselwort entfernen" data-for="{{ keyword.DELETE.id_for_label }}">✗</a>
       </div>
       {% endfor %}
-      <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiteres Schlüsselwort</a>
+      <span><a href="javascript:void(0);" class="btn btn-info btn-mini add-row">Weiteres Schlüsselwort</a></span>
     </div>
   </div>
   <div class="control-group">
     <label for="importExtras" class="control-label">Extrafelder</label>
     <div class="controls" id="importExtras">
+      {{ form.extra_form.management_form }}
       {% for extra in form.extra_form %}
-      <div class="input-prepend input-append import-inputgroup">
+      <div class="input-prepend input-append import-inputgroup dynamic-formset">
+        {{ extra.id }}
         {{ extra.bib_field }}
         {{ extra.content }}
-        <input type="hidden" id="{{ extra.DELETE.id_for_label }}" value="" />
-        <a class="btn btn-warning" href="javascript:void(0);" data-toggle="button" title="Extrafeld entfernen" data-for="{{ extra.DELETE.id_for_label }}">✗</a>
+        <input type="hidden" id="{{ extra.DELETE.id_for_label }}" value="" name="{{ extra.DELETE.html_name }}" />
+        <a class="btn btn-warning delete-row" href="javascript:void(0);" title="Extrafeld entfernen" data-for="{{ extra.DELETE.id_for_label }}">✗</a>
       </div>
       {% endfor %}
-      <a href="javascript:void(0);" class="btn btn-info btn-mini">Weiteres Extrafeld</a>
+      <span><a href="javascript:void(0);" class="btn btn-info btn-mini add-row">Weiteres Extrafeld</a></span>
     </div>
   </div>
   <input type="submit" name="submitTyped" value="Speichern" class="btn btn-primary" />
 </form>
 {% endblock content-form %}
 {% endblock content %}
+{% block scripts %}
+<script src="{% static "js/jquery-2.0.2.js" %}"></script>
+{{ form.media.js }}
+<script src="{% static "js/base.js" %}"></script>
+<script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
+{% for author in form.author_form %}
+<script>$("#{{ author.editor.id_for_label }}").bootstrapSwitch();
+</script>
+{% endfor %}
+<script>
+$(function() {
+  {#var bootstrapButton = $.fn.button.noConflict();#}
+  {#$.fn.bootstrapBtn = bootstrapButton;#}
+  $('#importAuthors').find('.add-row').click(function() {
+    var ind = addForm(this, 'authors');
+    var par = $('#id_authors-' + ind + '-editor').parent().parent();
+    $('#id_authors-' + ind + '-editor').insertBefore(par);
+    par.remove();
+    $('#id_authors-' + ind + '-editor').bootstrapSwitch();
+    });
+  $('#importAuthors').find('.delete-row').click(function() {
+    {% if modify %} doc_toggle_delete(this);
+    {% else %} return deleteForm(this, 'authors');
+    {% endif %}
+    });
+  $('#importKeywords').find('.add-row').click(function() {
+    return addForm(this, 'keywords');
+    });
+  $('#importKeywords').find('.delete-row').click(function() {
+    {% if modify %} doc_toggle_delete(this);
+    {% else %} return deleteForm(this, 'keywords');
+    {% endif %}
+    });
+  $('#importExtras').find('.add-row').click(function() {
+    return addForm(this, 'extras');
+    });
+  $('#importExtras').find('.delete-row').click(function() {
+    {% if modify %} doc_toggle_delete(this);
+    {% else %} return deleteForm(this, 'extras');
+    {% endif %}
+    });
+  $('.switch').on('switchChange', function(e, data) {
+    if(data.value) {
+      $(data).attr('checked', 'checked');
+    } else {
+      $(data).removeAttr('checked');
+    }
+  });
+  $('.grid').sortable({
+      tolerance: 'pointer',
+      revert: 'invalid',
+      placeholder: 'placeholder well',
+      forceHelperSize: true
+    });
+  $('.grid').on('sortupdate', function(ev, ui) {
+      doc_mod_authors();
+  });
+  $('#formTyped').submit(doc_mod_authors());
+  $('.add-row').click();
+  });
+</script>
+{% endblock scripts %}

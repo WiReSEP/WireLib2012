@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.urlresolvers import reverse
 from users.models import PhoneNumbers
 
 
@@ -22,3 +23,10 @@ class NonUser(models.Model):
 
     def __unicode__(self):
         return (self.last_name + ', ' + self.first_name)
+
+    @property
+    def external(self):
+        return True
+
+    def get_absolute_url(self):
+        return reverse('documents.external', args=(self.pk,))

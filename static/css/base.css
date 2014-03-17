@@ -333,6 +333,14 @@ ul.document-list li{
 	color: #880000;
 }
 
+/*******************
+ * document detail *
+ * *****************/
+
+#detailButtons {
+  margin-top: 25px;
+}
+
 /************************
  * Duplicate eliminator *
  ************************/

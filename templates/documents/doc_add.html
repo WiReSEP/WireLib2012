@@ -19,8 +19,8 @@ Import
   <div id="importTyped" class="tab-pane active fade in">
     {{ block.super }}
   </div>
-  <div id="importFile" class"tab-pane fade">
-    <form enctype="multipart/form-data" method="POST">
+  <div id="importFile" class="tab-pane fade">
+    <form enctype="multipart/form-data" method="POST" id="formFile">
       {{ upload_form.as_p }}
       <input type="submit" name="submitFile" value="Upload" class="btn btn-primary" />
     </form>
