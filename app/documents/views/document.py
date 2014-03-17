@@ -6,8 +6,10 @@ from documents.forms import UploadFileForm
 from documents.forms import NonUserForm
 from documents.forms import SelectUserForm
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.http import Http404
+from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.edit import CreateView
@@ -33,6 +35,10 @@ class DocumentChangeView(UpdateView):
         context['modify'] = True
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DocumentChangeView, self).dispatch(*args, **kwargs)
+
 
 class DocumentCreateView(CreateView):
     model = Document
@@ -53,7 +59,12 @@ class DocumentCreateView(CreateView):
                     Bibtex().do_import(bib_file)
         return super(DocumentCreateView, self).post(request, *args, **kwargs)
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DocumentCreateView, self).dispatch(*args, **kwargs)
 
+
+@login_required
 def lend(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -74,6 +85,7 @@ def lend(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
+@login_required
 def missing(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -83,6 +95,7 @@ def missing(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
+@login_required
 def unlend(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -92,6 +105,7 @@ def unlend(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
+@login_required
 def lost(request, pk):
     try:
         document = Document.objects.get(pk=pk)

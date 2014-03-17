@@ -6,8 +6,10 @@ import hashlib
 from os.path import normpath
 from os.path import join
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
 from documents.models import Document
 from documents.lib.allegro import Allegro
@@ -44,6 +46,10 @@ class ExportView(TemplateView):
         context['export_allegro_state'] = Allegro.get_state()
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ExportView, self).dispatch(*args, **kwargs)
+
 
 def _gen_sec_link(path):
     secret = settings.SECRET_KEY
@@ -53,6 +59,7 @@ def _gen_sec_link(path):
     return '%s%s/%s%s' % (uri_prefix, token, hextime, path)
 
 
+@login_required
 def export_allegro(request):
     if not Allegro.get_state():
         allegro_thread = Allegro()
@@ -60,6 +67,7 @@ def export_allegro(request):
     return HttpResponseRedirect(reverse('documents.export'))
 
 
+@login_required
 def export_bibtex(request):
     if not Bibtex.get_state():
         docs_to_export = Document.objects.filter(bib_date__isnull=True)
