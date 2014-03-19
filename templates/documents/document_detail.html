@@ -4,7 +4,7 @@
   <h1 id="detailTitle">
     {{ document.title }}
   </h1>
-  <div class="btn btn-link" id="detailEdit" onclick="self.location.href='{% url documents.edit document.pk %}'">
+  <div class="btn btn-link" id="detailEdit" onclick="self.location.href='{% url 'documents.edit' document.pk %}'">
     ✎
   </div>
 </div>

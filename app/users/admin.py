@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from users.models import User
 from users.models import PhoneNumbers
 from users.forms import UserChangeForm
+from users.forms import UserCreationForm
 
 
 class PhoneNumbersAdmin(admin.ModelAdmin):
@@ -14,6 +15,7 @@ class PhoneNumbersAdmin(admin.ModelAdmin):
 class UserAdmin(AuthUserAdmin):
     model = User
     form = UserChangeForm
+    add_form = UserCreationForm
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal Info'), {'fields': ('first_name', 'last_name', 'email',
