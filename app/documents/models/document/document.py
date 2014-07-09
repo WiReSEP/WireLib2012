@@ -344,6 +344,9 @@ class DocStatus(models.Model):
         # ausleihender non_User
     non_user_lend = models.ForeignKey(NonUser, blank=True, null=True)
 
+    def get_status_string(self):
+        return Document.STATUS_CHOICES[self.status]
+
     class Meta:
         app_label = "documents"
         permissions = (("can_lend", "Can lend documents"),
