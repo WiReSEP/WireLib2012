@@ -21,6 +21,8 @@ pip install gunicorn
 django-admin.py startproject deploy
 cd deploy
 ln -s ../../app/documents documents
+ln -s ../../app/users users
 
-
-echo "Now please edit the file var/deploy/settings.py for your needs."
+echo
+echo
+echo 'You need to edit the settings.py and the urls.py'
