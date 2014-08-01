@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<address>
+  <strong>{{ object }}</strong><br />
+  <a href="mailto:{{ object.email }}">{{ object.email }}</a><br />
+  {{ object.street }} {{ object.number }}<br />
+  {{ object.zipcode }}, {{ object.city }}<br />
+  {% for number in object.phone_numbers.all %}
+  {{ number }}<br />
+  {% endfor %}
+</address>
+{% endblock content %}

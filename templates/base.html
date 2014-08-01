@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+<title>{% block title %}TU Braunschweig{% endblock title %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet" media="screen" />
+<link href="{% static "css/base.css" %}" rel="stylesheet" media="screen" />
+{% block html_head %}{% endblock html_head %}
+</head>
+<body>
+<div class="container-fluid">
+  <div id="header">
+    {% block header %}
+    <div id="banner" ></div>
+    <div id="tu-signet" ><img src="{% static "images/siegel_rot.jpg" %}" alt="TU BRAUNSCHWEIG" height="74" width="198"></div>
+    <div id="institute-logo" ><img src="{% static "images/institute.png" %}" alt="WiReLib" height="86" width="137"></div>
+    {% endblock header %}
+  </div>
+  <div class="row-fluid">
+    <div id="menu" class="navbar">
+      <div class="navbar-inner">
+        <ul class="nav">
+          <li><a href="">Impressum</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          {% block menu %}
+          {% for li in menu_top %}
+          {{ li.html|safe }}
+          {% endfor %}
+          {% if user.is_authenticated %}
+          {% if 'can_see_admin' in perms %}
+          <li>
+            <a href="/admin/">
+              Administration
+            </a>
+          </li>
+          {% endif %}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Profil ({{ user }})
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="{% url 'users.profile' user.username%}">
+                  Profil
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'users.logout' %}">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+          {% else %}
+          <li>
+            <a href="{% url 'users.login' %}?next={{ fullpath }}">
+              Login
+            </a>
+          </li>
+          {% endif %}
+          <li>
+          <form action="{% url 'documents.list' %}" class="navbar-search pull-right" method="get">
+              <input type="text" placeholder="Suche" class="search-query" name="search"/>
+            </form>
+          </li>
+          {% endblock menu %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div id="navigation" class="span2">
+      <ul class="nav nav-tabs nav-stacked">
+        {% block navigation %}
+        {% for li in menu_left %}
+        {{ li.html|safe }}
+        {% endfor %}
+        {% endblock navigation %}
+      </ul>
+    </div>
+    <div class="span8">
+      <div id="content" class="row-fluid">
+        <h1>
+          {% block content-header %}
+          {% endblock content-header %}
+        </h1>
+        {% block content %}{% endblock content %}
+      </div>
+      <div id="footer">
+        <div class="hr-line"></div>
+        Druckversion
+        {% block footer %}{% endblock footer %}
+        <div class="hr-line">Verantwortlicher</div>
+        <div class="hr-line"></div>
+      </div>
+    </div>
+    <div id="snippet" class="span2">{% block snippet %}{% endblock snippet %}</div>
+  </div>
+</div>
+{% block scripts %}
+<script src="{% static "js/jquery-2.0.2.js" %}"></script> 
+<script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
+<script src="{% static "js/base.js" %}"></script>
+{% endblock scripts %}
+</body> 
+</html>

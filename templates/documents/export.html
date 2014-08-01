@@ -1,0 +1,84 @@
+{% extends "documents/base.html" %}
+{% load static %}
+{% block scripts %}
+{{ block.super }}
+<script src="{% static "js/export.js" %}"></script>
+<script type="text/javascript">
+$('#exportContent').on('click', 'a.reload', function(event) {
+    event.preventDefault();
+    var url = $(this).attr('href');
+    $('#exportContent').load(url + " #exportContent");
+  });
+(function workerBibtex() {
+  $('#exportBibtexProgress').load('{% url 'documents.export' %} #exportBibtexProgress');
+  setTimeout(workerBibtex, 2500);
+})();
+(function workerAllegro() {
+  $('#exportAllegroProgress').load('{% url 'documents.export' %} #exportAllegroProgress');
+  setTimeout(workerAllegro, 2500);
+})();
+</script>
+{% endblock scripts %}
+{% block content %}
+---Beschreibung---
+<hr />
+<div id="exportContent">
+  <h1>BibTeX-Export</h1>
+  <p>Dieser Export ist hauptsächlich zur Datensicherung gedacht.</p>
+  <div class="spoiler">
+    <span>BibTeX Exporte</span>
+    <div class="spoiler-pre">
+      <ul class="export-list">
+        {% for entry in biblist_small %}
+        <li><i class="icon-list-alt"></i><a href="{{ entry.link }}">{{ entry.desc }}</a></li>
+        {% endfor %}
+      </ul>
+      <a>[mehr...]</a>
+    </div>
+    <div class="spoiler-post">
+      {% if not export_bib_state %}
+      <a href="{% url 'documents.export.bibtex' %}" class="btn reload">Neu Exportieren</a>
+      {% else %}
+      <div class="progress" id="exportBibtexProgress">
+        <div class="bar" style="width: {{ export_bib_state }}%"></div>
+      </div>
+      {% endif %}
+      <ul class="export-list">
+        {% for entry in biblist %}
+        <li><i class="icon-list-alt"></i><a href="{{ entry.link }}">{{ entry.desc }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<hr />
+<div>
+  <h1>TU-Bibliotheks-Export</h1>
+  <p>Dieser Export ist zum Datenaustausch mit Blibliotheken gedacht, die das Allegro-Format nutzen, z.B. die Bibliothek der TU Braunschweig.</p>
+  <div class="spoiler">
+    <span>Allegro Exporte</span>
+    <div class="spoiler-pre">
+      <ul class="export-list">
+        {% for entry in allegrolist_small %}
+        <li><i class="icon-list-alt"></i><a href="{{ entry.link }}">{{ entry.desc }}</a></li>
+        {% endfor %}
+      </ul>
+      <a>[mehr...]</a>
+    </div>
+    <div class="spoiler-post">
+      {% if not export_allegro_state %}
+      <a href="{% url 'documents.export.allegro' %}" class="btn reload">Neu Exportieren</a>
+      {% else %}
+      <div class="progress" id="exportAllegroProgress">
+        <div class="bar" style="width: {{ export_allegro_state }}%"></div>
+      </div>
+      {% endif %}
+      <ul class="export-list">
+        {% for entry in allegrolist %}
+        <li><i class="icon-list-alt"></i><a href="{{ entry.link }}">{{ entry.desc }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}

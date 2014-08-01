@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load webdesign %}
+{% block content %}
+<h1>Heading 1</h1>
+{% lorem 2 p %}
+<h2>Heading 2</h2>
+{% lorem 1 p %}
+<h3>Heading 3</h3>
+{% lorem 2 p %}
+<h4>Heading 4</h4>
+{% lorem 1 p %}
+<h5>Heading 5</h5>
+{% lorem 2 p %}
+<h5>Heading 5</h5>
+{% lorem 2 p %}
+{% endblock content %}
+{% block menu %}
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      {{ user }}
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a href="/lorem/user/profile/1">Profil</a></li>
+    </ul>
+  </li>
+{{ block.super }}
+{% endblock menu %}
+{% block navigation %}
+  <li class="active"><a href="/lorem/">Home</a></li>
+  <li><a href="/lorem/documents">Literatur</a></li>
+  <li><a href="/lorem/documents/search">Erweiterte Suche</a></li>
+  <li class="inactive"><a href="/lorem/documents/new">Dokumente hinzufügen</a></li>
+  <li><a href="/lorem/duplicates">Duplikate entfernen</a></li>
+  <li><a href="/lorem/export">Export</a></li>
+{% endblock navigation %}
+{% block snippet %}
+<div class="snippet">
+  <h1>Snippet 01</h1>
+  <p>{% lorem 10 w %}</p>
+</div>
+<div class="snippet">
+  <h1>Snippet 02</h1>
+  <p>{% lorem 18 w %}</p>
+</div>
+<div class="snippet">
+  <h1>{% lorem 5 w %}</h1>
+  <p>{% lorem 14 w %}</p>
+</div>
+{% endblock snippet %}

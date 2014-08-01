@@ -1,4 +1,5 @@
 *.py[cod]
+*~
 
 *.swp
 *.ac[nr]
@@ -19,7 +20,5 @@ doc/Pflichtenheft/Pflichtenheft_WiReLib.pdf
 doc/Pflichtenheft/TemplatePflichtenheft.pdf
 "doc/Pr\303\244sentation/"
 "doc/pr\303\244sentation.tar.gz"
-
-settings/__init__.py
-wirelib.db
-settings/SECRET
+.ropeproject/
+olddb

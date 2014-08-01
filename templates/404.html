@@ -1,7 +1,12 @@
-{% extends index.html %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Page not found' %}{% endblock %}
+
 {% block content %}
-  <h1>
-	404 File Not Found
-  </h1><br />
-  The Page you requested is not available
-{% endblock content %}
+
+<h2>{% trans 'Page not found' %}</h2>
+
+<p>{% trans "We're sorry, but the requested page could not be found." %}</p>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p><a href="{% url 'users.password.change' %}">Hier</a> klicken um das Passwort zu ändern.</p>
+<form method="post" action="{% url 'users.edit' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Absenden" class="btn btn-primary" />
+  <a href="{% url 'users.profile' user.username %}" class="btn">Abbrechen</a>
+</form>
+{% endblock content %}

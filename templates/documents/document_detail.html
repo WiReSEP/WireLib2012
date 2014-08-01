@@ -1,0 +1,326 @@
+{% extends "documents/base.html" %}
+{% block content-header %}
+<div id="detailHeading">
+  <h1 id="detailTitle">
+    {{ document.title }}
+  </h1>
+  <div class="btn btn-link" id="detailEdit" onclick="self.location.href='{% url 'documents.edit' document.pk %}'">
+    ✎
+  </div>
+</div>
+{% endblock content-header %}
+{% block content %}
+<div id="detailContent">
+  <div id="detailStatus" class="{{ document.get_status_css_class }}">
+    {{ document.get_status_string }}
+    {% if document.is_lend %}
+    an <a href="{{ document.get_user_lend.get_absolute_url }}">{{ document.get_user_lend }}</a>
+    {% if document.get_user_lend.external %}(Extern). 
+    <a href="{{ document.get_user_responsible.get_absolute_url }}">{{ document.get_user_responsible }}</a> 
+    hat für ihn/sie gebürgt.{% endif %}
+    {% endif %}
+  </div>
+  <dl class="dl-horizontal">
+    <dt id="detailAuthors">
+      Autoren
+    </dt>
+    <dd>
+      {% for author in document.get_all_authors %}
+      <div class="author">
+        {{ author }} {% if author.editor %}(Editor){% endif %}
+      </div>
+      {% empty %}
+      <div class="author">-</div>
+      {% endfor %}
+    </dd>
+    <dt id="detailCategory">
+      Kategorie
+    </dt>
+    <dd>
+      {{ document.category|default:"-" }}
+    </dd>
+    <dt id="detailPublisher">
+      Publisher
+    </dt>
+    <dd>
+      {{ document.publisher }}
+    </dd>
+    <dt id="detailYear">
+      Erscheinungsjahr
+    </dt>
+    <dd>
+      {{ document.year|default:"-" }}
+    </dd>
+    <dt id="detailKeywords">
+      Schlüsselwörter
+    </dt>
+    <dd>
+      {% for keyword in document.keywords_set.all %}
+      {{ keyword }}{% if not forloop.last %}, {% endif %}
+      {% empty %}
+      -
+      {% endfor %}
+    </dd>
+    {% if 'documents.can_see_dop' in perms %}
+    <dt id="detailDateOfPurchase">
+      In der Bibliothek seit
+    </dt>
+    <dd>
+      {{ document.date_of_purchase|default:"-" }}
+    </dd>
+    {% endif %}
+    <dt id="detailComment">
+      Notizen
+    </dt>
+    <dd>
+      {{ document.comment|default:"-" }}
+    </dd>
+    {% for extra in document.docextra_set.all %}
+    <dt class="extra">
+      {{ extra.bib_field }}
+    </dt>
+    <dd>
+      {{ extra.content }}
+    </dd>
+    {% endfor %}
+    <dt id="detailBibNo">
+      Bibliotheks-ID
+    </dt>
+    <dd>
+      {{ document.bib_no }}
+    </dd>
+    <dt id="detailInvNo">
+      Inventarnummer
+    </dt>
+    <dd>
+      {{ document.inv_no }}
+    </dd>
+    <dt id="detailISBN">
+      ISBN
+    </dt>
+    <dd>
+      {{ document.isbn|default:"-" }}
+    </dd>
+    {% if 'documents.can_see_price' in perms %}
+    {% if document.price %}
+    <dt id="detailPrice">
+      Preis
+    </dt>
+    <dd>
+      {{ document.price }} {{ document.currency }}
+    </dd>
+    {% endif %}
+    {% endif %}
+    <dt id="detailBibtexID">
+      Bibtex-ID
+    </dt>
+    <dd>
+      {{ document.bibtex_id|default:"-" }}
+    </dd>
+    {% if 'documents.can_see_locn' in perms %}
+    <dt id="detailLOCN">
+      Library Of Congress Number
+    </dt>
+    <dd>
+      {{ document.lib_of_con_nr|default:"-" }}
+    </dd>
+    {% endif %}
+    {% if 'documents.can_see_last_update_info' in perms %}
+    <dt id="detailLastUpdates">
+      Letztes Update
+    </dt>
+    <dd>
+      am {{ document.last_updated }}
+      von {{ document.last_edit_by }}
+    </dd>
+    {% endif %}
+    <div id="detailButtons">
+      {% if 'documents.can_lend' in perms %}
+      {% if document.is_available or document.is_missing %}
+      <div class="btn-group dropup">
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+        {% if document.is_available %}
+          Ausleihen für
+        {% elif document.is_missing %}
+          Gefunden für
+        {% endif %}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="{% url 'documents.lend' document.pk %}" class="status-link">
+              mich
+            </a>
+          </li>
+          <li>
+            <a href="#modalLendInternal" data-toggle="modal">
+              Institutsangehörigen
+            </a>
+          </li>
+          <li>
+            <a href="#modalLendExternal" data-toggle="modal">
+              Institutsfremden
+            </a>
+          </li>
+          {% if document.is_missing %}
+          <li>
+          <a href="{% url 'documents.unlend' document.pk %}" class="status-link">
+              Bibliothek
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+      {% endif %}
+      {% if 'documents.can_miss' in perms %}
+      {% if document.is_lend and document.get_user_lend == user or document.is_available %}
+      <a class="btn" href="{% url 'documents.miss' document.pk %}" class="status-link">
+        Vermisst melden
+      </a>
+      {% endif %}
+      {% endif %}
+      {% if 'documents.can_lend' in perms %}
+      {% if document.is_lend %}
+      <div class="btn-group dropup">
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+          Übertragen an
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          {% if document.get_user_lend != user %}
+          <li>
+            <a href="{% url 'documents.lend' document.pk %}" class="status-link">
+              mich
+            </a>
+          </li>
+          {% endif %}
+          <li>
+            <a href="#modalLendInternal" data-toggle="modal">
+              Institutsangehörigen
+            </a>
+          </li>
+          <li>
+            <a href="#modalLendExternal" data-toggle="modal">
+              Institutsfremden
+            </a>
+          </li>
+        </ul>
+      </div>
+      {% endif %}
+      {% endif %}
+      {% if 'documents.can_lost' in perms %}
+      {% if document.is_missing %}
+      <a class="btn" href="{% url 'documents.lost' document.pk %}" class="status-link">
+        Verloren melden
+      </a>
+      {% endif %}
+      {% endif %}
+      {% if 'documents.can_unlend' in perms %}
+      {% if document.is_lend and document.get_user_lend == user %}
+      <a class="btn" href="{% url 'documents.unlend' document.pk %}" class="status-link">
+        Zurückgeben
+      </a>
+      {% endif %}
+      {% endif %}
+      <div class="modal hide fade" id="modalLendInternal" role="dialog" data-backdrop="false">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Ausleihe für Institutsangehörigen</h3>
+        </div>
+        <form id="formInternal" action="{% url 'documents.lend' document.pk %}" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          {{ userform }}
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" value="Ausleihen" />
+          <button type="button" data-dismiss="modal">
+            Abbrechen
+          </button>
+        </div>
+        </form>
+      </div>
+      <div class="modal hide fade" id="modalLendExternal" role="dialog" data-backdrop="false">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Ausleihe für Externen</h3>
+        </div>
+        <form id="formExternal" action="{% url 'documents.lend' document.pk %}" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          {{ externalform }}
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" value="Ausleihen" />
+          <button type="button" data-dismiss="modal">
+            Abbrechen
+          </button>
+        </div>
+        </form>
+      </div>
+    </div>
+    {% if 'documents.can_see_history' in perms %}
+    <table id="detailHistory" class="table table-striped table-hover table-condensed">
+      <caption>
+        Diese Tabelle enthält alle bisherigen Statusveränderungen des
+        Dokumentes. Das heißt wann wurde dieses Buch ausgeliehen, zurückgegeben
+        oder vermisst gemeldet und von wem.
+      </caption>
+      <thead>
+        <tr>
+          <th>
+            Datum
+          </th>
+          <th>
+            Status
+          </th>
+          <th>
+            Benutzer
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc_status in document.docstatus_set.all %}
+        <tr>
+          <td>
+            {{ doc_status.date }}
+          </td>
+          <td>
+            {{ doc_status.get_status_string }}
+          </td>
+          <td>
+            {{ doc_status.recent_user }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    <div id="detailBibtex" class="accordion">
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="bibtex" href="#detailBibtexCollapse">
+            Bibtex-Code
+          </a>
+        </div>
+        <div id="detailBibtexCollapse" class="accordion-body collapse">
+          <div class="accordion-inner">
+            {{ document.get_bibtex }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </dl>
+</div>
+{% endblock content %}
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+  $('#detailContent').on('click', '#detailButtons a.status-link', function(event) {
+    event.preventDefault();
+    var url = $(this).attr('href');
+    $('#detailContent').load(url + " #detailContent")
+  });
+</script>
+{% endblock scripts %}

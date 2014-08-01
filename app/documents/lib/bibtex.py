@@ -287,10 +287,20 @@ class Bibtex(threading.Thread):
     bibtex_lock = threading.Lock()
     """ Stellt sicher, dass nur ein Bibtex-Thread läuft
     """
+    docs_exported = 0
+    docs_to_export = 0
+
+    @staticmethod
+    def get_state():
+        if Bibtex.docs_to_export:
+            return (Bibtex.docs_exported / Bibtex.docs_to_export)
+        return 0
+
     def export_data(self, documents, export_path):
         """ Zum setzen der für den Export notwendigen Daten.
         """
         self.documents = documents
+        Bibtex.docs_to_export = documents.count()
         self.export_path = export_path
         return self
 
@@ -455,7 +465,11 @@ class Bibtex(threading.Thread):
             with codecs.open(bib_filename, mode='a', encoding='utf-8') \
                     as bib_file:
                 bib_file.write(Bibtex.export_doc(doc))
+            Bibtex.docs_exported += 1
         documents.update(bib_date=datetime.date.today())
+
+        Bibtex.docs_exported = 0
+        Bibtex.docs_to_export = 0
 
         lock.acquire()
         Bibtex.active = False

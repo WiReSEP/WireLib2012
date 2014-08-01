@@ -1,0 +1,205 @@
+{% extends 'documents/doc_modify.html' %}
+{% load webdesign %}
+{% block navigation %}
+  <li><a href="/lorem/">Home</a></li>
+  <li><a href="/lorem/documents">Literatur</a></li>
+  <li><a href="/lorem/documents/search">Erweiterte Suche</a></li>
+  <li class="active"><a href="/lorem/documents/new">Dokumente hinzufügen</a></li>
+  <li><a href="/lorem/duplicates">Duplikate entfernen</a></li>
+  <li><a href="/lorem/export">Export</a></li>
+{% endblock navigation %}
+{% block content %}
+  <h1>Import</h1>
+  <ul class="nav nav-tabs" id="importSelector">
+    <li class="active">
+      <a href="#importManual" data-toggle="tab">
+        Daten eingeben
+      </a>
+    </li>
+    <li>
+      <a href="#importFile" data-toggle="tab">
+        Datei hochladen
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div id="importManual" class="tab-pane active fade in">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label for="importTitle" class="control-label">Titel</label>
+          <div class="controls">
+            <input type="text" placeholder="Titel" id="importTitle" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importAuthors" class="control-label">Autoren</label>
+          <div class="controls" id="importAuthors">
+            <div class="input-prepend input-append import-inputgroup">
+              <span class="drag-n-drop add-on"></span>
+              <input type="text" data-provide="typeahead" autocomplete="off" data-source='["Donald Knuth", "Martin Graef", "Rebecca Thomas", "Arieh Iserles"]' />
+              <a class="btn btn-info" href="javascript:void(0);" data-toggle="button" title="Ist Editor">Ist Editor</a>
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Autor entfernen">✗</a>
+            </div>
+            <div class="input-prepend input-append import-inputgroup">
+              <span class="drag-n-drop add-on"></span>
+              <input type="text" data-provide="typeahead" autocomplete="off" data-source='["Donald Knuth", "Martin Graef", "Rebecca Thomas", "Arieh Iserles"]' />
+              <a class="btn btn-info" href="javascript:void(0);" data-toggle="button" title="Ist Editor">Ist Editor</a>
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Autor entfernen">✗</a>
+            </div>
+            <div class="input-prepend input-append import-inputgroup">
+              <span class="drag-n-drop add-on"></span>
+              <input type="text" data-provide="typeahead" autocomplete="off" data-source='["Donald Knuth", "Martin Graef", "Rebecca Thomas", "Arieh Iserles"]' />
+              <a class="btn btn-info" href="javascript:void(0);" data-toggle="button" title="Ist Editor">Ist Editor</a>
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Autor entfernen">✗</a>
+            </div>
+            <div>
+              <a href="javascript:void(0)" class="btn btn-info btn-mini">
+                Weiterer Autor
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importPublisher" class="control-label">Verlag</label>
+          <div class="controls">
+            <input type="text" id="importPublisher" data-provide="typeahead" autocomplete="off" data-source='["Cambridge University Press", "Springer", "OReilly"]' />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importAddress" class="control-label">Adresse</label>
+          <div class="controls">
+            <input type="text" id="importAddress" placeholder="Adresse" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importBibNo" class="control-label">Bibliotheksnummer</label>
+          <div class="controls">
+            <input type="text" placeholder="Bibliotheksnummer" id="importBibNo" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importInvNo" class="control-label">Inventarnummer</label>
+          <div class="controls">
+            <input type="text" placeholder="Inventarnummer" id="importInvNo" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importISBN" class="control-label">ISBN</label>
+          <div class="controls">
+            <input type="text" placeholder="ISBN" id="importISBN" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importYear" class="control-label">Erscheinungsjahr</label>
+          <div class="controls">
+            <input type="text" placeholder="Jahr" id="importYear" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importKeywords" class="control-label">Schlüsselwörter</label>
+          <div class="controls" id="importKeywords">
+            <div class="input-append import-inputgroup">
+              <input type="text" />
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Schlüsselwort entfernen">✗</a>
+            </div>
+            <div class="input-append import-inputgroup">
+              <input type="text" />
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Schlüsselwort entfernen">✗</a>
+            </div>
+            <div class="input-append import-inputgroup">
+              <input type="text" />
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Schlüsselwort entfernen">✗</a>
+            </div>
+            <div>
+              <a href="javascript:void(0)" class="btn btn-info btn-mini">
+                Weiteres Schlüsselwort
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importBibTeXCategory" class="control-label">BibTeX-Kategorie</label>
+          <div class="controls">
+            <select id="importBibTeXCategory" size="1">
+              <option>book</option>
+              <option>Thesis</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importBibTeXID" class="control-label">BibTeX-ID</label>
+          <div class="controls">
+            <input type="text" id="importBibTeXID" placeholder="BibTeX-ID" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importPrice" class="control-label">Preis</label>
+          <div class="controls">
+            <input type="text" id="importPrice" placeholder="Preis" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importCurrency" class="control-label">Währung</label>
+          <div class="controls">
+            <input type="text" id="importCurrency" placeholder="Währung" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importLOCN" class="control-label">Library Of Congress Number</label>
+          <div class="controls">
+            <input type="text" id="importLOCN" placeholder="Library Of Congress Number" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importComment" class="control-label">Notizen</label>
+          <div class="controls">
+            <textarea id="importComment"></textarea>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="importExtras" class="control-label">Extrafelder</label>
+          <div class="controls" id="importKeywords">
+            <div class="input-prepend input-append import-inputgroup">
+              <input type="text" placeholder="Feldname"/>
+              <input type="text" placeholder="Feldinhalt" />
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Extrafeld entfernen">✗</a>
+            </div>
+            <div class="input-prepend input-append import-inputgroup">
+              <input type="text" placeholder="Feldname"/>
+              <input type="text" placeholder="Feldinhalt" />
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Extrafeld entfernen">✗</a>
+            </div>
+            <div class="input-prepend input-append import-inputgroup">
+              <input type="text" placeholder="Feldname"/>
+              <input type="text" placeholder="Feldinhalt" />
+              <a class="btn btn-danger" href="javascript:void(0);" data-toggle="tooltip" title="Extrafeld entfernen">✗</a>
+            </div>
+            <div>
+              <a href="javascript:void(0)" class="btn btn-info btn-mini">
+                Weiteres Extrafeld
+              </a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div id="importFile" class="tab-pane fade">
+      <form>
+        <input type="file" name="file" />
+        <input type="submit" name="submitFile" value="Upload" onclick="void(0);" />
+      </form>
+    </div>
+  </div>
+{% endblock content %}
+{% block menu %}
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      {{ user }}
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a href="/lorem/user/profile/1">Profil</a></li>
+    </ul>
+  </li>
+{{ block.super }}
+{% endblock menu %}

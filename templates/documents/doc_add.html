@@ -1,0 +1,29 @@
+{% extends "documents/doc_modify.html" %}
+{% block content-header %}
+Import
+{% endblock content-header %}
+{% block content-form %}
+<ul class="nav nav-tabs" id="importSelector">
+  <li class="active">
+    <a href="#importTyped" data-toggle="tab">
+      Daten eingeben
+    </a>
+  </li>
+  <li>
+    <a href="#importFile" data-toggle="tab">
+      Datei hochladen
+    </a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div id="importTyped" class="tab-pane active fade in">
+    {{ block.super }}
+  </div>
+  <div id="importFile" class="tab-pane fade">
+    <form enctype="multipart/form-data" method="POST" id="formFile">
+      {{ upload_form.as_p }}
+      <input type="submit" name="submitFile" value="Upload" class="btn btn-primary" />
+    </form>
+  </div>
+</div>
+{% endblock content-form %}

@@ -11,7 +11,7 @@ Anwendungsdetails
 
 Anforderungen
 -------------
-  * Django 1.3
+  * Django 1.5
   * mysql oder sqlite
   * Webserver
   * *optional:* git
