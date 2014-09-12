@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from documents.lib.bibtex import Bibtex
 from documents.lib.exceptions import LendingError
+from django.core import validators
 
 
 class Document(models.Model):
@@ -35,7 +36,13 @@ class Document(models.Model):
 
     bib_no = models.CharField("Bibliotheks-Nr.",
                               max_length=15,
-                              primary_key=True)
+                              primary_key=True,
+                              validators=[
+                                  validators.RegexValidator(r'\w\d+',
+                                                            u'Eingabe ist nicht zulässig. Es wird ein '
+                                                            u'Buchstaben geflogt von Zahlen erwartet. z.B. J110.'
+                                                            )
+                              ])
     inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
     bibtex_id = models.CharField("Bibtex-ID", max_length=120, unique=True)
     lib_of_con_nr = models.CharField("Library Of Congress No",
