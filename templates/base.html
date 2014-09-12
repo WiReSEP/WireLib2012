@@ -56,7 +56,11 @@
           </li>
           {% else %}
           <li>
+            {% if is_logoutpage %}
+            <a href="{% url 'users.login' %}">
+            {% else %}
             <a href="{% url 'users.login' %}?next={{ fullpath }}">
+            {% endif %}
               Login
             </a>
           </li>
