@@ -13,10 +13,10 @@ from django.core.urlresolvers import reverse
 # unberechtigtem Zugriff. Sollen gewisse Rechte für den Zugriff auf die Seite
 # notwendig sein, müssen diese im View selbst eingerichtet werden.
 
-NAV_LIST = ((reverse('index'), 'Home', None),
+NAV_LIST = ((reverse('index'), 'Startseite', None),
             (reverse('documents.list'), 'Literaturverzeichnis', None),
             (reverse('documents.search'), 'Erweiterte Suche', None),
-            (reverse('documents.new'), 'neue Dokumente', ('documents.add_document',)),
+            (reverse('documents.new'), 'Neue Dokumente', ('documents.add_document',)),
             (reverse('documents.export'), 'Export', ('documents.can_export',)),
             )
 
