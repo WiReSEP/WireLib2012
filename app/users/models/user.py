@@ -21,11 +21,11 @@ class PhoneNumbers(models.Model):
 
 
 class User(AuthUser):
-    street = models.CharField("Straße", max_length=30)
-    number = models.CharField("Hausnummer", max_length=5)
-    zipcode = models.CharField("Postleitzahl", max_length=10)
-    city = models.CharField("Stadt", max_length=58)
-    phone_numbers = models.ManyToManyField(PhoneNumbers)
+    street = models.CharField("Straße", max_length=30, blank=True)
+    number = models.CharField("Hausnummer", max_length=5, blank=True)
+    zipcode = models.CharField("Postleitzahl", max_length=10, blank=True)
+    city = models.CharField("Stadt", max_length=58, blank=True)
+    phone_numbers = models.ManyToManyField(PhoneNumbers, blank=True)
 
     objects = UserManager()
 
