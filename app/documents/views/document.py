@@ -36,7 +36,7 @@ class DocumentChangeView(UpdateView):
         return context
 
     @method_decorator(
-        decorators.permission_required('documents.change_document'))
+        decorators.permission_required('documents.change_document', raise_exception=True))
     def dispatch(self, *args, **kwargs):
         return super(DocumentChangeView, self).dispatch(*args, **kwargs)
 
@@ -61,12 +61,12 @@ class DocumentCreateView(CreateView):
         return super(DocumentCreateView, self).post(request, *args, **kwargs)
 
     @method_decorator(
-        decorators.permission_required('documents.add_document'))
+        decorators.permission_required('documents.add_document', raise_exception=True))
     def dispatch(self, *args, **kwargs):
         return super(DocumentCreateView, self).dispatch(*args, **kwargs)
 
 
-@decorators.permission_required('documents.can_lend')
+@decorators.permission_required('documents.can_lend', raise_exception=True)
 def lend(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -87,7 +87,7 @@ def lend(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
-@decorators.permission_required('documents.can_miss')
+@decorators.permission_required('documents.can_miss', raise_exception=True)
 def missing(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -97,7 +97,7 @@ def missing(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
-@decorators.permission_required('documents.can_unlend')
+@decorators.permission_required('documents.can_unlend', raise_exception=True)
 def unlend(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -107,7 +107,7 @@ def unlend(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
-@decorators.permission_required('documents.can_lost')
+@decorators.permission_required('documents.can_lost', raise_exception=True)
 def lost(request, pk):
     try:
         document = Document.objects.get(pk=pk)

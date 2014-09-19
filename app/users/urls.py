@@ -25,7 +25,7 @@ urlpatterns += patterns('users.views',
                         url(r'^edit/$',
                             views.UserEdit.as_view(),
                             name='users.edit'),
-                        url(r'^(?P<username>[\w@.+-]{0,30})/$',
+                        url(r'^show/(?P<username>[\w@.+-]{0,30})/$',
                             views.UserProfile.as_view(),
                             name='users.profile'),
                         )

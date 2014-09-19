@@ -46,7 +46,7 @@ class ExportView(TemplateView):
         return context
 
     @method_decorator(
-        decorators.permission_required('documents.can_see_export'))
+        decorators.permission_required('documents.can_see_export', raise_exception=True))
     def dispatch(self, *args, **kwargs):
         return super(ExportView, self).dispatch(*args, **kwargs)
 
@@ -59,7 +59,7 @@ def _gen_sec_link(path):
     return '%s%s/%s%s' % (uri_prefix, token, hextime, path)
 
 
-@decorators.permission_required('documents.can_export')
+@decorators.permission_required('documents.can_export', raise_exception=True)
 def export_allegro(request):
     if not Allegro.get_state():
         allegro_thread = Allegro()
@@ -67,7 +67,7 @@ def export_allegro(request):
     return HttpResponseRedirect(reverse('documents.export'))
 
 
-@decorators.permission_required('documents.can_export')
+@decorators.permission_required('documents.can_export', raise_exception=True)
 def export_bibtex(request):
     if not Bibtex.get_state():
         docs_to_export = Document.objects.filter(bib_date__isnull=True)
