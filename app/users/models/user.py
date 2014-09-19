@@ -32,6 +32,8 @@ class User(AuthUser):
     class Meta:
         app_label = 'users'
         permissions = (('can_see_admin', 'Can see the adminpanel'),)
+        verbose_name = 'Benutzer'
+        verbose_name_plural = verbose_name
 
     def __unicode__(self):
         name = self.get_full_name()
