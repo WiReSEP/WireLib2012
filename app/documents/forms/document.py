@@ -82,7 +82,7 @@ class CustomAuthorInlineFormSet(BaseInlineFormSet):
             if form and form.cleaned_data:
                 form.cleaned_data['sort_value'] = i
                 form.sort_value = i
-        return super(CustomInlineFormSet, self).save(commit)
+        return super(CustomAuthorInlineFormSet, self).save(commit)
 
 AuthorInlineFormset = inlineformset_factory(Document, DocumentAuthors,
                                             form=AuthorSelectForm, 
