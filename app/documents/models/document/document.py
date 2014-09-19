@@ -88,7 +88,6 @@ class Document(models.Model):
                         "Can see last update info"),
                        ("can_see_dop", "Can see date of purchase"),
                        ("can_see_export", "Can see dates of export"),
-                       ("can_import", "Can import documents"),
                        ("can_export", "Can export documents"),)
         ordering = ['title']
         verbose_name = "Dokument"

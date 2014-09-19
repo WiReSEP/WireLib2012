@@ -1,5 +1,5 @@
 #vim: set fileencoding=utf-8
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import decorators
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from documents.forms import SimpleSearch
@@ -103,7 +103,7 @@ class MissedDocumentList(DocumentList):
         self.doc_count = queryset.count()
         return queryset
 
-    @method_decorator(login_required)
+    @method_decorator(decorators.permission_required('documents.can_miss'))
     def dispatch(self, *args, **kwargs):
         return super(MissedDocumentList, self).dispatch(*args, **kwargs)
 
@@ -120,6 +120,6 @@ class LendDocumentList(DocumentList):
         self.doc_count = queryset.count()
         return queryset
 
-    @method_decorator(login_required)
+    @method_decorator(decorators.permission_required('documents.can_lend'))
     def dispatch(self, *args, **kwargs):
         return super(LendDocumentList, self).dispatch(*args, **kwargs)

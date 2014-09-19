@@ -211,8 +211,6 @@ class Command(BaseCommand):
         Permission.objects.get(
                 codename="delete_docextra").group_set.add(self.g_biblio)
         Permission.objects.get(
-                codename="can_import").group_set.add(self.g_biblio)
-        Permission.objects.get(
                 codename="can_export").group_set.add(self.g_biblio)
         Permission.objects.get(
                 codename="add_docstatus").group_set.add(self.g_biblio)
@@ -410,7 +408,6 @@ class Command(BaseCommand):
         #user7 Rechte geben
         Permission.objects.get(codename="can_see_price").user_set.add(user7)
         Permission.objects.get(codename="can_see_export").user_set.add(user7)
-        Permission.objects.get(codename="can_import").user_set.add(user7)
         Permission.objects.get(codename="can_lend").user_set.add(user7)
         Permission.objects.get(codename="can_unlend").user_set.add(user7)
         Permission.objects.get(codename="can_miss").user_set.add(user7)

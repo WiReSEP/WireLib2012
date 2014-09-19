@@ -1,18 +1,18 @@
 #vim: set fileencoding=utf-8
-from documents.lib.bibtex import Bibtex
-from documents.models import Document
-from documents.forms import DocumentForm
-from documents.forms import UploadFileForm
-from documents.forms import NonUserForm
-from documents.forms import SelectUserForm
+from django.contrib.auth import decorators
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
-from django.views.generic.edit import UpdateView
 from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
+from documents.forms import DocumentForm
+from documents.forms import NonUserForm
+from documents.forms import SelectUserForm
+from documents.forms import UploadFileForm
+from documents.lib.bibtex import Bibtex
+from documents.models import Document
 
 
 class DocumentDetailView(DetailView):
@@ -35,7 +35,8 @@ class DocumentChangeView(UpdateView):
         context['modify'] = True
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(
+        decorators.permission_required('documents.change_document'))
     def dispatch(self, *args, **kwargs):
         return super(DocumentChangeView, self).dispatch(*args, **kwargs)
 
@@ -59,12 +60,13 @@ class DocumentCreateView(CreateView):
                     Bibtex().do_import(bib_file)
         return super(DocumentCreateView, self).post(request, *args, **kwargs)
 
-    @method_decorator(login_required)
+    @method_decorator(
+        decorators.permission_required('documents.add_document'))
     def dispatch(self, *args, **kwargs):
         return super(DocumentCreateView, self).dispatch(*args, **kwargs)
 
 
-@login_required
+@decorators.permission_required('documents.can_lend')
 def lend(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -85,7 +87,7 @@ def lend(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
-@login_required
+@decorators.permission_required('documents.can_miss')
 def missing(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -95,7 +97,7 @@ def missing(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
-@login_required
+@decorators.permission_required('documents.can_unlend')
 def unlend(request, pk):
     try:
         document = Document.objects.get(pk=pk)
@@ -105,7 +107,7 @@ def unlend(request, pk):
     return HttpResponseRedirect(reverse('documents.detail', kwargs={'pk': pk}))
 
 
-@login_required
+@decorators.permission_required('documents.can_lost')
 def lost(request, pk):
     try:
         document = Document.objects.get(pk=pk)
