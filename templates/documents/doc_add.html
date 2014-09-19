@@ -21,6 +21,7 @@ Import
   </div>
   <div id="importFile" class="tab-pane fade">
     <form enctype="multipart/form-data" method="POST" id="formFile">
+      {% csrf_token %}
       {{ upload_form.as_p }}
       <input type="submit" name="submitFile" value="Upload" class="btn btn-primary" />
     </form>
