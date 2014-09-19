@@ -1,6 +1,7 @@
 #vim: set fileencoding=utf-8
 from django import forms
 from django.forms.models import inlineformset_factory
+from django.forms.models import BaseInlineFormSet
 from documents.models import Author
 from documents.models import Document
 from documents.models import DocumentAuthors
@@ -75,20 +76,21 @@ class ExtraForm(forms.ModelForm):
         fields = ['bib_field', 'content']
 
 
-def _save_author_formset(self, commit=True):
-    for i, form in enumerate(self, 1):
-        if form and form.cleaned_data:
-            form.cleaned_data['sort_value'] = i
-            form.sort_value = i
-            form.save()
-    for form in self.deleted_forms:
-        form.save().delete()
+class CustomAuthorInlineFormSet(BaseInlineFormSet):
+    def save(self, commit=True):
+        for i, form in enumerate(self, 1):
+            if form and form.cleaned_data:
+                form.cleaned_data['sort_value'] = i
+                form.sort_value = i
+        return super(CustomInlineFormSet, self).save(commit)
 
 AuthorInlineFormset = inlineformset_factory(Document, DocumentAuthors,
-                                            form=AuthorSelectForm)
-AuthorInlineFormset.save = _save_author_formset
+                                            form=AuthorSelectForm, 
+                                            formset=CustomAuthorInlineFormSet)
+
 KeywordInlineFormset = inlineformset_factory(Document, Keywords,
                                              form=KeywordForm)
+
 ExtraInlineFormset = inlineformset_factory(Document, DocExtra, form=ExtraForm)
 
 
@@ -144,8 +146,9 @@ class DocumentForm(forms.ModelForm):
     def save(self, commit=True):
         self.extra_form.save()
         self.keyword_form.save()
+        retval=super(DocumentForm, self).save(commit)
         self.author_form.save()
-        return super(DocumentForm, self).save(commit)
+        return retval
 
     class Meta:
         model = Document
