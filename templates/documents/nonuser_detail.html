@@ -6,8 +6,7 @@
   <a href="mailto:{{ object.email }}">{{ object.email }}</a><br />
   {{ object.street }} {{ object.number }}<br />
   {{ object.zipcode }}, {{ object.city }}<br />
-  {% for number in object.phone_numbers.all %}
-  {{ number }}<br />
-  {% endfor %}
+  {{ object.phone_number }}<br />
 </address>
+<a href="{% url 'documents.list.nonuserlend' nonuser=object.pk %}" class="btn">Ausgeliehene Dokumente</a>
 {% endblock content %}

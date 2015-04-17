@@ -217,7 +217,7 @@
       {% endif %}
       {% endif %}
       {% if 'documents.can_unlend' in perms %}
-      {% if document.is_lend and document.get_user_lend == user %}
+      {% if document.is_lend %}
       <a class="btn" href="{% url 'documents.unlend' document.pk %}" class="status-link">
         Zurückgeben
       </a>
@@ -281,7 +281,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for doc_status in document.docstatus_set.all %}
+        {% for doc_status in document.get_all_status %}
         <tr>
           <td>
             {{ doc_status.date }}

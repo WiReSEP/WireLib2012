@@ -1,0 +1,6 @@
+.git
+_venv2
+_venv3
+.gitignore
+*.swp
+*.pyc
