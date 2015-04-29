@@ -3,6 +3,6 @@ apt-get install python-django python-flup python-pip python-mysqldb libapache2-m
 a2enmod wsgi
 pip install -r requirements.txt
 
-ln -s "$(pwd)/etc/apache2.conf" /etc/apache2/conf-available/wirelib.conf
+ln -s "$(pwd)/etc/apache.conf" /etc/apache2/conf-available/wirelib.conf
 a2enconf wirelib
 service apache2 restart
