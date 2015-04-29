@@ -56,8 +56,8 @@ def database_config():
             'NAME': config.get('database', 'name', ''),
             'USER': config.get('database', 'user', ''),
             'PASSWORD': config.get('database', 'password', ''),
-            'HOST': config.get('database', 'host', ''),
-            'PORT': config.get('database', 'port', ''),
+            'HOST': config.get('database', 'host', 'localhost'),
+            'PORT': config.get('database', 'port', '3306'),
         }
     else:
         print('Datenbank konfiguration konnte nicht geladen werden.')

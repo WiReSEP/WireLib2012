@@ -3,9 +3,8 @@ MAINTAINER Theodor van Nahl <theo_dev@van-nahl.org>
 
 RUN apt-get update && apt-get install -y \
 	python-django python-flup python-pip \
-	apache2 libapache2-mod-wsgi libapache2-mod-xsendfile
+	apache2 libapache2-mod-wsgi
 RUN a2enmod wsgi
-RUN a2enmod xsendfile
 
 COPY requirements.txt /opt/requirements.txt
 RUN pip install -r /opt/requirements.txt
