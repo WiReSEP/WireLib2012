@@ -14,6 +14,7 @@ try:
 except:  # PY2 Fallback
     import ConfigParser as configparser
 import os
+import string
 
 
 def abs_join(*args):

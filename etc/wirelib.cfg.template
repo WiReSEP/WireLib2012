@@ -3,3 +3,6 @@ type = mysql
 name = wirelib_database
 user = wirelib_db_user
 password = secret
+
+[global]
+allowed_hosts = .example.org
