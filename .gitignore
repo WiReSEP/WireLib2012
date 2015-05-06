@@ -19,3 +19,7 @@ doc/Grobentwurf/Wissenschaftliches_Rechnen-WiReLib-Grobentwurf.pdf
 doc/Pflichtenheft/Pflichtenheft_WiReLib.pdf
 doc/Pflichtenheft/TemplatePflichtenheft.pdf
 olddb
+*.bib
+*.ADT
+db.sqlite
+etc/wirelib.cfg
