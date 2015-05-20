@@ -1,10 +1,11 @@
 # vim: set fileencoding=utf-8
 from __future__ import unicode_literals
 
-from django.db import models
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import AbstractUser as AuthUser
 from django.contrib.auth.models import UserManager
+from django.core.urlresolvers import reverse
+from django.db import models
+from wirelib import http
 import subprocess
 
 
@@ -25,9 +26,15 @@ class User(AuthUser):
 
         # AFS can be used to authenticate the user. This method will only be
         # used if the user defined like that.
-        afs_auth = subprocess.call(['/usr/bin/klog',
-                                    '-principal', self.username,
-                                    '-password', raw_password])
+        try:
+            afs_auth = subprocess.call(['/usr/bin/klog',
+                                        '-principal', self.username,
+                                        '-password', raw_password])
+        except:
+            raise http.MessagedServerError(
+                'Unable to authenticate AFS User. '
+                'Please check the AFS Configuration.'
+            )
         return afs_auth == 0
 
     class Meta:
