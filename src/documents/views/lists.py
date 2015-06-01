@@ -61,11 +61,10 @@ class DocumentList(ListView):
         if filter_title:
             q_obj = q_obj.filter(title__iregex='^[%s].*$' % filter_title)
         if filter_authors:
-            q_obj = q_obj.filter(Q(authors__first_name__iregex='^[%s].*$'
-                                   % filter_authors) |
-                                 Q(authors__last_name__iregex='^[%s].*$'
-                                   % filter_authors)
-                                 )
+            #fn_filter = Q(authors__first_name__iregex='^[%s].*$' % filter_authors)
+            ln_filter = Q(authors__last_name__iregex='^[%s].*$' % filter_authors)
+            #q_obj = q_obj.filter(fn_filter | ln_filter)
+            q_obj = q_obj.filter(ln_filter)
         self.doc_count = q_obj.count()
         return q_obj
 
