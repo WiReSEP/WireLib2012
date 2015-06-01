@@ -41,8 +41,10 @@
           {{ author }}{% if not forloop.last %}, {% endif %}
           {% endfor %}
         </div>
-        <div class="publisher">{{ doc.publisher }}</div>
-        <div class="year">({{ doc.year }})</div>
+	<div>
+          <span class="publisher">{{ doc.publisher }}</span>
+          <span class="year">({{ doc.year }})</span>
+	</div>
       </div>
     </li>
     {% endfor %}
