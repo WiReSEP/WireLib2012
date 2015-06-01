@@ -277,9 +277,6 @@ ul.document-list li{
 	font-style: italic;
 }
 .document-list .year{
-	font-weight: 700;
-	padding-right: 5px;
-	float: left;
 }
 .document-list .volume{
 }
