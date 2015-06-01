@@ -33,7 +33,7 @@ class SimpleSearch(SearchForm):
                      ('v-z', 'Titel mit V-Z beginnend'),
                      ('^a-z', 'Titel mit Sonderzeichen'),
                      )
-    AUTHOR_CHOICES = (('', 'Alle Authoren'),
+    AUTHOR_CHOICES = (('', 'Alle Autoren'),
                       ('a-c', 'Autoren mit A-C beginnend'),
                       ('d-f', 'Autoren mit D-F beginnend'),
                       ('g-i', 'Autoren mit G-I beginnend'),
