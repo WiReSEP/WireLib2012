@@ -27,7 +27,8 @@
     <noscript><input type="submit" value="Suchen" /></noscript>
   </form>
   <div>
-    {{ document_start }} - {{ document_end }} von {{ document_count }} Dokumenten.
+    {{ document_start }} - {{ document_end }} von {{ document_count }}
+    Dokument{{ document_count|pluralize:",en" }}.
   </div>
   <ul class="document-list">
     {% for doc in document_list %}
