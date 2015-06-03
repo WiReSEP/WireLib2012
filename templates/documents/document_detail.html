@@ -260,8 +260,8 @@
         </form>
       </div>
     </div>
-    {% if 'documents.can_see_history' in perms %}
-    <div id="detailHistoryAccordion" class="accordion">
+    <div id="detailAccordion" class="accordion">
+      {% if 'documents.can_see_history' in perms %}
       <div class="accordion-group">
         <div class="accordion-heading">
           <a class="accordion-toggle" data-toggle="collapse" href="#detailHistoryCollapse">
@@ -296,9 +296,7 @@
 	  </div>
 	</div>
       </div>
-    </div>
-    {% endif %}
-    <div id="detailBibtex" class="accordion">
+      {% endif %}
       <div class="accordion-group">
         <div class="accordion-heading">
           <a class="accordion-toggle" data-toggle="collapse" data-parent="bibtex" href="#detailBibtexCollapse">
