@@ -22,7 +22,7 @@
     {% endif %}
     {% endif %}
   </div>
-  <dl class="dl-horizontal">
+  <dl class="dl-horizontal" id="bibliographical-data">
     <dt id="detailAuthors">
       Autoren
     </dt>
@@ -42,60 +42,22 @@
       {{ document.category|default:"-" }}
     </dd>
     <dt id="detailPublisher">
-      Publisher
+      Verlag
     </dt>
     <dd>
       {{ document.publisher }}
+    </dd>
+    <dt id="detailAddress">
+      Ort
+    </dt>
+    <dd>
+      {{ document.address }}
     </dd>
     <dt id="detailYear">
       Erscheinungsjahr
     </dt>
     <dd>
       {{ document.year|default:"-" }}
-    </dd>
-    <dt id="detailKeywords">
-      Schlüsselwörter
-    </dt>
-    <dd>
-      {% for keyword in document.keywords_set.all %}
-      {{ keyword }}{% if not forloop.last %}, {% endif %}
-      {% empty %}
-      -
-      {% endfor %}
-    </dd>
-    {% if 'documents.can_see_dop' in perms %}
-    <dt id="detailDateOfPurchase">
-      In der Bibliothek seit
-    </dt>
-    <dd>
-      {{ document.date_of_purchase|default:"-" }}
-    </dd>
-    {% endif %}
-    <dt id="detailComment">
-      Notizen
-    </dt>
-    <dd>
-      {{ document.comment|default:"-" }}
-    </dd>
-    {% for extra in document.docextra_set.all %}
-    <dt class="extra">
-      {{ extra.bib_field }}
-    </dt>
-    <dd>
-      {{ extra.content }}
-    </dd>
-    {% endfor %}
-    <dt id="detailBibNo">
-      Bibliotheks-ID
-    </dt>
-    <dd>
-      {{ document.bib_no }}
-    </dd>
-    <dt id="detailInvNo">
-      Inventarnummer
-    </dt>
-    <dd>
-      {{ document.inv_no }}
     </dd>
     <dt id="detailISBN">
       ISBN
@@ -107,8 +69,47 @@
       -
       {% endif %}
     </dd>
-    {% if 'documents.can_see_price' in perms %}
-    {% if document.price %}
+    <dt id="detailKeywords">
+      Schlüsselwörter
+    </dt>
+    <dd>
+      {% for keyword in document.keywords_set.all %}
+      {{ keyword }}{% if not forloop.last %}, {% endif %}
+      {% empty %}
+      -
+      {% endfor %}
+    </dd>
+    {% for extra in document.docextra_set.all %}
+    <dt class="extra">
+      {{ extra.bib_field }}
+    </dt>
+    <dd>
+      {{ extra.content }}
+    </dd>
+    {% endfor %}
+  </dl>
+  <dl class="dl-horizontal" id="administrative-data">
+    {% if 'documents.can_see_dop' in perms %}
+    <dt id="detailDateOfPurchase">
+      In der Bibliothek seit
+    </dt>
+    <dd>
+      {{ document.date_of_purchase|default:"-" }}
+    </dd>
+    {% endif %}
+    <dt id="detailBibNo">
+      Bibliotheksnummer
+    </dt>
+    <dd>
+      {{ document.bib_no }}
+    </dd>
+    <dt id="detailInvNo">
+      Inventarnummer
+    </dt>
+    <dd>
+      {{ document.inv_no }}
+    </dd>
+    {% if 'documents.can_see_price' in perms and document.price %}
     <dt id="detailPrice">
       Preis
     </dt>
@@ -116,14 +117,21 @@
       {{ document.price }} {{ document.currency }}
     </dd>
     {% endif %}
-    {% endif %}
+  </dl>
+  <dl class="dl-horizontal" id="other-data">
     <dt id="detailBibtexID">
       Bibtex-ID
     </dt>
     <dd>
       {{ document.bibtex_id|default:"-" }}
     </dd>
-    {% if 'documents.can_see_locn' in perms %}
+    <dt id="detailComment">
+      Notizen
+    </dt>
+    <dd>
+      {{ document.comment|default:"-" }}
+    </dd>
+    {% if false and 'documents.can_see_locn' in perms %}
     <dt id="detailLOCN">
       Library Of Congress Number
     </dt>
@@ -133,10 +141,10 @@
     {% endif %}
     {% if 'documents.can_see_last_update_info' in perms %}
     <dt id="detailLastUpdates">
-      Letztes Update
+      Letzte Änderung
     </dt>
     <dd>
-      am {{ document.last_updated }}
+      {{ document.last_updated }}
       von {{ document.last_edit_by }}
     </dd>
     {% endif %}
