@@ -101,7 +101,11 @@
       ISBN
     </dt>
     <dd>
-      {{ document.isbn|default:"-" }}
+      {% if document.isbn %}
+      <a href='https://en.wikipedia.org/wiki/Special:BookSources/{{ document.isbn|cut:"-" }}'>{{ document.isbn }}</a>
+      {% else %}
+      -
+      {% endif %}
     </dd>
     {% if 'documents.can_see_price' in perms %}
     {% if document.price %}
