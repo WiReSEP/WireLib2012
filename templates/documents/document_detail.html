@@ -17,9 +17,9 @@
     {{ document.get_status_string }}
     {% if document.is_lend %}
     an <a href="{{ document.get_user_lend.get_absolute_url }}">{{ document.get_user_lend }}</a>
-    {% if document.get_user_lend.external %}(Extern). 
-    <a href="{{ document.get_user_responsible.get_absolute_url }}">{{ document.get_user_responsible }}</a> 
-    hat für ihn/sie gebürgt.{% endif %}
+    {% if document.get_user_lend.external %}(extern) durch 
+    <a href="{{ document.get_user_responsible.get_absolute_url }}">{{ document.get_user_responsible }}</a>.
+    {% endif %}
     {% endif %}
   </div>
   <dl class="dl-horizontal">
