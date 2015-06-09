@@ -4,9 +4,11 @@
   <h1 id="detailTitle">
     {{ document.title }}
   </h1>
+  {% if 'documents.can_modify' in perms %}
   <div class="btn btn-link" id="detailEdit" title="Bearbeiten" onclick="self.location.href='{% url 'documents.edit' document.pk %}'">
     ✎
   </div>
+  {% endif %}
 </div>
 {% endblock content-header %}
 {% block content %}
@@ -217,6 +219,10 @@
         Zurückgeben
       </a>
       {% endif %}
+      {% if 'documents.can_modify' in perms %}
+      <a class="btn" href="{% url 'documents.edit' document.pk %}" class="status-link">
+	Bearbeiten
+      </a>
       {% endif %}
       <div class="modal hide fade" id="modalLendInternal" role="dialog" data-backdrop="false">
         <div class="modal-header">
