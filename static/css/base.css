@@ -28,6 +28,10 @@
   background-image: url('../images/banner.png');
 }
 
+input, textarea {
+    width: auto;
+}
+
 #tu-signet{
   position: absolute;
   bottom: 150px;

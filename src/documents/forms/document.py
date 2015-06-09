@@ -96,11 +96,17 @@ ExtraInlineFormset = inlineformset_factory(Document, DocExtra, form=ExtraForm)
 
 class DocumentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+        if not kwargs['initial']:
+            kwargs['initial'] = {}
+        kwargs['initial'].update({'currency': 'EUR', 'category': 'book'})
         super(DocumentForm, self).__init__(*args, **kwargs)
+
         for key, field in self.fields.items():
             field.widget.attrs.update({'placeholder': key})
-        self.fields['title'].widget.attrs.update({'id': 'importTitle'})
-        self.fields['address'].widget.attrs.update({'id': 'importAddress'})
+        self.fields['title'].widget.attrs.update({'id': 'importTitle',
+                                                  'size': '120'})
+        self.fields['address'].widget.attrs.update({'id': 'importAddress',
+                                                    'size': '80'})
         self.fields['bib_no'].widget.attrs.update({'id': 'importBibNo'})
         self.fields['inv_no'].widget.attrs.update({'id': 'importInvNo'})
         self.fields['isbn'].widget.attrs.update({'id': 'importISBN',
@@ -110,9 +116,11 @@ class DocumentForm(forms.ModelForm):
         self.fields['bibtex_id'].widget.attrs.update({'id': 'importBibTeXID'})
         self.fields['price'].widget.attrs.update({'id': 'importPrice'})
         self.fields['currency'].widget.attrs.update({'id': 'importCurrency'})
+        #self.fields['currency'].initial = 'EUR'
         self.fields['lib_of_con_nr'].widget.attrs.update({'id': 'importLOCN',
                                                           'placeholder': 'Library Of Congress No'})
         self.fields['comment'].widget.attrs.update({'id': 'importComment',
+                                                    'cols': 80,
                                                     'placeholder': 'Kommentar'})
         self.author_form = AuthorInlineFormset(data=self.data or None,
                                                instance=self.instance or None,
@@ -126,7 +134,7 @@ class DocumentForm(forms.ModelForm):
 
     publisher = forms.CharField(widget=forms.TextInput(
         attrs={'data-provide': 'typeahead', 'autocomplete': 'off',
-               'data-source': _get_publisher_list(), 'id': 'importPublisher'}))
+               'data-source': _get_publisher_list(), 'id': 'importPublisher', 'size': '80'}))
 
     def clean_publisher(self):
         publisher_name = self.cleaned_data['publisher']
