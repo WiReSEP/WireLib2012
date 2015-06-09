@@ -208,6 +208,10 @@ p{
   margin-left: 220px;
 }
 
+#detailAccordion{
+  margin-top: 25px;
+}
+
 #detailHistory{
   width: 70%;
 }
