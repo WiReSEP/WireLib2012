@@ -305,6 +305,9 @@ ul.document-list li{
 .status-avail:before{
 	content: "✓";
 	color: green;
+	font-size: large;
+	font-weight: bold;
+	margin-right: 0.5ex;
 }
 
 .status-lend{
@@ -312,6 +315,9 @@ ul.document-list li{
 .status-lend:before{
 	content: "✗";
 	color: #880000;
+	font-size: large;
+	font-weight: bold;
+	margin-right: 0.5ex;
 }
 
 .status-ordered{
@@ -319,6 +325,9 @@ ul.document-list li{
 .status-ordered:before{
 	content: "✗";
 	color: #880000;
+	font-size: large;
+	font-weight: bold;
+	margin-right: 0.5ex;
 }
 
 .status-miss{
@@ -326,6 +335,9 @@ ul.document-list li{
 .status-miss:before{
 	content: "✗";
 	color: #880000;
+	font-size: large;
+	font-weight: bold;
+	margin-right: 0.5ex;
 }
 
 .status-lost{
@@ -333,6 +345,9 @@ ul.document-list li{
 .status-lost:before{
 	content: "✗";
 	color: #880000;
+	font-size: large;
+	font-weight: bold;
+	margin-right: 0.5ex;
 }
 
 /*******************
