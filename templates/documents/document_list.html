@@ -33,7 +33,7 @@
   </div>
   <ul class="document-list">
     {% for doc in document_list %}
-    <li class="{{ doc.get_status_css_class }}">
+    <li class="{{ doc.get_status_css_class }}" title="{{doc.get_status_string}}">
       <div class="title">
         <a href="{% url "documents.detail" doc.pk %}">{{ doc.title }}</a>
       </div>
