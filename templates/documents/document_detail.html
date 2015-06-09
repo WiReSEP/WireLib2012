@@ -180,8 +180,7 @@
       </a>
       {% endif %}
       {% endif %}
-      {% if 'documents.can_lend' in perms %}
-      {% if document.is_lend %}
+      {% if 'documents.can_lend' in perms and document.is_lend %}
       <div class="btn-group dropup">
         <button class="btn dropdown-toggle" data-toggle="dropdown">
           Übertragen an
@@ -208,16 +207,12 @@
         </ul>
       </div>
       {% endif %}
-      {% endif %}
-      {% if 'documents.can_lost' in perms %}
-      {% if document.is_missing %}
+      {% if 'documents.can_lost' in perms and document.is_missing %}
       <a class="btn" href="{% url 'documents.lost' document.pk %}" class="status-link">
         Verloren melden
       </a>
       {% endif %}
-      {% endif %}
-      {% if 'documents.can_unlend' in perms %}
-      {% if document.is_lend %}
+      {% if 'documents.can_unlend' in perms and document.is_lend %}
       <a class="btn" href="{% url 'documents.unlend' document.pk %}" class="status-link">
         Zurückgeben
       </a>
