@@ -254,6 +254,11 @@ p{
 	width: 4.5em;
 }
 
+#search-form .search-form-desc {
+    font-size: smaller;
+    display: block;
+}
+
 /* List definitions */
 ul.document-list li{
 	padding-top: 4px;
