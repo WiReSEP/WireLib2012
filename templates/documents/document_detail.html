@@ -293,6 +293,7 @@
 		  <th>Datum</th>
 		  <th>Status</th>
 		  <th>Benutzer</th>
+		  <th>Verliehen an</th>
 		</tr>
 	      </thead>
 	      <tbody>
@@ -301,6 +302,7 @@
 		  <td>{{ doc_status.date }}</td>
 		  <td>{{ doc_status.get_status_string }}</td>
 		  <td>{{ doc_status.recent_user }}</td>
+		  <td>{{ doc_status.user_lend }}</td>
 		</tr>
 		{% endfor %}
 	      </tbody>
