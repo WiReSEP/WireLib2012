@@ -27,7 +27,7 @@ class Document(models.Model):
                    LOST: 'status-lost',
                    }
 
-    STATUS_CHOICES = {AVAILABLE: "Verfügbar",
+    STATUS_CHOICES = {AVAILABLE: "Vorhanden",
                       LEND: "Verliehen",
                       ORDERED: "Bestellt",
                       MISSING: "Vermisst",
@@ -40,7 +40,7 @@ class Document(models.Model):
                               validators=[
                                   validators.RegexValidator(r'\w\d+',
                                                             u'Eingabe ist nicht zulässig. Es wird ein '
-                                                            u'Buchstaben geflogt von Zahlen erwartet. z.B. J110.'
+                                                            u'Buchstaben gefolgt von Zahlen erwartet. z.B. J110.'
                                                             )
                               ])
     inv_no = models.CharField("Inventar-Nr.", max_length=15, unique=True)
@@ -64,13 +64,13 @@ class Document(models.Model):
                                  default=AVAILABLE)
     isbn = models.CharField("ISBN", max_length=17, blank=True, null=True)
     category = models.ForeignKey(Category, verbose_name="Kategorie")
-    last_updated = models.DateField("Zuletzt geupdated", auto_now=True)
+    last_updated = models.DateField("Zuletzt geändert", auto_now=True)
     last_edit_by = models.ForeignKey(get_user_model(),
                                      verbose_name="Zuletzt geändert von")
     publisher = models.ForeignKey(Publisher, blank=True, null=True)
     year = models.IntegerField("Jahr", blank=True, null=True)
     address = models.CharField(
-        "Adresse", max_length=100, blank=True, null=True)
+        "Ort", max_length=100, blank=True, null=True)
     date_of_purchase = models.DateField("Kaufdatum", auto_now_add=True)
     ub_date = models.DateField("UB-Export", blank=True, null=True)
         # Datum des Allegro-Exports

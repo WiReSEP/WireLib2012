@@ -11,5 +11,5 @@ class Publisher(models.Model):
 
     class Meta:
         app_label = 'documents'
-        verbose_name = "Publisher"
-        verbose_name_plural = "Publisher"
+        verbose_name = "Verlag"
+        verbose_name_plural = "Verlage"
