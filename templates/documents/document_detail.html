@@ -69,6 +69,18 @@
       -
       {% endif %}
     </dd>
+    {% if 'documents.can_see_locn' in perms %}
+    <dt id="detailLOCN">
+      Library Of Congress Number
+    </dt>
+    <dd>
+      {% if document.lib_of_con_nr %}
+      <a href='http://lccn.loc.gov/{{ document.lib_of_con_nr }}'>{{ document.lib_of_con_nr }}</a>
+      {% else %}
+      -
+      {% endif %}
+    </dd>
+    {% endif %}
     <dt id="detailKeywords">
       Schlüsselwörter
     </dt>
@@ -131,14 +143,6 @@
     <dd>
       {{ document.comment|default:"-" }}
     </dd>
-    {% if false and 'documents.can_see_locn' in perms %}
-    <dt id="detailLOCN">
-      Library Of Congress Number
-    </dt>
-    <dd>
-      {{ document.lib_of_con_nr|default:"-" }}
-    </dd>
-    {% endif %}
     {% if 'documents.can_see_last_update_info' in perms %}
     <dt id="detailLastUpdates">
       Letzte Änderung
