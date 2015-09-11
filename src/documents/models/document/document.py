@@ -12,6 +12,9 @@ from documents.lib.bibtex import Bibtex
 from documents.lib.exceptions import LendingError
 from django.core import validators
 
+# UserModel = get_user_model()
+from django.conf import settings
+UserModel = settings.AUTH_USER_MODEL
 
 class Document(models.Model):
     AVAILABLE = 0   # vorhanden
@@ -65,7 +68,7 @@ class Document(models.Model):
     isbn = models.CharField("ISBN", max_length=17, blank=True, null=True)
     category = models.ForeignKey(Category, verbose_name="Kategorie")
     last_updated = models.DateField("Zuletzt geändert", auto_now=True)
-    last_edit_by = models.ForeignKey(get_user_model(),
+    last_edit_by = models.ForeignKey(UserModel,
                                      verbose_name="Zuletzt geändert von")
     publisher = models.ForeignKey(Publisher, blank=True, null=True)
     year = models.IntegerField("Jahr", blank=True, null=True)
@@ -98,7 +101,7 @@ class Document(models.Model):
         Methode zum Speichern des letzten Bearbeiters des Dokumentes
         """
         if user is None:
-            user = get_user_model().objects.get(id=1)
+            user = UserModel.objects.get(id=1)
         self.last_edit_by = user
         super(Document, self).save(*args, **kwargs)
         if not self.status == self._status():
@@ -279,7 +282,7 @@ class Document(models.Model):
 
     def get_user_lend(self):
         if not self.is_lend():
-            return get_user_model.objects.None()
+            return UserModel.objects.None()
         latest = self.docstatus_set.latest('date')
         if latest:
             retVal = latest.recent_user
@@ -288,19 +291,19 @@ class Document(models.Model):
             if latest.non_user_lend:
                 retVal = latest.non_user_lend
         else:
-            retVal = get_user_model().objects.None()
+            retVal = UserModel.objects.None()
         return retVal
 
     def get_user_responsible(self):
         if not self.is_lend():
-            return get_user_model.objects.None()
+            return UserModel.objects.None()
         latest = self.docstatus_set.latest('date')
         if latest:
             retVal = latest.recent_user
             if latest.user_lend:
                 retVal = latest.user_lend
         else:
-            retVal = get_user_model().objects.None()
+            retVal = UserModel.objects.None()
         return retVal
 
     def get_status_css_class(self):
@@ -335,7 +338,7 @@ class DocumentAuthors(models.Model):
 
 class DocStatus(models.Model):
         # auftraggebender User
-    recent_user = models.ForeignKey(get_user_model(),
+    recent_user = models.ForeignKey(UserModel,
                                     related_name='recent_user')
     doc_id = models.ForeignKey(Document)
         # in welchen Status wurde geändert?
@@ -349,7 +352,7 @@ class DocStatus(models.Model):
         # Ende der Rückgabefrist
     date_term_lend = models.DateTimeField(blank=True, null=True)
         # ausleihender User
-    user_lend = models.ForeignKey(get_user_model(), blank=True,
+    user_lend = models.ForeignKey(UserModel, blank=True,
                                   null=True, related_name='user_lend')
         # ausleihender non_User
     non_user_lend = models.ForeignKey(NonUser, blank=True, null=True)
