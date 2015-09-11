@@ -275,3 +275,7 @@ DOCUMENTS_SENDER_MAIL = '${SENDER_MAIL}'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/users/login/'
 LOGOUT_URL = '/users/logout/'
+
+
+#TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_RUNNER = 'wirelib.test_runner.WireLibDiscoverRunner'
