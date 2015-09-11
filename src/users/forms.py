@@ -15,11 +15,13 @@ class UserEditForm(forms.ModelForm):
 class UserChangeForm(AuthUserChangeForm):
     class Meta:
         model = models.User
+        fields = "__all__"
 
 
 class UserCreationForm(AuthUserCreationForm):
     class Meta:
         model = models.User
+        fields = "__all__"
 
     def clean_username(self):
         username = self.cleaned_data['username']
