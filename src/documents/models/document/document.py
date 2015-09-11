@@ -5,7 +5,7 @@ from ..bibtex import Category
 from ..user import NonUser
 from .author import Author
 from .publisher import Publisher
-from django.contrib.auth import get_user_model
+#from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.db import models
 from documents.lib.bibtex import Bibtex
