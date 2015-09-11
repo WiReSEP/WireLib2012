@@ -70,6 +70,7 @@ class DocumentAuthorForm(ModelForm):
 
     class Meta:
         model = DocumentAuthors
+        fields = "__all__"
 
 AuthorSelectForm = inlineformset_factory(Document, DocumentAuthors, extra=4,
                                          form=DocumentAuthorForm)
@@ -92,12 +93,14 @@ class AuthorAddForm(ModelForm):
 
     class Meta:
         model = Author
+        fields = "__all__"
 
 
 class PublisherAddForm(ModelForm):
 
     class Meta:
         model = Publisher
+        fields = "__all__"
 
 
 class UserModelChoiceField(forms.ModelChoiceField):
@@ -120,6 +123,7 @@ class NonUserForm(ModelForm):
 
     class Meta:
         model = NonUser
+        fields = "__all__"
 
     def clean(self):
         """ Override super method to bypass the unique checks. """
