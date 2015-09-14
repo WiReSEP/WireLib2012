@@ -60,13 +60,14 @@ class Document(models.Model):
     currency = models.CharField("Währung",
                                 max_length=10,
                                 blank=True,
-                                null=True)
+                                null=True,
+                                default="EURO")
     title = models.CharField("Titel", max_length=255)
     status = models.IntegerField("Status", null=True,
                                  choices=STATUS_CHOICES.items(),
                                  default=AVAILABLE)
     isbn = models.CharField("ISBN", max_length=17, blank=True, null=True)
-    category = models.ForeignKey(Category, verbose_name="Kategorie")
+    category = models.ForeignKey(Category, verbose_name="Kategorie", default="book")
     last_updated = models.DateField("Zuletzt geändert", auto_now=True)
     last_edit_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                      verbose_name="Zuletzt geändert von")

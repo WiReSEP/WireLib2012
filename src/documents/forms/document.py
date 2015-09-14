@@ -96,9 +96,9 @@ ExtraInlineFormset = inlineformset_factory(Document, DocExtra, form=ExtraForm)
 
 class DocumentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        if not kwargs['initial']:
-            kwargs['initial'] = {}
-        kwargs['initial'].update({'currency': 'EUR', 'category': 'book'})
+        #if not kwargs['initial']:
+        #    kwargs['initial'] = {}
+        #kwargs['initial'].update({'currency': 'EUR', 'category': 'book'})
         super(DocumentForm, self).__init__(*args, **kwargs)
 
         for key, field in self.fields.items():
@@ -116,7 +116,6 @@ class DocumentForm(forms.ModelForm):
         self.fields['bibtex_id'].widget.attrs.update({'id': 'importBibTeXID'})
         self.fields['price'].widget.attrs.update({'id': 'importPrice'})
         self.fields['currency'].widget.attrs.update({'id': 'importCurrency'})
-        #self.fields['currency'].initial = 'EUR'
         self.fields['lib_of_con_nr'].widget.attrs.update({'id': 'importLOCN',
                                                           'placeholder': 'Library Of Congress No'})
         self.fields['comment'].widget.attrs.update({'id': 'importComment',
