@@ -23,3 +23,5 @@ olddb
 *.ADT
 db.sqlite
 etc/wirelib.cfg
+/dbbackup/
+.fuse*
